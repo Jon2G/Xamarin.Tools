@@ -34,6 +34,7 @@ namespace Plugin.Xamarin.Tools.Android
         /// </summary>
         public static ITools Init(Activity activity)
         {
+            Acr.UserDialogs.UserDialogs.Init(activity);
             AppDomain.CurrentDomain.UnhandledException +=Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 

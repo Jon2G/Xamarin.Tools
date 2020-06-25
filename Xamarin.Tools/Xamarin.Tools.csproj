@@ -88,6 +88,15 @@
 	<Compile Include="iOS\**\*.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Android\Services\" />
+    <Folder Include="iOS\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.442" />
+  </ItemGroup>
+
 
 
   <!--Additional item groups-->
