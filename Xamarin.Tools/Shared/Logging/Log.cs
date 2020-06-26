@@ -6,11 +6,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace Plugin.Xamarin.Tools.Shared.Logging
 {
     public static class Log
     {
+        public static EventHandler OnConecctionLost;
         public static string LogDirectory { get; private set; }
         public static string LogPath { get; private set; }
         public static string BackgroundLogPath { get; private set; }
@@ -66,7 +68,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "---->", error);
-                if (Tools.Debugging)
+                if (Tools.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -88,7 +90,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error.Message);
-                if (Tools.Debugging)
+                if (Tools.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -130,7 +132,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
                     StackFrame frame = MainStackFrame(error);
                     LogMe("STACK FRAME\n L:" + frame?.GetFileLineNumber() ?? -1 + (" Frame:" + frame ?? "Desconocido") + "\n");
                 }
-                if (Tools.Debugging)
+                if (Tools.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -152,7 +154,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString(), descripcion, "----> ", error.Message);
-                if (Tools.Debugging)
+                if (Tools.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -169,7 +171,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error);
-                if (Tools.Debugging)
+                if (Tools.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -231,7 +233,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
         }
         private static void EliminarDisposedLogs()
         {
-            DirectoryInfo dir = new DirectoryInfo($"{Tools.Debugging}\\DisposedLogs");
+            DirectoryInfo dir = new DirectoryInfo($"{Tools.Instance.Debugging}\\DisposedLogs");
             if (dir.Exists)
             {
                 try
@@ -250,7 +252,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine, "--",
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", Environment.NewLine, query);
-                if (Tools.Debugging)
+                if (Tools.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -289,7 +291,41 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
                 // just suppress any error logging exceptions
             }
         }
-
         #endregion
+        internal static bool IsDBConnectionError(Exception ex)
+        {
+            Exception Exbase = ex.MainExcepcion();
+            Exception exception = ex;
+#if NETSTANDARD
+            bool desconexion = (exception is SqlException);
+#else
+            bool desconexion = (exception.GetType().Name == "SqlException");
+#endif
+            if (desconexion)
+            {
+                //Asegurarse
+                foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME" })
+                    if (
+                        (exception?.Message?.ToUpper()?.Contains(identificados) ?? false)
+                        ||
+                        (ex?.Message?.ToUpper()?.Contains(identificados) ?? false)
+                        ||
+                        (Exbase?.Message?.ToUpper()?.Contains(identificados) ?? false)
+                    )
+                    {
+                        //Log.LogMe($"-->[WARNING!!!] Se adapto forzadamente por:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
+                        //AppData.Demonio.AdaptarLaBase();
+                        //AppData.Demonio.Despierta();
+                        return false;
+                    }
+            }
+            if (desconexion)
+            {
+                Log.LogMe($"-->[WARNING!!!] DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
+            }
+            return desconexion;
+
+
+        }
     }
 }

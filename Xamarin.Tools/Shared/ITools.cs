@@ -6,6 +6,7 @@ namespace Plugin.Xamarin.Tools.Shared
 {
     public interface ITools
     {
+        ITools InitAll(string LogDirectory, bool AlertAfterCritical = false);
         ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false);
     }
 }

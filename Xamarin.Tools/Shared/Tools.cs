@@ -8,9 +8,9 @@ namespace Plugin.Xamarin.Tools.Shared
     public static partial class Tools
     {
 
-#if NETSTANDARD
-        static ITools currentInstance;
-        public static ITools Instance
+//#if NETSTANDARD
+        static AbstractTools currentInstance;
+        public static AbstractTools Instance
         {
             get
             {
@@ -21,22 +21,7 @@ namespace Plugin.Xamarin.Tools.Shared
             }
             set => currentInstance = value;
         }
-#endif
-
-        public static bool Debugging { get; private set; }
-        public static void Init()
-        {
-            Debugging = Debugger.IsAttached;
-
-        }
-        public static void InitAll(string LogDirectory)
-        {
-            Logging.Log.Init(LogDirectory);
-        }
-        public static void SetDebugging(bool Debugging)
-        {
-            Tools.Debugging = true;
-        }
+//#endif
 
     }
 }
