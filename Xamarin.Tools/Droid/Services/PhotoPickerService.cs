@@ -21,7 +21,7 @@ namespace Plugin.Xamarin.Tools.Droid.Services
             intent.SetType("image/*");
             intent.SetAction(Intent.ActionGetContent);
 
-            ToolsImplementation tools = (Tools.Instance as ToolsImplementation);
+            ToolsImplementation tools = (Shared.Tools.Instance as ToolsImplementation);
             // Start the picture-picker activity (resumes in MainActivity.cs)
             tools.MainActivity.StartActivityForResult(Intent.CreateChooser(intent, "Select Picture"), PickImageId);
             ////ADD ON PLATAFORM SPECIFIC

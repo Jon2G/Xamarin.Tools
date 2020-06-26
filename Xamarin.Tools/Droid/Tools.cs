@@ -32,9 +32,9 @@ namespace Plugin.Xamarin.Tools.Droid
 
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
-
-            Instance.SetDebugging(Debugger.IsAttached);
-            (Instance as ToolsImplementation).MainActivity = activity;
+            Shared.Tools.Set(new ToolsImplementation());
+            Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
+            (Shared.Tools.Instance as ToolsImplementation).MainActivity = activity;
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
             #region DependencyServices
             DependencyService.Register<DataShare>();
@@ -44,26 +44,13 @@ namespace Plugin.Xamarin.Tools.Droid
             DependencyService.Register<Screenshot>();
             #endregion
 
-            return Instance;
+            return Shared.Tools.Instance;
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)
         {
             // IMPORTANT: Initialize XFGloss AFTER calling LoadApplication on the Android platform
             XFGloss.Droid.Library.Init(activity, bundle);
-            return Instance;
-        }
-
-        static AbstractTools currentInstance;
-        public static AbstractTools Instance
-        {
-            get
-            {
-                if (currentInstance == null)
-                    throw new ArgumentException("[Shared.Tools] In android, you must call UserDialogs.Init(Activity) from your first activity OR UserDialogs.Init(App) from your custom application OR provide a factory function to get the current top activity via UserDialogs.Init(() => supply top activity)");
-
-                return currentInstance;
-            }
-            set => currentInstance = value;
+            return Shared.Tools.Instance;
         }
     }
 }
