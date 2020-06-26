@@ -20,6 +20,7 @@ namespace Plugin.Xamarin.Tools.UWP
         {
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
+            Instance = new ToolsImplementation();
             Instance.SetDebugging(Debugger.IsAttached);
             return Instance;
         }
