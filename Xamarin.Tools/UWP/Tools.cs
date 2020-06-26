@@ -20,22 +20,23 @@ namespace Plugin.Xamarin.Tools.UWP
         {
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
-            Instance = new ToolsImplementation();
-            Instance.SetDebugging(Debugger.IsAttached);
-            return Instance;
+
+            Plugin.Xamarin.Tools.Shared.Tools.Set(new ToolsImplementation());
+            Plugin.Xamarin.Tools.Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
+            return Plugin.Xamarin.Tools.Shared.Tools.Instance;
         }
 
-        static AbstractTools currentInstance;
-        public static AbstractTools Instance
-        {
-            get
-            {
-                if (currentInstance == null)
-                    throw new ArgumentException("[Shared.Tools] In android, you must call UserDialogs.Init(Activity) from your first activity OR UserDialogs.Init(App) from your custom application OR provide a factory function to get the current top activity via UserDialogs.Init(() => supply top activity)");
+        //static AbstractTools currentInstance;
+        //public static AbstractTools Instance
+        //{
+        //    get
+        //    {
+        //        if (currentInstance == null)
+        //            throw new ArgumentException("[Shared.Tools] In android, you must call UserDialogs.Init(Activity) from your first activity OR UserDialogs.Init(App) from your custom application OR provide a factory function to get the current top activity via UserDialogs.Init(() => supply top activity)");
 
-                return currentInstance;
-            }
-            set => currentInstance = value;
-        }
+        //        return currentInstance;
+        //    }
+        //    set => currentInstance = value;
+        //}
     }
 }

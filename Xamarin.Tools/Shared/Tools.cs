@@ -7,7 +7,10 @@ namespace Plugin.Xamarin.Tools.Shared
 {
     public static partial class Tools
     {
-
+        public static void Set(AbstractTools Instance)
+        {
+            currentInstance = Instance;
+        }
 //#if NETSTANDARD
         static AbstractTools currentInstance;
         public static AbstractTools Instance
