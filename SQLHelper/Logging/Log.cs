@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 
-namespace Plugin.Xamarin.Tools.Shared.Logging
+namespace SQLHelper
 {
     public static class Log
     {
@@ -18,13 +18,14 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
         public static string BackgroundLogPath { get; private set; }
         public static string DBLogPath { get; private set; }
         public static string CriticalLogPath { get; private set; }
+        public static EventHandler AlertCritical;
 
         public static void Init(string LogDirectory, bool AlertAfterCritical = false)
         {
             Log.LogDirectory = LogDirectory;
-            Log.CriticalLogPath = $"{Log.LogDirectory}\\Critical.Log";
-            Log.LogPath = $"{Log.LogDirectory}\\AppData.Log";
-            Log.BackgroundLogPath = $"{Log.LogDirectory}\\AppDataDemonio.Log";
+            Log.CriticalLogPath = $"{Log.LogDirectory}\\Critical.log";
+            Log.LogPath = $"{Log.LogDirectory}\\AppData.log";
+            Log.BackgroundLogPath = $"{Log.LogDirectory}\\AppDataDemonio.log";
             Log.DBLogPath = $"{Log.LogDirectory}\\SQL_T.sql";
             if (!Directory.Exists(Log.LogDirectory))
             {
@@ -32,14 +33,26 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             }
             if (AlertAfterCritical)
             {
-
+                AlertCriticalUnhandled();
             }
         }
-
+        private static void AlertCriticalUnhandled()
+        {
+            FileInfo file = new FileInfo(Log.CriticalLogPath);
+            if (file.Exists)
+            {
+                string criticalDescription = File.ReadAllText(file.FullName);
+                file.Delete();
+                if (!string.IsNullOrEmpty(criticalDescription))
+                {
+                    AlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
+                }
+            }
+        }
         public static void ChangeLogPath(string Path)
         {
-            Log.BackgroundLogPath = $"{Path}\\AppDataDemonio.Log";
-            Log.LogPath = $"{Path}\\AppData.Log";
+            Log.BackgroundLogPath = $"{Path}\\AppDataDemonio.log";
+            Log.LogPath = $"{Path}\\AppData.log";
             Log.DBLogPath = $"{Path}\\SQL_T.sql";
             Log.LogDirectory = Path;
             if (!Directory.Exists(Log.LogDirectory))
@@ -68,7 +81,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "---->", error);
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -90,7 +103,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error.Message);
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -132,7 +145,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
                     StackFrame frame = MainStackFrame(error);
                     LogMe("STACK FRAME\n L:" + frame?.GetFileLineNumber() ?? -1 + (" Frame:" + frame ?? "Desconocido") + "\n");
                 }
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -154,7 +167,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString(), descripcion, "----> ", error.Message);
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -171,7 +184,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error);
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -233,7 +246,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
         }
         private static void EliminarDisposedLogs()
         {
-            DirectoryInfo dir = new DirectoryInfo($"{Tools.Instance.Debugging}\\DisposedLogs");
+            DirectoryInfo dir = new DirectoryInfo($"{SQLHelper.Instance.Debugging}\\DisposedLogs");
             if (dir.Exists)
             {
                 try
@@ -252,7 +265,7 @@ namespace Plugin.Xamarin.Tools.Shared.Logging
             {
                 string mensaje = string.Concat(Environment.NewLine, "--",
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", Environment.NewLine, query);
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;

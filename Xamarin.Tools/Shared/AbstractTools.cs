@@ -16,5 +16,6 @@ namespace Plugin.Xamarin.Tools.Shared
         public abstract ITools InitAll(string LogDirectory, bool AlertAfterCritical = false);
         public abstract ITools InitLoggin(string LogDirectory = "Logs", bool AlertAfterCritical = false);
         public abstract void SetDebugging(bool Debugging);
+        public abstract void CriticalAlert(object sender, EventArgs e);
     }
 }

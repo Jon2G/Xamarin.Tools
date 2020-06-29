@@ -19,13 +19,19 @@ namespace Plugin.Xamarin.Tools.Droid
 
         public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
         {
-            Shared.Logging.Log.Init(LogDirectory, AlertAfterCritical);
+            SQLHelper.Log.AlertCritical += CriticalAlert;
+            SQLHelper.Log.Init(LogDirectory, AlertAfterCritical);
             return this;
         }
 
         public override void SetDebugging(bool Debugging)
         {
             Debugging = true;
+        }
+
+        public override async void CriticalAlert(object sender, EventArgs e)
+        {
+           await  Acr.UserDialogs.UserDialogs.Instance.AlertAsync(sender.ToString(), "Alerta", "Entiendo");
         }
     }
 }

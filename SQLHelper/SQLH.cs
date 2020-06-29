@@ -1,5 +1,4 @@
 ﻿
-using Plugin.Xamarin.Tools.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plugin.Xamarin.Tools.Shared.SQLHelper
+namespace SQLHelper
 {
     public class SQLH
     {
@@ -178,7 +177,7 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
             {
                 Log.LogMe(ex, "Consulta fallida");
                 Log.LogMeSQL(sql);
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     Debugger.Break();
                     Log.LogMe(ex, "Consulta fallida");
@@ -260,7 +259,7 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
                 {
                     Log.LogMe(ex, "Transaccion fallida reportada");
                     ReportaTransaccion(cmd);
-                    if (Tools.Instance.Debugging)
+                    if (SQLHelper.Instance.Debugging)
                     {
                         throw;
                     }
@@ -401,7 +400,7 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
         }
         public Reader Leector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
         {
-            if (Tools.Instance.Debugging)
+            if (SQLHelper.Instance.Debugging)
             {
                 if (commandType == CommandType.StoredProcedure)
                 {
@@ -425,7 +424,7 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
                 {
                     Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
                 }
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     throw ex;
                 }
@@ -445,7 +444,7 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
             }
             catch (Exception ex)
             {
-                if (Tools.Instance.Debugging)
+                if (SQLHelper.Instance.Debugging)
                 {
                     throw ex;
                 }

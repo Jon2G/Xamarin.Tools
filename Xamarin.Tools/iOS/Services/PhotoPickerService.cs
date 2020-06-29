@@ -4,8 +4,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Foundation;
-using Plugin.Xamarin.Tools.Shared.Logging;
 using Plugin.Xamarin.Tools.Shared.Services;
+using SQLHelper;
 using UIKit;
 using Xamarin.Forms;
 

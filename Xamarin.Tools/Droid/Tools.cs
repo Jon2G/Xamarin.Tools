@@ -9,7 +9,7 @@ using Android.OS;
 using Plugin.CurrentActivity;
 using Plugin.Xamarin.Tools.Droid.Services;
 using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Logging;
+using SQLHelper;
 using Xamarin.Forms;
 using Application = Android.App.Application;
 

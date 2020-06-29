@@ -13,6 +13,8 @@ namespace Sample.Views
         public MainPage()
         {
             InitializeComponent();
+
+          
         }
     }
 }

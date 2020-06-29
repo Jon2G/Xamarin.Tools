@@ -1,9 +1,9 @@
 ﻿using Foundation;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
-using Plugin.Xamarin.Tools.Shared.Logging;
 using Plugin.Xamarin.Tools.Shared.Services;
 using QuickLook;
+using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.IO;

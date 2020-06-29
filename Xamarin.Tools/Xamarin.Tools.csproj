@@ -14,10 +14,10 @@
 		<PackageId>Plugin.Xamarin.Tools</PackageId>
 
 		<Product>$(AssemblyName) ($(TargetFramework))</Product>
-		<AssemblyVersion>1.0.0.1</AssemblyVersion>
+		<AssemblyVersion>1.0.0.4</AssemblyVersion>
 		<AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
 		<Version>1.0.0.4</Version>
-		<PackageVersion>1.0.0.5</PackageVersion>
+		<PackageVersion>1.0.0.6</PackageVersion>
 		<PackOnBuild>true</PackOnBuild>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>default</LangVersion>
@@ -65,7 +65,6 @@
 	<ItemGroup>
 		<Compile Include="**\*.shared.cs" />
 		<Compile Include="Shared\**\*.cs" />
-		<Compile Remove="Shared\SQLHelper\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
@@ -87,13 +86,11 @@
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
 		<Compile Include="**\*.android.cs" />
 		<Compile Include="Droid\**\*.cs" />
-		<Compile Remove="Shared\SQLHelper\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
 		<Compile Include="**\*.apple.cs" />
 		<Compile Include="iOS\**\*.cs" />
-		<Compile Remove="Shared\SQLHelper\*.cs" />
 	</ItemGroup>
 
 
@@ -121,18 +118,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="UWP\ToolsImplementation.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Include="UWP\Tools.cs" />
 		<Compile Include="UWP\ToolsImplementation.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="UWP\Tools.cs" />
+	  <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
 	</ItemGroup>
-
 
 
 	<!--Additional item groups-->

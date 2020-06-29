@@ -3,7 +3,6 @@ using System.Collections.Generic;
 //Alias para poder trabajar con mas facilidad
 using SqlConnection = SQLite.SQLiteConnection;
 using SqlCommand = SQLite.SQLiteCommand;
-using SqlDbType = System.Data.DbType;
 using SqlDataReader = SQLite_Net.Extensions.Readers.ReaderItem;
 using System.Data;
 using System.IO;
@@ -12,9 +11,8 @@ using System.Threading.Tasks;
 using SQLite;
 using SQLite_Net.Extensions.Readers;
 using System.Text;
-using Plugin.Xamarin.Tools.Shared.Logging;
 
-namespace Plugin.Xamarin.Tools.Shared.SQLHelper
+namespace SQLHelper
 {
     public class SQLHLite
     {
@@ -99,7 +97,7 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
         public readonly string DBVersion;
         public SQLHLite(string DBVersion)
         {
-            FileInfo db = new FileInfo(Path.Combine(Tools.Instance.LibraryPath, "XCOMANDERA.db"));
+            FileInfo db = new FileInfo(Path.Combine(SQLHelper.Instance.LibraryPath, "XCOMANDERA.db"));
             this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
@@ -136,10 +134,10 @@ namespace Plugin.Xamarin.Tools.Shared.SQLHelper
 
         private void Crear(SqlConnection connection)
         {
-            OnCreateDB?.Invoke(connection, EventArgs.Empty);
             connection.Execute("DROP TABLE IF EXISTS DB_VERSION");
             connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
             connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
+            OnCreateDB?.Invoke(connection, EventArgs.Empty);
             connection.Close();
         }
 

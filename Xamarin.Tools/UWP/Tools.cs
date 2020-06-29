@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Logging;
+using SQLHelper;
 
 namespace Plugin.Xamarin.Tools.UWP
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plugin.Xamarin.Tools.Shared.SQLHelper
+namespace SQLHelper
 {
     public class DBError : Exception
     {

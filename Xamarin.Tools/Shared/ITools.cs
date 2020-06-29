@@ -8,5 +8,6 @@ namespace Plugin.Xamarin.Tools.Shared
     {
         ITools InitAll(string LogDirectory, bool AlertAfterCritical = false);
         ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false);
+        void CriticalAlert(object sender, EventArgs e);
     }
 }
