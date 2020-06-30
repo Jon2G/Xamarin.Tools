@@ -471,8 +471,15 @@ namespace SQLHelper
         }
         public bool Exists(string sql, bool Reportar = false, params SqlParameter[] parametros)
         {
-            using Reader reader = Leector(sql, CommandType.Text, Reportar, parametros);
-            return reader.Read();
+            bool result = false;
+            using (Reader reader = Leector(sql, CommandType.Text, Reportar, parametros))
+            {
+                if (reader != null)
+                {
+                    result = reader.Read();
+                }
+            }
+            return result;
         }
         public bool ExisteCampo(string Tabla, string Campo)
         {

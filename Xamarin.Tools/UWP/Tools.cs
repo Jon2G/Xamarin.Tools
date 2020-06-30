@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.Shared;
 using SQLHelper;
+using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.UWP
 {
@@ -18,11 +19,21 @@ namespace Plugin.Xamarin.Tools.UWP
         /// </summary>
         public static AbstractTools Init()
         {
+            
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Plugin.Xamarin.Tools.Shared.Tools.Set(new ToolsImplementation());
             Plugin.Xamarin.Tools.Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
+
+            #region DependencyServices
+            //DependencyService.Register<DataShare>();
+            //DependencyService.Register<PDFSaveAndOpen>();
+            //DependencyService.Register<PhotoPickerService>();
+            DependencyService.Register<UWP.Services.PrintHTML>();
+           // DependencyService.Register<Screenshot>();
+            #endregion
+
             return Plugin.Xamarin.Tools.Shared.Tools.Instance;
         }
 

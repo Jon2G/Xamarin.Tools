@@ -118,12 +118,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Include="UWP\Services\PrintHTML.cs" />
 		<Compile Include="UWP\Tools.cs" />
 		<Compile Include="UWP\ToolsImplementation.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="UWP\Services\PrintHTML.cs" />
 	</ItemGroup>
 
 

@@ -13,9 +13,14 @@ namespace Plugin.Xamarin.Tools.iOS.Services
 {
     public class PrintHTML : IPrintHTML
     {
-        public void Print(WebView viewToPrint)
+        public bool Print(string HTML, string Printer)
         {
-            var renderer = Platform.CreateRenderer(viewToPrint);
+            WebView browser = new WebView();
+            var htmlSource = new HtmlWebViewSource();
+            htmlSource.Html = HTML;
+            browser.Source = htmlSource;
+
+            var renderer = Platform.CreateRenderer(browser);
             var webView = renderer.NativeView as WKWebView;
 
             var printInfo = UIPrintInfo.PrintInfo;
@@ -31,6 +36,8 @@ namespace Plugin.Xamarin.Tools.iOS.Services
             printController.PrintFormatter = webView.ViewPrintFormatter;
 
             printController.Present(true, (printInteractionController, completed, error) => { });
+
+            return true;
         }
     }
 }

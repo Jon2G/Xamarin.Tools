@@ -7,6 +7,6 @@ namespace Plugin.Xamarin.Tools.Shared.Services
 {
     public interface IPrintHTML
     {
-        public void Print(WebView viewToPrint);
+        public bool Print(string Html ,string Printer);
     }
 }
