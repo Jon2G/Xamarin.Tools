@@ -7,6 +7,7 @@ using Plugin.Xamarin.Tools.Shared;
 using SQLHelper;
 using Xamarin.Forms;
 
+
 namespace Plugin.Xamarin.Tools.UWP
 {
     /// <summary>
@@ -31,7 +32,8 @@ namespace Plugin.Xamarin.Tools.UWP
             //DependencyService.Register<PDFSaveAndOpen>();
             //DependencyService.Register<PhotoPickerService>();
             DependencyService.Register<UWP.Services.PrintHTML>();
-           // DependencyService.Register<Screenshot>();
+            // DependencyService.Register<Screenshot>();
+            DependencyService.Register<UWP.Services.ICustomMessageBox.CustomMessageBoxService>();
             #endregion
 
             return Plugin.Xamarin.Tools.Shared.Tools.Instance;

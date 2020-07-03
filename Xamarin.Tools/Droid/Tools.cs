@@ -42,6 +42,7 @@ namespace Plugin.Xamarin.Tools.Droid
             DependencyService.Register<PhotoPickerService>();
             DependencyService.Register<PrintHTML>();
             DependencyService.Register<Screenshot>();
+            DependencyService.Register<CustomMessageBoxService>();
             #endregion
 
             return Shared.Tools.Instance;

@@ -45,6 +45,7 @@ namespace Plugin.Xamarin.Tools.iOS
             DependencyService.Register<PhotoPickerService>();
             DependencyService.Register<PrintHTML>();
             DependencyService.Register<Screenshot>();
+            DependencyService.Register<CustomMessageBoxService>();
             #endregion
 
             return Instance;
