@@ -18,9 +18,9 @@ namespace SQLHelper
         public static string BackgroundLogPath { get; private set; }
         public static string DBLogPath { get; private set; }
         public static string CriticalLogPath { get; private set; }
-        public static EventHandler AlertCritical;
+        private static EventHandler OnAlertCritical;
 
-        public static void Init(string LogDirectory, bool AlertAfterCritical = false)
+        public static void Init(string LogDirectory,EventHandler CriticalAction=null)
         {
             Log.LogDirectory = LogDirectory;
             Log.CriticalLogPath = $"{Log.LogDirectory}\\Critical.log";
@@ -31,8 +31,9 @@ namespace SQLHelper
             {
                 Directory.CreateDirectory(Log.LogDirectory);
             }
-            if (AlertAfterCritical)
+            if (CriticalAction!=null)
             {
+                OnAlertCritical += CriticalAction;
                 AlertCriticalUnhandled();
             }
         }
@@ -45,7 +46,7 @@ namespace SQLHelper
                 file.Delete();
                 if (!string.IsNullOrEmpty(criticalDescription))
                 {
-                    AlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
+                    OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
                 }
             }
         }

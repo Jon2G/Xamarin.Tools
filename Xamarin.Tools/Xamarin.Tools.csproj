@@ -1,124 +1,133 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
-  <PropertyGroup>
-    <!--Work around so the conditions work below-->
-    <TargetFrameworks></TargetFrameworks>
-    <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;uap10.0.16299;net45</TargetFrameworks>
+	<PropertyGroup>
+		<!--Work around so the conditions work below-->
+		<TargetFrameworks></TargetFrameworks>
+		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;uap10.0.16299;net45</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>-->
 
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net47</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net47</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462</TargetFrameworks>
 
-    <!--Feel free to add as many targets as you need below
+		<!--Feel free to add as many targets as you need below
     netstandard1.0;netstandard2.0;MonoAndroid90;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
     For UWP update the version number with a version number you have installed.
     -->
-    <AssemblyName>Plugin.Xamarin.Tools</AssemblyName>
-    <RootNamespace>Plugin.Xamarin.Tools</RootNamespace>
-    <PackageId>Plugin.Xamarin.Tools</PackageId>
+		<AssemblyName>Plugin.Xamarin.Tools</AssemblyName>
+		<RootNamespace>Plugin.Xamarin.Tools</RootNamespace>
+		<PackageId>Plugin.Xamarin.Tools</PackageId>
 
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <AssemblyVersion>1.0.0.4</AssemblyVersion>
-    <AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
-    <Version>1.0.0.4</Version>
-    <PackageVersion>1.0.0.6</PackageVersion>
-    <PackOnBuild>true</PackOnBuild>
-    <NeutralLanguage>en</NeutralLanguage>
-    <LangVersion>default</LangVersion>
-    <DefineConstants>$(DefineConstants);</DefineConstants>
+		<Product>$(AssemblyName) ($(TargetFramework))</Product>
+		<AssemblyVersion>1.0.0.4</AssemblyVersion>
+		<AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
+		<Version>1.0.0.4</Version>
+		<PackageVersion>1.0.0.6</PackageVersion>
+		<PackOnBuild>true</PackOnBuild>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>default</LangVersion>
+		<DefineConstants>$(DefineConstants);</DefineConstants>
 
-    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 
-    <LangVersion>latest</LangVersion>
-    <DebugType>portable</DebugType>
+		<LangVersion>latest</LangVersion>
+		<DebugType>portable</DebugType>
 
-    <!--TODO: Fill these in-->
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</RepositoryUrl>
-    <PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
-    <PackageIconUrl>ICON URL</PackageIconUrl>
-    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, Xamarin.Tools</PackageTags>
+		<!--TODO: Fill these in-->
+		<PackageLicenseUrl></PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</RepositoryUrl>
+		<PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
+		<PackageIconUrl>ICON URL</PackageIconUrl>
+		<PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, Xamarin.Tools</PackageTags>
 
-    <Title>Xamarin.Tools Plugin for Xamarin and Windows</Title>
-    <Summary>Summary of nuget</Summary>
-    <Description>Set of several tools and dependency services for xamarin</Description>
-
-
-    <Owners>YOU</Owners>
-    <Authors>BlumJonathanGG</Authors>
-    <Copyright>Copyright 2020</Copyright>
-
-    <!--When built in 2019 will remove extra references on pack-->
-    <DisableExtraReferences>true</DisableExtraReferences>
-    <Company>BlumJonathanGG</Company>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="**\*.shared.cs" />
-    <Compile Include="Shared\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <Compile Include="**\*.shared.cs" />
-    <Compile Include="Shared\**\*.cs" />
-  </ItemGroup>
-
-  <!--<ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">-->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net45')) ">
-    <Compile Include="**\*.uwp.cs" />
-    <Compile Include="UWP\**\*.cs" />
-    <!--
-    If you need to add sdk references:
-     <SDKReference Include="WindowsMobile, Version=10.0.16299.0">
-      <Name>Windows Mobile Extensions for the UWP</Name>
-    </SDKReference>
-    -->
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
-    <Compile Include="**\*.android.cs" />
-    <Compile Include="Droid\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <Compile Include="**\*.apple.cs" />
-    <Compile Include="iOS\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
-    <PackageReference Include="Plugin.CurrentActivity">
-      <Version>2.1.0.4</Version>
-    </PackageReference>
-  </ItemGroup>
+		<Title>Xamarin.Tools Plugin for Xamarin and Windows</Title>
+		<Summary>Summary of nuget</Summary>
+		<Description>Set of several tools and dependency services for xamarin</Description>
 
 
+		<Owners>YOU</Owners>
+		<Authors>BlumJonathanGG</Authors>
+		<Copyright>Copyright 2020</Copyright>
 
-  <ItemGroup>
-    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
-    <PackageReference Include="Ansuria.XFGloss" Version="1.1.3" />
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="Plugin.Permissions" Version="6.0.1" />
-    <PackageReference Include="PresentationFramework" Version="4.6.0" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
-    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
-    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1080" />
-  </ItemGroup>
+		<!--When built in 2019 will remove extra references on pack-->
+		<DisableExtraReferences>true</DisableExtraReferences>
+		<Company>BlumJonathanGG</Company>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+		<DebugSymbols>true</DebugSymbols>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="**\*.shared.cs" />
+		<Compile Include="Shared\**\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+		<Compile Include="**\*.shared.cs" />
+		<Compile Include="Shared\**\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
+		<PackageReference Include="Plugin.CurrentActivity">
+			<Version>2.1.0.4</Version>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+		<Compile Include="Droid\**\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+		<Compile Include="iOS\**\*.cs" />
+	</ItemGroup>
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('net462')) ">
+		<Compile Include="UWP\**\*.cs" />
+		<Page Include="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+		<None Update="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</None>
+		<Compile Include="UWP\Services\ICustomMessageBox\CustomMessageBoxService.cs" />
+		
+		<Reference Include="PresentationCore">
+			<HintPath>..\..\Git\GourmetPOS\Assambles\PresentationCore.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Xaml">
+			<HintPath>..\..\Git\GourmetPOS\Assambles\System.Xaml.dll</HintPath>
+		</Reference>
+		<PackageReference Include="WindowsBase">
+			<Version>4.6.1055</Version>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Remove="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+	</ItemGroup>
 
 
-  <!--
+
+
+	<ItemGroup>
+		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
+		<PackageReference Include="Ansuria.XFGloss" Version="1.1.3" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+		<PackageReference Include="PresentationFramework" Version="4.6.0" />
+		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
+		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
+		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1080" />
+	</ItemGroup>
+
+
+
+
+	<!--
 
       
 
@@ -152,52 +161,30 @@
 	  <None Remove="UWP\Services\ICustomMessageBox\Util.cs" />
 	</ItemGroup>-->
 
-  <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Shared\Classes\Extensiones.cs" />
+	</ItemGroup>
 
 
 
-  <ItemGroup>
-    <Resource Include="UWP\Services\ICustomMessageBox\blankicon.ico" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="WindowsBase">
-      <Version>4.6.1055</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms.Platform.WPF">
-      <Version>4.7.0.1080</Version>
-    </PackageReference>
-  </ItemGroup>
 
 
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net45')) ">
-    <Compile Include="UWP\**\*.cs" />
-    <Compile Include="UWP\Services\ICustomMessageBox\*.*" />
-    <Compile Include="UWP\Services\ICustomMessageBox\CustomMessageBox.cs" />
-
-    <Compile Include="UWP\Services\ICustomMessageBox\CustomMessageBox.cs" />
-    <Compile Include="UWP\Services\ICustomMessageBox\CustomMessageBoxService.cs" />
-    <Compile Include="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml.cs">
-      <DependentUpon>CustomMessageBoxWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UWP\Services\ICustomMessageBox\Util.cs" />
-    <Compile Include="UWP\Services\PrintHTML.cs" />
-    <Compile Include="UWP\Tools.cs" />
-    <Compile Include="UWP\ToolsImplementation.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
 
 
-  <!--Additional item groups-->
-  <!--
+
+
+
+	<!--Additional item groups-->
+	<!--
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.TVOS')) ">
     <Compile Include="**\*.tvos.cs" />
   </ItemGroup>

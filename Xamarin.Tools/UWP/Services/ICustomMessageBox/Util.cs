@@ -4,14 +4,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace WPFCustomMessageBox
+namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
 {
     using System.Drawing;
     using System.Windows;
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using Windows.UI.Xaml.Media;
     using ImageSource = System.Windows.Media.ImageSource;
 
     /// <summary>

@@ -5,6 +5,8 @@ using System.Text;
 using Android.App;
 using Android.Util;
 using Plugin.Xamarin.Tools.Shared;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Droid
 {
@@ -17,21 +19,29 @@ namespace Plugin.Xamarin.Tools.Droid
             return InitLoggin(LogDirectory, AlertAfterCritical);
         }
 
-        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
+        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical)
         {
-            SQLHelper.Log.AlertCritical += CriticalAlert;
-            SQLHelper.Log.Init(LogDirectory, AlertAfterCritical);
+            if (AlertAfterCritical)
+            {
+                SQLHelper.Log.Init(LogDirectory, CriticalAlert);
+            }
+            else
+            {
+                SQLHelper.Log.Init(LogDirectory);
+            }
+
             return this;
+        }
+
+        public override void CriticalAlert(object sender, EventArgs e)
+        {
+            DependencyService.Get<Shared.Services.ICustomMessageBox>()
+                .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
 
         public override void SetDebugging(bool Debugging)
         {
             Debugging = true;
-        }
-
-        public override async void CriticalAlert(object sender, EventArgs e)
-        {
-           await  Acr.UserDialogs.UserDialogs.Instance.AlertAsync(sender.ToString(), "Alerta", "Entiendo");
         }
     }
 }

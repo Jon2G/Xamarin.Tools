@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.iOS
 {
@@ -18,8 +19,14 @@ namespace Plugin.Xamarin.Tools.iOS
         public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
         {
             Debugging = Debugger.IsAttached;
-            Log.AlertCritical += CriticalAlert;
-            Log.Init(LogDirectory, AlertAfterCritical);
+            if (AlertAfterCritical)
+            {
+                SQLHelper.Log.Init(LogDirectory, CriticalAlert);
+            }
+            else
+            {
+                SQLHelper.Log.Init(LogDirectory);
+            }
             return this;
         }
 
@@ -27,9 +34,10 @@ namespace Plugin.Xamarin.Tools.iOS
         {
             Debugging = true;
         }
-        public override async void CriticalAlert(object sender, EventArgs e)
+        public override void CriticalAlert(object sender, EventArgs e)
         {
-            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(sender.ToString(), "Alerta", "Entiendo");
+            DependencyService.Get<Shared.Services.ICustomMessageBox>()
+                .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
     }
 }

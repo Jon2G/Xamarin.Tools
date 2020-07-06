@@ -3,7 +3,11 @@ using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Windows;
+using Xamarin.Forms;
+using Application = System.Windows.Application;
 
 namespace Plugin.Xamarin.Tools.UWP
 {
@@ -17,8 +21,14 @@ namespace Plugin.Xamarin.Tools.UWP
 
         public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
         {
-            Log.AlertCritical += CriticalAlert;
-            Log.Init(LogDirectory, AlertAfterCritical);
+            if (AlertAfterCritical)
+            {
+                SQLHelper.Log.Init(LogDirectory, CriticalAlert);
+            }
+            else
+            {
+                SQLHelper.Log.Init(LogDirectory);
+            }
             return this;
         }
 
@@ -26,9 +36,71 @@ namespace Plugin.Xamarin.Tools.UWP
         {
             Debugging = true;
         }
-        public override async void CriticalAlert(object sender, EventArgs e)
+        public override void CriticalAlert(object sender, EventArgs e)
         {
-            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(sender.ToString(), "Alerta", "Entiendo");
+            DependencyService.Get<Shared.Services.ICustomMessageBox>()
+                .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
+        #region UWP Especific
+        public static ToolsImplementation UWPInstance
+        {
+            get => Shared.Tools.Instance as ToolsImplementation;
+        }
+        private bool? _IsInDesingMode;
+        public bool IsInDesingMode
+        {
+            get
+            {
+                if (_IsInDesingMode is null)
+                {
+                    _IsInDesingMode = Designing();
+                }
+                return (bool)_IsInDesingMode;
+            }
+        }
+        private bool Designing()
+        {
+            string name = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
+            name = name?.Trim()?.ToUpper();
+            if (name == "XDESPROC" || name == "DEVENV")
+            {
+                return true;
+            }
+            // MessageBox.Show(name);
+            return false;
+        }
+        public Window VentanaPadre()
+        {
+            if (this.IsInDesingMode)
+            {
+                return null;
+            }
+            try
+            {
+                Window a = (from nic in Application.Current.Windows.OfType<Window>()
+                            where nic.IsActive //&& nic.GetType() != typeof(Chat)
+                            select nic).FirstOrDefault();
+                if (!(a is null)) return (a.IsActive ? a : null);
+                a = Application.Current.Windows.OfType<Window>().FirstOrDefault();
+                if (a != null && a.IsActive) return (a.IsActive ? a : null);
+                try
+                {
+                    a?.Show();
+                }
+                catch (Exception ex)
+                {
+                    // ignored
+                    Log.LogMe(ex, "Ventana padre");
+                }
+
+                return (a.IsActive ? a : null);
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex, "Al determinar la ventana padre");
+                return null;
+            }
+        }
+        #endregion
     }
 }
