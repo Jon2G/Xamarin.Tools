@@ -11,8 +11,7 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
     {
         public static ImageSource ByteToImage(this byte[] ByteArray)
         {
-            Stream stream = new MemoryStream(ByteArray);
-            return ImageSource.FromStream(() => stream);
+            return ImageSource.FromStream(() => new MemoryStream(ByteArray));
         }
 
         public static byte[] ImageToByte(this ImageSource ImageSource)

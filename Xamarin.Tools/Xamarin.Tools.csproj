@@ -173,6 +173,10 @@
 	  <None Remove="Shared\Classes\Extensiones.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Shared\Classes\Security.cs" />
+	</ItemGroup>
+
 
 
 
