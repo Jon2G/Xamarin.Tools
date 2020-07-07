@@ -43,7 +43,8 @@ namespace Plugin.Xamarin.Tools.Droid.Services
 
         public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText, caption, okButtonText);
+            return CustomMessageBoxResult.OK;
         }
 
         public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
