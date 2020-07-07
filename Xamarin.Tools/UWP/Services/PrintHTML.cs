@@ -37,7 +37,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services
                     ProcessStartInfo info = new ProcessStartInfo();
                     info.Arguments = $"-p \"{Printer}\" \"{file.FullName}\"";
                     string pathToExe = Shared.Tools.Instance.LibraryPath + "\\PrintHTML";
-                    info.FileName = Path.Combine(pathToExe, "PrintHtml.exe");
+                    info.FileName = pathToExe+ "\\PrintHtml.exe";
                     using (Process p = Process.Start(info))
                     {
                         // Wait until it is finished

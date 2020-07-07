@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,17 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
             return stream.ToArray();
         }
 
-
+        public static int FindIndexOf<T>(this ObservableCollection<T> modificadoresSeleccionados, Func<T, bool> p)
+        {
+            for (int i = 0; i < modificadoresSeleccionados.Count; i++)
+            {
+                T elemento = modificadoresSeleccionados[i];
+                if (p.Invoke(elemento))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
     }
 }
