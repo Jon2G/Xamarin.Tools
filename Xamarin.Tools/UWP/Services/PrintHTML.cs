@@ -44,7 +44,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services
                     return PrintToPDF(HTML, TicketPath, Printer);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
                 return false;
@@ -56,20 +56,19 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             try
             {
                 FileInfo pdfile = new FileInfo($"{TicketPath}.pdf");
-                PdfGenerateConfig config = new PdfGenerateConfig();
-                config.ManualPageSize = new PdfSharp.Drawing.XSize(226,int.MaxValue);
-                config.MarginBottom =
-                    config.MarginTop =
-                    config.MarginLeft =
-                    config.MarginRight = 0;
+                PdfGenerateConfig config = new PdfGenerateConfig();          
+                config.ManualPageSize = new PdfSharp.Drawing.XSize(204, 283);
+                //config.ManualPageSize = new PdfSharp.Drawing.XSize(226, 140);
+                config.SetMargins(5);
+ 
 
-                using (PdfDocument pdf = PdfGenerator.GeneratePdf(HTML, config))
+                using (PdfDocument pdf = PdfGenerator.GeneratePdf(HTML,config))
                 {
                     pdf.Save(pdfile.FullName);
                 }
                 if (pdfile.Exists)
                 {
-                    return PrintPDF(Printer, "80mm", pdfile.FullName, 1);
+                    return PrintPDF(Printer, "A4", pdfile.FullName, 1);
                 }
 
             }
@@ -79,49 +78,28 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             }
             return false;
         }
-        private bool PrintPDF(string printer,string paperName,string filename,int copies)
+        private bool PrintPDF(string printer, string paperName, string filename, int copies)
         {
             try
             {
-                // Create the printer settings for our printer
-                var printerSettings = new PrinterSettings
-                {
-                    PrinterName = printer,
-                    Copies = (short)copies,
-                };
-
-                // Create our page settings for the paper size selected
-                var pageSettings = new PageSettings(printerSettings)
-                {
-                    Margins = new Margins(0, 0, 0, 0),
-                };
-                if (paperName == "58mm")
-                {
-                    pageSettings.PaperSize = new PaperSize("TK", 2, int.MaxValue);
-                }
-                else if (paperName == "80mm")
-                {
-                    pageSettings.PaperSize = new PaperSize("TK", 3, int.MaxValue);
-                }
-                else
-                {
-                    foreach (PaperSize paperSize in printerSettings.PaperSizes)
-                    {
-                        if (paperSize.PaperName == paperName)
-                        {
-                            pageSettings.PaperSize = paperSize;
-                            break;
-                        }
-                    }
-                }
                 // Now print the PDF document
-                using (var document = PdfiumViewer.PdfDocument.Load(filename))
+                using (PdfiumViewer.PdfDocument document = PdfiumViewer.PdfDocument.Load(filename))
                 {
-                    using (var printDocument = document.CreatePrintDocument())
+                    using (PrintDocument printDocument = document.CreatePrintDocument(PdfiumViewer.PdfPrintMode.ShrinkToMargin))
                     {
-                        printDocument.PrinterSettings = printerSettings;
-                        printDocument.DefaultPageSettings = pageSettings;
+                        ////////////////
+                        PaperSize ps = new PaperSize("80", 3, 3);
+                        printDocument.DefaultPageSettings.Margins.Left = 0;
+                        printDocument.DefaultPageSettings.Margins.Right = 0;
+                        printDocument.DefaultPageSettings.Margins.Top = 0;
+                        printDocument.DefaultPageSettings.Margins.Bottom = 0;
+                        printDocument.DefaultPageSettings.PaperSize = ps;
                         printDocument.PrintController = new StandardPrintController();
+                        printDocument.PrinterSettings = new PrinterSettings() { PrinterName = printer, Copies = (short)copies };
+
+                        //printDocument.PrinterSettings.PrintToFile = true;
+                        //printDocument.PrinterSettings.PrintFileName = filename.Replace(".pdf", "_PRINT.pdf");
+                        ////////////////
                         printDocument.Print();
                     }
                 }

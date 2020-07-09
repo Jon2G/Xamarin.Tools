@@ -14,8 +14,8 @@ namespace WpfSample
     /// </summary>
     public partial class App : System.Windows.Application
     {
-        Xamarin.Forms.Forms.Init();
-        Plugin.Xamarin.Tools.UWP.Tools.Init();
+        //Xamarin.Forms.Forms.Init();
+        //Plugin.Xamarin.Tools.UWP.Tools.Init();
 
     }
 }
