@@ -15,29 +15,24 @@ namespace Plugin.Xamarin.Tools.iOS.Services
     {
         public bool Print(string HTML, string Printer)
         {
-            WebView browser = new WebView();
-            var htmlSource = new HtmlWebViewSource();
-            htmlSource.Html = HTML;
-            browser.Source = htmlSource;
-
-            var renderer = Platform.CreateRenderer(browser);
-            var webView = renderer.NativeView as WKWebView;
-
-            var printInfo = UIPrintInfo.PrintInfo;
-            printInfo.OutputType = UIPrintInfoOutputType.General;
-            printInfo.JobName = "Xamarin.Forms printing";
-            printInfo.Orientation = UIPrintInfoOrientation.Portrait;
-            printInfo.Duplex = UIPrintInfoDuplex.None;
-
-            var printController = UIPrintInteractionController.SharedPrintController;
-
-            printController.PrintInfo = printInfo;
-            printController.ShowsPageRange = true;
-            printController.PrintFormatter = webView.ViewPrintFormatter;
-
-            printController.Present(true, (printInteractionController, completed, error) => { });
-
-            return true;
+            try
+            {
+                if (Printer != "Microsoft Print to PDF")
+                {
+                    if (Forms9Patch.ToPdfService.IsAvailable)
+                    {
+                        Forms9Patch.PrintService.PrintAsync(HTML, "XCOMANDERA");
+                    }
+                    else
+                        Acr.UserDialogs.UserDialogs.Instance.Toast("PDF Export is not available on this device", TimeSpan.FromSeconds(5));
+                }
+            }
+            catch (Exception ex)
+            {
+                SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
+                return false;
+            }
+            return false;
         }
     }
 }

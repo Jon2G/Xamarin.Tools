@@ -15,6 +15,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using DroidWebView = Android.Webkit.WebView;
 using Android.Text;
+using System.IO;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
@@ -22,33 +23,25 @@ namespace Plugin.Xamarin.Tools.Droid.Services
     {
         public bool Print(string HTML, string Printer)
         {
-            WebView browser = new WebView();
-            var htmlSource = new HtmlWebViewSource();
-            htmlSource.Html = HTML;
-            browser.Source = htmlSource;
-
-            Activity activity = (Shared.Tools.Instance as ToolsImplementation).MainActivity;
-            IVisualElementRenderer renderer = Platform.CreateRendererWithContext(browser, activity);
-            var webView = renderer.ViewGroup.GetChildAt(0) as DroidWebView;
-
-
-            if (webView != null)
+            try
             {
-                var version = Build.VERSION.SdkInt;
-
-                if (version >= BuildVersionCodes.Kitkat)
+                if (Printer != "Microsoft Print to PDF")
                 {
-
-                    string name = Guid.NewGuid().ToString("N");
-                    PrintDocumentAdapter documentAdapter = webView.CreatePrintDocumentAdapter(name);
-
-                    var printMgr = (PrintManager)activity.GetSystemService(Context.PrintService);
-
-                    printMgr.Print("FormatoTexto-Print", documentAdapter, null);
+                    if (Forms9Patch.ToPdfService.IsAvailable)
+                    {
+                        Forms9Patch.PrintService.PrintAsync(HTML, "XCOMANDERA");
+                    }
+                    else
+                        Acr.UserDialogs.UserDialogs.Instance.Toast("PDF Export is not available on this device", TimeSpan.FromSeconds(5));
                 }
             }
-
-            return true;
+            catch (Exception ex)
+            {
+                SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
+                return false;
+            }
+            return false;
         }
+
     }
 }
