@@ -36,6 +36,7 @@ namespace Plugin.Xamarin.Tools.Droid
             Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
             (Shared.Tools.Instance as ToolsImplementation).MainActivity = activity;
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
+            ZXing.Net.Mobile.Forms.Android.Platform.Init();
             #region DependencyServices
             DependencyService.Register<DataShare>();
             DependencyService.Register<PDFSaveAndOpen>();

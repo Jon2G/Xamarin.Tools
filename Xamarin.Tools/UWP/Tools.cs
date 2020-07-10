@@ -26,6 +26,7 @@ namespace Plugin.Xamarin.Tools.UWP
 
             Plugin.Xamarin.Tools.Shared.Tools.Set(new ToolsImplementation());
             Plugin.Xamarin.Tools.Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
+           // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 
             #region DependencyServices
             //DependencyService.Register<DataShare>();
