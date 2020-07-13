@@ -41,6 +41,7 @@ namespace Plugin.Xamarin.Tools.iOS
 
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
 
+
             #region DependencyServices
             DependencyService.Register<DataShare>();
             DependencyService.Register<PDFSaveAndOpen>();
@@ -48,6 +49,7 @@ namespace Plugin.Xamarin.Tools.iOS
             DependencyService.Register<PrintHTML>();
             DependencyService.Register<Screenshot>();
             DependencyService.Register<CustomMessageBoxService>();
+            DependencyService.Register<Services.DeviceInfo>();
             #endregion
 
             return Instance;

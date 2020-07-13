@@ -37,6 +37,7 @@ namespace Plugin.Xamarin.Tools.Droid
             (Shared.Tools.Instance as ToolsImplementation).MainActivity = activity;
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
+    
             #region DependencyServices
             DependencyService.Register<DataShare>();
             DependencyService.Register<PDFSaveAndOpen>();
@@ -44,6 +45,7 @@ namespace Plugin.Xamarin.Tools.Droid
             DependencyService.Register<PrintHTML>();
             DependencyService.Register<Screenshot>();
             DependencyService.Register<CustomMessageBoxService>();
+            DependencyService.Register<Services.DeviceInfo>();
             #endregion
 
             return Shared.Tools.Instance;

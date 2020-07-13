@@ -183,7 +183,7 @@ namespace SQLHelper
         {
             try
             {
-                string mensaje = string.Concat(Environment.NewLine,
+                string mensaje = string.Concat(Environment.NewLine,"[WARNING]",
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error);
                 if (SQLHelper.Instance.Debugging)
                 {
@@ -306,7 +306,7 @@ namespace SQLHelper
             }
         }
         #endregion
-        internal static bool IsDBConnectionError(Exception ex)
+        public static bool IsDBConnectionError(Exception ex)
         {
             Exception Exbase = ex.MainExcepcion();
             Exception exception = ex;

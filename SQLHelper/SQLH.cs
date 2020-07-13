@@ -12,6 +12,7 @@ namespace SQLHelper
 {
     public class SQLH
     {
+        public const int Error = -2;
         public string ConnectionString { get; private set; }
         public SQLH(string ConnectionString)
         {
@@ -429,6 +430,30 @@ namespace SQLHelper
                     throw ex;
                 }
                 return null;
+            }
+        }
+        public void RunBatch(string Batch, bool Reportar = false)
+        {
+            Batch += "\nGO";   // make sure last batch is executed.
+            try
+            {
+                foreach (string line in Batch.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (line.ToUpperInvariant().Trim() == "GO")
+                    {
+                        if (!string.IsNullOrEmpty(Batch))
+                            EXEC(Batch, CommandType.Text, Reportar);
+                        Batch = string.Empty;
+                    }
+                    else
+                    {
+                        Batch += line + "\n";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogMeDemonio(ex.Message);
             }
         }
         public async Task<Reader> AsyncLeector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)

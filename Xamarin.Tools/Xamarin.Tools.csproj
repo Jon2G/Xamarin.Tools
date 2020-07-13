@@ -106,6 +106,9 @@
 			<Version>4.6.1055</Version>
 		</PackageReference>
 	</ItemGroup>
+
+
+
 	<ItemGroup>
 	  <EmbeddedResource Remove="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
@@ -124,6 +127,7 @@
 		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
 		<PackageReference Include="PresentationFramework" Version="4.6.0" />
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
+		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
 		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
 		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1080" />
 		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
@@ -175,13 +179,8 @@
 	  <Resource Include="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Shared\Classes\Extensiones.cs" />
-	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Shared\Classes\Security.cs" />
-	</ItemGroup>
+
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 	  <PackageReference Include="HtmlRenderer.Core">
@@ -206,15 +205,6 @@
 	    <Version>2.13.0</Version>
 	  </PackageReference>
 	</ItemGroup>
-
-
-
-
-
-
-
-
-
 
 
 	<!--Additional item groups-->

@@ -95,9 +95,9 @@ namespace SQLHelper
         public EventHandler OnCreateDB;
         public readonly string RutaDb;
         public readonly string DBVersion;
-        public SQLHLite(string DBVersion)
+        public SQLHLite(string DBVersion,string DBName)
         {
-            FileInfo db = new FileInfo(Path.Combine(SQLHelper.Instance.LibraryPath, "XCOMANDERA.db"));
+            FileInfo db = new FileInfo(Path.Combine(SQLHelper.Instance.LibraryPath, DBName));
             this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
