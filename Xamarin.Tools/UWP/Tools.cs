@@ -13,26 +13,27 @@ namespace Plugin.Xamarin.Tools.UWP
     /// <summary>
     /// Interface for Xamarin.Tools
     /// </summary>
-    public partial class Tools 
+    public partial class Tools
     {
         /// <summary>
         /// Initialize android user dialogs
         /// </summary>
         public static AbstractTools Init()
         {
-            
+
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Plugin.Xamarin.Tools.Shared.Tools.Set(new ToolsImplementation());
             Plugin.Xamarin.Tools.Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
-           // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
+            // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 
             #region DependencyServices
             //DependencyService.Register<DataShare>();
             //DependencyService.Register<PDFSaveAndOpen>();
             //DependencyService.Register<PhotoPickerService>();
             DependencyService.Register<UWP.Services.PrintHTML>();
+            //  DependencyService.Register<UWP.Services.DeviceInfo>(); //TODO
             // DependencyService.Register<Screenshot>();
             DependencyService.Register<UWP.Services.ICustomMessageBox.CustomMessageBoxService>();
             #endregion

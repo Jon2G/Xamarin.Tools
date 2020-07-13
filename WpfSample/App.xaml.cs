@@ -16,6 +16,7 @@ namespace WpfSample
     {
         //Xamarin.Forms.Forms.Init();
         //Plugin.Xamarin.Tools.UWP.Tools.Init();
+     
 
     }
 }
