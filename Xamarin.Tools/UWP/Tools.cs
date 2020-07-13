@@ -26,6 +26,7 @@ namespace Plugin.Xamarin.Tools.UWP
 
             Plugin.Xamarin.Tools.Shared.Tools.Set(new ToolsImplementation());
             Plugin.Xamarin.Tools.Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
+    
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 
             #region DependencyServices
@@ -33,7 +34,7 @@ namespace Plugin.Xamarin.Tools.UWP
             //DependencyService.Register<PDFSaveAndOpen>();
             //DependencyService.Register<PhotoPickerService>();
             DependencyService.Register<UWP.Services.PrintHTML>();
-            //  DependencyService.Register<UWP.Services.DeviceInfo>(); //TODO
+            DependencyService.Register<UWP.Services.DeviceInfo>();
             // DependencyService.Register<Screenshot>();
             DependencyService.Register<UWP.Services.ICustomMessageBox.CustomMessageBoxService>();
             #endregion

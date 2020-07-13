@@ -21,7 +21,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         public static Licence Instance(AbstractTools instance)
         {
             IDeviceInfo deviceInfo = DependencyService.Get<IDeviceInfo>();
-            return new Licence(deviceInfo.Id);
+            return new Licence(deviceInfo.DeviceId);
         }
         public async Task<ProjectActivationState> Autheticate(string AppKey)
         {

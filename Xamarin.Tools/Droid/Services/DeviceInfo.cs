@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs.Infrastructure;
 using Android.OS;
+using DeviceId;
 using Plugin.DeviceInfo.Abstractions;
 using SQLHelper;
 using System;
@@ -18,21 +19,9 @@ namespace Plugin.Xamarin.Tools.Droid.Services
         {
             get
             {
-                try
-                {
-                    NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()
-                        .OrderBy(intf => intf.NetworkInterfaceType)
-                        .FirstOrDefault(intf => intf.OperationalStatus == OperationalStatus.Up
-                        && (intf.NetworkInterfaceType == NetworkInterfaceType.Wireless80211
-                        || intf.NetworkInterfaceType == NetworkInterfaceType.Ethernet));
-                    PhysicalAddress hw = ni.GetPhysicalAddress();
-                    return string.Join(":", (from ma in hw.GetAddressBytes() select ma.ToString("X2")).ToArray());
-                }
-                catch (Exception ex)
-                {
-                    SQLHelper.Log.LogMe(ex, "Trying to get the MacAdress");
-                    return "Unavaible";
-                }
+                DeviceIdBuilder builder = new DeviceIdBuilder();
+                builder.AddMacAddress();
+                return builder.ToString();
             }
         }
         /// <summary>

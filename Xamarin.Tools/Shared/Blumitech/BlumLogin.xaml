@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:input="clr-namespace:Plugin.InputKit.Shared.Controls;assembly=Plugin.InputKit" 
+             xmlns:vm="clr-namespace:Plugin.Xamarin.Tools.Shared.Blumitech"
+             mc:Ignorable="d"
+             x:Class="Plugin.Xamarin.Tools.Shared.Blumitech.BlumLogin">
+    <ContentPage.BindingContext>
+        <vm:LoginViewModel x:Name="User" />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
+            <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Cadena de conexión"/>
+            <Image Margin="10" HeightRequest="45" Source="LogoBlum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
+            <Frame VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BackgroundColor="#51626262" BorderColor="Transparent" Margin="10">
+                <input:FormView IsValidated="{Binding IsValidated}">
+
+                    <input:AdvancedEntry 
+                    Text="{Binding UserName}"
+                    IsRequired="True"
+                    Title="Correo electrónico:"
+                    Annotation="Email"
+                    Placeholder="sample@domain.com"
+                    AnnotationColor="#1E1E58"
+                    ValidationMessage="Por favor ingrese un email valido"
+                    IconImage="ic_email_black_24dp.png"
+                    MinLength="10"
+                    MaxLength="50" Margin="0,0,10,0" TextChanged="MailChanged"/>
+
+                    <input:AdvancedEntry 
+                    Text="{Binding Password}"
+                    IsRequired="True"
+                    Title="Password:"
+                    Annotation="Password"
+                    Placeholder="*******"
+                    AnnotationColor="#1E1E58"
+                    IconImage="ic_account_circle_black_24dp.png"
+                    MaxLength="10"  Margin="0,0,10,0" TextChanged="PasswordChanged"
+                    />
+                    <Button x:Name="Btn" Command="{Binding LogIn}" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
+                </input:FormView>
+            </Frame>
+            <Label FontSize="Small" Text="Crear cuenta"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

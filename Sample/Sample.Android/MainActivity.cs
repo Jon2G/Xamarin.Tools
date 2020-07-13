@@ -20,11 +20,12 @@ namespace Sample.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-
-            Tools.Init(this, savedInstanceState)
-                .InitLoggin("Logs",true);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            Tools.Init(this, savedInstanceState)
+                .InitLoggin(AlertAfterCritical: true);
+            
             LoadApplication(new App());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
