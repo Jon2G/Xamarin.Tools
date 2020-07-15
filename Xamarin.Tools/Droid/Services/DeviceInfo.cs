@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs.Infrastructure;
 using Android.OS;
+using Com.Xamarin.Formsviewgroup;
 using DeviceId;
 using Plugin.DeviceInfo.Abstractions;
 using SQLHelper;
@@ -9,7 +10,10 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 using static Android.Provider.Settings;
+using Platform = Plugin.DeviceInfo.Abstractions.Platform;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
@@ -31,18 +35,21 @@ namespace Plugin.Xamarin.Tools.Droid.Services
         {
             get
             {
-                string id = Android.OS.Build.GetSerial();
-                if (string.IsNullOrWhiteSpace(id) || id == Build.Unknown || id == "0")
+                string id = null;
+                try
                 {
-                    try
-                    {
-                        var context = Android.App.Application.Context;
-                        id = Secure.GetString(context.ContentResolver, Secure.AndroidId);
-                    }
-                    catch (Exception ex)
-                    {
-                        Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
-                    }
+                    var context = Android.App.Application.Context;
+                    id = Secure.GetString(context.ContentResolver, Secure.AndroidId);
+                }
+                catch (Exception ex)
+                {
+                    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
+                }
+                if (string.IsNullOrEmpty(id))
+                {
+                    DeviceIdBuilder builder = new DeviceIdBuilder();
+                    builder.AddProcessorId();
+                    return builder.ToString();
                 }
                 return id;
             }

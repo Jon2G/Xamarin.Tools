@@ -399,6 +399,10 @@ namespace SQLHelper
             }
             return result;
         }
+        public DataTable DataTable(string Querry, string TableName = null, params SqlParameter[] parameters)
+        {
+            return DataTable(Querry, CommandType.Text, TableName, false, parameters);
+        }
         public Reader Leector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
         {
             if (SQLHelper.Instance.Debugging)

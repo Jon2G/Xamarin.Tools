@@ -52,9 +52,10 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
 
         }
         private bool IsModalLocked { get; set; }
-        public void LockModal()
+        public BasePage LockModal()
         {
             this.IsModalLocked = !this.IsModalLocked;
+            return this;
         }
         protected override bool OnBackButtonPressed()
         {

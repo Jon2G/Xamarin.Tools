@@ -129,7 +129,7 @@ namespace Plugin.Xamarin.Tools.iOS.Services
             }
         }
 
-        public async void ShareFile(string title, string message, string FileName, byte[] fileData)
+        public async void ShareFile(string title, string message, string FileName, MemoryStream fileData)
         {
             if (!await CheckStoragePermission())
             {
@@ -142,7 +142,7 @@ namespace Plugin.Xamarin.Tools.iOS.Services
             FileInfo fi = new FileInfo(filename);
             if (!NSFileManager.DefaultManager.FileExists(filename))
             {
-                Stream stream = new MemoryStream(fileData);
+                MemoryStream stream = fileData;
                 NSData imgData = NSData.FromStream(stream);
                 NSError err;
                 imgData.Save(filename, false, out err);

@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Shared.Blumitech
 {
     public class LoginViewModel : ViewModelBase
     {
+        public ICommand LoginSucces;
         private string _UserName;
         private string _Password;
 

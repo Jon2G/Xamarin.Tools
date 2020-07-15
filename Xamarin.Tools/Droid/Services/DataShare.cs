@@ -76,7 +76,7 @@ namespace Plugin.Xamarin.Tools.Droid.Services
                 Log.LogMe(ex, $"Al compartir el archivo:'{absolutePath}'");
             }
         }
-        public async void ShareFile(string title, string message, string FileName, byte[] fileData)
+        public async void ShareFile(string title, string message, string FileName, MemoryStream MemoryStream)
         {
             if (!await CheckStoragePermission())
             {
@@ -91,7 +91,7 @@ namespace Plugin.Xamarin.Tools.Droid.Services
                 file.Delete();
             }
             var filename = Path.Combine(dirPath, FileName);
-            File.WriteAllBytes(filename, fileData);
+            File.WriteAllBytes(filename, MemoryStream.ToArray());
             ShowFile(title, message, file.AbsolutePath);
         }
         public async void ShareFiles(string title, string message, List<Tuple<string, byte[]>> Files)

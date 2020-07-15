@@ -15,7 +15,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         public WebService(string DeviceId)
         {
             this.DeviceId = DeviceId;
-            this.Url = "http://localhost:51425/Activacion.asmx";
+            this.Url = "http://192.168.0.32:51425/Activacion.asmx";
         }
         public async Task<ProjectActivationState> RequestProjectAccess(string ProjectKey)
         {
@@ -40,7 +40,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         private async Task<ProjectActivationState> IsDeviceAutenticated()
         {
             await Task.Yield();
-            GET("http://localhost:51425/Activacion.asmx", "IsDeviceAutenticated", "http://tempuri.org/"
+            GET(this.Url, "IsDeviceAutenticated", "http://tempuri.org/"
                 , new Dictionary<string, string>()
                 {{"DeviceId",this.DeviceId} }, out string Respuesta);
             if (Respuesta == "ERROR")
@@ -86,7 +86,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
                 {
                     client.Headers.Add("Accept-Language", " en-US");
                     client.Headers.Add("Accept", " text/html, application/xhtml+xml, */*");
-                    // client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
+                    client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
                     responseText = client.DownloadString(GetUrl);
                     status = HttpStatusCode.OK;
                 }
