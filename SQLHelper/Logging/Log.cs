@@ -19,7 +19,6 @@ namespace SQLHelper
         public static string DBLogPath { get; private set; }
         public static string CriticalLogPath { get; private set; }
         private static EventHandler OnAlertCritical;
-
         public static void Init(string LogDirectory,EventHandler CriticalAction=null)
         {
             Log.LogDirectory = LogDirectory;
@@ -75,7 +74,6 @@ namespace SQLHelper
             }
             return Exbase;
         }
-
         public static void LogMe(string error)
         {
             try
@@ -115,7 +113,6 @@ namespace SQLHelper
             {
             }
         }
-
         public static StackFrame MainStackFrame(Exception exception)
         {
             StackTrace st = new StackTrace(exception, true);
@@ -134,7 +131,6 @@ namespace SQLHelper
             }
             return null;
         }
-
         public static void LogMe(Exception error, string descripcion, bool StackTrace = false)
         {
             try

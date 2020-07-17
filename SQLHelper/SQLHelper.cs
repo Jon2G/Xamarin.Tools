@@ -20,6 +20,11 @@ namespace SQLHelper
             this.Debugging = Debugging;
         }
 
+        public void SetDebugging(bool Debugging)
+        {
+            this.Debugging = Debugging;
+        }
+
         public static SQLHelper Init(string LibraryPath, bool Debugging)
         {
             Set(new SQLHelper(LibraryPath, Debugging));
