@@ -41,7 +41,7 @@ namespace Plugin.Xamarin.Tools.iOS
 
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
 
-
+            Shared.Tools.Instance = Instance;
             #region DependencyServices
             DependencyService.Register<DataShare>();
             DependencyService.Register<PDFSaveAndOpen>();

@@ -95,9 +95,9 @@ namespace SQLHelper
         public EventHandler OnCreateDB;
         public readonly string RutaDb;
         public readonly string DBVersion;
-        public SQLHLite(string DBVersion,string DBName)
+        public SQLHLite(string DBVersion, string DBName)
         {
-            if(SQLHelper.Instance is null)
+            if (SQLHelper.Instance is null)
             {
                 throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
             }
@@ -117,25 +117,26 @@ namespace SQLHelper
             {
                 Crear(Conecction());
             }
-
-
-            string dbVersion = string.Empty;
-            try
-            {
-                dbVersion = Single<string>("SELECT VERSION FROM DB_VERSION");
-            }
-            catch
-            {
-                // ignored
-            }
-
+            string dbVersion = GetDbVersion();
             if (dbVersion != DBVersion)
             {
                 db.Delete();
                 Crear(Conecction());
             }
         }
-
+        public string GetDbVersion()
+        {
+            string dbVersion = null;
+            try
+            {
+                dbVersion = Single<string>("SELECT VERSION FROM DB_VERSION");
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+            }
+            return dbVersion;
+        }
         private void Crear(SqlConnection connection)
         {
             connection.Execute("DROP TABLE IF EXISTS DB_VERSION");

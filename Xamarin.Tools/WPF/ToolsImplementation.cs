@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using Xamarin.Forms;
+using Application = System.Windows.Application;
 
-
-namespace Plugin.Xamarin.Tools.UWP
+namespace Plugin.Xamarin.Tools.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
@@ -34,7 +34,7 @@ namespace Plugin.Xamarin.Tools.UWP
 
         public override void SetDebugging(bool Debugging)
         {
-            Debugging = true;
+            SQLHelper.SQLHelper.Instance.SetDebugging(Debugging);
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {
@@ -68,6 +68,38 @@ namespace Plugin.Xamarin.Tools.UWP
             }
             // MessageBox.Show(name);
             return false;
+        }
+        public Window VentanaPadre()
+        {
+            if (IsInDesingMode)
+            {
+                return null;
+            }
+            try
+            {
+                Window a = (from nic in Application.Current.Windows.OfType<Window>()
+                            where nic.IsActive //&& nic.GetType() != typeof(Chat)
+                            select nic).FirstOrDefault();
+                if (!(a is null)) return a.IsActive ? a : null;
+                a = Application.Current.Windows.OfType<Window>().FirstOrDefault();
+                if (a != null && a.IsActive) return a.IsActive ? a : null;
+                try
+                {
+                    a?.Show();
+                }
+                catch (Exception ex)
+                {
+                    // ignored
+                    Log.LogMe(ex, "Ventana padre");
+                }
+
+                return a.IsActive ? a : null;
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex, "Al determinar la ventana padre");
+                return null;
+            }
         }
         #endregion
     }

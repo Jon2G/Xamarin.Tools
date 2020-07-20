@@ -2,10 +2,11 @@
 using System.Drawing;
 using System.Windows;
 using Plugin.Xamarin.Tools.Shared.Enums;
+using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using SQLHelper;
 
 
-namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
+namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
 {
     /// <summary>
     /// Interaction logic for ModalDialog.xaml

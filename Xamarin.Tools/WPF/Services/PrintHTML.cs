@@ -9,7 +9,7 @@ using System.Text;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.UWP.Services
+namespace Plugin.Xamarin.Tools.WPF.Services
 {
     public class PrintHTML : Shared.Services.IPrintHTML
     {
@@ -56,13 +56,13 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             try
             {
                 FileInfo pdfile = new FileInfo($"{TicketPath}.pdf");
-                PdfGenerateConfig config = new PdfGenerateConfig();          
+                PdfGenerateConfig config = new PdfGenerateConfig();
                 config.ManualPageSize = new PdfSharp.Drawing.XSize(204, 283);
                 //config.ManualPageSize = new PdfSharp.Drawing.XSize(226, 140);
                 config.SetMargins(5);
- 
 
-                using (PdfDocument pdf = PdfGenerator.GeneratePdf(HTML,config))
+
+                using (PdfDocument pdf = PdfGenerator.GeneratePdf(HTML, config))
                 {
                     pdf.Save(pdfile.FullName);
                 }

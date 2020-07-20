@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
+namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
 {
     using System.Drawing;
     using System.Windows;

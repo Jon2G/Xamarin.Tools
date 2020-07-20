@@ -138,34 +138,21 @@ namespace Plugin.Xamarin.Tools.iOS.Services
             }
             string dirPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            var filename = Path.Combine(dirPath, FileName);
+            string filename = Path.Combine(dirPath, FileName);
             FileInfo fi = new FileInfo(filename);
-            if (!NSFileManager.DefaultManager.FileExists(filename))
-            {
-                MemoryStream stream = fileData;
-                NSData imgData = NSData.FromStream(stream);
-                NSError err;
-                imgData.Save(filename, false, out err);
-            }
-            var items = new NSObject[] { NSObject.FromObject(title), NSUrl.FromFilename(fi.FullName) };
-            var activityController = new UIActivityViewController(items, null);
-            var vc = GetVisibleViewController();
-            NSString[] excludedActivityTypes = null;
+            File.WriteAllBytes(filename, fileData.ToArray());
+            //if (!NSFileManager.DefaultManager.FileExists(filename))
+            //{
+            //    MemoryStream stream = fileData;
+            //    NSData imgData = NSData.FromStream(stream);
+            //    NSError err;
+            //    imgData.Save(filename, false, out err);
+            //}
 
-            if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
-                activityController.ExcludedActivityTypes = excludedActivityTypes;
-            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            Device.BeginInvokeOnMainThread(() =>
             {
-                if (activityController.PopoverPresentationController != null)
-                {
-                    activityController.PopoverPresentationController.SourceView = vc.View;
-                }
-            }
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await vc.PresentViewControllerAsync(activityController, true);
+                ShowFile(title, message, filename);
             });
-            ShowFile(title, message, FileName);
             return;
         }
 
@@ -183,24 +170,13 @@ namespace Plugin.Xamarin.Tools.iOS.Services
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No se encontro el archivo", "Mensaje informativo");
                 return;
             }
-
-            var items = new NSObject[] { NSObject.FromObject(title), NSUrl.FromFilename(filePath) };
-            var activityController = new UIActivityViewController(items, null);
-            var vc = GetVisibleViewController();
-
-            NSString[] excludedActivityTypes = null;
-
-            if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
-                activityController.ExcludedActivityTypes = excludedActivityTypes;
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            
+            var PreviewController = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(filePath));
+            PreviewController.Delegate = new UIDocumentInteractionControllerDelegateClass(UIApplication.SharedApplication.KeyWindow.RootViewController);
+            Device.BeginInvokeOnMainThread(() =>
             {
-                if (activityController.PopoverPresentationController != null)
-                {
-                    activityController.PopoverPresentationController.SourceView = vc.View;
-                }
-            }
-            await vc.PresentViewControllerAsync(activityController, true);
+                PreviewController.PresentPreview(true);
+            });
         }
 
         public async void ShareFiles(string title, string message, List<Tuple<string, byte[]>> Files)

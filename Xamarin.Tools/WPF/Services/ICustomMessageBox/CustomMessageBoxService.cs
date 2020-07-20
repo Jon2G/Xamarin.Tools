@@ -1,28 +1,21 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MessageBox.cs">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using Plugin.Xamarin.Tools.Shared.Enums;
+using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
+using SQLHelper;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows;
 
-namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
+namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
 {
-    using Plugin.Xamarin.Tools.Shared.Enums;
-    using Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox;
-    using SQLHelper;
-    using System;
-    using System.Windows;
-
-    /// <summary>
-    /// Displays a message box.
-    /// </summary>
-    public static class CustomMessageBox
+    public class CustomMessageBoxService : Shared.Services.ICustomMessageBox
     {
         /// <summary>
         /// Displays a message box that has a message and returns a result.
         /// </summary>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult Show(string messageBoxText)
+        public CustomMessageBoxResult Show(string messageBoxText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText);
             msg.ShowDialog();
@@ -36,7 +29,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult Show(string messageBoxText, string caption)
+        public CustomMessageBoxResult Show(string messageBoxText, string caption)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption);
             msg.ShowDialog();
@@ -50,7 +43,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult Show(Window owner, string messageBoxText)
+        public CustomMessageBoxResult Show(Window owner, string messageBoxText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText)
             {
@@ -68,7 +61,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult Show(Window owner, string messageBoxText, string caption)
+        public CustomMessageBoxResult Show(Window owner, string messageBoxText, string caption)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption)
             {
@@ -86,7 +79,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="button">A System.Windows.CustomMessageBoxButton value that specifies which button or buttons to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button)
+        public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, button);
             msg.ShowDialog();
@@ -102,19 +95,19 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="button">A System.Windows.CustomMessageBoxButton value that specifies which button or buttons to display.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
+        public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            Application.Current.Dispatcher.Invoke(delegate
             {
                 try
                 {
                     CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, button, icon);
-                   
+
                     msg.ShowDialog();
                 }
                 catch (System.ComponentModel.Win32Exception ex)
                 {
-                    Log.LogMe(ex,"Al mostar un mensaje personalizado");
+                    Log.LogMe(ex, "Al mostar un mensaje personalizado");
                 }
             });
             return CustomMessageBoxResult.OK;
@@ -127,7 +120,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText)
+        public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OK)
             {
@@ -147,7 +140,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
+        public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OK, icon)
             {
@@ -168,7 +161,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
+        public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OKCancel)
             {
@@ -191,7 +184,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText, CustomMessageBoxImage icon)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OKCancel, icon)
             {
@@ -213,7 +206,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="yesButtonText">A System.String that specifies the text to display within the Yes button.</param>
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText)
+        public CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNo)
             {
@@ -236,7 +229,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon)
+        public CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNo, icon)
             {
@@ -259,7 +252,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)
+        public CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNoCancel)
             {
@@ -284,7 +277,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public static CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        public CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNoCancel, icon)
             {
@@ -297,6 +290,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox
 
             return msg.Result;
         }
+
 
     }
 }

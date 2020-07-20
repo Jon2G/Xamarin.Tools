@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.UWP;
+using Plugin.Xamarin.Tools.WPF.Services;
+using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using SQLHelper;
 using Xamarin.Forms;
 
 
-namespace Plugin.Xamarin.Tools.UWP
+namespace Plugin.Xamarin.Tools.WPF
 {
     /// <summary>
     /// Interface for Xamarin.Tools
@@ -19,31 +20,27 @@ namespace Plugin.Xamarin.Tools.UWP
         /// <summary>
         /// Initialize android user dialogs
         /// </summary>
-        public static AbstractTools Init(string LibraryPath)
+        public static AbstractTools Init()
         {
-           
-            
+
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Shared.Tools.Set(new ToolsImplementation());
             Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
-            Shared.Tools.Instance.SetLibraryPath(LibraryPath);
 
-            
-       //     ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
-
+            // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 
             #region DependencyServices
             //DependencyService.Register<DataShare>();
             //DependencyService.Register<PDFSaveAndOpen>();
             //DependencyService.Register<PhotoPickerService>();
-            //DependencyService.Register<PrintHTML>();
-            //DependencyService.Register<Services.DeviceInfo>();
+            DependencyService.Register<PrintHTML>();
+            DependencyService.Register<Services.DeviceInfo>();
             // DependencyService.Register<Screenshot>();
-            //DependencyService.Register<CustomMessageBoxService>();
+            DependencyService.Register<CustomMessageBoxService>();
             #endregion
-            Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
+
             return Shared.Tools.Instance;
         }
 

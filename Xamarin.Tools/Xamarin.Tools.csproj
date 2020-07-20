@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<!--Work around so the conditions work below-->
 		<TargetFrameworks></TargetFrameworks>
-		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;uap10.0.16299;net45</TargetFrameworks>
+		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>-->
 
-		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462</TargetFrameworks>
 
 		<!--Feel free to add as many targets as you need below
@@ -18,10 +18,10 @@
 		<PackageId>Plugin.Xamarin.Tools</PackageId>
 
 		<Product>$(AssemblyName) ($(TargetFramework))</Product>
-		<AssemblyVersion>1.0.0.4</AssemblyVersion>
+		<AssemblyVersion>1.0.0.8</AssemblyVersion>
 		<AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
-		<Version>1.0.0.4</Version>
-		<PackageVersion>1.0.0.6</PackageVersion>
+		<Version>1.0.0.7</Version>
+		<PackageVersion>1.0.0.8</PackageVersion>
 		<PackOnBuild>true</PackOnBuild>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>default</LangVersion>
@@ -54,6 +54,7 @@
 		<DisableExtraReferences>true</DisableExtraReferences>
 		<Company>BlumJonathanGG</Company>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 
 	</PropertyGroup>
 
@@ -72,7 +73,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-		<Compile Include="**\*.shared.cs" />
+		<!--<Compile Include="**\*.shared.cs" />-->
 		<Compile Include="Shared\**\*.cs" />
 	</ItemGroup>
 
@@ -89,13 +90,13 @@
 		<Compile Include="iOS\**\*.cs" />
 	</ItemGroup>
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('net462')) ">
-		<Compile Include="UWP\**\*.cs" />
-		<Page Include="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
-		<None Update="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
+		<Compile Include="WPF\**\*.cs" />
+		<Page Include="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+		<None Update="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
-		<Compile Include="UWP\Services\ICustomMessageBox\CustomMessageBoxService.cs" />
-		
+		<Compile Include="WPF\Services\ICustomMessageBox\CustomMessageBoxService.cs" />
+
 		<Reference Include="PresentationCore">
 			<HintPath>..\..\Git\GourmetPOS\Assambles\PresentationCore.dll</HintPath>
 		</Reference>
@@ -107,12 +108,16 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
+		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
+		<Compile Include="UWP\**\*.cs" />
+	</ItemGroup>
 
 
 
 
 	<ItemGroup>
-	  <EmbeddedResource Remove="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+		<EmbeddedResource Remove="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
 
 
@@ -124,125 +129,58 @@
 		<PackageReference Include="DeviceId" Version="5.1.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="Forms9Patch" Version="2.3.0" />
-		<PackageReference Include="PdfiumViewer.Native.x86.v8-xfa" Version="2018.4.8.256" />
-		<PackageReference Include="PdfiumViewer.Native.x86_64.no_v8-no_xfa" Version="2018.4.8.256" />
-		<PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" Version="2018.4.8.256" />
+		<!--<PackageReference Include="PdfSharp" Version="1.50.5147" />-->
 		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
-		<PackageReference Include="PresentationFramework" Version="4.6.0" />
+		<!--<PackageReference Include="PresentationFramework" Version="4.6.0" />-->
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
 		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
+		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1142" />
 		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1080" />
+		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1142" />
 		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
 		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
 	</ItemGroup>
-
-
-
-
-	<!--
-
-      
-
-
-	<ItemGroup>
-	  <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="UWP\Services\ICustomMessageBox\blankicon.ico" />
-	  <None Remove="UWP\Services\PrintHTML.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Shared\Services\ICustomMessageBox.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="UWP\Services\ICustomMessageBox\CustomMessageBoxService.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="UWP\Services\ICustomMessageBox\CustomMessageBox.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="UWP\Services\ICustomMessageBox\Util.cs" />
-	</ItemGroup>-->
 
 	<ItemGroup>
 		<ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="UWP\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+		<Resource Include="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
 
 
 
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-	  <PackageReference Include="HtmlRenderer.Core">
+		<!--<PackageReference Include="HtmlRenderer.Core">
 	    <Version>1.5.0.6</Version>
 	  </PackageReference>
 	  <PackageReference Include="HtmlRenderer.PdfSharp">
 	    <Version>1.5.0.6</Version>
-	  </PackageReference>
+	  </PackageReference>-->
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-	  <PackageReference Include="HtmlRenderer.Core">
-	    <Version>1.5.0.6</Version>
-	  </PackageReference>
-	  <PackageReference Include="HtmlRenderer.PdfSharp">
-	    <Version>1.5.0.6</Version>
-	  </PackageReference>
-	  <PackageReference Include="iTextSharp">
-	    <Version>5.5.13.1</Version>
-	  </PackageReference>
-	  <PackageReference Include="PdfiumViewer">
-	    <Version>2.13.0</Version>
-	  </PackageReference>
+		<PackageReference Include="PresentationFramework" Version="4.6.0" />
+		<PackageReference Include="HtmlRenderer.Core">
+			<Version>1.5.0.6</Version>
+		</PackageReference>
+		<PackageReference Include="HtmlRenderer.PdfSharp">
+			<Version>1.5.0.6</Version>
+		</PackageReference>
+		<PackageReference Include="iTextSharp">
+			<Version>5.5.13.1</Version>
+		</PackageReference>
+		<PackageReference Include="PdfiumViewer">
+			<Version>2.13.0</Version>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Shared\Blumitech\BlumLogin.xaml">
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </EmbeddedResource>
+		<EmbeddedResource Update="Shared\Blumitech\BlumLogin.xaml">
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
 	</ItemGroup>
 
-
-	<!--Additional item groups-->
-	<!--
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.TVOS')) ">
-    <Compile Include="**\*.tvos.cs" />
-  </ItemGroup>
-
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.WatchOS')) ">
-    <Compile Include="**\*.watchos.cs" />
-  </ItemGroup>
-
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac')) ">
-    <Compile Include="**\*.mac.cs" />
-  </ItemGroup>
-
-  
-   <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-    <Compile Include="**\*.netcore.cs" />
-  </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Tizen')) ">
-    <Compile Include="**\*.tizen.cs" />
-    <PackageReference Include="Tizen.NET" Version="4.0.0" />
-  </ItemGroup>
-
-
-  -->
 </Project>

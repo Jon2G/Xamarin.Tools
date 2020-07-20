@@ -5,7 +5,6 @@ using System.IO;
 using Xamarin.Forms;
 using UIKit;
 using QuickLook;
-using UIKit;
 using Plugin.Xamarin.Tools.iOS.Classes;
 
 namespace Plugin.Xamarin.Tools.iOS.Services

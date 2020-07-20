@@ -1,5 +1,5 @@
 ﻿<w:Window 
-        x:Class="Plugin.Xamarin.Tools.UWP.Services.ICustomMessageBox.CustomMessageBoxWindow"
+        x:Class="Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox.CustomMessageBoxWindow"
         xmlns:w="clr-namespace:System.Windows;assembly=PresentationFramework"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
