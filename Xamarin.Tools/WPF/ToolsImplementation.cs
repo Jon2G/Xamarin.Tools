@@ -34,7 +34,7 @@ namespace Plugin.Xamarin.Tools.WPF
 
         public override void SetDebugging(bool Debugging)
         {
-            SQLHelper.SQLHelper.Instance.SetDebugging(Debugging);
+            SQLHelper.SQLHelper.Instance?.SetDebugging(Debugging);
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {

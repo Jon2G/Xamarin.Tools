@@ -57,8 +57,18 @@ namespace Plugin.Xamarin.Tools.WPF.Services
             {
                 FileInfo pdfile = new FileInfo($"{TicketPath}.pdf");
                 PdfGenerateConfig config = new PdfGenerateConfig();
-                config.ManualPageSize = new PdfSharp.Drawing.XSize(204, 283);
-                //config.ManualPageSize = new PdfSharp.Drawing.XSize(226, 140);
+                config.ManualPageSize = new PdfSharp.Drawing.XSize(204, 8503);
+                /*
+                 * IMPORTANTE!
+                 * Se deben respetar estar proporcinoes para evitar errores
+                 * Una forma de saber que la impresion es correcta es por que al 
+                 * tratar de imprimir el ticket desde EDGE en la vista previa con la
+                 * impresora seleccionada debe marcar una escala de 100% y el texto mostrarse
+                 * al inicio de la pagina,sin cortes y en orientación vertical
+                 *204 son 72 milimetros en puntos
+                 *8503 son 3000 milimetros en puntos
+                 *ESTO SE TOMO DE LA CONFIGURACION DEL SERVIDOR DE IMPRESION PARA LA IMPRESORA
+                 */
                 config.SetMargins(5);
 
 
@@ -68,7 +78,7 @@ namespace Plugin.Xamarin.Tools.WPF.Services
                 }
                 if (pdfile.Exists)
                 {
-                    return PrintPDF(Printer, "A4", pdfile.FullName, 1);
+                    return PrintPDF(Printer, pdfile.FullName, 1);
                 }
 
             }
@@ -78,7 +88,7 @@ namespace Plugin.Xamarin.Tools.WPF.Services
             }
             return false;
         }
-        private bool PrintPDF(string printer, string paperName, string filename, int copies)
+        private bool PrintPDF(string printer, string filename, int copies)
         {
             try
             {
@@ -88,12 +98,12 @@ namespace Plugin.Xamarin.Tools.WPF.Services
                     using (PrintDocument printDocument = document.CreatePrintDocument(PdfiumViewer.PdfPrintMode.ShrinkToMargin))
                     {
                         ////////////////
-                        PaperSize ps = new PaperSize("80", 3, 3);
-                        printDocument.DefaultPageSettings.Margins.Left = 0;
-                        printDocument.DefaultPageSettings.Margins.Right = 0;
-                        printDocument.DefaultPageSettings.Margins.Top = 0;
-                        printDocument.DefaultPageSettings.Margins.Bottom = 0;
-                        printDocument.DefaultPageSettings.PaperSize = ps;
+                        //PaperSize ps = new PaperSize("80", 3, 1);
+                        //printDocument.DefaultPageSettings.Margins.Left = 0;
+                        //printDocument.DefaultPageSettings.Margins.Right = 0;
+                        //printDocument.DefaultPageSettings.Margins.Top = 0;
+                        //printDocument.DefaultPageSettings.Margins.Bottom = 0;
+                        //printDocument.DefaultPageSettings.PaperSize = ps;
                         printDocument.PrintController = new StandardPrintController();
                         printDocument.PrinterSettings = new PrinterSettings() { PrinterName = printer, Copies = (short)copies };
 
