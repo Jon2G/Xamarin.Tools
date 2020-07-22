@@ -1,15 +1,15 @@
-﻿using Plugin.Xamarin.Tools.Shared.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.IO;
 using Xamarin.Forms;
 using UIKit;
 using QuickLook;
 using Plugin.Xamarin.Tools.iOS.Classes;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 
 namespace Plugin.Xamarin.Tools.iOS.Services
 {
-   public class PDFSaveAndOpen: IPDFSaveAndOpen
+    internal class PDFSaveAndOpen: IPDFSaveAndOpen
     {
         public async Task SaveAndView(string fileName, MemoryStream stream, PDFOpenContext context = PDFOpenContext.InApp, string contentType = "application / pdf")
         {

@@ -1,7 +1,9 @@
 ﻿using Foundation;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using Plugin.Xamarin.Tools.iOS.Services;
 using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using QuickLook;
 using SQLHelper;
 using System;
@@ -13,10 +15,15 @@ using System.Threading.Tasks;
 using UIKit;
 using Xamarin.Forms;
 
+
 namespace Plugin.Xamarin.Tools.iOS.Services
 {
-    public class DataShare : IDataShare
+    internal class DataShare : IDataShare
     {
+        public DataShare()
+        {
+
+        }
         public void ShowFile(string AttachmentName, byte[] AttachmentBytes)
         {
             var FileName = AttachmentName;

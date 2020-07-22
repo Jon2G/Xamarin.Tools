@@ -1,5 +1,5 @@
 ﻿using Android.Content;
-using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
-    public class PhotoPickerService : IPhotoPickerService
+    internal class PhotoPickerService : IPhotoPickerService
     {
         // Field, property, and method for Picture Picker
         public const int PickImageId = 1000;

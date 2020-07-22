@@ -5,6 +5,7 @@ using System.Text;
 using Android.App;
 using Android.Util;
 using Plugin.Xamarin.Tools.Shared;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -35,7 +36,7 @@ namespace Plugin.Xamarin.Tools.Droid
 
         public override void CriticalAlert(object sender, EventArgs e)
         {
-            DependencyService.Get<Shared.Services.ICustomMessageBox>()
+            DependencyService.Get<ICustomMessageBox>()
                 .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
 

@@ -1,5 +1,6 @@
 ﻿using PdfSharp;
 using PdfSharp.Pdf;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.WPF.Services
 {
-    public class PrintHTML : Shared.Services.IPrintHTML
+    public class PrintHTML : IPrintHTML
     {
         public bool Print(string HTML, string Printer)
         {

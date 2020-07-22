@@ -1,5 +1,4 @@
-﻿using Plugin.Xamarin.Tools.Shared.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +15,7 @@ using Xamarin.Forms.Platform.Android;
 using DroidWebView = Android.Webkit.WebView;
 using Android.Text;
 using System.IO;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {

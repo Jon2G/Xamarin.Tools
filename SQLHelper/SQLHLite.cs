@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using SQLite;
 using SQLite_Net.Extensions.Readers;
 using System.Text;
+using System.Diagnostics;
 
 namespace SQLHelper
 {
@@ -30,6 +31,10 @@ namespace SQLHelper
                 this.Connection = con;
                 this.Command = Command;
                 this._Reader = null;
+                if (Debugger.IsAttached)
+                {
+                    Console.WriteLine(Command);
+                }
             }
 
             public bool Read()
@@ -95,9 +100,13 @@ namespace SQLHelper
         public EventHandler OnCreateDB;
         public readonly string RutaDb;
         public readonly string DBVersion;
-        public SQLHLite(string DBVersion)
+        public SQLHLite(string DBVersion, string DBName)
         {
-            FileInfo db = new FileInfo(Path.Combine(SQLHelper.Instance.LibraryPath, "XCOMANDERA.db"));
+            if (SQLHelper.Instance is null)
+            {
+                throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
+            }
+            FileInfo db = new FileInfo(Path.Combine(SQLHelper.Instance.LibraryPath, DBName));
             this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
@@ -187,7 +196,10 @@ namespace SQLHelper
                 afectadas = con.Execute(sql, parametros);
                 con.Close();
             }
-
+            if (Debugger.IsAttached)
+            {
+                Console.WriteLine(sql);
+            }
             return afectadas;
         }
         public List<T> Lista<T>(string sql)

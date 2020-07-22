@@ -1,4 +1,5 @@
 ﻿using Plugin.Xamarin.Tools.Shared;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace Plugin.Xamarin.Tools.iOS
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {
-            DependencyService.Get<Shared.Services.ICustomMessageBox>()
+            DependencyService.Get<ICustomMessageBox>()
                 .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Foundation;
-using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

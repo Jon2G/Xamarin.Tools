@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Plugin.Xamarin.Tools.WPF.Services
 {
-    public class DeviceInfo : Shared.Services.IDeviceInfo
+    public class DeviceInfo : Shared.Services.Interfaces.IDeviceInfo
     {
         public string MacAdress
         {

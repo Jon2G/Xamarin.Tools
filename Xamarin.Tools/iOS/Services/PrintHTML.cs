@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Foundation;
-using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using UIKit;
 using WebKit;
 using Xamarin.Forms;

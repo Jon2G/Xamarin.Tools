@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Plugin.Xamarin.Tools.Shared.Enums;
-namespace Plugin.Xamarin.Tools.Shared.Services
+
+namespace Plugin.Xamarin.Tools.Shared.Services.Interfaces
 {
     /// <summary>
     /// Displays a message box.
@@ -14,7 +15,7 @@ namespace Plugin.Xamarin.Tools.Shared.Services
         /// </summary>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-         public CustomMessageBoxResult Show(string messageBoxText);
+        public CustomMessageBoxResult Show(string messageBoxText);
 
         /// <summary>
         /// Displays a message box that has a message and a title bar caption; and that returns a result.

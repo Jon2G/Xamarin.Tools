@@ -6,6 +6,7 @@ using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,9 @@ using Environment = Android.OS.Environment;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
-    public class DataShare : IDataShare
+    internal class DataShare : IDataShare
     {
+        public DataShare() { }
         Context CurrentContext => CrossCurrentActivity.Current.Activity;
         public async void ShowFile(string AttachmentName, byte[] AttachmentBytes)
         {

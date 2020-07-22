@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 using Android.App;
 using Xamarin.Forms;
 using Plugin.CurrentActivity;
-using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
-    public class PDFSaveAndOpen: IPDFSaveAndOpen
+    internal class PDFSaveAndOpen: IPDFSaveAndOpen
     {
         public async Task SaveAndView(string fileName, MemoryStream stream, PDFOpenContext context = PDFOpenContext.InApp, string contentType = "application / pdf")
         {

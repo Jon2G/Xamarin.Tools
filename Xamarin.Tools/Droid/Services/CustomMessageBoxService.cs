@@ -1,11 +1,12 @@
 ﻿using Plugin.Xamarin.Tools.Shared.Enums;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
-    public class CustomMessageBoxService : Shared.Services.ICustomMessageBox
+    public class CustomMessageBoxService : ICustomMessageBox
     {
         public CustomMessageBoxResult Show(string messageBoxText)
         {

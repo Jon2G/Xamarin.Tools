@@ -4,14 +4,14 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Foundation;
-using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using UIKit;
 using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.iOS.Services
 {
-    public class PhotoPickerService : IPhotoPickerService
+    internal class PhotoPickerService : IPhotoPickerService
     {
         TaskCompletionSource<Tuple<byte[], ImageSource>> taskCompletionSource;
         UIImagePickerController imagePicker;

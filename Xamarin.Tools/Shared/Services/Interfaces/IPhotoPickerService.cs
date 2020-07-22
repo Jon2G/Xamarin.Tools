@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.Shared.Services
+namespace Plugin.Xamarin.Tools.Shared.Services.Interfaces
 {
     public interface IPhotoPickerService
     {

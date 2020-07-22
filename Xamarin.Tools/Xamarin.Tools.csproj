@@ -116,6 +116,7 @@
 
 
 
+
 	<ItemGroup>
 		<EmbeddedResource Remove="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>

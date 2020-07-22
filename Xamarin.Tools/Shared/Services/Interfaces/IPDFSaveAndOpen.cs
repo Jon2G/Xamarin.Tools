@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plugin.Xamarin.Tools.Shared.Services
+namespace Plugin.Xamarin.Tools.Shared.Services.Interfaces
 {
     public interface IPDFSaveAndOpen
     {

@@ -1,6 +1,6 @@
 ﻿using Android.Graphics;
 using Plugin.CurrentActivity;
-using Plugin.Xamarin.Tools.Shared.Services;
+using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
