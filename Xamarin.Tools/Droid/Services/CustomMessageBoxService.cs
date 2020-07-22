@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
-    public class CustomMessageBoxService : ICustomMessageBox
+    internal class CustomMessageBoxService : ICustomMessageBox
     {
         public CustomMessageBoxResult Show(string messageBoxText)
         {

@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
 {
-    public class CustomMessageBoxService : Shared.Services.Interfaces.ICustomMessageBox
+    internal class CustomMessageBoxService : Shared.Services.Interfaces.ICustomMessageBox
     {
         /// <summary>
         /// Displays a message box that has a message and returns a result.
