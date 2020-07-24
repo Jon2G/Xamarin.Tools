@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows;
 using Plugin.Xamarin.Tools.Shared.Enums;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
+using Plugin.Xamarin.Tools.WPF.Utilities;
 using SQLHelper;
 
 
@@ -200,27 +201,46 @@ namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
 
         private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
+            if (!ClickHelper.EsValido())
+            {
+                return;
+            }
             Result = CustomMessageBoxResult.OK;
             Close();
         }
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
         {
+            if (!ClickHelper.EsValido())
+            {
+                return;
+            }
             Result = CustomMessageBoxResult.Cancel;
             Close();
         }
         private void Button_Yes_Click(object sender, RoutedEventArgs e)
         {
+            if (!ClickHelper.EsValido())
+            {
+                return;
+            }
             Result = CustomMessageBoxResult.Yes;
             Close();
         }
         private void Button_No_Click(object sender, RoutedEventArgs e)
         {
+            if (!ClickHelper.EsValido())
+            {
+                return;
+            }
             Result = CustomMessageBoxResult.No;
             Close();
         }
         private void Button_OK_TouchDown(object sender, System.Windows.Input.TouchEventArgs e)
         {
-
+            if (!ClickHelper.EsValido())
+            {
+                return;
+            }
         }
     }
 }

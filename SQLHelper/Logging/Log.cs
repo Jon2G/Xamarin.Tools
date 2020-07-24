@@ -82,6 +82,7 @@ namespace SQLHelper
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "---->", error);
                 if (SQLHelper.Instance.Debugging)
                 {
+                    Debug.WriteLine(mensaje);
                     Console.Write(mensaje);
                     return;
                 }

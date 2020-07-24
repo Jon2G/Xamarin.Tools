@@ -30,28 +30,28 @@
 
                 <!-- Cancel Button -->
                 <Button Name="Button_Cancel" MinWidth="200" MaxWidth="200" Height="60" Margin="5,0" HorizontalAlignment="Right" Visibility="Collapsed" IsCancel="True"
-                        DockPanel.Dock="Right" Click="Button_Cancel_Click" MouseDown="Button_Cancel_Click">
+                        DockPanel.Dock="Right" TouchDown="Button_Cancel_Click"  Click="Button_Cancel_Click" MouseDown="Button_Cancel_Click">
                     <TextBlock Name="Label_Cancel" Padding="0" Margin="10,0" FontSize="16" Text="Cancelar"/>
                 </Button>
                 <!-- End Cancel Button -->
 
                 <!-- No Button -->
                 <Button Name="Button_No" MinWidth="200" MaxWidth="200" Height="60" Margin="5,0" HorizontalAlignment="Right" Visibility="Collapsed"
-                        DockPanel.Dock="Right" Click="Button_No_Click" MouseDown="Button_No_Click">
+                        DockPanel.Dock="Right" TouchDown="Button_No_Click"  Click="Button_No_Click" MouseDown="Button_No_Click">
                     <TextBlock Name="Label_No" Padding="0" Margin="10,0" FontSize="16"/>
                 </Button>
                 <!-- End No Button -->
 
                 <!-- Yes Button -->
                 <Button Name="Button_Yes" MinWidth="200" MaxWidth="200" Height="60" Margin="35,0,5,0" HorizontalAlignment="Right" Visibility="Collapsed"
-                        DockPanel.Dock="Right" MouseDown="Button_Yes_Click" Click="Button_Yes_Click">
+                        DockPanel.Dock="Right" TouchDown="Button_Yes_Click"  MouseDown="Button_Yes_Click" Click="Button_Yes_Click">
                     <TextBlock TextWrapping="Wrap" Name="Label_Yes" Padding="0" Margin="10,0" FontSize="16" Text="Sí"/>
                 </Button>
                 <!-- End Yes Button -->
 
                 <!-- OK Button -->
                 <Button Name="Button_OK" MinWidth="200" MaxWidth="200" Margin="35,0,5,0" HorizontalAlignment="Right" Height="60"
-                       MouseDown="Button_OK_Click" Click="Button_OK_Click">
+                       MouseDown="Button_OK_Click" TouchDown="Button_OK_Click"  Click="Button_OK_Click">
                     <TextBlock Name="Label_Ok" Padding="0" Margin="10,0" FontSize="16" Text="Ok"/>
                 </Button>
                 <!-- End OK Button -->
