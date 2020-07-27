@@ -27,18 +27,14 @@ namespace Plugin.Xamarin.Tools.Droid.Services.HtmlToPDF
 {
     public class PrintHTML : IPrintHTML
     {
-        public async Task<bool> Print(string HTML, string Printer)
+        public bool Print(string HTML, string Printer)
         {
             try
             {
-                await Task.Yield();
                 if (Printer != "Microsoft Print to PDF")
                 {
                     HTMLToPDF(HTML, Guid.NewGuid().ToString("N"));
-                    //if (!string.IsNullOrEmpty(pdf))
-                    //{
-                    //    return Print(pdf);
-                    //}
+                    return true;
                 }
 
             }
@@ -60,7 +56,6 @@ namespace Plugin.Xamarin.Tools.Droid.Services.HtmlToPDF
 
             }
         }
-
         private void PdfCompleted(object sender, EventArgs e)
         {
             if (sender is PDFToHtml pdf)
@@ -71,7 +66,6 @@ namespace Plugin.Xamarin.Tools.Droid.Services.HtmlToPDF
                 }
             }
         }
-
         private bool Print(string PdfFile)
         {
             try

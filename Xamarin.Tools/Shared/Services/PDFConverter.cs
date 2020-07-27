@@ -44,8 +44,7 @@ namespace Plugin.Xamarin.Tools.Shared.Services
             return new Droid.Services.HtmlToPDF.PDFConverter();
 #endif
 #if __IOS__
-            // return new iOS.Services.PhotoPickerService();
-              return null;
+            return new iOS.Services.HtmlToPDF.PDFConverter();
 #endif
 #if WINDOWS_UWP
             return null;

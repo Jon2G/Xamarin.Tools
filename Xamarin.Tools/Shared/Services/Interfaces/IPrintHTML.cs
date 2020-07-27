@@ -8,6 +8,6 @@ namespace Plugin.Xamarin.Tools.Shared.Services.Interfaces
 {
     public interface IPrintHTML
     {
-        public Task<bool> Print(string Html, string Printer);
+        public bool Print(string Html, string Printer);
     }
 }

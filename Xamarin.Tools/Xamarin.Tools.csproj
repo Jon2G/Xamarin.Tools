@@ -114,12 +114,10 @@
 			<Version>2.1.0.4</Version>
 		</PackageReference>
 		<Compile Include="Droid\**\*.cs" />
-		<ProjectReference Include="..\XFPDF\XFPDF\XFPDF.Android\XFPDF.Android.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
 		<Compile Include="iOS\**\*.cs" />
-		<ProjectReference Include="..\XFPDF\XFPDF\XFPDF.iOS\XFPDF.iOS.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('net462')) ">
 
