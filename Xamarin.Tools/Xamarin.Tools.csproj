@@ -6,7 +6,8 @@
 		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>-->
 
-		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>
+		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>-->
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.17763</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462</TargetFrameworks>
 
 		<!--Feel free to add as many targets as you need below
@@ -66,30 +67,63 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|Xamarin.iOS10|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|MonoAndroid90|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|uap10.0.17763|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|MonoAndroid90|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|Xamarin.iOS10|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|uap10.0.17763|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="**\*.shared.cs" />
 		<Compile Include="Shared\**\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
 		<!--<Compile Include="**\*.shared.cs" />-->
-		<Compile Include="Shared\**\*.cs" />
+
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+		<Compile Include="Droid\Services\CustomPrintDocumentAdapter.cs" />
 		<PackageReference Include="Plugin.CurrentActivity">
 			<Version>2.1.0.4</Version>
 		</PackageReference>
-	</ItemGroup>
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
 		<Compile Include="Droid\**\*.cs" />
+		<ProjectReference Include="..\XFPDF\XFPDF\XFPDF.Android\XFPDF.Android.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
 		<Compile Include="iOS\**\*.cs" />
+		<ProjectReference Include="..\XFPDF\XFPDF\XFPDF.iOS\XFPDF.iOS.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('net462')) ">
+
+
 		<Compile Include="WPF\**\*.cs" />
 		<Page Include="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 		<None Update="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
@@ -106,12 +140,27 @@
 		<PackageReference Include="WindowsBase">
 			<Version>4.6.1055</Version>
 		</PackageReference>
+		<PackageReference Include="PresentationFramework" Version="4.6.0" />
+		<PackageReference Include="HtmlRenderer.Core">
+			<Version>1.5.0.6</Version>
+		</PackageReference>
+		<PackageReference Include="HtmlRenderer.PdfSharp">
+			<Version>1.5.0.6</Version>
+		</PackageReference>
+		<PackageReference Include="iTextSharp">
+			<Version>5.5.13.1</Version>
+		</PackageReference>
+		<PackageReference Include="PdfiumViewer">
+			<Version>2.13.0</Version>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
+
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
 		<Compile Include="UWP\**\*.cs" />
 	</ItemGroup>
+
 
 
 
@@ -125,26 +174,28 @@
 
 
 
+
 	<ItemGroup>
 		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
 		<PackageReference Include="Ansuria.XFGloss" Version="1.1.3" />
 		<PackageReference Include="DeviceId" Version="5.1.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="Forms9Patch" Version="2.3.0" />
 		<!--<PackageReference Include="PdfSharp" Version="1.50.5147" />-->
 		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
 		<!--<PackageReference Include="PresentationFramework" Version="4.6.0" />-->
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
 		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1142" />
+		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />
 		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1142" />
+		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.7.0.1179" />
 		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
 		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
+
+
 	</ItemGroup>
 
 	<ItemGroup>
@@ -163,21 +214,6 @@
 	  </PackageReference>-->
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-		<PackageReference Include="PresentationFramework" Version="4.6.0" />
-		<PackageReference Include="HtmlRenderer.Core">
-			<Version>1.5.0.6</Version>
-		</PackageReference>
-		<PackageReference Include="HtmlRenderer.PdfSharp">
-			<Version>1.5.0.6</Version>
-		</PackageReference>
-		<PackageReference Include="iTextSharp">
-			<Version>5.5.13.1</Version>
-		</PackageReference>
-		<PackageReference Include="PdfiumViewer">
-			<Version>2.13.0</Version>
-		</PackageReference>
-	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Update="Shared\Blumitech\BlumLogin.xaml">

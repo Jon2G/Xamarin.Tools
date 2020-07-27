@@ -55,6 +55,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         private async Task<ProjectActivationState> GetProjectStatus(string ProjectKey)
         {
+            await Task.Yield();
             return ProjectActivationState.Active;
         }
         private static HttpStatusCode GET(string url, string metodo, string EspacioNombres, Dictionary<string, string> parameters, out string Respuesta)

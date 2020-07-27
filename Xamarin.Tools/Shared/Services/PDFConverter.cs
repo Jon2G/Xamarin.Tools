@@ -1,21 +1,23 @@
-﻿using System;
+﻿using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Plugin.Xamarin.Tools.Shared.Services
 {
-    public static class PrintHTML
+
+    public static class PDFConverter
     {
         /// <summary>
         /// Lazy-initialized file picker implementation
         /// </summary>
-        private static Lazy<Services.Interfaces.IPrintHTML> implementation =
-            new Lazy<Services.Interfaces.IPrintHTML>(Create, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        private static Lazy<IPDFConverter> implementation =
+            new Lazy<IPDFConverter>(Create, System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// Current file picker plugin implementation to use
         /// </summary>
-        public static Services.Interfaces.IPrintHTML Current
+        public static IPDFConverter Current
         {
             get
             {
@@ -33,22 +35,23 @@ namespace Plugin.Xamarin.Tools.Shared.Services
         /// Creates file picker instance for the platform
         /// </summary>
         /// <returns>file picker instance</returns>
-        private static Services.Interfaces.IPrintHTML Create()
+        private static IPDFConverter Create()
         {
 #if NETSTANDARD1_0 || NETSTANDARD2_0
             return null;
 #else
 #if MONOANDROID
-            return new Droid.Services.HtmlToPDF.PrintHTML();
+            return new Droid.Services.HtmlToPDF.PDFConverter();
 #endif
 #if __IOS__
-            return new iOS.Services.PrintHTML();
+            // return new iOS.Services.PhotoPickerService();
+              return null;
 #endif
 #if WINDOWS_UWP
             return null;
 #endif
 #if NET462
-            return new WPF.Services.PrintHTML();
+            return null;
 #endif
 #endif
         }
@@ -62,6 +65,6 @@ namespace Plugin.Xamarin.Tools.Shared.Services
             new NotImplementedException(
                 "This functionality is not implemented in the portable version of this assembly. You should reference the NuGet package from your main application project in order to reference the platform-specific implementation.");
 
-
     }
+
 }

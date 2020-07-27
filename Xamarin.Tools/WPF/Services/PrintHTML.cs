@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing.Printing;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 using Xamarin.Forms;
 
@@ -14,10 +15,11 @@ namespace Plugin.Xamarin.Tools.WPF.Services
 {
     public class PrintHTML : IPrintHTML
     {
-        public bool Print(string HTML, string Printer)
+        public async Task<bool> Print(string HTML, string Printer)
         {
             try
             {
+                await Task.Yield();
                 DirectoryInfo TicketsPath = new DirectoryInfo(Shared.Tools.Instance.LibraryPath + "\\TICKETS");
                 if (!TicketsPath.Exists)
                 {

@@ -12,6 +12,10 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
     public class BasePopUp : PopupPage
     {
         public event EventHandler Confirmado;
+        protected void InvokeConfirmado(object sender, EventArgs e)
+        {
+            Confirmado?.Invoke(sender, e);
+        }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -28,10 +32,25 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             await PopupNavigation.Instance.PushAsync(this, true);
             return this;
         }
-        protected async Task<BasePopUp> Close()
+        public async Task<BasePopUp> Close()
         {
             await PopupNavigation.Instance.RemovePageAsync(this, true);
             return this;
+        }
+
+        private bool IsModalLocked { get; set; }
+        public BasePopUp LockModal()
+        {
+            this.IsModalLocked = !this.IsModalLocked;
+            return this;
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            if (this.IsModalLocked)
+            {
+                return true;
+            }
+            return base.OnBackButtonPressed();
         }
     }
 }

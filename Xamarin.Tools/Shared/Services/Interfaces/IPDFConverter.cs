@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Shared.Services.Interfaces
 {
-    public interface IPrintHTML
+    public interface IPDFConverter
     {
-        public Task<bool> Print(string Html, string Printer);
+        void ConvertHTMLtoPDF(PDFToHtml _PDFToHtml);
     }
 }
