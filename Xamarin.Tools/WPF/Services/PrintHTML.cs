@@ -15,11 +15,10 @@ namespace Plugin.Xamarin.Tools.WPF.Services
 {
     public class PrintHTML : IPrintHTML
     {
-        public async Task<bool> Print(string HTML, string Printer)
+        public bool Print(string HTML, string Printer)
         {
             try
             {
-                await Task.Yield();
                 DirectoryInfo TicketsPath = new DirectoryInfo(Shared.Tools.Instance.LibraryPath + "\\TICKETS");
                 if (!TicketsPath.Exists)
                 {
