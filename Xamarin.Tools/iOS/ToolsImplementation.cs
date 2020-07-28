@@ -37,8 +37,7 @@ namespace Plugin.Xamarin.Tools.iOS
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {
-            DependencyService.Get<ICustomMessageBox>()
-                .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
+            Shared.Services.CustomMessageBox.Current.ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
     }
 }

@@ -182,6 +182,7 @@
 		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
 		<!--<PackageReference Include="PresentationFramework" Version="4.6.0" />-->
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
+		<PackageReference Include="TouchView" Version="4.1.78" />
 		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
 		<PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />
 		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
