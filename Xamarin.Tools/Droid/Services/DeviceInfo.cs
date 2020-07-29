@@ -17,7 +17,7 @@ using Platform = Plugin.DeviceInfo.Abstractions.Platform;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
-    public class DeviceInfo : Shared.Services.Interfaces.IDeviceInfo
+    internal class DeviceInfo : Shared.Services.Interfaces.IDeviceInfo
     {
         public string MacAdress
         {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Plugin.Xamarin.Tools.Shared.Services.Interfaces
 {
-    public interface IDeviceInfo : DeviceInfo.Abstractions.IDeviceInfo
+    public interface IDeviceInfo : Plugin.DeviceInfo.Abstractions.IDeviceInfo
     {
         public string MacAdress { get; }
         public string DeviceId { get; }
