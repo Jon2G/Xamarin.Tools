@@ -14,9 +14,10 @@ namespace Plugin.Xamarin.Tools.UWP.Services
         {
             get
             {
-                DeviceIdBuilder builder = new DeviceIdBuilder();
-                builder.AddMacAddress();
-                return builder.ToString();
+                //DeviceIdBuilder builder = new DeviceIdBuilder();
+                //builder.AddMacAddress();
+                //return builder.ToString();
+                return "NotAvaible";
             }
         }
 
@@ -24,9 +25,10 @@ namespace Plugin.Xamarin.Tools.UWP.Services
         {
             get
             {
-                DeviceIdBuilder builder = new DeviceIdBuilder();
-                builder.AddProcessorId();
-                return builder.ToString();
+                //DeviceIdBuilder builder = new DeviceIdBuilder();
+                //builder.AddProcessorId();
+                //return builder.ToString();
+                return "NotAvaible";
             }
         }
 

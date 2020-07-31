@@ -5,13 +5,17 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content.PM;
 using Android.OS;
 using Plugin.CurrentActivity;
 using Plugin.Xamarin.Tools.Droid.Services;
 using Plugin.Xamarin.Tools.Shared;
+using Plugin.Xamarin.Tools.Shared.Pages;
 using SQLHelper;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Application = Android.App.Application;
+using Log = SQLHelper.Log;
 
 namespace Plugin.Xamarin.Tools.Droid
 {
@@ -37,7 +41,7 @@ namespace Plugin.Xamarin.Tools.Droid
             (Shared.Tools.Instance as ToolsImplementation).MainActivity = activity;
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
-
+            OrientationServices(activity);
             #region DependencyServices
             //DependencyService.Register<DataShare>();
             //DependencyService.Register<PDFSaveAndOpen>();
@@ -54,6 +58,21 @@ namespace Plugin.Xamarin.Tools.Droid
             // IMPORTANT: Initialize XFGloss AFTER calling LoadApplication on the Android platform
             XFGloss.Droid.Library.Init(activity, bundle);
             return Shared.Tools.Instance;
+        }
+        private static void OrientationServices(Activity activity)
+        {
+            MessagingCenter.Subscribe<BasePage>(activity, nameof(DeviceOrientation.Landscape), sender =>
+            {
+                activity.RequestedOrientation = ScreenOrientation.Landscape;
+            });
+            MessagingCenter.Subscribe<BasePage>(activity, nameof(DeviceOrientation.Portrait), sender =>
+            {
+                activity.RequestedOrientation = ScreenOrientation.Portrait;
+            });
+            MessagingCenter.Subscribe<BasePage>(activity, nameof(DeviceOrientation.Other), sender =>
+            {
+                activity.RequestedOrientation = ScreenOrientation.Unspecified;
+            });
         }
     }
 }
