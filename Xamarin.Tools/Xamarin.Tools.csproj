@@ -162,7 +162,7 @@
 		</PackageReference>
 		<PackageReference Include="itext7.pdfhtml" Version="3.0.1" />
 				<PackageReference Include="itext7.pdfhtml" Version="3.0.1" />-->
-
+		<PackageReference Include="IronPdf" Version="2020.7.1" />
 	</ItemGroup>
 
 

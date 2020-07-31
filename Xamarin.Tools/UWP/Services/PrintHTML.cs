@@ -1,4 +1,5 @@
 ﻿
+using IronPdf;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -56,15 +57,14 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             try
             {
                 FileInfo pdfile = new FileInfo($"{TicketPath}.pdf");
-                //MemoryStream ms = new MemoryStream();
-                //ConverterProperties converterProperties = new ConverterProperties();
-                //HtmlConverter.ConvertToPdf(HTML, ms, converterProperties);
 
-                //var writer = new iText.Kernel.Pdf.PdfWriter(pdfile.FullName, new WriterProperties());
-                //iText.Kernel.Pdf.PdfDocument vDoc = new iText.Kernel.Pdf.PdfDocument(writer);
-                //vDoc.SetDefaultPageSize(new iText.Kernel.Geom.PageSize(204, 8503));
-                //vDoc.Close();
 
+                IronPdf.HtmlToPdf Renderer = new IronPdf.HtmlToPdf();
+                Renderer.PrintOptions.SetCustomPaperSizeinMilimeters(72, 3000);
+                Renderer.RenderHtmlAsPdf(HTML)
+                    .SaveAs(pdfile.FullName);
+
+                    
                 if (pdfile.Exists)
                 {
                     return PrintPDF(Printer, pdfile.FullName, 1);
@@ -83,20 +83,8 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             try
             {
                 // Now print the PDF document
-                ProcessStartInfo info = new ProcessStartInfo();
-                info.Verb = $"print /d:{printer}";
-                info.FileName = filename;
-                info.CreateNoWindow = true;
-                info.WindowStyle = ProcessWindowStyle.Hidden;
-
-                Process p = new Process();
-                p.StartInfo = info;
-                p.Start();
-
-                p.WaitForInputIdle();
-                System.Threading.Thread.Sleep(3000);
-                if (false == p.CloseMainWindow())
-                    p.Kill();
+                PdfDocument Pdf = IronPdf.PdfDocument.FromFile(filename);
+                Pdf.Print(printer);
 
                 return true;
             }
