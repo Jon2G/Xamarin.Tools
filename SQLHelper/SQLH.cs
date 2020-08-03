@@ -119,7 +119,7 @@ namespace SQLHelper
                 , new SqlParameter("CAMPO", Campo)
                 );
         }
-        public void CambiarCadena(string CadenaCon)
+        public void ChangeConnectionString(string CadenaCon)
         {
             this.ConnectionString = CadenaCon;
         }

@@ -19,6 +19,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
 {
     public class BasePage : ContentPage
     {
+        public object Auxiliar { get; set; }
         public class PageOrientationEventArgs : EventArgs
         {
             public PageOrientationEventArgs(PageOrientation orientation)
