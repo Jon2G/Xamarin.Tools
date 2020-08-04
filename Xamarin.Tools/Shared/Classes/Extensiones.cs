@@ -250,6 +250,10 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
                 resultado[i] = lista.GetRange(rango, xlista);
                 rango += xlista;
             }
+            if (rango < lista.Count)
+            {
+                resultado[0].AddRange(lista.GetRange(rango, lista.Count - rango));
+            }
             return resultado;
 
         }
