@@ -33,7 +33,7 @@ namespace SQLHelper
                 this._Reader = null;
                 if (Debugger.IsAttached)
                 {
-                    Console.WriteLine(Command);
+                    Debug.WriteLine(Command);
                 }
             }
 
