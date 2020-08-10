@@ -24,7 +24,11 @@ namespace Plugin.Xamarin.Tools.Shared.Services
                 var ret = implementation.Value;
                 if (ret == null)
                 {
+#if NETCOREAPP
+                    throw new Exception("NotImplementedInReferenceAssembly");
+#else
                     throw NotImplementedInReferenceAssembly();
+#endif
                 }
 
                 return ret;
@@ -51,6 +55,9 @@ namespace Plugin.Xamarin.Tools.Shared.Services
 #endif
 #if NET462
             return new WPF.Services.DeviceInfo();
+#endif
+#if NETCOREAPP
+            return new NetCore.Services.DeviceInfo();
 #endif
 #endif
         }

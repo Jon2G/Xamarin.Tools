@@ -3,15 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using XFGloss;
 using Xamarin.Forms.Platform;
-
-
-#if WINDOWS_UWP
-using Windows.UI.Xaml.Media;
-using Xamarin.Forms.Platform.UWP;
-using UWPRender = Xamarin.Forms.Platform.UWP.PageRenderer;
-#endif
 
 
 
@@ -72,6 +64,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         {
             this.LockedOrientation = DeviceOrientation.Other;
             this.IsModalLocked = false;
+            InitOrientationPage();
             //IdentidadVisual.Inicializar(this);
         }
         public DeviceOrientation LockedOrientation { get; private set; }
@@ -129,30 +122,6 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         {
             await Navigation.PopToRootAsync(true);
 
-        }
-
-        public void SetGradientBackground(Gradient gradient)
-        {
-            if (Device.RuntimePlatform == Device.UWP)
-            {
-#if WINDOWS_UWP
-                LinearGradientBrush gradiente = new LinearGradientBrush();
-                foreach (GradientStep step in gradient.Steps)
-                {
-                    gradiente.GradientStops.Add(new GradientStop()
-                    {
-                        Color = step.StepColor.ToWindowsColor(),
-                        Offset = step.StepPercentage
-                    });
-                }
-                IVisualElementRenderer render = this.GetOrCreateRenderer();
-                (render as UWPRender).Background = gradiente;
-#endif
-            }
-            else
-            {
-                ContentPageGloss.SetBackgroundGradient(this, gradient);
-            }
         }
     }
 }

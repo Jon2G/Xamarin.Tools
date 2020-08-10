@@ -55,8 +55,6 @@ namespace Plugin.Xamarin.Tools.Droid
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)
         {
-            // IMPORTANT: Initialize XFGloss AFTER calling LoadApplication on the Android platform
-            XFGloss.Droid.Library.Init(activity, bundle);
             return Shared.Tools.Instance;
         }
         private static void OrientationServices(Activity activity)

@@ -98,6 +98,7 @@ namespace SQLHelper
         }
 
         public EventHandler OnCreateDB;
+        private FileInfo file;
         public readonly string RutaDb;
         public readonly string DBVersion;
         public SQLHLite(string DBVersion, string DBName)
@@ -110,6 +111,17 @@ namespace SQLHelper
             this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
+
+        public SQLHLite(FileInfo file)
+        {
+            if (SQLHelper.Instance is null)
+            {
+                throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
+            }
+            file.Refresh();
+            this.RutaDb = file.FullName;
+        }
+
         /// <summary>
         /// Comprueba que la base de datos exista y que sea la versión mas reciente
         /// de lo contrario crea una nueva base de datos
@@ -153,7 +165,18 @@ namespace SQLHelper
 
         public SqlConnection Conecction()
         {
-            return new SQLiteConnection(this.RutaDb);
+            SqlConnection con;
+            try
+            {
+                con = new SqlConnection(this.RutaDb);
+                return con;
+            }
+            catch (Exception ex)
+            {
+                con = null;
+                Log.LogMe(ex);
+            }
+            return con;
         }
         public int Querry(string sql, params object[] args)
         {

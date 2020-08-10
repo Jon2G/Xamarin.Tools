@@ -36,7 +36,7 @@ namespace Plugin.Xamarin.Tools.Shared.Services
         /// <returns>file picker instance</returns>
         private static IPDFSaveAndOpen CreateDataShare()
         {
-#if NETSTANDARD1_0 || NETSTANDARD2_0
+#if NETSTANDARD1_0 || NETSTANDARD2_0||NETCOREAPP
             return null;
 #else
 #if MONOANDROID

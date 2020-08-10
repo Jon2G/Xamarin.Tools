@@ -16,8 +16,7 @@ namespace Plugin.Xamarin.Tools.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();
-            /********** ADD THIS CALL TO INITIALIZE XFGloss *********/
-            XFGloss.iOS.Library.Init();
+
             //FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             //CrossMedia.Current.Initialize();
             Rg.Plugins.Popup.Popup.Init();
