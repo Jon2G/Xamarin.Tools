@@ -94,27 +94,62 @@ namespace Plugin.Xamarin.Tools.WPF.Services
         {
             try
             {
-                // Now print the PDF document
-                using (PdfiumViewer.PdfDocument document = PdfiumViewer.PdfDocument.Load(filename))
-                {
-                    using (PrintDocument printDocument = document.CreatePrintDocument(PdfiumViewer.PdfPrintMode.ShrinkToMargin))
-                    {
-                        ////////////////
-                        //PaperSize ps = new PaperSize("80", 3, 1);
-                        //printDocument.DefaultPageSettings.Margins.Left = 0;
-                        //printDocument.DefaultPageSettings.Margins.Right = 0;
-                        //printDocument.DefaultPageSettings.Margins.Top = 0;
-                        //printDocument.DefaultPageSettings.Margins.Bottom = 0;
-                        //printDocument.DefaultPageSettings.PaperSize = ps;
-                        printDocument.PrintController = new StandardPrintController();
-                        printDocument.PrinterSettings = new PrinterSettings() { PrinterName = printer, Copies = (short)copies };
 
-                        //printDocument.PrinterSettings.PrintToFile = true;
-                        //printDocument.PrinterSettings.PrintFileName = filename.Replace(".pdf", "_PRINT.pdf");
-                        ////////////////
-                        printDocument.Print();
+                string gsArguments;
+                string gsLocation;
+                ProcessStartInfo gsProcessInfo;
+                Process gsProcess;
+
+                gsArguments = $"-grey -noquery -printer \"{printer}\" \"{filename}\"";
+                gsLocation = @"C:\Program Files\gs\gs9.52\bin\gswin64c.exe";
+
+                gsProcessInfo = new ProcessStartInfo();
+                gsProcessInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                gsProcessInfo.FileName = gsLocation;
+                gsProcessInfo.Arguments = gsArguments;
+
+                gsProcess = Process.Start(gsProcessInfo);
+                gsProcess.WaitForExit();
+
+                return true;
+                ///////////////////////
+                var ctrl = new StandardPrintController();
+
+                using (var document = PdfiumViewer.PdfDocument.Load(filename))
+                {
+                    using (PrintDocument doc = document.CreatePrintDocument())
+                    {
+                        doc.PrintController = ctrl;
+                        doc.PrinterSettings.PrinterName = printer;
+                        doc.PrinterSettings.PrintFileName = filename;
+
+                        doc.Print();
                     }
                 }
+
+
+
+                // Now print the PDF document
+                //using (PdfiumViewer.PdfDocument document = PdfiumViewer.PdfDocument.Load(filename))
+                //{
+                //    using (PrintDocument printDocument = document.CreatePrintDocument(PdfiumViewer.PdfPrintMode.ShrinkToMargin))
+                //    {
+                //        ////////////////
+                //        //PaperSize ps = new PaperSize("80", 3, 1);
+                //        //printDocument.DefaultPageSettings.Margins.Left = 0;
+                //        //printDocument.DefaultPageSettings.Margins.Right = 0;
+                //        //printDocument.DefaultPageSettings.Margins.Top = 0;
+                //        //printDocument.DefaultPageSettings.Margins.Bottom = 0;
+                //        //printDocument.DefaultPageSettings.PaperSize = ps;
+                //        printDocument.PrintController = new StandardPrintController();
+                //        printDocument.PrinterSettings = new PrinterSettings() { PrinterName = printer, Copies = (short)copies };
+
+                //        //printDocument.PrinterSettings.PrintToFile = true;
+                //        //printDocument.PrinterSettings.PrintFileName = filename.Replace(".pdf", "_PRINT.pdf");
+                //        ////////////////
+                //        printDocument.Print();
+                //    }
+                //}
                 return true;
             }
             catch (Exception ex)
