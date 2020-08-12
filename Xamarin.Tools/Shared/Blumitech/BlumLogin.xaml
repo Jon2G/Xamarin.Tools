@@ -12,35 +12,35 @@
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
             <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Registrar dispositivo"/>
             <Image Margin="10" HeightRequest="45" Source="LogoBlum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
-            <Frame BindingContext="{Binding Source={Reference Me}}" VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BorderColor="Transparent" Margin="10">
+            <Frame BackgroundColor="Transparent" BindingContext="{Binding Source={Reference Me}}" VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BorderColor="Transparent" Margin="10">
                 <input:FormView IsValidated="{Binding IsValidated}">
 
                     <input:AdvancedEntry BindingContext="{Binding Source={Reference Me}}"
                     Text="{Binding UserName}"
-                    IsRequired="True"
+                    IsRequired="True" x:Name="TxtUser"
                     Title="Correo electrónico:"
                     Annotation="Email"
                     Placeholder="sample@domain.com"
                     AnnotationColor="#FF1E16"
                     ValidationMessage="Por favor ingrese un email valido"
                     IconImage="ic_email_black_24dp.png"
-                    MinLength="10" TextFontSize="Medium"
+                    MinLength="10" TextFontSize="Medium" TextColor="Black"
                     MaxLength="50" Margin="0,0,10,0" TextChanged="MailChanged"/>
 
                     <input:AdvancedEntry  BindingContext="{Binding Source={Reference Me}}"
                     Text="{Binding Password}"
                     IsRequired="True"
                     Title="Password:"
-                    Annotation="Password"
+                    Annotation="Password" x:Name="TxtPass"
                     Placeholder="*******" IsPassword="True"
                     AnnotationColor="#FF1E16" TextFontSize="Medium" 
-                    IconImage="ic_account_circle_black_24dp.png"
+                    IconImage="ic_account_circle_black_24dp.png" TextColor="Black"
                     MaxLength="10"  Margin="0,0,10,0" TextChanged="PasswordChanged"
                     />
-                    <Button BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Command="{Binding SubmitCommand}" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
+                    <Button BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Clicked="Btn_Clicked" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
                 </input:FormView>
             </Frame>
-            <Label TextColor="Blue" TextDecorations="Underline" FontSize="Micro"  Text="Crear cuenta" HorizontalOptions="Start">
+            <Label TextColor="Blue" TextDecorations="Underline" FontSize="Small"  Text="Crear cuenta" HorizontalOptions="Start">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Registrarse"/>
                 </Label.GestureRecognizers>

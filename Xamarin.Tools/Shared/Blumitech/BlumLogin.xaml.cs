@@ -51,6 +51,8 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         private async void LogIn()
         {
+            UserName = TxtUser.Text;
+            Password = TxtPass.Text;
             IsValidated = !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
             if (!IsValidated)
             {
@@ -68,6 +70,11 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             {
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Usuario o contraseña incorrectos", "Alert", "OK");
             }
+        }
+
+        private void Btn_Clicked(object sender, EventArgs e)
+        {
+            this.SubmitCommand.Execute(this);
         }
     }
 }
