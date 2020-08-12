@@ -19,7 +19,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         public WebService(string DeviceId)
         {
             this.DeviceId = DeviceId;
-            this.Url = "https://localhost:44359/AppAuthentication";
+            this.Url = "http://www.spika.mx:88/AppAuthentication";
         }
         public async Task<ProjectActivationState> RequestProjectAccess(string ProjectKey)
         {
