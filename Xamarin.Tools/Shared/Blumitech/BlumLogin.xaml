@@ -6,44 +6,45 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:input="clr-namespace:Plugin.InputKit.Shared.Controls;assembly=Plugin.InputKit" 
              xmlns:vm="clr-namespace:Plugin.Xamarin.Tools.Shared.Blumitech"
-             mc:Ignorable="d"
+             mc:Ignorable="d" x:Name="Me"
              x:Class="Plugin.Xamarin.Tools.Shared.Blumitech.BlumLogin">
-    <ContentPage.BindingContext>
-        <vm:LoginViewModel x:Name="User" />
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
-            <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Cadena de conexión"/>
+            <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Registrar dispositivo"/>
             <Image Margin="10" HeightRequest="45" Source="LogoBlum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
-            <Frame VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BackgroundColor="#51626262" BorderColor="Transparent" Margin="10">
+            <Frame BindingContext="{Binding Source={Reference Me}}" VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BorderColor="Transparent" Margin="10">
                 <input:FormView IsValidated="{Binding IsValidated}">
 
-                    <input:AdvancedEntry 
+                    <input:AdvancedEntry BindingContext="{Binding Source={Reference Me}}"
                     Text="{Binding UserName}"
                     IsRequired="True"
                     Title="Correo electrónico:"
                     Annotation="Email"
                     Placeholder="sample@domain.com"
-                    AnnotationColor="#1E1E58"
+                    AnnotationColor="#FF1E16"
                     ValidationMessage="Por favor ingrese un email valido"
                     IconImage="ic_email_black_24dp.png"
-                    MinLength="10"
+                    MinLength="10" TextFontSize="Medium"
                     MaxLength="50" Margin="0,0,10,0" TextChanged="MailChanged"/>
 
-                    <input:AdvancedEntry 
+                    <input:AdvancedEntry  BindingContext="{Binding Source={Reference Me}}"
                     Text="{Binding Password}"
                     IsRequired="True"
                     Title="Password:"
                     Annotation="Password"
-                    Placeholder="*******"
-                    AnnotationColor="#1E1E58"
+                    Placeholder="*******" IsPassword="True"
+                    AnnotationColor="#FF1E16" TextFontSize="Medium" 
                     IconImage="ic_account_circle_black_24dp.png"
                     MaxLength="10"  Margin="0,0,10,0" TextChanged="PasswordChanged"
                     />
-                    <Button x:Name="Btn" Command="{Binding LogIn}" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
+                    <Button BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Command="{Binding SubmitCommand}" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
                 </input:FormView>
             </Frame>
-            <Label FontSize="Small" Text="Crear cuenta"/>
+            <Label TextColor="Blue" TextDecorations="Underline" FontSize="Micro"  Text="Crear cuenta" HorizontalOptions="Start">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Registrarse"/>
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
     </ContentPage.Content>
 </pages:BasePage>

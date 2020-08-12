@@ -1,8 +1,12 @@
-﻿using System;
+﻿using SQLHelper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +19,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         public WebService(string DeviceId)
         {
             this.DeviceId = DeviceId;
-            this.Url = "http://192.168.0.32:51425/Activacion.asmx";
+            this.Url = "https://localhost:44359/AppAuthentication";
         }
         public async Task<ProjectActivationState> RequestProjectAccess(string ProjectKey)
         {
@@ -40,14 +44,12 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         private async Task<ProjectActivationState> IsDeviceAutenticated()
         {
             await Task.Yield();
-            GET(this.Url, "IsDeviceAutenticated", "http://tempuri.org/"
-                , new Dictionary<string, string>()
-                {{"DeviceId",this.DeviceId} }, out string Respuesta);
-            if (Respuesta == "ERROR")
+            ResponseResult result = await GET(this.Url, "IsDeviceAutenticated", this.DeviceId);
+            if (result.Response == "ERROR")
             {
                 return ProjectActivationState.ConnectionFailed;
             }
-            if (Respuesta == "REGISTERED")
+            if (result.Response == "REGISTERED")
             {
                 return ProjectActivationState.Registered;
             }
@@ -58,19 +60,30 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             await Task.Yield();
             return ProjectActivationState.Active;
         }
-        private static HttpStatusCode GET(string url, string metodo, string EspacioNombres, Dictionary<string, string> parameters, out string Respuesta)
+        public struct ResponseResult
         {
-            HttpStatusCode status = HttpStatusCode.Unused;
-            string parametersText;
-            if (parameters != null && parameters.Count > 0)
+            public HttpStatusCode HttpStatusCode;
+            public string Response;
+            public ResponseResult(HttpStatusCode httpStatusCode, string response)
             {
-                StringBuilder sb = new StringBuilder("?");
-                foreach (KeyValuePair<string, string> oneParameter in parameters)
+                HttpStatusCode = httpStatusCode;
+                Response = response;
+            }
+        }
+        private static async Task<ResponseResult> GET(string url, string metodo, params string[] parameters)
+        {
+            ResponseResult result = new ResponseResult();
+            result.HttpStatusCode = HttpStatusCode.Unused;
+            string parametersText;
+            if (parameters != null && parameters.Length > 0)
+            {
+                StringBuilder sb = new StringBuilder("/");
+                foreach (string oneParameter in parameters)
                 {
-                    sb.AppendFormat("{0}={1}&", oneParameter.Key, oneParameter.Value);
+                    sb.AppendFormat("{0}/", oneParameter);
                 }
                 parametersText = sb.ToString();
-                if (parametersText.Last() == '&')
+                if (parametersText.Last() == '/')
                 {
                     parametersText = parametersText.Substring(0, parametersText.Length - 1);
                 }
@@ -83,18 +96,22 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             string responseText = String.Empty;
             try
             {
-                using (WebClient client = new WebClient())
+                using (HttpClientHandler handler = new HttpClientHandler())
                 {
-                    client.Headers.Add("Accept-Language", " en-US");
-                    client.Headers.Add("Accept", " text/html, application/xhtml+xml, */*");
-                    client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
-                    responseText = client.DownloadString(GetUrl);
-                    status = HttpStatusCode.OK;
+                    handler.ServerCertificateCustomValidationCallback +=
+                        (HttpRequestMessage arg1, X509Certificate2 arg2, X509Chain arg3, SslPolicyErrors arg4) => { return true; };
+
+                    using (HttpClient client = new HttpClient(handler))
+                    {
+                        result.Response = await client.GetStringAsync(GetUrl);
+                        result.HttpStatusCode = HttpStatusCode.OK;
+                    }
                 }
             }
             catch (WebException ex)
             {
-                status = (HttpStatusCode)ex.Status;
+                Log.LogMe(ex);
+                result.HttpStatusCode = (HttpStatusCode)ex.Status;
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
                     using (StreamReader reader = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()))
@@ -102,35 +119,43 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
                         responseText = reader.ReadToEnd();
                     }
                 }
-                Respuesta = "ERROR";
-                return status;
+                result.Response = "ERROR";
+                return result;
             }
-            Respuesta = null;
-            if (!string.IsNullOrEmpty(responseText))
+            catch (Exception ex)
             {
-                string responseElement = @$"<string xmlns=""{EspacioNombres}"">";
-                int pos1 = responseText.IndexOf(responseElement);
-                if (pos1 >= 0)
-                {
-                    pos1 += responseElement.Length;
-                    int pos2 = responseText.IndexOf("</", pos1);
-
-                    if (pos2 > pos1)
-                    {
-                        responseText = responseText.Substring(pos1, pos2 - pos1);
-                    }
-                }
-                else
-                {
-                    responseText = ""; // No result
-                }
-                if (!string.IsNullOrEmpty(responseText) && responseText != "ERROR")
-                {
-                    Respuesta = responseText;
-                }
+                Log.LogMe(ex);
+                result.Response = "ERROR";
             }
-            return status;
+            return result;
         }
+
+        internal async Task<string> Enroll(string appKey, string userName, string password)
+        {
+            ResponseResult response = await GET(this.Url, "EnrollDevice",this.DeviceId, appKey, userName,password);
+            return response.Response;
+        }
+
+        internal async Task<string> DevicesLeft(string appKey, string userName)
+        {
+            ResponseResult response = await GET(this.Url, "DevicesLeft", appKey, userName);
+            return response.Response;
+        }
+
+        internal async Task<string> LogIn(string userName, string password)
+        {
+            try
+            {
+                ResponseResult response = await GET(this.Url, "LogIn", userName, password);
+                return response.Response;
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+                return "ERROR";
+            }
+        }
+
         private HttpStatusCode SOAP(string webWebServiceUrl,
                                 string webServiceNamespace,
                                 string methodName,
