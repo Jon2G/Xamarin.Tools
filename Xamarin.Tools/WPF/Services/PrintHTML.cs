@@ -1,4 +1,6 @@
-﻿using PdfSharp;
+﻿
+using ceTe.DynamicPDF.Printing;
+using PdfSharp;
 using PdfSharp.Pdf;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
@@ -80,7 +82,7 @@ namespace Plugin.Xamarin.Tools.WPF.Services
                 }
                 if (pdfile.Exists)
                 {
-                    return PrintPDF(Printer, pdfile.FullName, 1);
+                    return PrintPDF(Printer, pdfile.FullName, 1,pdfile.DirectoryName);
                 }
 
             }
@@ -90,29 +92,11 @@ namespace Plugin.Xamarin.Tools.WPF.Services
             }
             return false;
         }
-        private bool PrintPDF(string printer, string filename, int copies)
+        private bool PrintPDF(string printer, string filename, int copies, string TicketPath)
         {
             try
             {
-
-                string gsArguments;
-                string gsLocation;
-                ProcessStartInfo gsProcessInfo;
-                Process gsProcess;
-
-                gsArguments = $"-grey -noquery -printer \"{printer}\" \"{filename}\"";
-                gsLocation = @"C:\Program Files\gs\gs9.52\bin\gswin64c.exe";
-
-                gsProcessInfo = new ProcessStartInfo();
-                gsProcessInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                gsProcessInfo.FileName = gsLocation;
-                gsProcessInfo.Arguments = gsArguments;
-
-                gsProcess = Process.Start(gsProcessInfo);
-                gsProcess.WaitForExit();
-
-                return true;
-                ///////////////////////
+                /////////////////////
                 var ctrl = new StandardPrintController();
 
                 using (var document = PdfiumViewer.PdfDocument.Load(filename))
