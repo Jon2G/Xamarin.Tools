@@ -74,6 +74,13 @@ namespace SQLHelper
             }
             return Exbase;
         }
+        public static void DebugMe(string text)
+        {
+            if (SQLHelper.Instance.Debugging)
+            {
+                LogMe(text);
+            }
+        }
         public static void LogMe(string error)
         {
             try

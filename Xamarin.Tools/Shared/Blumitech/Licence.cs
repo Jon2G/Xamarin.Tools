@@ -11,22 +11,22 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
 {
     public sealed class Licence
     {
-        private Func<object, EventArgs, Licence> OnLoginSuccesEvent;
         private readonly Dictionary<string, string> AppKeys;
         private readonly WebService WebService;
         private readonly string AppName;
-        private Licence(string DeviceId,string AppName)
+        private string AppKey;
+        private Licence(string DeviceId, string AppName)
         {
             this.AppName = AppName;
             this.AppKeys = new Dictionary<string, string>() {
-                { "InventarioFisico","INVIS001"}
+                { "InventarioFisico","INVIS001"},
+                { "MyGourmetPOS","MGPOS2020"}
             };
             this.WebService = new WebService(DeviceId);
         }
         public static Licence Instance(AbstractTools instance, string AppName)
         {
-            IDeviceInfo deviceInfo = DependencyService.Get<IDeviceInfo>();
-            return new Licence(deviceInfo.DeviceId, AppName);
+            return new Licence(Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId, AppName);
         }
         public async Task<bool> IsAuthorizated(Page page)
         {
@@ -48,8 +48,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
                     break;
                 case ProjectActivationState.LoginRequired:
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
-                    BlumLogin login = new BlumLogin().LockModal() as BlumLogin;
-                    login.GetUser().LoginSucces=new Command(Login_Disappearing);
+                    BlumLogin login = new BlumLogin(page.Background, this).LockModal() as BlumLogin;
                     await page.Navigation.PushModalAsync(login);
                     Autorized = false;
                     break;
@@ -60,17 +59,54 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             return Autorized;
         }
 
-        private void Login_Disappearing(object sender)
+        internal async Task<bool> RegisterDevice(string userName, string password)
         {
-            BlumLogin login = (sender as BlumLogin);
-            login.GetUser().LoginSucces = null;
-            this.OnLoginSuccesEvent?.Invoke(this, EventArgs.Empty);
+            string response = await this.WebService.DevicesLeft(this.AppKey, userName);
+            switch (response)
+            {
+                case "ERROR":
+                case "INVALID_REQUEST":
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Revise su conexión a internet", "Atención");
+                    return false;
+                case "CUSTOMER_NOT_FOUND":
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Registro invalido", "Atención");
+                    return false;
+                case "PROJECT_NOT_FOUND":
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No esta contratado este servicio", "Atención");
+                    return false;
+            }
+            if (!int.TryParse(response, out int left))
+            {
+                return false;
+            }
+            if (left <= 0)
+            {
+                await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
+                return false;
+            }
+            else
+            {
+                switch (await this.WebService.Enroll(AppKey, userName, password))
+                {
+                    case "NO_DEVICES_LEFT":
+                        await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
+                        break;
+                    case "PROJECT_NOT_ENROLLED":
+                        await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No esta contratado este servicio", "Atención");
+                        break;
+                    case "SUCCES":
+                        left--;
+                        await Acr.UserDialogs.UserDialogs.Instance.AlertAsync($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
+                        return true;
+                }
+            }
+            return false;
         }
 
-        public Licence OnLoginSucces(Func<object, EventArgs, Licence> loginSucces)
+
+        internal async Task<bool> Login(string UserName, string Password)
         {
-            this.OnLoginSuccesEvent = loginSucces;
-            return this;
+            return (await this.WebService.LogIn(UserName, Password) == "OK");
         }
 
         private async Task<ProjectActivationState> Autheticate(string AppKey)
@@ -79,8 +115,8 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             {
                 return ProjectActivationState.Denied;
             }
-            AppKey = this.AppKeys[AppKey];
-            return await this.WebService.RequestProjectAccess(AppKey);
+            this.AppKey = this.AppKeys[AppKey];
+            return await this.WebService.RequestProjectAccess(this.AppKey);
         }
 
 

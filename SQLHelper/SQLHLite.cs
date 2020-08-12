@@ -98,7 +98,7 @@ namespace SQLHelper
         }
 
         public EventHandler OnCreateDB;
-        private FileInfo file;
+        //private FileInfo file;
         public readonly string RutaDb;
         public readonly string DBVersion;
         public SQLHLite(string DBVersion, string DBName)
