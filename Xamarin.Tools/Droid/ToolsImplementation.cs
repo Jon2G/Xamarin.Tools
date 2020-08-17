@@ -39,9 +39,10 @@ namespace Plugin.Xamarin.Tools.Droid
           Shared.Services.CustomMessageBox.Current.ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
 
-        public override void SetDebugging(bool Debugging)
+        public override AbstractTools SetDebugging(bool Debugging)
         {
-            Debugging = true;
+            this.Debugging = true;
+            return this;
         }
     }
 }

@@ -20,11 +20,12 @@ namespace Plugin.Xamarin.Tools.Shared
 
         public abstract ITools InitAll(string LogDirectory, bool AlertAfterCritical = false);
         public abstract ITools InitLoggin(string LogDirectory = "Logs", bool AlertAfterCritical = false);
-        public abstract void SetDebugging(bool Debugging);
+        public abstract AbstractTools SetDebugging(bool Debugging);
         public abstract void CriticalAlert(object sender, EventArgs e);
-        public void SetLibraryPath(string LibraryPath)
+        public AbstractTools SetLibraryPath(string LibraryPath)
         {
             this._LibraryPath = LibraryPath;
+            return this;
         }
     }
 }

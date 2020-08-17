@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -68,13 +69,14 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             //IdentidadVisual.Inicializar(this);
         }
         public DeviceOrientation LockedOrientation { get; private set; }
-        protected void LockOrientation(DeviceOrientation Orientation)
+        protected BasePage LockOrientation(DeviceOrientation Orientation)
         {
             this.LockedOrientation = Orientation;
             if (Device.RuntimePlatform == Device.Android)
             {
                 MessagingCenter.Send(this, this.LockedOrientation.ToString());
             }
+            return this;
         }
         protected override void OnAppearing()
         {
@@ -112,6 +114,11 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         }
         protected override bool OnBackButtonPressed()
         {
+            if (Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopupStack.LastOrDefault() is BasePopUp popUp)
+            {
+                popUp.BackButtonPressed();
+                return true;
+            }
             if (this.IsModalLocked)
             {
                 return true;

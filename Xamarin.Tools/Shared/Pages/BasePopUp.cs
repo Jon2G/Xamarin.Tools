@@ -50,7 +50,17 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             {
                 return true;
             }
-            return base.OnBackButtonPressed();
+            else
+            {
+                return false;
+            }
+        }
+        public async void BackButtonPressed()
+        {
+           if(!OnBackButtonPressed())
+            {
+                await this.Close();
+            }
         }
     }
 }

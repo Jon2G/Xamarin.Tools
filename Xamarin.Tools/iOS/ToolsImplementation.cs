@@ -36,9 +36,10 @@ namespace Plugin.Xamarin.Tools.iOS
             return this;
         }
 
-        public override void SetDebugging(bool Debugging)
+        public override AbstractTools SetDebugging(bool Debugging)
         {
-            Debugging = true;
+            this.Debugging = true;
+            return this;
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {

@@ -33,9 +33,11 @@ namespace Plugin.Xamarin.Tools.WPF
             return this;
         }
 
-        public override void SetDebugging(bool Debugging)
+        public override AbstractTools SetDebugging(bool Debugging)
         {
+            this.Debugging = Debugging;
             SQLHelper.SQLHelper.Instance?.SetDebugging(Debugging);
+            return this;
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {

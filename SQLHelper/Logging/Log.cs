@@ -101,7 +101,7 @@ namespace SQLHelper
         }
         public static void LogMe(Exception error)
         {
-            if (error.GetType().Name == "SDKException")
+            if (error?.GetType()?.Name == "SDKException")
             {
                 //ignorar errores del lector n.n
                 return;
