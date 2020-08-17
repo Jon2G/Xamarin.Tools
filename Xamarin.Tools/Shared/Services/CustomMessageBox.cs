@@ -45,7 +45,7 @@ namespace Plugin.Xamarin.Tools.Shared.Services
             return new iOS.Services.CustomMessageBoxService();
 #endif
 #if WINDOWS_UWP
-            return null;
+            return new UWP.Services.CustomMessageBoxService();
 #endif
 #if NET462
             return new WPF.Services.ICustomMessageBox.CustomMessageBoxService();
