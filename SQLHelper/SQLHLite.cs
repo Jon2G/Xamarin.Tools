@@ -141,12 +141,19 @@ namespace SQLHelper
                 Crear(Conecction());
             }
         }
+
         public string GetDbVersion()
         {
             string dbVersion = null;
             try
             {
-                dbVersion = Single<string>("SELECT VERSION FROM DB_VERSION");
+                using (Reader reader = new Reader(Conecction(), "SELECT VERSION FROM DB_VERSION"))
+                {
+                    if (reader.Read())
+                    {
+                        dbVersion = reader[0].ToString();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -284,6 +291,18 @@ namespace SQLHelper
             try
             {
                 return new Reader(Conecction(), sql);
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex, "Al compilar y ejecutar un leector");
+                return null;
+            }
+        }
+        public Reader Leector(string sql, SqlConnection connection)
+        {
+            try
+            {
+                return new Reader(connection, sql);
             }
             catch (Exception ex)
             {
