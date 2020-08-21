@@ -30,5 +30,14 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
                 return (status == PermissionStatus.Granted);
             });
         }
+        public static async Task<bool> TenemosPermiso(Plugin.Permissions.Abstractions.Permission Permiso)
+        {
+            return await Device.InvokeOnMainThreadAsync(async () =>
+            {
+                Plugin.Permissions.BasePermission basePermission = new BasePermission(Permiso);
+                PermissionStatus status = await basePermission.CheckPermissionStatusAsync();
+                return (status == PermissionStatus.Granted);
+            });
+        }
     }
 }

@@ -139,6 +139,12 @@ namespace SQLHelper
             }
             return null;
         }
+
+        public static void LogCritical(Exception ex)
+        {
+            LogUnhandledException(ex);
+        }
+
         public static void LogMe(Exception error, string descripcion, bool StackTrace = false)
         {
             try

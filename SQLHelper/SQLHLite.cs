@@ -126,9 +126,8 @@ namespace SQLHelper
         /// Comprueba que la base de datos exista y que sea la versión mas reciente
         /// de lo contrario crea una nueva base de datos
         /// </summary>
-        public async Task RevisarBaseDatos()
+        public void RevisarBaseDatos()
         {
-            await Task.Yield();
             FileInfo db = new FileInfo(this.RutaDb);
             if (!db.Exists)
             {
@@ -162,7 +161,19 @@ namespace SQLHelper
             OnCreateDB?.Invoke(connection, EventArgs.Empty);
             connection.Close();
         }
-
+        public bool EliminarDB()
+        {
+            try
+            {
+                File.Delete(RutaDb);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+                return false;
+            }
+        }
         public SqlConnection Conecction()
         {
             SqlConnection con;
@@ -298,6 +309,14 @@ namespace SQLHelper
                 return reader?.Read() ?? false;
             }
         }
+        public bool TableExists(string TableName)
+        {
+            using (Reader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
+            {
+                return reader?.Read() ?? false;
+            }
+        }
+
         internal void Batch(string sql)
         {
             StringBuilder sqlBatch = new StringBuilder();
