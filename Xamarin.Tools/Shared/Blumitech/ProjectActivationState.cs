@@ -7,6 +7,6 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
     public enum ProjectActivationState
     {
         LoginRequired, Expired, Denied,Active, ConnectionFailed,
-        Registered
+        Registered, Unknown
     }
 }

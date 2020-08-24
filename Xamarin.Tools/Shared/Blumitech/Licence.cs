@@ -1,4 +1,5 @@
 ﻿
+using Plugin.Connectivity;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
@@ -55,11 +56,25 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             }
             return brand;
         }
+        private bool DoIHaveInternet()
+        {
+            if (!CrossConnectivity.IsSupported)
+                return true;
+
+            return CrossConnectivity.Current.IsConnected;
+        }
         public async Task<bool> IsAuthorizated(Page page)
         {
             bool Autorized = false;
-            ProjectActivationState state
-                = await Autheticate(this.AppName);
+            ProjectActivationState state = ProjectActivationState.Unknown;
+            if (!DoIHaveInternet())
+            {
+                state= ProjectActivationState.ConnectionFailed;
+            }
+            else
+            {
+                state = await Autheticate(this.AppName);
+            }
             switch (state)
             {
                 case ProjectActivationState.Active:
