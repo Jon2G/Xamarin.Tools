@@ -76,7 +76,7 @@ namespace SQLHelper
         }
         public static void DebugMe(string text)
         {
-            if (SQLHelper.Instance.Debugging)
+            if (SQLHelper.Instance?.Debugging??false)
             {
                 LogMe(text);
             }
@@ -85,7 +85,7 @@ namespace SQLHelper
         {
             try
             {
-                string mensaje = string.Concat(Environment.NewLine,
+                string mensaje = string.Concat("\r",Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "---->", error);
                 if (SQLHelper.Instance.Debugging)
                 {

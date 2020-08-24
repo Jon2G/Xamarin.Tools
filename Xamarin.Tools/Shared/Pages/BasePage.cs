@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.Xamarin.Tools.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -129,6 +130,10 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         {
             await Navigation.PopToRootAsync(true);
 
+        }
+        public void SetScreenMode(ScreenMode Screen)
+        {
+            Services.ScreenManager.Current.SetScreenMode(Screen);
         }
     }
 }

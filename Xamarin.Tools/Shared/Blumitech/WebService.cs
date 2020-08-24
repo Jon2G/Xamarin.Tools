@@ -43,7 +43,6 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         private async Task<ProjectActivationState> IsDeviceAutenticated()
         {
-            await Task.Yield();
             ResponseResult result = await GET(this.Url, "IsDeviceAutenticated", this.DeviceId);
             if (result.Response == "ERROR")
             {
@@ -72,8 +71,10 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         private static async Task<ResponseResult> GET(string url, string metodo, params string[] parameters)
         {
-            ResponseResult result = new ResponseResult();
-            result.HttpStatusCode = HttpStatusCode.Unused;
+            ResponseResult result = new ResponseResult
+            {
+                HttpStatusCode = HttpStatusCode.Unused
+            };
             string parametersText;
             if (parameters != null && parameters.Length > 0)
             {
@@ -96,7 +97,11 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             string responseText = String.Empty;
             try
             {
-                using (HttpClientHandler handler = new HttpClientHandler())
+                using (HttpClientHandler handler = new HttpClientHandler()
+                {
+                    Proxy = null,
+                    UseProxy = false
+                })
                 {
                     handler.ServerCertificateCustomValidationCallback +=
                         (HttpRequestMessage arg1, X509Certificate2 arg2, X509Chain arg3, SslPolicyErrors arg4) => { return true; };
@@ -132,7 +137,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
 
         internal async Task<string> Enroll(string appKey, string userName, string password)
         {
-            ResponseResult response = await GET(this.Url, "EnrollDevice",this.DeviceId, appKey, userName,password);
+            ResponseResult response = await GET(this.Url, "EnrollDevice", this.DeviceId, appKey, userName, password);
             return response.Response;
         }
 
