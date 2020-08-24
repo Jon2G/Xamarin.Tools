@@ -246,6 +246,7 @@
 		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
 	</ItemGroup>
 
+
 	<ItemGroup>
 		<EmbeddedResource Remove="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
