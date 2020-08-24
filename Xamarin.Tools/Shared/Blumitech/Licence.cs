@@ -130,7 +130,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             {
                 string DeviceBrand = this.GetDeviceBrand();
                 string Platform = this.GetDevicePlatform();
-                switch (await this.WebService.Enroll(AppKey, DeviceBrand, Platform, userName, password))
+                switch (await this.WebService.Enroll(AppKey,userName,password, DeviceBrand, Platform))
                 {
                     case "NO_DEVICES_LEFT":
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
