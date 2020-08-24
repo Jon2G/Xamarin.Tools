@@ -28,6 +28,33 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         {
             return new Licence(Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId, AppName);
         }
+        private string GetDeviceBrand()
+        {
+            string brand = "GENERIC";
+            try
+            {
+                var Info = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current;
+                brand = $"{Info.DeviceName}-{Info.Model}";
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+            }
+            return brand;
+        }
+        private string GetDevicePlatform()
+        {
+            string brand = "GENERIC";
+            try
+            {
+                return Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.Platform.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+            }
+            return brand;
+        }
         public async Task<bool> IsAuthorizated(Page page)
         {
             bool Autorized = false;
@@ -86,7 +113,9 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             }
             else
             {
-                switch (await this.WebService.Enroll(AppKey, userName, password))
+                string DeviceBrand = this.GetDeviceBrand();
+                string Platform = this.GetDevicePlatform();
+                switch (await this.WebService.Enroll(AppKey, DeviceBrand, Platform, userName, password))
                 {
                     case "NO_DEVICES_LEFT":
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");

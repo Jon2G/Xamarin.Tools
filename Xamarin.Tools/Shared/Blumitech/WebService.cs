@@ -134,10 +134,10 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             }
             return result;
         }
-
-        internal async Task<string> Enroll(string appKey, string userName, string password)
+   
+        internal async Task<string> Enroll(string appKey, string userName, string password,string DeviceBrand,string Platform)
         {
-            ResponseResult response = await GET(this.Url, "EnrollDevice", this.DeviceId, appKey, userName, password);
+            ResponseResult response = await GET(this.Url, "EnrollDevice", this.DeviceId,DeviceBrand,Platform, appKey, userName, password);
             return response.Response;
         }
 
