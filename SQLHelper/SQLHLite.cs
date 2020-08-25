@@ -17,7 +17,7 @@ namespace SQLHelper
 {
     public class SQLHLite
     {
-        public class Reader : IDisposable
+        public class Reader : IReader
         {
             private bool disposedValue;
             private List<SqlDataReader> _Reader { get; set; }
@@ -60,6 +60,7 @@ namespace SQLHelper
                     return fila[campo];
                 }
             }
+            public object this[string columna] => this._Reader[Fila][columna];
 
             protected virtual void Dispose(bool disposing)
             {
@@ -231,15 +232,12 @@ namespace SQLHelper
         }
         public int EXEC(string sql, params object[] parametros)
         {
+            Log.DebugMe(sql);
             int afectadas = -1;
             using (SqlConnection con = Conecction())
             {
                 afectadas = con.Execute(sql, parametros);
                 con.Close();
-            }
-            if (Debugger.IsAttached)
-            {
-                Console.WriteLine(sql);
             }
             return afectadas;
         }

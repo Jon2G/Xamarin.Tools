@@ -112,7 +112,7 @@ namespace SQLHelper
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error.Message);
                 if (SQLHelper.Instance.Debugging)
                 {
-                    Console.Write(mensaje);
+                    LogMe(mensaje);
                     return;
                 }
                 File.AppendAllText(Log.LogPath, mensaje);
@@ -178,12 +178,17 @@ namespace SQLHelper
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString(), descripcion, "----> ", error.Message);
+                if (Log.IsDBConnectionError(error))
+                {
+                    Log.OnConecctionLost?.Invoke(error, EventArgs.Empty);
+                }
                 if (SQLHelper.Instance.Debugging)
                 {
-                    Console.Write(mensaje);
+                    Log.LogMe(mensaje);
                     return;
                 }
                 File.AppendAllText(Log.BackgroundLogPath, mensaje);
+
             }
             catch (Exception)
             {
@@ -340,6 +345,7 @@ namespace SQLHelper
                         //Log.LogMe($"-->[WARNING!!!] Se adapto forzadamente por:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
                         //AppData.Demonio.AdaptarLaBase();
                         //AppData.Demonio.Despierta();
+                        
                         return false;
                     }
             }

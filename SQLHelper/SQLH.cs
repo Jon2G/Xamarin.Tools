@@ -22,7 +22,7 @@ namespace SQLHelper
         {
 
         }
-        public class Reader : IDisposable
+        public class Reader :  IReader
         {
             private SqlDataReader _Reader { get; set; }
             private SqlCommand Cmd { get; set; }
@@ -66,7 +66,7 @@ namespace SQLHelper
                     Log.LogMe(ex, "Desechando objetos");
                 }
             }
-
+            
             public bool Read()
             {
                 return _Reader.Read();

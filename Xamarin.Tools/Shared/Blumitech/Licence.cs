@@ -1,5 +1,6 @@
 ﻿
 using Plugin.Connectivity;
+using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
@@ -65,11 +66,15 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         public async Task<bool> IsAuthorizated(Page page)
         {
+            if ((Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging && !Services.DeviceInfo.Current.IsDevice))
+            {
+                return true;
+            }
             bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
             if (!DoIHaveInternet())
             {
-                state= ProjectActivationState.ConnectionFailed;
+                state = ProjectActivationState.ConnectionFailed;
             }
             else
             {
@@ -130,7 +135,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             {
                 string DeviceBrand = this.GetDeviceBrand();
                 string Platform = this.GetDevicePlatform();
-                switch (await this.WebService.Enroll(AppKey,userName,password, DeviceBrand, Platform))
+                switch (await this.WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform))
                 {
                     case "NO_DEVICES_LEFT":
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
