@@ -81,7 +81,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
                 StringBuilder sb = new StringBuilder("/");
                 foreach (string oneParameter in parameters)
                 {
-                    sb.AppendFormat("{0}/", oneParameter);
+                    sb.AppendFormat("{0}/", Uri.EscapeDataString(oneParameter));
                 }
                 parametersText = sb.ToString();
                 if (parametersText.Last() == '/')
@@ -134,10 +134,10 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             }
             return result;
         }
-   
-        internal async Task<string> Enroll(string appKey, string userName, string password,string DeviceBrand,string Platform)
+
+        internal async Task<string> Enroll(string appKey, string userName, string password, string DeviceBrand, string Platform)
         {
-            ResponseResult response = await GET(this.Url, "EnrollDevice", this.DeviceId,DeviceBrand,Platform, appKey, userName, password);
+            ResponseResult response = await GET(this.Url, "EnrollDevice", this.DeviceId, DeviceBrand, Platform, appKey, userName, password);
             return response.Response;
         }
 

@@ -333,8 +333,11 @@ namespace SQLHelper
                 return reader?.Read() ?? false;
             }
         }
-
-        internal void Batch(string sql)
+        public void Batch(string sql)
+        {
+            Batch(Conecction(), sql);
+        }
+        public void Batch(SQLiteConnection con,string sql)
         {
             StringBuilder sqlBatch = new StringBuilder();
             sql += "\nGO";   // make sure last batch is executed.
@@ -344,8 +347,9 @@ namespace SQLHelper
                 {
                     if (line.ToUpperInvariant().Trim() == "GO")
                     {
+
                         if (!string.IsNullOrEmpty(sqlBatch.ToString()))
-                            EXEC(sqlBatch.ToString());
+                            con.Execute(sqlBatch.ToString());
                         sqlBatch.Clear();
                     }
                     else

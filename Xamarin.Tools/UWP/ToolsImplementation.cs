@@ -1,4 +1,5 @@
 ﻿using Plugin.Xamarin.Tools.Shared;
+using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
@@ -40,7 +41,7 @@ namespace Plugin.Xamarin.Tools.UWP
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {
-            DependencyService.Get<ICustomMessageBox>()
+            CustomMessageBox.Current
                 .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
         #region UWP Especific

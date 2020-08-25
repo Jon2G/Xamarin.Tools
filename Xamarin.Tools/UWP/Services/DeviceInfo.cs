@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using Windows.Security.ExchangeActiveSyncProvisioning;
+using Windows.System.Profile;
 
 namespace Plugin.Xamarin.Tools.UWP.Services
 {
@@ -21,18 +23,9 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             }
         }
 
-        public string DeviceId
-        {
-            get
-            {
-                //DeviceIdBuilder builder = new DeviceIdBuilder();
-                //builder.AddProcessorId();
-                //return builder.ToString();
-                return "NotAvaible";
-            }
-        }
+        public string DeviceId => Id;
 
-        public string Id => Plugin.DeviceInfo.CrossDeviceInfo.Current.Id;
+        public string Id => Plugin.DeviceInfo.CrossDeviceInfo.Current.Id.Replace("+", "-");
 
         public string Model => Plugin.DeviceInfo.CrossDeviceInfo.Current.Model;
 
