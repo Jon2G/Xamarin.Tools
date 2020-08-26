@@ -230,6 +230,7 @@ namespace SQLHelper
             }
             return result;
         }
+
         public int EXEC(string sql, params object[] parametros)
         {
             Log.DebugMe(sql);
@@ -337,25 +338,29 @@ namespace SQLHelper
         {
             Batch(Conecction(), sql);
         }
-        public void Batch(SQLiteConnection con,string sql)
+        public void Batch(SQLiteConnection con, string sql)
         {
             StringBuilder sqlBatch = new StringBuilder();
-            sql += "\nGO";   // make sure last batch is executed.
             try
             {
                 foreach (string line in sql.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (line.ToUpperInvariant().Trim() == "GO")
+                    if (line.ToUpperInvariant().Trim() == "--GO"||(sqlBatch.Length>0&&sqlBatch[sqlBatch.Length-1]==';'))
                     {
+                        string batch = sqlBatch.ToString();
 
-                        if (!string.IsNullOrEmpty(sqlBatch.ToString()))
-                            con.Execute(sqlBatch.ToString());
+                        if (!string.IsNullOrEmpty(batch))
+                            EXEC(batch);
                         sqlBatch.Clear();
                     }
-                    else
+                    if (!line.StartsWith("--"))
                     {
-                        sqlBatch.AppendLine(line);
+                        sqlBatch.Append(line.Trim());
                     }
+                }
+                if (sqlBatch.Length > 0)
+                {
+                    EXEC(sqlBatch.ToString());
                 }
             }
             catch (Exception ex)

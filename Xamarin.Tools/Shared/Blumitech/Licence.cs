@@ -36,7 +36,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             try
             {
                 var Info = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current;
-                brand = $"{Info.DeviceName}-{Info.Model}";
+                brand = $"{Info.DeviceName}@{Info.Model}@{Info.Manufacturer}";
             }
             catch (Exception ex)
             {
@@ -66,7 +66,9 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         public async Task<bool> IsAuthorizated(Page page)
         {
-            if ((Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging && !Services.DeviceInfo.Current.IsDevice))
+            if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging 
+                //&& !Services.DeviceInfo.Current.IsDevice
+                )
             {
                 return true;
             }

@@ -428,8 +428,7 @@ namespace SQLHelper
                 if (Log.IsDBConnectionError(ex))
                 {
                     Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
-                }
-                if (SQLHelper.Instance.Debugging)
+                }else if (SQLHelper.Instance.Debugging)
                 {
                     throw ex;
                 }
