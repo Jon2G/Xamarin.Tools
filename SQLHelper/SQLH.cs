@@ -1,4 +1,5 @@
 ﻿
+using SQLHelper.Readers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,8 +13,22 @@ namespace SQLHelper
 {
     public class SQLH
     {
+        public event EventHandler OnConnectionStringChanged;
         public const int Error = -2;
-        public string ConnectionString { get; private set; }
+        private string _ConnectionString;
+        public string ConnectionString
+        {
+            get=>_ConnectionString;
+            private set
+            {
+                if (_ConnectionString != value)
+                {
+                    _ConnectionString = value;
+                    this.OnConnectionStringChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
         public SQLH(string ConnectionString)
         {
             this.ConnectionString = ConnectionString;
@@ -21,63 +36,6 @@ namespace SQLHelper
         public SQLH()
         {
 
-        }
-        public class Reader :  IReader
-        {
-            private SqlDataReader _Reader { get; set; }
-            private SqlCommand Cmd { get; set; }
-            private SqlConnection Connection { get; set; }
-            public int FieldCount { get => _Reader.FieldCount; }
-
-            internal Reader(SqlCommand Cmd)
-            {
-                Connection = Cmd.Connection;
-                this.Cmd = Cmd;
-                _Reader = Cmd.ExecuteReader();
-            }
-            internal Reader() { }
-            internal async Task<Reader> AsyncReader(SqlCommand Cmd)
-            {
-                try
-                {
-                    Connection = Cmd.Connection;
-                    this.Cmd = Cmd;
-                    this.Cmd.CommandTimeout = 0;
-                    _Reader = await this.Cmd.ExecuteReaderAsync();
-                }
-                catch (Exception)
-                {
-                    Log.LogMeSQL(this.Cmd.CommandText);
-                }
-                return this;
-            }
-            public void Dispose()
-            {
-                try
-                {
-                    if (_Reader?.IsClosed ?? false)
-                        _Reader?.Close();
-                    Cmd?.Dispose();
-                    Connection?.Close();
-                    Connection?.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Log.LogMe(ex, "Desechando objetos");
-                }
-            }
-            
-            public bool Read()
-            {
-                return _Reader.Read();
-            }
-
-            public async Task<bool> Read(bool async)
-            {
-                return async ? await _Reader?.ReadAsync() : Read();
-            }
-            public object this[int index] => _Reader[index];
-            public object this[string columna] => _Reader[columna];
         }
         public async Task<Exception> PruebaConexion(string CadenaCon = null)
         {
@@ -142,7 +100,7 @@ namespace SQLHelper
         public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.StoredProcedure)
         {
             T result = default;
-            using (Reader reader = Leector(sql, type, Reportar))
+            using (IReader reader = Leector(sql, type, Reportar))
             {
                 if (reader.Read())
                 {
@@ -403,7 +361,7 @@ namespace SQLHelper
         {
             return DataTable(Querry, CommandType.Text, TableName, false, parameters);
         }
-        public Reader Leector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
+        public IReader Leector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
         {
             if (SQLHelper.Instance.Debugging)
             {
@@ -412,27 +370,31 @@ namespace SQLHelper
                     Log.LogMe($"STRORED PROCEDURE=>{sql}");
                 }
             }
-            using SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
-            try
+            using (SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType })
             {
-                cmd.Parameters.AddRange(parameters);
-                cmd.Connection.Open();
-                if (Reportar)
-                    ReportaTransaccion(cmd);
-                return new Reader(cmd);
-            }
-            catch (Exception ex)
-            {
-                Log.LogMeSQL("Transaccion fallida reportada");
-                Log.LogMeSQL(GetCommandText(cmd));
-                if (Log.IsDBConnectionError(ex))
+                try
                 {
-                    Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
-                }else if (SQLHelper.Instance.Debugging)
-                {
-                    throw ex;
+
+                    cmd.Parameters.AddRange(parameters);
+                    cmd.Connection.Open();
+                    if (Reportar)
+                        ReportaTransaccion(cmd);
+                    return new Reader(cmd);
                 }
-                return null;
+                catch (Exception ex)
+                {
+                    Log.LogMeSQL("Transaccion fallida reportada");
+                    Log.LogMeSQL(GetCommandText(cmd));
+                    if (Log.IsDBConnectionError(ex))
+                    {
+                        Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
+                    }
+                    else if (SQLHelper.Instance.Debugging)
+                    {
+                        throw ex;
+                    }
+                    return null;
+                }
             }
         }
         public void RunBatch(string Batch, bool Reportar = false)
@@ -500,7 +462,7 @@ namespace SQLHelper
         public bool Exists(string sql, bool Reportar = false, params SqlParameter[] parametros)
         {
             bool result = false;
-            using (Reader reader = Leector(sql, CommandType.Text, Reportar, parametros))
+            using (IReader reader = Leector(sql, CommandType.Text, Reportar, parametros))
             {
                 if (reader != null)
                 {

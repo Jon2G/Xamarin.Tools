@@ -12,92 +12,12 @@ using SQLite;
 using SQLite_Net.Extensions.Readers;
 using System.Text;
 using System.Diagnostics;
+using SQLHelper.Readers;
 
 namespace SQLHelper
 {
     public class SQLHLite
     {
-        public class Reader : IReader
-        {
-            private bool disposedValue;
-            private List<SqlDataReader> _Reader { get; set; }
-            private SqlConnection Connection { get; set; }
-            private string Command { get; set; }
-            public int FieldCount { get => _Reader?.FirstOrDefault()?.Fields?.Count ?? 0; }
-            public List<string> Fields => _Reader?.FirstOrDefault()?.Fields;
-            public int Fila { get; private set; }
-            internal Reader(SqlConnection con, string Command)
-            {
-                this.Connection = con;
-                this.Command = Command;
-                this._Reader = null;
-                if (Debugger.IsAttached)
-                {
-                    Debug.WriteLine(Command);
-                }
-            }
-
-            public bool Read()
-            {
-                if (this._Reader is null)
-                {
-                    this._Reader = this.Connection.ExecuteReader(Command).ToList();
-                    this.Fila = 0;
-                }
-                else
-                {
-                    Fila++;
-                }
-
-                return (this._Reader.Count > this.Fila);
-            }
-            public object this[int index]
-            {
-                get
-                {
-                    ReaderItem fila = this._Reader[Fila];
-                    string campo = fila.Fields[index];
-                    return fila[campo];
-                }
-            }
-            public object this[string columna] => this._Reader[Fila][columna];
-
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!disposedValue)
-                {
-                    if (disposing)
-                    {
-                        try
-                        {
-                            Connection?.Close();
-                            Connection?.Dispose();
-
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.LogMe(ex, "Desechando objetos");
-                        }
-                    }
-                    this.Command = null;
-                    this.Connection = null;
-                    disposedValue = true;
-                }
-            }
-            ~Reader()
-            {
-                // No cambie este código. Coloque el código de limpieza en el método "Dispose(bool disposing)".
-                Dispose(disposing: false);
-            }
-
-            public void Dispose()
-            {
-                // No cambie este código. Coloque el código de limpieza en el método "Dispose(bool disposing)".
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-        }
-
         public EventHandler OnCreateDB;
         //private FileInfo file;
         public readonly string RutaDb;
@@ -147,7 +67,7 @@ namespace SQLHelper
             string dbVersion = null;
             try
             {
-                using (Reader reader = new Reader(Conecction(), "SELECT VERSION FROM DB_VERSION"))
+                using (IReader reader = new LiteReader(Conecction(), "SELECT VERSION FROM DB_VERSION"))
                 {
                     if (reader.Read())
                     {
@@ -213,7 +133,7 @@ namespace SQLHelper
             T result = default;
             try
             {
-                using (Reader reader = Leector(sql))
+                using (IReader reader = Leector(sql))
                 {
                     if (reader.Read())
                     {
@@ -245,7 +165,7 @@ namespace SQLHelper
         public List<T> Lista<T>(string sql)
         {
             List<T> result = new List<T>();
-            using (Reader reader = Leector(sql))
+            using (IReader reader = Leector(sql))
             {
                 while (reader.Read())
                 {
@@ -259,7 +179,7 @@ namespace SQLHelper
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
 
-            using (Reader reader = Leector(sql))
+            using (IReader reader = Leector(sql))
             {
                 while (reader.Read())
                 {
@@ -274,7 +194,7 @@ namespace SQLHelper
         public DataTable DataTable(string Querry, string TableName = null)
         {
             DataTable result = new DataTable(TableName);
-            using (Reader reader = Leector(Querry))
+            using (LiteReader reader = (LiteReader)Leector(Querry))
             {
                 if (reader.Read())
                 {
@@ -296,11 +216,11 @@ namespace SQLHelper
             }
             return result;
         }
-        public Reader Leector(string sql)
+        public IReader Leector(string sql)
         {
             try
             {
-                return new Reader(Conecction(), sql);
+                return new LiteReader(Conecction(), sql);
             }
             catch (Exception ex)
             {
@@ -308,11 +228,11 @@ namespace SQLHelper
                 return null;
             }
         }
-        public Reader Leector(string sql, SqlConnection connection)
+        public LiteReader Leector(string sql, SqlConnection connection)
         {
             try
             {
-                return new Reader(connection, sql);
+                return new LiteReader(connection, sql);
             }
             catch (Exception ex)
             {
@@ -322,14 +242,14 @@ namespace SQLHelper
         }
         public bool Exists(string sql)
         {
-            using (Reader reader = Leector(sql))
+            using (IReader reader = Leector(sql))
             {
                 return reader?.Read() ?? false;
             }
         }
         public bool TableExists(string TableName)
         {
-            using (Reader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
+            using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
             {
                 return reader?.Read() ?? false;
             }

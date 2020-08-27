@@ -9,5 +9,6 @@ namespace SQLHelper
         public bool Read();
         public object this[int index] { get; }
         public object this[string columna] { get; }
+        public int FieldCount { get; }
     }
 }
