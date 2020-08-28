@@ -13,10 +13,11 @@ using SQLite_Net.Extensions.Readers;
 using System.Text;
 using System.Diagnostics;
 using SQLHelper.Readers;
+using SQLHelper.Interfaces;
 
 namespace SQLHelper
 {
-    public class SQLHLite
+    public class SQLHLite: BaseSQLHelper
     {
         public EventHandler OnCreateDB;
         //private FileInfo file;

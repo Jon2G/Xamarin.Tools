@@ -332,6 +332,7 @@ namespace SQLHelper
 #endif
             if (desconexion)
             {
+                desconexion = false;
                 //Asegurarse
                 foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME" })
                     if (
@@ -345,8 +346,8 @@ namespace SQLHelper
                         //Log.LogMe($"-->[WARNING!!!] Se adapto forzadamente por:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
                         //AppData.Demonio.AdaptarLaBase();
                         //AppData.Demonio.Despierta();
-                        
-                        return false;
+                        desconexion = true;
+                        break;
                     }
             }
             if (desconexion)

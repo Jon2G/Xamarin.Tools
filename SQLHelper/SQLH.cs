@@ -1,4 +1,5 @@
 ﻿
+using SQLHelper.Interfaces;
 using SQLHelper.Readers;
 using System;
 using System.Collections.Generic;
@@ -11,29 +12,13 @@ using System.Threading.Tasks;
 
 namespace SQLHelper
 {
-    public class SQLH
+    public class SQLH : BaseSQLHelper
     {
-        public event EventHandler OnConnectionStringChanged;
-        public const int Error = -2;
-        private string _ConnectionString;
-        public string ConnectionString
+        public SQLH(string ConnectionString) : base(ConnectionString)
         {
-            get=>_ConnectionString;
-            private set
-            {
-                if (_ConnectionString != value)
-                {
-                    _ConnectionString = value;
-                    this.OnConnectionStringChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
 
-        public SQLH(string ConnectionString)
-        {
-            this.ConnectionString = ConnectionString;
         }
-        public SQLH()
+        public SQLH() : base()
         {
 
         }
@@ -136,12 +121,9 @@ namespace SQLHelper
             {
                 Log.LogMe(ex, "Consulta fallida");
                 Log.LogMeSQL(sql);
-                if (SQLHelper.Instance.Debugging)
+                if (Log.IsDBConnectionError(ex))
                 {
-                    Debugger.Break();
-                    Log.LogMe(ex, "Consulta fallida");
-                    Log.LogMeSQL(sql);
-                    throw;
+                    Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
                 }
             }
             return result;
