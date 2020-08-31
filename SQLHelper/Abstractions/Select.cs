@@ -1,6 +1,7 @@
 ﻿using SQLHelper.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -8,26 +9,19 @@ namespace SQLHelper.Abstractions
 {
     public class Select : IQuery
     {
-        private readonly StringBuilder SelectionQuery;
-        private Select(BaseSQLHelper SQLH, string SelectionQuery,string TableName) : base(SQLH, TableName)
+        private readonly List<string> SelectionFields;
+        private Select(BaseSQLHelper SQLH, string TableName) : base(SQLH, TableName)
         {
-            this.SelectionQuery = new StringBuilder(SelectionQuery);
-            if (this.SelectionQuery.Length == 0)
-            {
-                this.SelectionQuery.Append("SELECT ");
-            }
+            this.SelectionFields = new List<string>();
         }
-        public static Select BulidFrom(BaseSQLHelper SQLH, string Query, string TableName)
+
+        public static Select BulidFrom(BaseSQLHelper SQLH, string TableName)
         {
-            return new Select(SQLH, Query,TableName);
-        }
-        public static Select BulidFrom(BaseSQLHelper SQLH,string TableName)
-        {
-            return new Select(SQLH, string.Empty,TableName);
+            return new Select(SQLH, TableName);
         }
         public Select AddFields(params string[] Fields)
         {
-            this.SelectionQuery.Append(string.Join(",", Fields));
+            this.SelectionFields.AddRange(Fields);
             return this;
         }
         public Select Where(string Field, object value)
@@ -37,7 +31,8 @@ namespace SQLHelper.Abstractions
         protected override string BuildQuery()
         {
             StringBuilder builder = new StringBuilder()
-                  .Append(this.SelectionQuery)
+                .Append("SELECT ")
+                  .Append(string.Join(",", this.SelectionFields))
                   .Append(" FROM ")
                   .Append(TableName);
             if (this.Parameters.Any())
@@ -47,8 +42,27 @@ namespace SQLHelper.Abstractions
                 {
                     builder.Append(" ")
                         .Append(pair.Key)
-                        .Append(" = ")
-                        .Append(pair.Value);
+                        .Append(" =@")
+                        .Append(pair.Key);
+                }
+            }
+            return builder.ToString();
+        }
+        protected override string BuildLiteQuery()
+        {
+            StringBuilder builder = new StringBuilder()
+                .Append("SELECT (")
+                  .Append(string.Join(",", this.SelectionFields))
+                  .Append(") FROM ")
+                  .Append(TableName);
+            if (this.Parameters.Any())
+            {
+                builder.Append(" WHERE");
+                foreach (var pair in this.Parameters)
+                {
+                    builder.Append(" ")
+                        .Append(pair.Key)
+                        .Append(" =?");
                 }
             }
             return builder.ToString();
@@ -56,6 +70,8 @@ namespace SQLHelper.Abstractions
 
         public override void Dispose()
         {
+            base.Dispose();
+            this.SelectionFields.Clear();
             return;
         }
 
@@ -67,14 +83,19 @@ namespace SQLHelper.Abstractions
         {
             if (this.SQLH is SQLH sql)
             {
-                return sql.Leector(BuildQuery(), System.Data.CommandType.Text, false);
+                IEnumerable<SqlParameter> parameters =
+                    this.Parameters.Select(x => new SqlParameter(x.Key, x.Value)).ToArray();
+
+                return sql.Leector(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
             }
             else if (this.SQLH is SQLHLite sqlite)
             {
-                return sqlite.Leector(BuildQuery());
+                return sqlite.Leector(BuildLiteQuery());
             }
             throw new NotSupportedException("No sql connection set");
 
         }
+
+
     }
 }

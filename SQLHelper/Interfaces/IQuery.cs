@@ -9,7 +9,7 @@ namespace SQLHelper.Interfaces
         public readonly BaseSQLHelper SQLH;
         protected readonly Dictionary<string, object> Parameters;
         protected readonly string TableName;
-        protected IQuery(BaseSQLHelper SQLH,string TableName)
+        protected IQuery(BaseSQLHelper SQLH, string TableName)
         {
             this.SQLH = SQLH;
             this.Parameters = new Dictionary<string, object>();
@@ -17,12 +17,16 @@ namespace SQLHelper.Interfaces
         }
         public abstract int Execute();
 
-        public  IQuery AddParameter(string Name, object Value)
+        public IQuery AddParameter(string Name, object Value)
         {
             this.Parameters.Add(Name, Value);
             return this;
         }
         protected abstract string BuildQuery();
-        public abstract void Dispose();
+        protected abstract string BuildLiteQuery();
+        public virtual void Dispose()
+        {
+            this.Parameters.Clear();
+        }
     }
 }

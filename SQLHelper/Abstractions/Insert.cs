@@ -36,5 +36,10 @@ namespace SQLHelper.Abstractions
         {
             throw new NotImplementedException();
         }
+
+        protected override string BuildLiteQuery()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

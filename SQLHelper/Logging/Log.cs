@@ -12,7 +12,7 @@ namespace SQLHelper
 {
     public static class Log
     {
-        public static EventHandler OnConecctionLost;
+        public static event EventHandler OnConecctionLost;
         public static string LogDirectory { get; private set; }
         public static string LogPath { get; private set; }
         public static string BackgroundLogPath { get; private set; }
@@ -321,6 +321,15 @@ namespace SQLHelper
             }
         }
         #endregion
+        public static bool AlertOnDBConnectionError(Exception ex)
+        {
+            if (IsDBConnectionError(ex))
+            {
+                Log.OnConecctionLost?.Invoke(ex, EventArgs.Empty);
+                return true;
+            }
+            return false;
+        }
         public static bool IsDBConnectionError(Exception ex)
         {
             Exception Exbase = ex.MainExcepcion();
@@ -330,9 +339,8 @@ namespace SQLHelper
 #else
             bool desconexion = (exception.GetType().Name == "SqlException");
 #endif
-            if (desconexion)
+            if (!desconexion)
             {
-                desconexion = false;
                 //Asegurarse
                 foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME" })
                     if (

@@ -121,10 +121,7 @@ namespace SQLHelper
             {
                 Log.LogMe(ex, "Consulta fallida");
                 Log.LogMeSQL(sql);
-                if (Log.IsDBConnectionError(ex))
-                {
-                    Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
-                }
+                Log.AlertOnDBConnectionError(ex);
             }
             return result;
         }
@@ -367,11 +364,7 @@ namespace SQLHelper
                 {
                     Log.LogMeSQL("Transaccion fallida reportada");
                     Log.LogMeSQL(GetCommandText(cmd));
-                    if (Log.IsDBConnectionError(ex))
-                    {
-                        Log.OnConecctionLost?.Invoke(new DBError(this.ConnectionString, ex), EventArgs.Empty);
-                    }
-                    else if (SQLHelper.Instance.Debugging)
+                    if (!Log.AlertOnDBConnectionError(ex) && SQLHelper.Instance.Debugging)
                     {
                         throw ex;
                     }
