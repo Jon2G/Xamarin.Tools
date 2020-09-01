@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Plugin.Xamarin.Tools.Shared.Classes
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase<T> : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -20,6 +20,16 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, args);
+        }
+        #endregion
+
+        #region GlobalPropertyChanged
+        protected static event PropertyChangedEventHandler GlobalPropertyChanged = delegate { };
+        protected static void OnGlobalPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            GlobalPropertyChanged(
+                typeof(T),
+                new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

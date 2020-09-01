@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Shared.Services
 {
-    public class PDFToHtml : ViewModelBase, IDisposable
+    public class PDFToHtml : ViewModelBase<PDFToHtml>, IDisposable
     {
         public enum PDFEnum
         {
