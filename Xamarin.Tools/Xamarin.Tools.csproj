@@ -8,7 +8,7 @@
 
     <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>-->
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1</TargetFrameworks>
 
     <!--Feel free to add as many targets as you need below
     netstandard1.0;netstandard2.0;MonoAndroid90;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
@@ -110,8 +110,7 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Compile Include="Droid\Services\CustomPrintDocumentAdapter.cs" />
-    <PackageReference Include="Plugin.CurrentActivity">
-      <Version>2.1.0.4</Version>
+    <PackageReference Include="Plugin.CurrentActivity" Version="2.1.0.4">
     </PackageReference>
     <Compile Include="Droid\**\*.cs" />
 
@@ -198,21 +197,17 @@
     <Reference Include="System.Xaml">
       <HintPath>..\..\Git\GourmetPOS\Assambles\System.Xaml.dll</HintPath>
     </Reference>
-    <PackageReference Include="WindowsBase">
-      <Version>4.6.1055</Version>
+    <PackageReference Include="WindowsBase" Version="4.6.1055">
     </PackageReference>
     <PackageReference Include="PresentationFramework" Version="4.6.0" />
-    <PackageReference Include="HtmlRenderer.Core">
-      <Version>1.5.0.6</Version>
+    <PackageReference Include="HtmlRenderer.Core" Version="1.5.0.6">
     </PackageReference>
-    <PackageReference Include="HtmlRenderer.PdfSharp">
-      <Version>1.5.0.6</Version>
+    <PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6">
     </PackageReference>
     <!--<PackageReference Include="iTextSharp">
 			<Version>5.5.13.1</Version>
 		</PackageReference>-->
-    <PackageReference Include="PdfiumViewer">
-      <Version>2.13.0</Version>
+    <PackageReference Include="PdfiumViewer" Version="2.13.0">
     </PackageReference>
 
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
@@ -309,8 +304,7 @@
 
 
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
-    <PackageReference Include="WinRtHttpClientHandler">
-      <Version>1.0.0</Version>
+    <PackageReference Include="WinRtHttpClientHandler" Version="1.0.0">
     </PackageReference>
   </ItemGroup>
 
