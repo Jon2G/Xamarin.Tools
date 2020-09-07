@@ -17,7 +17,7 @@ using SQLHelper.Interfaces;
 
 namespace SQLHelper
 {
-    public class SQLHLite: BaseSQLHelper
+    public class SQLHLite : BaseSQLHelper
     {
         public EventHandler OnCreateDB;
         //private FileInfo file;
@@ -151,6 +151,28 @@ namespace SQLHelper
             }
             return result;
         }
+        public T Single<T>(SQLiteConnection con, string sql)
+        {
+            T result = default;
+            try
+            {
+                using (IReader reader = Leector(sql, con))
+                {
+                    if (reader.Read())
+                    {
+                        result = (
+                            typeof(T).IsEnum ?
+                                (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
+                                (T)Convert.ChangeType(reader[0], typeof(T)));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.LogMe(e, "Al ejecutar un single en SQLHLite");
+            }
+            return result;
+        }
 
         public int EXEC(string sql, params object[] parametros)
         {
@@ -162,6 +184,22 @@ namespace SQLHelper
                 con.Close();
             }
             return afectadas;
+        }
+        public int EXEC(SQLiteConnection con, string sql, params object[] parametros)
+        {
+            Log.DebugMe(sql);
+            return con.Execute(sql, parametros);
+        }
+        public T ExecuteRead<T>(string sql, params object[] parametros)
+        {
+            Log.DebugMe(sql);
+            T result = default(T);
+            using (SqlConnection con = Conecction())
+            {
+                result = con.ExecuteScalar<T>(sql, parametros);
+                con.Close();
+            }
+            return result;
         }
         public List<T> Lista<T>(string sql)
         {
@@ -266,7 +304,7 @@ namespace SQLHelper
             {
                 foreach (string line in sql.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (line.ToUpperInvariant().Trim() == "--GO"||(sqlBatch.Length>0&&sqlBatch[sqlBatch.Length-1]==';'))
+                    if (line.ToUpperInvariant().Trim() == "--GO" || (sqlBatch.Length > 0 && sqlBatch[sqlBatch.Length - 1] == ';'))
                     {
                         string batch = sqlBatch.ToString();
 
@@ -290,6 +328,21 @@ namespace SQLHelper
             }
         }
 
+        public string FormatTime(TimeSpan TimeSpan)
+        {
+            return TimeSpan.ToString("hh':'mm':'ss'.'fff");
+        }
+        public string FormatTime(DateTime TimeSpan)
+        {
+            using (SQLiteConnection lite = Conecction())
+            {
+                return TimeSpan.ToString(lite.DateTimeStringFormat);
+            }
+        }
 
+        public int LastScopeIdentity(SqlConnection con)
+        {
+           return Single<int>(con, "SELECT last_insert_rowid();");
+        }
     }
 }

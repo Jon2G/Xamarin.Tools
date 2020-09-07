@@ -9,9 +9,10 @@ namespace SQLHelper.Abstractions
 {
     public class Update : IQuery
     {
+        private readonly Dictionary<string, object> WhereParameters;
         private Update(BaseSQLHelper SQLH, string TableName) : base(SQLH, TableName)
         {
-       
+            this.WhereParameters = new Dictionary<string, object>();
         }
         public static Update BulidFrom(BaseSQLHelper SQLH, string TableName)
         {
@@ -21,6 +22,11 @@ namespace SQLHelper.Abstractions
         public Update AddField(string Field, object NewValue)
         {
             this.AddParameter(Field, NewValue);
+            return this;
+        }
+        public Update Where(string Field, object value)
+        {
+            this.WhereParameters.Add(Field, value);
             return this;
         }
 
@@ -43,10 +49,10 @@ namespace SQLHelper.Abstractions
             {
                 builder.Remove(builder.Length - 2, 1);
             }
-            if (this.Parameters.Any())
+            if (this.WhereParameters.Any())
             {
                 builder.Append(" WHERE");
-                foreach (var pair in this.Parameters)
+                foreach (var pair in this.WhereParameters)
                 {
                     builder.Append(" ")
                         .Append(pair.Key)
@@ -77,14 +83,20 @@ namespace SQLHelper.Abstractions
         {
             if (this.SQLH is SQLH sql)
             {
-                IEnumerable<SqlParameter> parameters =
-                    this.Parameters.Select(x => new SqlParameter(x.Key, x.Value));
-
+                List<SqlParameter> parameters =
+                    this.Parameters.Select(x => new SqlParameter(x.Key, x.Value)).ToList();
+                foreach (var where in this.WhereParameters)
+                {
+                    if (parameters.Any(x => x.ParameterName == where.Key))
+                    {
+                        parameters.Add(new SqlParameter(where.Key, where.Value));
+                    }
+                }
                 return sql.EXEC(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
             }
             else if (this.SQLH is SQLHLite sqlite)
             {
-                IEnumerable<object> parameters =this.Parameters.Select(x => x.Value);
+                IEnumerable<object> parameters = this.Parameters.Select(x => x.Value);
 
                 return sqlite.EXEC(BuildLiteQuery(), parameters.ToArray());
             }

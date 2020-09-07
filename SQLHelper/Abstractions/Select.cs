@@ -1,9 +1,11 @@
 ﻿using SQLHelper.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SQLHelper.Abstractions
 {
@@ -14,7 +16,31 @@ namespace SQLHelper.Abstractions
         {
             this.SelectionFields = new List<string>();
         }
-
+        private Select(BaseSQLHelper SQLH) : base(SQLH, null)
+        {
+            this.SelectionFields = null;
+        }
+        public static Select BulidFrom(BaseSQLHelper SQLH)
+        {
+            return new Select(SQLH);
+        }
+        public IReader ExecuteQuery(string query, params SqlParameter[] parameters)
+        {
+            if (this.SQLH is SQLHLite lite)
+            {
+                foreach (SqlParameter parameter in parameters)
+                {
+                    Regex regex = new Regex(@$"\@{parameter.ParameterName}");
+                    query = regex.Replace(query, $"'{parameter.Value}'");
+                }
+                return lite.Leector(query);
+            }
+            else if (this.SQLH is SQLH sql)
+            {
+                return sql.Leector(query, CommandType.Text, false, parameters);
+            }
+            throw new NotSupportedException("No sql connection set");
+        }
         public static Select BulidFrom(BaseSQLHelper SQLH, string TableName)
         {
             return new Select(SQLH, TableName);
@@ -51,9 +77,9 @@ namespace SQLHelper.Abstractions
         protected override string BuildLiteQuery()
         {
             StringBuilder builder = new StringBuilder()
-                .Append("SELECT (")
+                .Append("SELECT ")
                   .Append(string.Join(",", this.SelectionFields))
-                  .Append(") FROM ")
+                  .Append(" FROM ")
                   .Append(TableName);
             if (this.Parameters.Any())
             {
@@ -62,7 +88,9 @@ namespace SQLHelper.Abstractions
                 {
                     builder.Append(" ")
                         .Append(pair.Key)
-                        .Append(" =?");
+                        .Append(" ='")
+                        .Append(pair.Value)
+                        .Append('\'');
                 }
             }
             return builder.ToString();
@@ -93,7 +121,6 @@ namespace SQLHelper.Abstractions
                 return sqlite.Leector(BuildLiteQuery());
             }
             throw new NotSupportedException("No sql connection set");
-
         }
 
 

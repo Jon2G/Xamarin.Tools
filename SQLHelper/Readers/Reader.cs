@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,16 +9,26 @@ namespace SQLHelper.Readers
 {
     public class Reader : IReader
     {
-        private SqlDataReader _Reader { get; set; }
+        private DbDataReader _Reader { get; set; }
         private SqlCommand Cmd { get; set; }
         private SqlConnection Connection { get; set; }
         public int FieldCount { get => _Reader.FieldCount; }
 
         internal Reader(SqlCommand Cmd)
         {
-            Connection = Cmd.Connection;
-            this.Cmd = Cmd;
-            _Reader = Cmd.ExecuteReader();
+            try
+            {
+                Connection = Cmd.Connection;
+                this.Cmd = Cmd;
+                _Reader = Cmd.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                if (Log.AlertOnDBConnectionError(ex))
+                {
+                    _Reader = new FakeReader();
+                }
+            }
         }
         internal Reader() { }
         internal async Task<Reader> AsyncReader(SqlCommand Cmd)

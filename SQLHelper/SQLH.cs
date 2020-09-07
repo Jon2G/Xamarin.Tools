@@ -212,26 +212,32 @@ namespace SQLHelper
             }
             return Rows;
         }
-        public List<T> Lista<T>(string sql, CommandType type = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
+        public List<T> Lista<T>(string sql, CommandType type = CommandType.StoredProcedure, bool Reportar = true, int indice = 0, params SqlParameter[] parameters)
         {
             List<T> result = new List<T>();
-            using (SqlConnection con = Con())
+            try
             {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
+                using (SqlConnection con = Con())
                 {
-                    cmd.Parameters.AddRange(parameters);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
                     {
-                        while (reader.Read())
+                        cmd.Parameters.AddRange(parameters);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            result.Add((T)Convert.ChangeType(reader[0], typeof(T)));
+                            while (reader.Read())
+                            {
+                                result.Add((T)Convert.ChangeType(reader[indice], typeof(T)));
+                            }
                         }
+                        if (Reportar)
+                            ReportaTransaccion(cmd);
                     }
-                    if (Reportar)
-                        ReportaTransaccion(cmd);
+                    con.Close();
                 }
-                con.Close();
+            }catch(Exception ex)
+            {
+                Log.AlertOnDBConnectionError(ex);
             }
             return result;
         }
@@ -368,7 +374,7 @@ namespace SQLHelper
                     {
                         throw ex;
                     }
-                    return null;
+                    return new FakeReader();
                 }
             }
         }
