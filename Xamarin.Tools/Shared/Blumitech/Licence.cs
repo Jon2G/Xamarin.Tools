@@ -96,9 +96,9 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo no cuenta con la licencia para usar esta aplicación", "Acceso denegado");
                     break;
                 case ProjectActivationState.LoginRequired:
-                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
+                    Acr.UserDialogs.UserDialogs.Instance.Alert("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
                     BlumLogin login = new BlumLogin(page.Background, this).LockModal() as BlumLogin;
-                    await page.Navigation.PushModalAsync(login);
+                    await page.Navigation.PushModalAsync(login,true);
                     Autorized = false;
                     break;
                 case ProjectActivationState.ConnectionFailed:

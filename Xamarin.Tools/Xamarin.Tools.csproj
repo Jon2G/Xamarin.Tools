@@ -311,4 +311,9 @@
 
 
 
+  <ItemGroup>
+    <Compile Update="Shared\Classes\Permisos.cs">
+      <SubType></SubType>
+    </Compile>
+  </ItemGroup>
 </Project>
