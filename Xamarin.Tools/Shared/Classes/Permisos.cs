@@ -32,6 +32,10 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
         }
         public static async Task<bool> TenemosPermiso(Plugin.Permissions.Abstractions.Permission Permiso)
         {
+            if (Device.RuntimePlatform == Device.iOS && Permiso == Permission.Storage)
+            {
+                return true;
+            }
             return await Device.InvokeOnMainThreadAsync(async () =>
             {
                 Plugin.Permissions.BasePermission basePermission = new BasePermission(Permiso);

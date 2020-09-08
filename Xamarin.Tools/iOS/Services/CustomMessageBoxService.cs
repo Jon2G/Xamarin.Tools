@@ -10,7 +10,8 @@ namespace Plugin.Xamarin.Tools.iOS.Services
     {
         public CustomMessageBoxResult Show(string messageBoxText)
         {
-            throw new NotImplementedException();
+            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText);
+            return CustomMessageBoxResult.OK;
         }
 
         public CustomMessageBoxResult Show(string messageBoxText, string caption)
@@ -25,7 +26,15 @@ namespace Plugin.Xamarin.Tools.iOS.Services
 
         public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            string text = null;
+            switch (button)
+            {
+                case CustomMessageBoxButton.OK:
+                    text = "Ok";
+                    break;
+            }
+            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText, caption, text);
+            return CustomMessageBoxResult.OK;
         }
 
         public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText)
@@ -35,7 +44,8 @@ namespace Plugin.Xamarin.Tools.iOS.Services
 
         public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText, caption, okButtonText);
+            return CustomMessageBoxResult.OK;
         }
 
         public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)

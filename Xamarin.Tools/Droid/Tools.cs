@@ -42,14 +42,6 @@ namespace Plugin.Xamarin.Tools.Droid
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
-            #region DependencyServices
-            //DependencyService.Register<DataShare>();
-            //DependencyService.Register<PDFSaveAndOpen>();
-            //DependencyService.Register<PhotoPickerService>();
-            //DependencyService.Register<Screenshot>();
-            //DependencyService.Register<CustomMessageBoxService>();
-            //DependencyService.Register<Services.DeviceInfo>();
-            #endregion
 
             return Shared.Tools.Instance;
         }

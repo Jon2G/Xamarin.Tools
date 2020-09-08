@@ -9,6 +9,7 @@ namespace Plugin.Xamarin.Tools.Shared
 {
     public static partial class Tools
     {
+        public static bool IsInited => currentInstance != null;
         public static void Set(AbstractTools Instance)
         {
             currentInstance = Instance;
@@ -26,5 +27,6 @@ namespace Plugin.Xamarin.Tools.Shared
             }
             set => currentInstance = value;
         }
+
     }
 }

@@ -19,7 +19,7 @@ namespace Plugin.Xamarin.Tools.iOS
 
         public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
         {
-           return InitLoggin(LogDirectory, AlertAfterCritical);
+            return InitLoggin(LogDirectory, AlertAfterCritical);
         }
 
         public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
@@ -47,7 +47,7 @@ namespace Plugin.Xamarin.Tools.iOS
         }
         public UIInterfaceOrientationMask GetSupportedInterfaceOrientations(Page mainPage)
         {
-            if (mainPage.Navigation.NavigationStack.Last() is BasePage page)
+            if (mainPage.Navigation.NavigationStack.Any() && mainPage.Navigation.NavigationStack.Last() is BasePage page)
             {
                 if (page.LockedOrientation != DeviceOrientation.Other)
                 {
