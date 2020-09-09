@@ -31,6 +31,10 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         private void MailChanged(object sender, EventArgs e)
         {
+            if(Btn is null)
+            {
+                return;
+            }
             if (string.IsNullOrEmpty(this.UserName) || string.IsNullOrEmpty(this.Password))
             {
                 this.Btn.TextColor = Color.Gray;
@@ -44,7 +48,6 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         {
             MailChanged(sender, e);
         }
-
         private void Registrarse(object sender, EventArgs e)
         {
             Launcher.OpenAsync(new Uri("https://ecommerce.blumitech.com.mx/"));
@@ -71,7 +74,6 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Usuario o contraseña incorrectos", "Alert", "OK");
             }
         }
-
         private void Btn_Clicked(object sender, EventArgs e)
         {
             this.SubmitCommand.Execute(this);

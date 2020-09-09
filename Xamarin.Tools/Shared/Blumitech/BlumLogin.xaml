@@ -3,8 +3,7 @@
                  xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:input="clr-namespace:Plugin.InputKit.Shared.Controls;assembly=Plugin.InputKit" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
              xmlns:vm="clr-namespace:Plugin.Xamarin.Tools.Shared.Blumitech"
              mc:Ignorable="d" x:Name="Me"
              x:Class="Plugin.Xamarin.Tools.Shared.Blumitech.BlumLogin">
@@ -13,7 +12,26 @@
             <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Registrar dispositivo"/>
             <Image Margin="10" HeightRequest="45" Source="LogoBlum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
             <Frame BackgroundColor="Transparent" BindingContext="{Binding Source={Reference Me}}" VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BorderColor="Transparent" Margin="10">
-                <input:FormView IsValidated="{Binding IsValidated}">
+                <StackLayout>
+
+                <Label TextColor="Black" FontAttributes="Bold" Text="Correo electrónico:" FontSize="Large"/>
+                <Entry BindingContext="{Binding Source={Reference Me}}"
+                    Text="{Binding UserName}" x:Name="TxtUser"
+                    Keyboard="Email"
+                    Placeholder="sample@domain.com"
+                    FontSize="Medium" TextColor="Black"
+                    MaxLength="50" Margin="0,0,10,0" TextChanged="MailChanged"/>
+
+                 <Label TextColor="Black" FontAttributes="Bold" Text="Password:" FontSize="Large"/>
+                    <Entry  BindingContext="{Binding Source={Reference Me}}"
+                    Text="{Binding Password}"
+                    x:Name="TxtPass" 
+                    Placeholder="*******" IsPassword="True" FontSize="Medium" 
+                    TextColor="Black" Margin="0,0,10,0" TextChanged="PasswordChanged"/>
+
+                    <Button BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Clicked="Btn_Clicked" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
+                    </StackLayout>
+                <!-- <input:FormView IsValidated="{Binding IsValidated}">
 
                     <input:AdvancedEntry BindingContext="{Binding Source={Reference Me}}"
                     Text="{Binding UserName}"
@@ -38,7 +56,7 @@
                     MaxLength="10"  Margin="0,0,10,0" TextChanged="PasswordChanged"
                     />
                     <Button BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Clicked="Btn_Clicked" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
-                </input:FormView>
+                </input:FormView>-->
             </Frame>
             <Label TextColor="Blue" TextDecorations="Underline" FontSize="Small"  Text="Crear cuenta" HorizontalOptions="Start">
                 <Label.GestureRecognizers>

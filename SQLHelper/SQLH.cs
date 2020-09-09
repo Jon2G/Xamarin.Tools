@@ -36,6 +36,13 @@ namespace SQLHelper
             }
             return null;
         }
+
+        public bool TriggerExists(string TriggerName)
+        {
+            return Exists($"SELECT * FROM sys.objects WHERE [name] = N'{TriggerName}' AND [type] = 'TR'"
+                ,false);
+        }
+
         public List<Tuple<string, Type>> GetColumnsName(string consulta, params SqlParameter[] Parametros)
         {
             List<Tuple<string, Type>> listacolumnas = new List<Tuple<string, Type>>();
