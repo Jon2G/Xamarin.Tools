@@ -19,7 +19,7 @@ namespace SQLHelper
         public static string DBLogPath { get; private set; }
         public static string CriticalLogPath { get; private set; }
         private static EventHandler OnAlertCritical;
-        public static void Init(string LogDirectory,EventHandler CriticalAction=null)
+        public static void Init(string LogDirectory, EventHandler CriticalAction = null)
         {
             Log.LogDirectory = LogDirectory;
             Log.CriticalLogPath = $"{Log.LogDirectory}\\Critical.log";
@@ -30,7 +30,7 @@ namespace SQLHelper
             {
                 Directory.CreateDirectory(Log.LogDirectory);
             }
-            if (CriticalAction!=null)
+            if (CriticalAction != null)
             {
                 OnAlertCritical += CriticalAction;
                 AlertCriticalUnhandled();
@@ -76,7 +76,7 @@ namespace SQLHelper
         }
         public static void DebugMe(string text)
         {
-            if (SQLHelper.Instance?.Debugging??false)
+            if (SQLHelper.Instance?.Debugging ?? false)
             {
                 LogMe(text);
             }
@@ -85,7 +85,7 @@ namespace SQLHelper
         {
             try
             {
-                string mensaje = string.Concat("\r",Environment.NewLine,
+                string mensaje = string.Concat("\r", Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "---->", error);
                 if (SQLHelper.Instance.Debugging)
                 {
@@ -198,7 +198,7 @@ namespace SQLHelper
         {
             try
             {
-                string mensaje = string.Concat(Environment.NewLine,"[WARNING]",
+                string mensaje = string.Concat(Environment.NewLine, "[WARNING]",
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error);
                 if (SQLHelper.Instance.Debugging)
                 {
@@ -342,7 +342,7 @@ namespace SQLHelper
             if (!desconexion)
             {
                 //Asegurarse
-                foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME" })
+                foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME", "SOCKET" })
                     if (
                         (exception?.Message?.ToUpper()?.Contains(identificados) ?? false)
                         ||

@@ -66,12 +66,12 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         }
         public async Task<bool> IsAuthorizated(Page page)
         {
-            /*if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging 
+            if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
                 //&& !Services.DeviceInfo.Current.IsDevice
                 )
             {
                 return true;
-            }*/
+            }
             bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
             if (!DoIHaveInternet())

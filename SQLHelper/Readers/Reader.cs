@@ -24,10 +24,8 @@ namespace SQLHelper.Readers
             }
             catch (Exception ex)
             {
-                if (Log.AlertOnDBConnectionError(ex))
-                {
-                    _Reader = new FakeReader();
-                }
+                Log.AlertOnDBConnectionError(ex);
+                _Reader = new FakeReader();
             }
         }
         internal Reader() { }

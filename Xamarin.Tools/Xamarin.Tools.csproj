@@ -172,6 +172,7 @@
     <Compile Remove="Shared\Services\PDFConverter.cs" />
     <Compile Remove="Shared\Services\PhotoPicker.cs" />
     <Compile Remove="Shared\Services\PrintHTML.cs" />
+    <Compile Remove="Shared\Effects\**\*.cs" />
 
     <Compile Include="NetCore\**\*.cs" />
 
@@ -307,9 +308,6 @@
     <PackageReference Include="WinRtHttpClientHandler" Version="1.0.0">
     </PackageReference>
   </ItemGroup>
-
-
-
 
   <ItemGroup>
     <Compile Update="Shared\Classes\Permisos.cs">

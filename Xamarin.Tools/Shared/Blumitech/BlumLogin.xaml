@@ -10,7 +10,7 @@
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
             <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Registrar dispositivo"/>
-            <Image Margin="10" HeightRequest="45" Source="LogoBlum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
+            <Image Margin="10" HeightRequest="45" Source="logo_blum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
             <Frame BackgroundColor="Transparent" BindingContext="{Binding Source={Reference Me}}" VerticalOptions="Start" HorizontalOptions="Center" Padding="3" CornerRadius="5" BorderColor="Transparent" Margin="10">
                 <StackLayout>
 

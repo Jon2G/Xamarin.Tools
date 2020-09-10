@@ -40,7 +40,7 @@ namespace SQLHelper
         public bool TriggerExists(string TriggerName)
         {
             return Exists($"SELECT * FROM sys.objects WHERE [name] = N'{TriggerName}' AND [type] = 'TR'"
-                ,false);
+                , false);
         }
 
         public List<Tuple<string, Type>> GetColumnsName(string consulta, params SqlParameter[] Parametros)
@@ -242,7 +242,8 @@ namespace SQLHelper
                     }
                     con.Close();
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.AlertOnDBConnectionError(ex);
             }
@@ -355,34 +356,25 @@ namespace SQLHelper
         }
         public IReader Leector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
         {
-            if (SQLHelper.Instance.Debugging)
+            try
             {
-                if (commandType == CommandType.StoredProcedure)
-                {
-                    Log.LogMe($"STRORED PROCEDURE=>{sql}");
-                }
+                SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
+                cmd.Parameters.AddRange(parameters);
+                cmd.Connection.Open();
+                if (Reportar)
+                    ReportaTransaccion(cmd);
+                return new Reader(cmd);
             }
-            using (SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType })
+            catch (Exception ex)
             {
-                try
+                Log.LogMeSQL("Transaccion fallida reportada");
+                Log.LogMeSQL(sql);
+                if (!Log.AlertOnDBConnectionError(ex) && SQLHelper.Instance.Debugging)
                 {
+                    throw ex;
+                }
+                return new FakeReader();
 
-                    cmd.Parameters.AddRange(parameters);
-                    cmd.Connection.Open();
-                    if (Reportar)
-                        ReportaTransaccion(cmd);
-                    return new Reader(cmd);
-                }
-                catch (Exception ex)
-                {
-                    Log.LogMeSQL("Transaccion fallida reportada");
-                    Log.LogMeSQL(GetCommandText(cmd));
-                    if (!Log.AlertOnDBConnectionError(ex) && SQLHelper.Instance.Debugging)
-                    {
-                        throw ex;
-                    }
-                    return new FakeReader();
-                }
             }
         }
         public void RunBatch(string Batch, bool Reportar = false)
