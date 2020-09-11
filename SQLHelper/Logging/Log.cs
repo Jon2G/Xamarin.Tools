@@ -90,7 +90,6 @@ namespace SQLHelper
                 if (SQLHelper.Instance.Debugging)
                 {
                     Debug.WriteLine(mensaje);
-                    Console.Write(mensaje);
                     return;
                 }
                 File.AppendAllText(Log.LogPath, mensaje);
