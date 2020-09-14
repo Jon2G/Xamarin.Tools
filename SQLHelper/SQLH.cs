@@ -209,7 +209,7 @@ namespace SQLHelper
                         throw;
                     }
 
-                    Rows = -2;
+                    Rows = SQLH.Error;
                 }
 
                 if (Reportar)

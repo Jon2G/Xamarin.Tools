@@ -25,6 +25,7 @@ namespace SQLHelper.Readers
             catch (Exception ex)
             {
                 Log.AlertOnDBConnectionError(ex);
+                Log.LogMe(ex);
                 _Reader = new FakeReader();
             }
         }

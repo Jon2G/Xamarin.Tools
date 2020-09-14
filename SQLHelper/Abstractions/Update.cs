@@ -87,7 +87,7 @@ namespace SQLHelper.Abstractions
                     this.Parameters.Select(x => new SqlParameter(x.Key, x.Value)).ToList();
                 foreach (var where in this.WhereParameters)
                 {
-                    if (parameters.Any(x => x.ParameterName == where.Key))
+                    if (!parameters.Any(x => x.ParameterName == where.Key))
                     {
                         parameters.Add(new SqlParameter(where.Key, where.Value));
                     }
