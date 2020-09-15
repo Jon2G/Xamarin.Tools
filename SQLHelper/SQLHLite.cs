@@ -336,7 +336,7 @@ namespace SQLHelper
         {
             using (SQLiteConnection lite = Conecction())
             {
-                return TimeSpan.ToString(lite.DateTimeStringFormat);
+                return TimeSpan.ToString("YYYYMMDDTHHMMSS");
             }
         }
 
