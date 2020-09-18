@@ -264,9 +264,11 @@ namespace SQLHelper
             catch (Exception ex)
             {
                 Log.LogMe(ex, "Al compilar y ejecutar un leector");
-                return null;
+                return new FakeReader();
             }
         }
+
+
         public LiteReader Leector(string sql, SqlConnection connection)
         {
             try

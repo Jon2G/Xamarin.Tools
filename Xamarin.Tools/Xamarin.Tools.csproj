@@ -56,7 +56,7 @@
 		<Company>BlumJonathanGG</Company>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
@@ -67,36 +67,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|Xamarin.iOS10|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|MonoAndroid90|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|uap10.0.17763|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|MonoAndroid90|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|Xamarin.iOS10|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|uap10.0.17763|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
+
 
 	<ItemGroup>
 		<Compile Include="Shared\**\*.cs" />
@@ -111,7 +82,7 @@
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
 		<Compile Include="Droid\**\*.cs" />
 		<Compile Include="Droid\Services\CustomPrintDocumentAdapter.cs" />
-		<PackageReference Include="Plugin.CurrentActivity" Version="2.1.0.4"/>
+		<PackageReference Include="Plugin.CurrentActivity" Version="2.1.0.4" />
 		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
 		<PackageReference Include="DeviceId" Version="5.1.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
@@ -165,7 +136,7 @@
 		<Compile Remove="Shared\Services\PrintHTML.cs" />
 		<Compile Remove="Shared\Effects\**\*.cs" />
 		<PackageReference Remove="Xamarin.Forms" Version="4.8.0.1364" />
-		
+
 		<Compile Include="NetCore\**\*.cs" />
 
 		<PackageReference Include="DeviceId" Version="5.1.1" />
@@ -220,18 +191,27 @@
 		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
 		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
 	</ItemGroup>
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
-
-		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
+	<ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
+		<!--<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.1" />-->
 		<Compile Include="UWP\**\*.cs" />
-		<PackageReference Include="IronPdf" Version="2020.7.1" />
-		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.10" />
+		<PackageReference Include="ColorCode.Core" Version="2.0.6" />
+		<PackageReference Include="Microsoft.Toolkit" Version="6.1.1" />
+		<PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+		<PackageReference Include="Microsoft.Toolkit.Uwp" Version="6.1.1" />
+		<PackageReference Include="Win2D.uwp" Version="1.25.0" />
+		<PackageReference Include="WinRtHttpClientHandler" Version="1.0.0" />
+		<PackageReference Include="ColorCode.UWP" Version="2.0.6" />
 
+		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.1" />
+
+		<PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
+		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
+		<PackageReference Include="IronPdf" Version="2020.7.1" />
 		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
 		<PackageReference Include="DeviceId" Version="5.1.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="IronPdf" Version="2020.8.0" />
-
 		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
 		<PackageReference Include="TouchView" Version="4.1.78" />
@@ -290,14 +270,13 @@
 	</ItemGroup>
 
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
-		<PackageReference Include="WinRtHttpClientHandler" Version="1.0.0">
-		</PackageReference>
-	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Update="Shared\Classes\Permisos.cs">
 			<SubType></SubType>
 		</Compile>
 	</ItemGroup>
+
+
+
 </Project>
