@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Shared.Pages
 {
@@ -30,6 +32,10 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             };
             this.Animation = scaleAnimation;
             await PopupNavigation.Instance.PushAsync(this, true);
+            if (Device.RuntimePlatform == Device.UWP)
+            {
+                this.UpdateChildrenLayout(); 
+            }
             return this;
         }
         public async Task<BasePopUp> Close()
@@ -57,7 +63,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         }
         public async void BackButtonPressed()
         {
-           if(!OnBackButtonPressed())
+            if (!OnBackButtonPressed())
             {
                 await this.Close();
             }

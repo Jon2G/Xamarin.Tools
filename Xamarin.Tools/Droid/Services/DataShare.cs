@@ -30,11 +30,24 @@ namespace Plugin.Xamarin.Tools.Droid.Services
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Debe permitir a la aplicación el acceso al almacenamiento antes de poder compartir", "Permita el acceso", "Entiendo");
                 return;
             }
-            string dirPath =/* Xamarin.Forms.Forms.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDownloads).Path;*/
+            string dirPath =
             Environment.GetExternalStoragePublicDirectory(Environment.DirectoryDownloads).Path;
+            if (!Directory.Exists(dirPath))
+            {
+                /* dirPath =
+                     (Plugin.Xamarin.Tools.Shared.Tools.Instance as
+                     Plugin.Xamarin.Tools.Droid.ToolsImplementation)
+                     .MainActivity.ApplicationContext
+                     .GetExternalFilesDir(Environment.DirectoryDownloads)
+                     .Path;*/
+                Directory.CreateDirectory(dirPath);
+            }
             var FileName = AttachmentName;
             Java.IO.File file = new Java.IO.File(dirPath, FileName);
-            file.Delete();
+            if (file.Exists())
+            {
+                file.Delete();
+            }
             var filename = Path.Combine(dirPath, AttachmentName);
             File.WriteAllBytes(filename, AttachmentBytes);
             Device.BeginInvokeOnMainThread(() =>

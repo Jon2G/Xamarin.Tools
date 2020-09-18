@@ -29,6 +29,10 @@ namespace SQLHelper
                 await Task.Yield();
                 using SqlConnection con = string.IsNullOrEmpty(CadenaCon) ? Con() : new SqlConnection(CadenaCon);
                 con.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT 1", con) { CommandType = CommandType.Text })
+                {
+                    cmd.ExecuteScalar();
+                }
             }
             catch (Exception e)
             {
@@ -177,8 +181,12 @@ namespace SQLHelper
         }
         public int EXEC(string procedimiento, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parametros)
         {
+            return EXEC(Con(), procedimiento, commandType, Reportar, parametros);
+        }
+        public int EXEC(SqlConnection connection,string procedimiento, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parametros)
+        {
             int Rows = -1;
-            using (SqlConnection con = Con())
+            using (SqlConnection con = connection??Con())
             {
                 con.Open();
                 using SqlCommand cmd = new SqlCommand(procedimiento, con)
