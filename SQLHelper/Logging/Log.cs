@@ -359,7 +359,11 @@ namespace SQLHelper
             }
             if (desconexion)
             {
-                Log.LogMe($"-->[WARNING!!!] DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
+                Log.DebugMe($"-->[WARNING!!!] DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
+            }
+            else
+            {
+                Log.DebugMe($"-->[WARNING!!!] FAKE ERROR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
             }
             return desconexion;
 

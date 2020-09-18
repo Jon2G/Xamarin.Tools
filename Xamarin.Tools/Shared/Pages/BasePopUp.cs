@@ -32,10 +32,6 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             };
             this.Animation = scaleAnimation;
             await PopupNavigation.Instance.PushAsync(this, true);
-            if (Device.RuntimePlatform == Device.UWP)
-            {
-                this.UpdateChildrenLayout(); 
-            }
             return this;
         }
         public async Task<BasePopUp> Close()

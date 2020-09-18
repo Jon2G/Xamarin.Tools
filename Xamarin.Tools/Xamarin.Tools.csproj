@@ -71,7 +71,7 @@
 
 	<ItemGroup>
 		<Compile Include="Shared\**\*.cs" />
-		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
+		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
@@ -253,7 +253,7 @@
 		<PackageReference Include="TouchView" Version="4.1.78" />
 		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
 		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1364" />
+		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1451" />
 		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
 		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
 

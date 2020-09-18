@@ -19,7 +19,7 @@ namespace Plugin.Xamarin.Tools.UWP.Renders
         protected override void OnElementChanged(ElementChangedEventArgs<ProgressRing> e)
         {
             base.OnElementChanged(e);
-            if (Control == null)
+            if (Control == null&&e.NewElement!=null)
             {
                 ring = new RadialProgressBar();
                 ring.Visibility = Windows.UI.Xaml.Visibility.Visible;
