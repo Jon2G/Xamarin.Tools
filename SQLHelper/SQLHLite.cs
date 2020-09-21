@@ -51,6 +51,7 @@ namespace SQLHelper
         public void RevisarBaseDatos()
         {
             FileInfo db = new FileInfo(this.RutaDb);
+
             if (!db.Exists)
             {
                 Crear(Conecction());
@@ -330,18 +331,7 @@ namespace SQLHelper
             }
         }
 
-        public string FormatTime(TimeSpan TimeSpan)
-        {
-            return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
-        }
-        public string FormatTime(DateTime TimeSpan)
-        {
-            using (SQLiteConnection lite = Conecction())
-            {
-                //'2020-09-17T12:27:55'  Formato universal de fecha y hora sql server
-                return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");
-            }
-        }
+
 
         public int LastScopeIdentity(SqlConnection con)
         {

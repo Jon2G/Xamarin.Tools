@@ -26,6 +26,17 @@ namespace SQLHelper.Interfaces
         {
             this.ConnectionString = ConnectionString;
         }
-
+        public string FormatTime(TimeSpan TimeSpan)
+        {
+            return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
+        }
+        public string FormatTime(DateTime TimeSpan)
+        {
+            //using (SQLiteConnection lite = Conecction())
+            //{
+            //'2020-09-17T12:27:55'  Formato universal de fecha y hora sql server
+            return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");
+            //}
+        }
     }
 }

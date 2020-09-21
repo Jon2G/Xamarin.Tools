@@ -34,7 +34,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             await PopupNavigation.Instance.PushAsync(this, true);
             return this;
         }
-        public async Task<BasePopUp> Close()
+        public virtual async Task<BasePopUp> Close()
         {
             await PopupNavigation.Instance.RemovePageAsync(this, true);
             return this;
