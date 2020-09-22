@@ -49,29 +49,7 @@ namespace Plugin.Xamarin.Tools.WPF
         {
             get => Shared.Tools.Instance as ToolsImplementation;
         }
-        private bool? _IsInDesingMode;
-        public bool IsInDesingMode
-        {
-            get
-            {
-                if (_IsInDesingMode is null)
-                {
-                    _IsInDesingMode = Designing();
-                }
-                return (bool)_IsInDesingMode;
-            }
-        }
-        private bool Designing()
-        {
-            string name = Process.GetCurrentProcess().ProcessName;
-            name = name?.Trim()?.ToUpper();
-            if (name == "XDESPROC" || name == "DEVENV")
-            {
-                return true;
-            }
-            // MessageBox.Show(name);
-            return false;
-        }
+
         public Window VentanaPadre()
         {
             if (IsInDesingMode)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 
@@ -26,6 +27,29 @@ namespace Plugin.Xamarin.Tools.Shared
         {
             this._LibraryPath = LibraryPath;
             return this;
+        }
+        private bool? _IsInDesingMode;
+        public bool IsInDesingMode
+        {
+            get
+            {
+                if (_IsInDesingMode is null)
+                {
+                    _IsInDesingMode = Designing();
+                }
+                return (bool)_IsInDesingMode;
+            }
+        }
+        private bool Designing()
+        {
+            string name = Process.GetCurrentProcess().ProcessName;
+            name = name?.Trim()?.ToUpper();
+            if (name == "XDESPROC" || name == "DEVENV")
+            {
+                return true;
+            }
+            // MessageBox.Show(name);
+            return false;
         }
     }
 }

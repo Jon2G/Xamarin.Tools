@@ -169,8 +169,7 @@
 		<!--<PackageReference Include="iTextSharp">
 			<Version>5.5.13.1</Version>
 		</PackageReference>-->
-		<PackageReference Include="PdfiumViewer" Version="2.13.0">
-		</PackageReference>
+		<PackageReference Include="PdfiumViewer" Version="2.13.0"/>
 
 		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
 		<PackageReference Include="DeviceId" Version="5.1.1" />
@@ -183,6 +182,7 @@
 		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
 		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
 		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1269" />
+		<PackageReference Include="Xamarin.Forms.Platform.WPF" Version="4.8.0.1451" />
 		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
 		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
 		<PackageReference Include="ceTe.DynamicPDF.Printing.NET" Version="4.13.0" />

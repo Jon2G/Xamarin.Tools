@@ -8,7 +8,8 @@ using Plugin.Xamarin.Tools.WPF.Services;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using SQLHelper;
 using Xamarin.Forms;
-
+using Xamarin.Forms.Internals;
+using Log = SQLHelper.Log;
 
 namespace Plugin.Xamarin.Tools.WPF
 {
@@ -23,6 +24,8 @@ namespace Plugin.Xamarin.Tools.WPF
         public static AbstractTools Init()
         {
 
+            global::Xamarin.Forms.Forms.Init();
+
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
@@ -35,10 +38,10 @@ namespace Plugin.Xamarin.Tools.WPF
             //DependencyService.Register<DataShare>();
             //DependencyService.Register<PDFSaveAndOpen>();
             //DependencyService.Register<PhotoPickerService>();
-            DependencyService.Register<PrintHTML>();
-            DependencyService.Register<Services.DeviceInfo>();
-            // DependencyService.Register<Screenshot>();
-            DependencyService.Register<CustomMessageBoxService>();
+            //DependencyService.Register<PrintHTML>();
+            //DependencyService.Register<Services.DeviceInfo>();
+            //// DependencyService.Register<Screenshot>();
+            //DependencyService.Register<CustomMessageBoxService>();
             #endregion
 
             return Shared.Tools.Instance;
