@@ -45,6 +45,7 @@ namespace SQLHelper
                 file.Delete();
                 if (!string.IsNullOrEmpty(criticalDescription))
                 {
+                    Log.DebugMe(criticalDescription);
                     OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
                 }
             }
