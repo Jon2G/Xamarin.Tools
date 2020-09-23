@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-
+#if NETCOREAPP
+#else 
+using Xamarin.Forms;
+#endif
 
 namespace Plugin.Xamarin.Tools.Shared
 {
@@ -42,6 +45,14 @@ namespace Plugin.Xamarin.Tools.Shared
         }
         private bool Designing()
         {
+#if NETCOREAPP
+
+#else 
+            if (Device.RuntimePlatform == Device.UWP)
+            {
+                return false;
+            }
+#endif
             string name = Process.GetCurrentProcess().ProcessName;
             name = name?.Trim()?.ToUpper();
             if (name == "XDESPROC" || name == "DEVENV")
