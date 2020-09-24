@@ -23,7 +23,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             base.OnDisappearing();
             Confirmado?.Invoke(this, null);
         }
-        public async Task<BasePopUp> Mostrar()
+        public virtual async Task<BasePopUp> Mostrar()
         {
             var scaleAnimation = new ScaleAnimation
             {
