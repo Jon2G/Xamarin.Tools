@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Plugin.Fingerprint;
+using Plugin.Fingerprint.Abstractions;
+using Plugin.Xamarin.Tools.Shared.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -310,6 +313,15 @@ namespace Plugin.Xamarin.Tools.Shared.Pages.PinView
             Pin = string.Empty;
         }
         #endregion
-
+        public async Task<bool> IsFingerPrintAvaible(bool allowAlternativeAuthentication = true)
+        {
+            return await CrossFingerprint.Current.IsAvailableAsync(allowAlternativeAuthentication);
+        }
+        public async Task<bool> RequestFingerPrint(string title, string reason)
+        {
+            AuthenticationRequestConfiguration request = new AuthenticationRequestConfiguration(title, reason);
+            FingerprintAuthenticationResult result = await CrossFingerprint.Current.AuthenticateAsync(request);
+            return result.Authenticated;
+        }
     }
 }

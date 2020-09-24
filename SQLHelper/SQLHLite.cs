@@ -95,7 +95,11 @@ namespace SQLHelper
         {
             try
             {
-                File.Delete(RutaDb);
+                FileInfo file = new FileInfo(RutaDb);
+                if (file.Exists)
+                {
+                    File.Delete(RutaDb);
+                }
                 return true;
             }
             catch (Exception ex)
@@ -335,7 +339,7 @@ namespace SQLHelper
 
         public int LastScopeIdentity(SqlConnection con)
         {
-           return Single<int>(con, "SELECT last_insert_rowid();");
+            return Single<int>(con, "SELECT last_insert_rowid();");
         }
     }
 }

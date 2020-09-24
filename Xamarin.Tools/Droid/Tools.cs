@@ -8,6 +8,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Plugin.CurrentActivity;
+using Plugin.Fingerprint;
 using Plugin.Xamarin.Tools.Droid.Services;
 using Plugin.Xamarin.Tools.Shared;
 using Plugin.Xamarin.Tools.Shared.Pages;
@@ -42,7 +43,7 @@ namespace Plugin.Xamarin.Tools.Droid
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
-
+            CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
             return Shared.Tools.Instance;
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)
