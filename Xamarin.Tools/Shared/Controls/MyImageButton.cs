@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.Xamarin.Tools.Shared.Converters;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
@@ -7,28 +8,18 @@ namespace Plugin.Xamarin.Tools.Shared.Controls
 {
     public partial class MyImageButton : ImageButton
     {
-        public static readonly BindableProperty MySourceProperty = BindableProperty.Create(
-            propertyName: nameof(MySource), returnType: typeof(string), declaringType: typeof(MyImageButton),
-            propertyChanged: OnMySourceChanged);
+        public static readonly BindableProperty ImgSourceProperty = BindableProperty.Create(
+            propertyName: nameof(MySource), returnType: typeof(ImageSource), declaringType: typeof(MyImage), defaultValue: null);
 
-        public static void OnMySourceChanged(BindableObject bindable, object oldVal, object newVal)
+        [TypeConverter(typeof(MyImageSourceConverter))]
+        public ImageSource MySource
         {
-            MyImageButton image = (MyImageButton)bindable;
-            if (oldVal as string != newVal as string)
+            get { return (ImageSource)GetValue(ImgSourceProperty); }
+            set
             {
-                if (Device.RuntimePlatform == Device.UWP)
-                {
-                    image.Source = ImageSource.FromFile($"Resources/{newVal}");
-                    return;
-                }
-                image.Source = ImageSource.FromFile(newVal as string);
+                SetValue(ImgSourceProperty, value);
+                OnPropertyChanged();
             }
-        }
-
-        public string MySource
-        {
-            get { return (string)GetValue(MySourceProperty); }
-            set { SetValue(MySourceProperty, value); }
         }
 
         public MyImageButton()

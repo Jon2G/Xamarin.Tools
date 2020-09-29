@@ -36,13 +36,45 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             try
             {
                 var Info = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current;
-                brand = $"{Info.DeviceName}@{Info.Model}@{Info.Manufacturer}";
+                brand = Info.Manufacturer;
+                if (brand.ToLower() == "unknown")
+                {
+                    brand = "GENERIC";
+                }
             }
             catch (Exception ex)
             {
                 Log.LogMe(ex);
             }
             return brand;
+        }
+        private string GetDeviceName()
+        {
+            string DeviceName = "GENERIC";
+            try
+            {
+                var Info = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current;
+                DeviceName = Info.DeviceName;
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+            }
+            return DeviceName;
+        }
+        private string GetDeviceModel()
+        {
+            string Model = "GENERIC";
+            try
+            {
+                var Info = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current;
+                Model = Info.Model;
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+            }
+            return Model;
         }
         private string GetDevicePlatform()
         {
@@ -137,7 +169,9 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             {
                 string DeviceBrand = this.GetDeviceBrand();
                 string Platform = this.GetDevicePlatform();
-                switch (await this.WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform))
+                string Name = this.GetDeviceName();
+                string Model = this.GetDeviceModel();
+                switch (await this.WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform,Name,Model))
                 {
                     case "NO_DEVICES_LEFT":
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");

@@ -1,4 +1,5 @@
 ﻿using FFImageLoading.Forms;
+using Plugin.Xamarin.Tools.Shared.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,29 +9,33 @@ namespace Plugin.Xamarin.Tools.Shared.Controls
 {
     public partial class MyImage : CachedImage
     {
-        public static readonly BindableProperty MySourceProperty = BindableProperty.Create(
-            propertyName: nameof(MySource), returnType: typeof(string), declaringType: typeof(MyImage),
-            propertyChanged: OnMySourceChanged);
 
-        public static void OnMySourceChanged(BindableObject bindable, object oldVal, object newVal)
+        public static readonly BindableProperty MySourceProperty = BindableProperty.Create(
+            propertyName: nameof(MySource), returnType: typeof(ImageSource), declaringType: typeof(MyImage), defaultValue: null,
+          propertyChanged: ImgChanged);
+
+        private static void ImgChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            MyImage image = (MyImage)bindable;
-            if (oldVal as string != newVal as string)
+            if (bindable is MyImage img)
             {
-                if (Device.RuntimePlatform == Device.UWP)
+                if (newValue != oldValue)
                 {
-                    image.Source = ImageSource.FromFile($"Resources/{newVal}");
-                    return;
+                    img.Source = newValue as ImageSource;
                 }
-                image.Source = ImageSource.FromFile(newVal as string);
             }
         }
 
-        public string MySource
+        [TypeConverter(typeof(MyImageSourceConverter))]
+        public ImageSource MySource
         {
-            get { return (string)GetValue(MySourceProperty); }
-            set { SetValue(MySourceProperty, value); }
+            get { return (ImageSource)GetValue(MySourceProperty); }
+            set
+            {
+                SetValue(MySourceProperty, value);
+                OnPropertyChanged();
+            }
         }
+
 
         public MyImage()
         {

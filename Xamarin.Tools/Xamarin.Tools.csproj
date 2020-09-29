@@ -126,6 +126,7 @@
 		<Compile Remove="Shared\Pages\**\*.xaml" />
 		<Compile Remove="Shared\Views\**\*.cs" />
 		<Compile Remove="Shared\Controls\**\*.cs" />
+		<Compile Remove="Shared\Converters\**\*.cs" />
 		<Compile Remove="Shared\Blumitech\**\*.cs" />
 		<Compile Remove="Shared\Classes\Extensiones.cs" />
 		<Compile Remove="Shared\Classes\Permisos.cs" />

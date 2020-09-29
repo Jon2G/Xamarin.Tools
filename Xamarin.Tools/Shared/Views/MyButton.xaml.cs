@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.Xamarin.Tools.Shared.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -143,11 +144,15 @@ namespace Plugin.Xamarin.Tools.Shared.Views
             }
         }
 
+
+
         public static readonly BindableProperty ImgSourceProperty = BindableProperty.Create(
-            propertyName: nameof(ImgSource), returnType: typeof(string), declaringType: typeof(MyButton), defaultValue: null);
-        public string ImgSource
+            propertyName: nameof(ImgSource), returnType: typeof(ImageSource), declaringType: typeof(MyButton), defaultValue: null);
+        
+        [TypeConverter(typeof(MyImageSourceConverter))]
+        public ImageSource ImgSource
         {
-            get { return (string)GetValue(ImgSourceProperty); }
+            get { return (ImageSource)GetValue(ImgSourceProperty); }
             set
             {
                 this.Img.IsVisible = !(value is null);
