@@ -36,10 +36,11 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         }
         public virtual async Task<BasePopUp> Close()
         {
+            Closing();
             await PopupNavigation.Instance.RemovePageAsync(this, true);
             return this;
         }
-
+        protected virtual void Closing() { }
         private bool IsModalLocked { get; set; }
         public BasePopUp LockModal()
         {
