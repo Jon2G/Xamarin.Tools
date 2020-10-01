@@ -213,7 +213,7 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
             }
             return lista;
         }
-        
+
         public static void InsertRow(this DataTable tabla, int index, DataRow fila)
         {
             DataRow dr = tabla.NewRow(); //Create New Row
@@ -225,37 +225,51 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
             tabla.Rows.InsertAt(dr, index); // InsertAt specified position
         }
 #endif
-        public static List<T>[] Divide<T>(this List<T> lista, int dividir)
+        public static List<T>[] Divide<T>(this IEnumerable<T> lista, int dividir)
         {
             if (dividir <= 0)
             {
                 throw new ArgumentOutOfRangeException("No puede dividir una lista entre:" + dividir);
             }
             List<T>[] resultado = new List<T>[dividir];
-            if (lista?.Count < 0)
+            if (lista?.Count() < 0)
             {
                 return resultado;
             }
 
-            int xlista = lista.Count / dividir;
+            int xlista = lista.Count() / dividir;
             if (xlista <= 0) { xlista = 1; }
 
             int rango = 0;
             for (int i = 0; i < dividir; i++)
             {
-                if (rango + xlista > lista.Count)
+                if (rango + xlista > lista.Count())
                 {
                     continue;
                 }
-                resultado[i] = lista.GetRange(rango, xlista);
+
+                resultado[i] = new List<T>(lista.GetRange(rango, xlista));
                 rango += xlista;
             }
-            if (rango < lista.Count)
+            if (rango < lista.Count())
             {
-                resultado[0].AddRange(lista.GetRange(rango, lista.Count - rango));
+                resultado[0].AddRange(lista.GetRange(rango, lista.Count() - rango));
             }
             return resultado;
 
+        }
+        public static IEnumerable<T> GetRange<T>(this IEnumerable<T> input, int start, int end)
+        {
+            int i = 0;
+            foreach (var item in input)
+            {
+                if (i < start) continue;
+                if (i > end) break;
+
+                yield return item;
+
+                i++;
+            }
         }
         public static List<T> Unir<T>(this List<T> lista, params List<T>[] listas)
         {

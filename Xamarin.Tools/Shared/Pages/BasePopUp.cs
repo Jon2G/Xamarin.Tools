@@ -14,6 +14,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
     public class BasePopUp : PopupPage
     {
         public event EventHandler Confirmado;
+        public event EventHandler OnClosed;
         protected void InvokeConfirmado(object sender, EventArgs e)
         {
             Confirmado?.Invoke(sender, e);
@@ -38,6 +39,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         {
             Closing();
             await PopupNavigation.Instance.RemovePageAsync(this, true);
+            OnClosed?.Invoke(this, EventArgs.Empty);
             return this;
         }
         protected virtual void Closing() { }
