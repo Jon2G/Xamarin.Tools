@@ -50,7 +50,7 @@ namespace Plugin.Xamarin.Tools.UWP
             get => Shared.Tools.Instance as ToolsImplementation;
         }
         private bool? _IsInDesingMode;
-        public bool IsInDesingMode
+        public new bool IsInDesingMode
         {
             get
             {

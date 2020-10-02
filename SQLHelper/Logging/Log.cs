@@ -190,8 +190,9 @@ namespace SQLHelper
                 File.AppendAllText(Log.BackgroundLogPath, mensaje);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.LogMe(ex);
             }
         }
         public static void LogMeDemonio(string error)

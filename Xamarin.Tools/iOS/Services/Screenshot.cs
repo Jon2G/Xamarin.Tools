@@ -4,14 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using UIKit;
 
 namespace Plugin.Xamarin.Tools.iOS.Services
 {
     public class Screenshot : IScreenshot
     {
-        public byte[] Capture()
+        public async Task<byte[]> Capture()
         {
+            await Task.Yield();
             var capture = UIScreen.MainScreen.Capture();
             using (NSData data = capture.AsPNG())
             {
