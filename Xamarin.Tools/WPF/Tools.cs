@@ -34,15 +34,6 @@ namespace Plugin.Xamarin.Tools.WPF
 
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 
-            #region DependencyServices
-            //DependencyService.Register<DataShare>();
-            //DependencyService.Register<PDFSaveAndOpen>();
-            //DependencyService.Register<PhotoPickerService>();
-            //DependencyService.Register<PrintHTML>();
-            //DependencyService.Register<Services.DeviceInfo>();
-            //// DependencyService.Register<Screenshot>();
-            //DependencyService.Register<CustomMessageBoxService>();
-            #endregion
 
             return Shared.Tools.Instance;
         }

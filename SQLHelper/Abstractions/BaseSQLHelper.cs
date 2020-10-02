@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SQLHelper.Interfaces
 {
-    public class BaseSQLHelper
+    public class BaseSQLHelper:IDisposable
     {
         public event EventHandler OnConnectionStringChanged;
         public const int Error = -2;
@@ -37,6 +37,11 @@ namespace SQLHelper.Interfaces
             //'2020-09-17T12:27:55'  Formato universal de fecha y hora sql server
             return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");
             //}
+        }
+
+        public void Dispose()
+        {
+         
         }
     }
 }

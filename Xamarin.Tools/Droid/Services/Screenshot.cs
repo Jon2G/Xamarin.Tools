@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Plugin.Xamarin.Tools.Droid.Services
 {
     public class Screenshot : IScreenshot
     {
-        public byte[] Capture()
+        public async Task<byte[]> Capture()
         {
+            await Task.Yield();
+
             var rootView = CrossCurrentActivity.Current.Activity.Window.DecorView.RootView;
             using (var screenshot = Android.Graphics.Bitmap.CreateBitmap(
                 rootView.Width,

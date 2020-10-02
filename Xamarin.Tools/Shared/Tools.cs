@@ -21,7 +21,7 @@ namespace Plugin.Xamarin.Tools.Shared
             get
             {
                 if (currentInstance == null)
-                    throw new ArgumentException("[Shared.Tools] This is the bait library, not the platform library.  You must install the nuget package in your main executable/application project");
+                    throw new ArgumentException("Please Init Plugin.Xamarin.Tools before using it");
 
                 return currentInstance;
             }
