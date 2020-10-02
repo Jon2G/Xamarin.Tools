@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SyncService.Daemon
 {
-    internal class DaemonConfig
+    public class DaemonConfig
     {
         public readonly BaseSQLHelper Source;
         public readonly BaseSQLHelper Destination;

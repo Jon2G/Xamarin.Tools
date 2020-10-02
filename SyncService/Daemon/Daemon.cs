@@ -25,7 +25,7 @@ namespace SyncService.Daemon
     {
         public const string OriginName = "ORIGINDaemon";
         public const string DestinationName = "DESTINATIONDaemon";
-        private DaemonConfig DaemonConfig;
+        public DaemonConfig DaemonConfig { get; set; }
         #region ThreadMonitor
         private static object Locker = new object();
         private Thread Thread { get; set; }

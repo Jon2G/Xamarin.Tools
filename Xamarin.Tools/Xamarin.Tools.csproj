@@ -71,6 +71,7 @@
 
 	<ItemGroup>
 		<Compile Include="Shared\**\*.cs" />
+		<Compile Remove="Shared\Controls\NotificationBar\CustomToolBar.xaml.cs" />
 		<PackageReference Include="Plugin.Fingerprint" Version="2.1.1" />
 		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
 	</ItemGroup>
@@ -271,6 +272,9 @@
 	<ItemGroup>
 		<EmbeddedResource Update="Shared\Blumitech\BlumLogin.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Shared\Controls\NotificationBar\CustomToolBar.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Shared\Pages\PinView\PinPanel.xaml">
 		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
