@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plugin.Xamarin.Tools.Shared.Blumitech
+namespace Tools.Forms.Blumitech
 {
     public enum ProjectActivationState
     {

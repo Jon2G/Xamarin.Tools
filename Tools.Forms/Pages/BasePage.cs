@@ -9,7 +9,7 @@ using Xamarin.Forms.Platform;
 
 
 
-namespace Plugin.Xamarin.Tools.Shared.Pages
+namespace Tools.Forms.Controls.Pages
 {
     public class BasePage : ContentPage
     {
@@ -107,7 +107,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
             }
 
         }
-        private bool IsModalLocked { get; set; }
+        protected bool IsModalLocked { get; private set; }
         public BasePage LockModal()
         {
             this.IsModalLocked = !this.IsModalLocked;
@@ -133,7 +133,7 @@ namespace Plugin.Xamarin.Tools.Shared.Pages
         }
         public void SetScreenMode(ScreenMode Screen)
         {
-            Services.ScreenManager.Current.SetScreenMode(Screen);
+            Plugin.Xamarin.Tools.Shared.Services.ScreenManager.Current.SetScreenMode(Screen);
         }
     }
 }

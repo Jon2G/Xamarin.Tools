@@ -10,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plugin.Xamarin.Tools.Shared.Blumitech
+namespace Tools.Forms.Blumitech
 {
     internal sealed class WebService
     {

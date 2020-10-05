@@ -2,10 +2,9 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect" 
-             xmlns:pinview="clr-namespace:Plugin.Xamarin.Tools.Shared.Pages.PinView" 
-             xmlns:controls="clr-namespace:Plugin.Xamarin.Tools.Shared.Controls" 
-             xmlns:views="clr-namespace:Plugin.Xamarin.Tools.Shared.Views"
-             x:Class="Plugin.Xamarin.Tools.Shared.Pages.PinView.PinPanel" x:Name="PinViewElement">
+             xmlns:views="clr-namespace:Tools.Forms.Controls.Views" 
+             xmlns:pinview="clr-namespace:Tools.Forms.Controls.Pages.PinView"
+             x:Class="Tools.Forms.Controls.Pages.PinView.PinPanel" x:Name="PinViewElement">
     <ContentView.Resources>
         <pinview:LengthToListConverter x:Key="LengthToListConverter"/>
         <pinview:DivideConverter x:Key="DivideConverter"/>

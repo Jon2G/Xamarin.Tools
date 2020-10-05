@@ -1,14 +1,15 @@
-﻿using Plugin.Xamarin.Tools.Shared.Pages;
+﻿using Tools.Forms.Controls.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Forms.Blumitech;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Plugin.Xamarin.Tools.Shared.Blumitech
+namespace Tools.Forms.Blumitech
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BlumLogin : BasePage

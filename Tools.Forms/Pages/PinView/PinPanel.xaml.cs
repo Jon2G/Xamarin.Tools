@@ -10,7 +10,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Plugin.Xamarin.Tools.Shared.Pages.PinView
+namespace Tools.Forms.Controls.Pages.PinView
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PinPanel : ContentView

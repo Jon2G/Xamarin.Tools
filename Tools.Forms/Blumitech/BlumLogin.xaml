@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<pages:BasePage  xmlns:pages="clr-namespace:Plugin.Xamarin.Tools.Shared.Pages"
+<pages:BasePage  xmlns:pages="clr-namespace:Tools.Forms.Controls.Pages"
                  xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
-             xmlns:vm="clr-namespace:Plugin.Xamarin.Tools.Shared.Blumitech"
+             xmlns:vm="clr-namespace:Tools.Forms.Blumitech"
              mc:Ignorable="d" x:Name="Me"
-             x:Class="Plugin.Xamarin.Tools.Shared.Blumitech.BlumLogin">
+             x:Class="Tools.Forms.Blumitech.BlumLogin">
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
             <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Registrar dispositivo"/>

@@ -8,7 +8,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Plugin.Xamarin.Tools.Shared.Views
+namespace Tools.Forms.Controls.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MyButton : ContentView

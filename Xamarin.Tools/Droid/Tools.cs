@@ -11,7 +11,6 @@ using Plugin.CurrentActivity;
 using Plugin.Fingerprint;
 using Plugin.Xamarin.Tools.Droid.Services;
 using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Pages;
 using SQLHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -52,15 +51,15 @@ namespace Plugin.Xamarin.Tools.Droid
         }
         private static void OrientationServices(Activity activity)
         {
-            MessagingCenter.Subscribe<BasePage>(activity, nameof(DeviceOrientation.Landscape), sender =>
+            MessagingCenter.Subscribe<Page>(activity, nameof(DeviceOrientation.Landscape), sender =>
             {
                 activity.RequestedOrientation = ScreenOrientation.Landscape;
             });
-            MessagingCenter.Subscribe<BasePage>(activity, nameof(DeviceOrientation.Portrait), sender =>
+            MessagingCenter.Subscribe<Page>(activity, nameof(DeviceOrientation.Portrait), sender =>
             {
                 activity.RequestedOrientation = ScreenOrientation.Portrait;
             });
-            MessagingCenter.Subscribe<BasePage>(activity, nameof(DeviceOrientation.Other), sender =>
+            MessagingCenter.Subscribe<Page>(activity, nameof(DeviceOrientation.Other), sender =>
             {
                 activity.RequestedOrientation = ScreenOrientation.Unspecified;
             });

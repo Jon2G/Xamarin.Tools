@@ -1,5 +1,5 @@
-﻿
-using Plugin.Connectivity;
+﻿using Plugin.Connectivity;
+using Tools.Forms.Blumitech;
 using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Plugin.Xamarin.Tools.Shared;
 
-namespace Plugin.Xamarin.Tools.Shared.Blumitech
+namespace Tools.Forms.Blumitech
 {
     public sealed class Licence
     {
@@ -20,11 +21,11 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         private Licence(string DeviceId, string AppName)
         {
             this.AppName = AppName;
-            this.AppKeys = new Dictionary<string, string>() {
+            AppKeys = new Dictionary<string, string>() {
                 { "InventarioFisico","INVIS001"},
                 { "MyGourmetPOS","MGPOS2020"}
             };
-            this.WebService = new WebService(DeviceId);
+            WebService = new WebService(DeviceId);
         }
         public static Licence Instance(AbstractTools instance, string AppName)
         {
@@ -99,7 +100,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
         public async Task<bool> IsAuthorizated(Page page)
         {
             if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
-                || !Services.DeviceInfo.Current.IsDevice
+                || !Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.IsDevice
                 )
             {
                 return true;
@@ -112,7 +113,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             }
             else
             {
-                state = await Autheticate(this.AppName);
+                state = await Autheticate(AppName);
             }
             switch (state)
             {
@@ -142,7 +143,7 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
 
         internal async Task<bool> RegisterDevice(string userName, string password)
         {
-            string response = await this.WebService.DevicesLeft(this.AppKey, userName);
+            string response = await WebService.DevicesLeft(AppKey, userName);
             switch (response)
             {
                 case "ERROR":
@@ -167,11 +168,11 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
             }
             else
             {
-                string DeviceBrand = this.GetDeviceBrand();
-                string Platform = this.GetDevicePlatform();
-                string Name = this.GetDeviceName();
-                string Model = this.GetDeviceModel();
-                switch (await this.WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform,Name,Model))
+                string DeviceBrand = GetDeviceBrand();
+                string Platform = GetDevicePlatform();
+                string Name = GetDeviceName();
+                string Model = GetDeviceModel();
+                switch (await WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform, Name, Model))
                 {
                     case "NO_DEVICES_LEFT":
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
@@ -191,17 +192,17 @@ namespace Plugin.Xamarin.Tools.Shared.Blumitech
 
         internal async Task<bool> Login(string UserName, string Password)
         {
-            return (await this.WebService.LogIn(UserName, Password) == "OK");
+            return await WebService.LogIn(UserName, Password) == "OK";
         }
 
         private async Task<ProjectActivationState> Autheticate(string AppKey)
         {
-            if (!this.AppKeys.ContainsKey(AppKey))
+            if (!AppKeys.ContainsKey(AppKey))
             {
                 return ProjectActivationState.Denied;
             }
-            this.AppKey = this.AppKeys[AppKey];
-            return await this.WebService.RequestProjectAccess(this.AppKey);
+            this.AppKey = AppKeys[AppKey];
+            return await WebService.RequestProjectAccess(this.AppKey);
         }
 
 

@@ -1,6 +1,5 @@
 ﻿using Foundation;
 using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Pages;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
@@ -47,18 +46,24 @@ namespace Plugin.Xamarin.Tools.iOS
         }
         public UIInterfaceOrientationMask GetSupportedInterfaceOrientations(Page mainPage)
         {
-            if (mainPage.Navigation.NavigationStack.Any() && mainPage.Navigation.NavigationStack.Last() is BasePage page)
+            if (mainPage.Navigation.NavigationStack.Any() && mainPage.Navigation.NavigationStack.Last() is Page page)
             {
-                if (page.LockedOrientation != DeviceOrientation.Other)
+                if (page.GetType().GetProperty("LockedOrientation") is System.Reflection.PropertyInfo LockedOrientationProperty)
                 {
-                    page.Disappearing += Page_Disappearing;
-                    switch (page.LockedOrientation)
+                    if (LockedOrientationProperty.GetValue(page) is DeviceOrientation LockedOrientation)
                     {
-                        case DeviceOrientation.Landscape:
-                            return UIInterfaceOrientationMask.Landscape;
-                        case DeviceOrientation.Portrait:
-                            return UIInterfaceOrientationMask.Portrait;
+                        if (LockedOrientation != DeviceOrientation.Other)
+                        {
+                            page.Disappearing += Page_Disappearing;
+                            switch (LockedOrientation)
+                            {
+                                case DeviceOrientation.Landscape:
+                                    return UIInterfaceOrientationMask.Landscape;
+                                case DeviceOrientation.Portrait:
+                                    return UIInterfaceOrientationMask.Portrait;
 
+                            }
+                        }
                     }
                 }
             }
@@ -66,7 +71,7 @@ namespace Plugin.Xamarin.Tools.iOS
         }
         private void Page_Disappearing(object sender, EventArgs e)
         {
-            (sender as BasePage).Disappearing -= Page_Disappearing;
+            (sender as Page).Disappearing -= Page_Disappearing;
             UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.Unknown)), new NSString("orientation"));
         }
     }

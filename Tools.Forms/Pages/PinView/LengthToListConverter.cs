@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.Shared.Pages.PinView
+namespace Tools.Forms.Controls.Pages.PinView
 {
-    class DivideConverter : IValueConverter
+    class LengthToListConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double val)
+            if (value is int length)
             {
-                int number = int.Parse(parameter.ToString());
-                return val / number;
+                return Enumerable.Range(1, length);
             }
-            return value;
+            return new List<object>();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

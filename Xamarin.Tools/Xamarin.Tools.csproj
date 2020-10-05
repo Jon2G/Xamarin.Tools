@@ -71,13 +71,16 @@
 
 	<ItemGroup>
 		<Compile Include="Shared\**\*.cs" />
-		<Compile Remove="Shared\Controls\NotificationBar\CustomToolBar.xaml.cs" />
 		<PackageReference Include="Plugin.Fingerprint" Version="2.1.1" />
+		<PackageReference Include="System.Data.Common" Version="4.3.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
 		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
+		<PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
 		<!--<Compile Include="**\*.shared.cs" />-->
+
 	</ItemGroup>
 
 
@@ -101,14 +104,13 @@
 		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
 		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
 	</ItemGroup>
+
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
 		<Compile Include="iOS\**\*.cs" />
-
 		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
 		<PackageReference Include="DeviceId" Version="5.1.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="IronPdf" Version="2020.8.0" />
-
 		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
 		<PackageReference Include="TouchView" Version="4.1.78" />
@@ -123,12 +125,7 @@
 		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
 	</ItemGroup>
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-		<Compile Remove="Shared\Pages\**\*.cs" />
-		<Compile Remove="Shared\Pages\**\*.xaml" />
-		<Compile Remove="Shared\Views\**\*.cs" />
-		<Compile Remove="Shared\Controls\**\*.cs" />
 		<Compile Remove="Shared\Converters\**\*.cs" />
-		<Compile Remove="Shared\Blumitech\**\*.cs" />
 		<Compile Remove="Shared\Classes\Extensiones.cs" />
 		<Compile Remove="Shared\Classes\Permisos.cs" />
 		<Compile Remove="Shared\Services.PhotoPicker.cs" />
@@ -151,7 +148,6 @@
 
 	</ItemGroup>
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('net462')) ">
-
 		<Compile Include="WPF\**\*.cs" />
 		<Page Include="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 		<None Update="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
@@ -208,10 +204,7 @@
 		<PackageReference Include="Win2D.uwp" Version="1.25.0" />
 		<PackageReference Include="WinRtHttpClientHandler" Version="1.0.0" />
 		<PackageReference Include="ColorCode.UWP" Version="2.0.6" />
-
 		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.1" />
-
-		<PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
 		<PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.3" />
 		<PackageReference Include="IronPdf" Version="2020.7.1" />
 		<PackageReference Include="Acr.UserDialogs" Version="7.1.0.446" />
@@ -269,30 +262,35 @@
 	</ItemGroup>
 
 
-	<ItemGroup>
-		<EmbeddedResource Update="Shared\Blumitech\BlumLogin.xaml">
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Shared\Controls\NotificationBar\CustomToolBar.xaml">
-		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Shared\Pages\PinView\PinPanel.xaml">
-		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Shared\Views\MyButton.xaml">
-		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</EmbeddedResource>
-	</ItemGroup>
-
-
 
 	<ItemGroup>
 		<Compile Update="Shared\Classes\Permisos.cs">
 			<SubType></SubType>
 		</Compile>
-		<Compile Update="Shared\Pages\PinView\PinPanel.xaml.cs">
-		  <DependentUpon>PinPanel.xaml</DependentUpon>
-		</Compile>
+	</ItemGroup>
+
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
+		<PackageReference Include="Mono.Data.Sqlite">
+			<Version>1.0.61</Version>
+		</PackageReference>
+	</ItemGroup>
+
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+		<PackageReference Include="Mono.Data.Sqlite">
+			<Version>1.0.61</Version>
+		</PackageReference>
+	</ItemGroup>
+
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+		<PackageReference Include="Mono.Data.Sqlite">
+			<Version>1.0.61</Version>
+		</PackageReference>
 	</ItemGroup>
 
 

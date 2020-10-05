@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.Shared.Controls
+namespace Tools.Forms.Controls
 {
     public partial class MyImage : CachedImage
     {
-
         public static readonly BindableProperty MySourceProperty = BindableProperty.Create(
             propertyName: nameof(MySource), returnType: typeof(ImageSource), declaringType: typeof(MyImage), defaultValue: null,
           propertyChanged: ImgChanged);

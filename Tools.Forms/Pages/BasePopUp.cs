@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.Shared.Pages
+namespace Tools.Forms.Controls.Pages
 {
     public class BasePopUp : PopupPage
     {

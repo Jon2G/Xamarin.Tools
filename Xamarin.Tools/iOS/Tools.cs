@@ -1,7 +1,6 @@
 ﻿using Foundation;
 using Plugin.Xamarin.Tools.iOS.Services;
 using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Pages;
 using SQLHelper;
 using System;
 using System.Collections.Generic;

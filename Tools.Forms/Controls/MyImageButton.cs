@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.Shared.Controls
+namespace Tools.Forms.Controls
 {
     public partial class MyImageButton : ImageButton
     {

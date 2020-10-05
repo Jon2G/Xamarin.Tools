@@ -1,0 +1,66 @@
+﻿tOOLS<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage  xmlns:pages="clr-namespace:Tools.Forms.Controls.Pages"
+                 xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:views="clr-namespace:Tools.Forms.Controls.Views"
+                 x:Class="Tools.Forms.Controls.Pages.CadenaCon" x:Name="Me">
+    <ContentPage.Content>
+        <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
+            <Image IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
+                   Margin="0" HeightRequest="45" Source="{Binding Logo,Source={Reference Me}}"
+                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+            <Label Margin="0,10" BackgroundColor="DarkBlue" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Cadena de conexión"/>
+            <Grid Margin="5" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <ScrollView VerticalScrollBarVisibility="Default" HorizontalScrollBarVisibility="Never">
+                    <StackLayout Margin="0" Padding="10" HorizontalOptions="Center" VerticalOptions="StartAndExpand">
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Base de Datos:"/>
+                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtDbName" TextChanged="RecargaCadena"/>
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Servidor"/>
+                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtServidor" TextChanged="RecargaCadena"/>
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Puerto del servidor:"/>
+                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtPuerto" TextChanged="RecargaCadena"/>
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Usuario"/>
+                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtUsuario" TextChanged="RecargaCadena"/>
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Contraseña"/>
+                        <Entry Text="" TextColor="Black" FontSize="Subtitle"  x:Name="TxtContraseña" TextChanged="RecargaCadena"/>
+                        <Grid BackgroundColor="White"  Margin="0,5" VerticalOptions="FillAndExpand">
+                            <Frame BackgroundColor="White" BorderColor="Black" Padding="1" >
+                                <Editor HeightRequest="200" TextColor="Black" VerticalOptions="FillAndExpand" Text="" FontSize="Subtitle" x:Name="TxtCadenaCon"/>
+                            </Frame>
+                        </Grid>
+                        <StackLayout VerticalOptions="End" HorizontalOptions="Fill">
+                            <Frame  Padding="1" Margin="0" BorderColor="Black">
+                                <Button x:Name="BtnProbar" Clicked="ProbarConexion" FontSize="Body" BackgroundColor="White"  Text="Probar conexión"/>
+                            </Frame>
+
+                            <Frame Padding="1" Margin="0" BorderColor="Black">
+                                <Button x:Name="BtnGuardar" Clicked="Guardar" FontSize="Body"  BackgroundColor="White"  Text="Guardar y utilizar"/>
+                            </Frame>
+
+                            <views:MyButton Padding="10" StackHorizontalOptions="CenterAndExpand" Text="Guardar y renovar base local" Touched="GuardarRenovar_Touched"/>
+
+                            <Frame  Padding="1" Margin="0" BorderColor="Black">
+                                <Button x:Name="BtnCancelar" Clicked="Cancelar" FontSize="Body" BackgroundColor="White"  Text="Salir sin hacer nada"/>
+                            </Frame>
+                        </StackLayout>
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
+            <Frame VerticalOptions="EndAndExpand" Padding="3" CornerRadius="5" MinimumHeightRequest="40" BackgroundColor="White" BorderColor="Black" Margin="5">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                </Frame.GestureRecognizers>
+                <Grid VerticalOptions="Fill" HeightRequest="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" x:Name="Img" Margin="0" Source="usbok.png" Aspect="Fill"/>
+                    <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"  Padding="0" Margin="0" Grid.Column="1" HorizontalScrollBarVisibility="Never" VerticalScrollBarVisibility="Default">
+                        <Label TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TxtEstado" Text="Ok" FontSize="Medium"/>
+                    </ScrollView>
+                </Grid>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</pages:BasePage>

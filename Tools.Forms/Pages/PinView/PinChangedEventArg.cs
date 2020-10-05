@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plugin.Xamarin.Tools.Shared.Pages.PinView
+namespace Tools.Forms.Controls.Pages.PinView
 {
     public class PinChangedEventArg
     {
