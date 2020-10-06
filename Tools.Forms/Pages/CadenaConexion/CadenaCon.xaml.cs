@@ -12,6 +12,7 @@ using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 using Log = SQLHelper.Log;
 using Plugin.Xamarin.Tools.Shared.Converters;
+using SyncService.Daemon.VersionControl;
 
 namespace Tools.Forms.Controls.Pages
 {
@@ -63,7 +64,7 @@ namespace Tools.Forms.Controls.Pages
             }
             return false;
         }
-        public CadenaCon(SQLHLite DBConection,Exception ex)
+        public CadenaCon(SQLHLite DBConection, Exception ex)
         {
             InitializeComponent();
             this.DBConection = DBConection;
@@ -71,7 +72,7 @@ namespace Tools.Forms.Controls.Pages
             this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }
-        public CadenaCon(SQLHLite DBConection,Configuracion Configuracion)
+        public CadenaCon(SQLHLite DBConection, Configuracion Configuracion)
         {
             InitializeComponent();
             try
@@ -138,16 +139,24 @@ namespace Tools.Forms.Controls.Pages
                     this.Configuracion = Configuracion.BuildFrom(TxtDbName.Text, TxtContraseña.Text, TxtPuerto.Text, TxtServidor.Text, TxtUsuario.Text);
                     this.Configuracion.CadenaCon = TxtCadenaCon.Text;
                     this.Configuracion.Salvar(this.DBConection, this.NewDBConection);
-                    
+
                     this.NewDBConection.ChangeConnectionString(this.Configuracion.CadenaCon);
 
-                    if (this.NewDBConection.ExisteTabla("DESCARGAS_VERSIONES"))
+                    foreach (IVersionControlTable controlTable in new IVersionControlTable[] {
+                        new DispositivosTablets(),new DescargasVersiones(), new TriggersInfo()
+                    })
                     {
-                        this.NewDBConection.EXEC(
-                            "DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = @ID_DISPOSITIVO",
-                            System.Data.CommandType.Text, false,
-                            new SqlParameter("ID_DISPOSITIVO", Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId));
+                        if (!this.NewDBConection.ExisteTabla(controlTable.TableName))
+                        {
+                            controlTable.CreateTable(this.NewDBConection);
+                        }
                     }
+
+                    this.NewDBConection.EXEC(
+                        "DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = @ID_DISPOSITIVO",
+                        System.Data.CommandType.Text, false,
+                        new SqlParameter("ID_DISPOSITIVO", Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId));
+
                     if (this.Navigation.ModalStack.Count > 0)
                     {
                         await Navigation.PopModalAsync();
