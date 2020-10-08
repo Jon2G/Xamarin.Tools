@@ -366,6 +366,10 @@ namespace SQLHelper
         {
             return DataTable(Querry, CommandType.Text, TableName, false, parameters);
         }
+        public IReader Leector(string sql, params SqlParameter[] parameters)
+        {
+            return Leector(sql, CommandType.Text, false, parameters);
+        }
         public IReader Leector(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parameters)
         {
             try
