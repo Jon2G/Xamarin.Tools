@@ -40,11 +40,18 @@ namespace SQLHelper
             }
             return null;
         }
+
+        public string GetDbName()
+        {
+            return Single<string>("SELECT DB_NAME() AS [Current Database];");
+        }
+
         public bool TriggerExists(string TriggerName)
         {
             return Exists($"SELECT * FROM sys.objects WHERE [name] = N'{TriggerName}' AND [type] = 'TR'"
                 , false);
         }
+
         public List<Tuple<string, Type>> GetColumnsName(string consulta, params SqlParameter[] Parametros)
         {
             List<Tuple<string, Type>> listacolumnas = new List<Tuple<string, Type>>();
@@ -91,7 +98,7 @@ namespace SQLHelper
             }
             con.Close();
         }
-        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.StoredProcedure)
+        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text)
         {
             T result = default;
             using (IReader reader = Leector(sql, type, Reportar))
@@ -147,15 +154,18 @@ namespace SQLHelper
             }
             return result;
         }
-        [Obsolete("No se deberia utilizar mas procedimientos alamcenados debido a su dificil versionamiento", false)]
-        public int EXEC(string procedimiento, bool Reportar = true, params SqlParameter[] parametros)
+        public int EXEC(string sql, params SqlParameter[] parametros)
+        {
+            return EXEC(sql, CommandType.Text, false, parametros);
+        }
+        public int EXEC(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parametros)
         {
             int Rows = -1;
             using (SqlConnection con = Con())
             {
                 con.Open();
-                using SqlCommand cmd = new SqlCommand(procedimiento, con)
-                { CommandType = CommandType.StoredProcedure };
+                using SqlCommand cmd = new SqlCommand(sql, con)
+                { CommandType = commandType };
                 if (parametros.Any(x => x.Value is null))
                 {
                     foreach (SqlParameter t in parametros)
@@ -177,14 +187,10 @@ namespace SQLHelper
             }
             return Rows;
         }
-        public int EXEC(string procedimiento, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parametros)
-        {
-            return EXEC(Con(), procedimiento, commandType, Reportar, parametros);
-        }
-        public int EXEC(SqlConnection connection,string procedimiento, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parametros)
+        public int EXEC(SqlConnection connection, string procedimiento, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parametros)
         {
             int Rows = -1;
-            using (SqlConnection con = connection??Con())
+            using (SqlConnection con = connection ?? Con())
             {
                 con.Open();
                 using SqlCommand cmd = new SqlCommand(procedimiento, con)
@@ -360,7 +366,7 @@ namespace SQLHelper
         {
             return DataTable(Querry, CommandType.Text, TableName, false, parameters);
         }
-        public IReader Leector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
+        public IReader Leector(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parameters)
         {
             try
             {
@@ -426,22 +432,6 @@ namespace SQLHelper
                 }
                 Log.LogMeSQL("Transaccion fallida reportada");
                 Log.LogMeSQL(GetCommandText(cmd));
-                return null;
-            }
-        }
-        [Obsolete("No se deberia utilizar mas procedimientos alamcenados debido a su dificil versionamiento", false)]
-        public Reader Leector(string sql, bool Reportar, params SqlParameter[] parameters)
-        {
-            try
-            {
-                using SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = CommandType.StoredProcedure };
-                cmd.Parameters.AddRange(parameters);
-                cmd.Connection.Open();
-                return new Reader(cmd);
-            }
-            catch (Exception ex)
-            {
-                Log.LogMe(ex);
                 return null;
             }
         }
