@@ -478,13 +478,16 @@ namespace SyncService.Daemon
                 try
                 {
                     Pendientes pendiente = Pendings.Dequeue();
-                    Table table = Schema.First(x => x.Name == pendiente.Tabla);
-                    if (!table.Execute(this.DaemonConfig, pendiente, direccion))
+                    Table table = Schema.FirstOrDefault(x => x.Name == pendiente.Tabla);
+                    if (table != null)
                     {
-                        if (direccion == DireccionDemonio.TO_ORIGIN)//deben ir en un orden especifico
+                        if (!table.Execute(this.DaemonConfig, pendiente, direccion))
                         {
-                            Processed = 0;
-                            return;
+                            if (direccion == DireccionDemonio.TO_ORIGIN)//deben ir en un orden especifico
+                            {
+                                Processed = 0;
+                                return;
+                            }
                         }
                     }
                     Processed++;

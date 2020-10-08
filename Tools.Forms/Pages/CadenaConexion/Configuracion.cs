@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Tools.Forms.Controls.Pages.CadenaConexion
 {
-    public class Configuracion
+    public class Configuracion:Plugin.Xamarin.Tools.Shared.Classes.ViewModelBase<Configuracion>
     {
         public string CadenaCon { get; set; }
         public string IdentificadorDispositivo { get; private set; }
