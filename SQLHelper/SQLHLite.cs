@@ -3,13 +3,12 @@ using System.Collections.Generic;
 //Alias para poder trabajar con mas facilidad
 using SqlConnection = SQLite.SQLiteConnection;
 using SqlCommand = SQLite.SQLiteCommand;
-using SqlDataReader = SQLite_Net.Extensions.Readers.ReaderItem;
+using SqlDataReader = SQLHelper.SQLiteNetExtensions.ReaderItem;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SQLite;
-using SQLite_Net.Extensions.Readers;
 using System.Text;
 using System.Diagnostics;
 using SQLHelper.Readers;

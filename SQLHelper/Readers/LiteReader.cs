@@ -4,11 +4,10 @@ using System.Text;
 //Alias para poder trabajar con mas facilidad
 using SqlConnection = SQLite.SQLiteConnection;
 using SqlCommand = SQLite.SQLiteCommand;
-using SqlDataReader = SQLite_Net.Extensions.Readers.ReaderItem;
+using SqlDataReader =SQLHelper.SQLiteNetExtensions.ReaderItem;
 using System.Linq;
 using System.Diagnostics;
-using SQLite_Net.Extensions.Readers;
-
+using SQLHelper.SQLiteNetExtensions;
 namespace SQLHelper.Readers
 {
     public class LiteReader : IReader
