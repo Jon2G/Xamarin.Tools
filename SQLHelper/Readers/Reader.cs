@@ -13,8 +13,7 @@ namespace SQLHelper.Readers
         private SqlCommand Cmd { get; set; }
         private SqlConnection Connection { get; set; }
         public int FieldCount { get => _Reader.FieldCount; }
-
-        internal Reader(SqlCommand Cmd)
+        public Reader(SqlCommand Cmd)
         {
             try
             {
@@ -43,6 +42,10 @@ namespace SQLHelper.Readers
             {
                 Log.LogMeSQL(this.Cmd.CommandText);
             }
+            finally
+            {
+                Connection.Close();
+            }
             return this;
         }
         public void Dispose()
@@ -63,7 +66,12 @@ namespace SQLHelper.Readers
 
         public bool Read()
         {
-            return _Reader.Read();
+            bool read = _Reader.Read();
+            if (!read)
+            {
+                Dispose();
+            }
+            return read;
         }
 
         public async Task<bool> Read(bool async)

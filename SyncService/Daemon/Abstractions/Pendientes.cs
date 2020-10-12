@@ -25,7 +25,7 @@ namespace SyncService.Daemon.Abstractions
             this.Id = Id;
         }
 
-        internal void Sincronizado(DaemonConfig config, DireccionDemonio direccion, Table table)
+        internal void Sincronizado(DaemonConfig config, DireccionDemonio direccion)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.Xamarin.Tools.Shared.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,45 @@ namespace Tools.Forms.Controls.NotificationBar
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CustomToolBar : ContentView, INotificaciones
     {
+        public static readonly BindableProperty LogoTextProperty = BindableProperty.Create(
+            propertyName: nameof(LogoText), returnType: typeof(string), declaringType: typeof(CustomToolBar), defaultValue: null);
+        public string LogoText
+        {
+            get { return (string)GetValue(LogoTextProperty); }
+            set
+            {
+                SetValue(LogoTextProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+
+        public static readonly BindableProperty LogoProperty = BindableProperty.Create(
+            propertyName: nameof(Logo), returnType: typeof(ImageSource), declaringType: typeof(CustomToolBar), defaultValue: null);
+
+        [TypeConverter(typeof(MyImageSourceConverter))]
+        public ImageSource Logo
+        {
+            get { return (ImageSource)GetValue(LogoProperty); }
+            set
+            {
+                SetValue(LogoProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public static readonly BindableProperty IsLogoVisibleProperty = BindableProperty.Create(
+            propertyName: nameof(IsLogoVisible), returnType: typeof(bool), declaringType: typeof(CustomToolBar), defaultValue: false);
+        public bool IsLogoVisible
+        {
+            get { return (bool)GetValue(IsLogoVisibleProperty); }
+            set
+            {
+                SetValue(IsLogoVisibleProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
         public static readonly BindableProperty IsProgressVisibleProperty = BindableProperty.Create(
             propertyName: nameof(IsProgressVisible), returnType: typeof(bool), declaringType: typeof(CustomToolBar), defaultValue: false);
         public bool IsProgressVisible
@@ -36,10 +76,10 @@ namespace Tools.Forms.Controls.NotificationBar
         }
 
         public static readonly BindableProperty ProgressSourceProperty = BindableProperty.Create(
-            propertyName: nameof(IsProgressVisible), returnType: typeof(Binding), declaringType: typeof(CustomToolBar), defaultValue: null);
-        public Binding ProgressSource
+            propertyName: nameof(ProgressSource), returnType: typeof(float), declaringType: typeof(CustomToolBar), defaultValue: null);
+        public float ProgressSource
         {
-            get { return (Binding)GetValue(ProgressSourceProperty); }
+            get { return (float)GetValue(ProgressSourceProperty); }
             set
             {
                 SetValue(ProgressSourceProperty, value);

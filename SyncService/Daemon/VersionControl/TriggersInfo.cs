@@ -18,5 +18,15 @@ namespace SyncService.Daemon.VersionControl
                 VERSION VARCHAR(100) 
                 )");
         }
+
+        public void CreateTable(SQLHLite SQLH)
+        {
+            SQLH.EXEC(@"CREATE TABLE TRIGGERS_INFO
+                (
+                ID INT AUTOINCREMENT PRIMARY KEY,
+                NAME TEXT ,
+                VERSION TEXT
+                )");
+        }
     }
 }

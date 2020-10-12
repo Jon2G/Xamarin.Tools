@@ -6,6 +6,7 @@ using SQLHelper.Readers;
 using SQLite;
 using SyncService.Daemon.Abstractions;
 using SyncService.Daemon.Enums;
+using SyncService.Daemon.VersionControl;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +34,8 @@ namespace SyncService.Daemon
         #endregion
         private Table[] Schema;
         public event EventHandler OnConnectionStateChanged;
-
+        public event EventHandler OnConnectionStatusChanged;
+        public event Func<bool> OnInicializate;
         private readonly Queue<Pendientes> Pendings;
         private int _Processed;
         private int Processed
@@ -45,7 +47,6 @@ namespace SyncService.Daemon
                 OnPropertyChanged(nameof(Progress));
             }
         }
-
         public static readonly string DeviceId;
         private static bool _OffLine;
         public static bool OffLine
@@ -61,7 +62,6 @@ namespace SyncService.Daemon
                 }
             }
         }
-
         public static readonly Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
         public static Daemon Current
         {
@@ -97,6 +97,7 @@ namespace SyncService.Daemon
             get;
             private set;
         }
+        private string SelectLiteQuery;
         private static Daemon Born()
         {
             Daemon demon = new Daemon()
@@ -124,7 +125,7 @@ namespace SyncService.Daemon
             Processed = 0;
             Schema = new Table[0];
         }
-        public static Daemon Init(string DbVersion,int MaxSleep=30)
+        public static Daemon Init(string DbVersion, int MaxSleep = 30)
         {
             if (ConnectionsManager.Instance is null)
             {
@@ -146,6 +147,29 @@ namespace SyncService.Daemon
         public Daemon SetSchema(params Table[] tables)
         {
             this.Schema = tables;
+            this.SelectLiteQuery = string.Empty;
+            if (this.Schema.Any(x => x.TableDirection != TableDirection.DOWNLOAD))
+            {
+                StringBuilder builder = new StringBuilder()
+                    .Append("SELECT ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL ORDER BY(CASE ");
+                bool Debugging = Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging;
+                int MaxPriority = 0;
+                foreach (Table table in this.Schema.Where(x => x.TableDirection != TableDirection.DOWNLOAD))
+                {
+                    if (table.Priority > MaxPriority)
+                    {
+                        MaxPriority = table.Priority;
+                    }
+
+                    builder.Append(" WHEN TABLA = '")
+                        .Append(table.Name)
+                        .Append("' THEN ").Append(table.Priority);
+                }
+                MaxPriority++;
+                builder.Append(" ELSE ").Append(MaxPriority).Append(" END),ID")
+                    .Append((Debugging ? ";" : "LIMIT 25;"));
+                this.SelectLiteQuery = builder.ToString();
+            }
             return Daemon.Current;
         }
         public async void Reset()
@@ -208,7 +232,7 @@ namespace SyncService.Daemon
                 {
                     return;
                 }
-                Thread.Sleep(TimeSpan.FromSeconds(5));
+                Thread.Sleep(TimeSpan.FromSeconds(1));
             }
             IsSleepRequested = false;
             //this.Thread = null;
@@ -253,10 +277,25 @@ namespace SyncService.Daemon
                             Start();
                             return;
                         }
-                        Trigger.CheckTrigger(SQLH, table,this.DaemonConfig.DbVersion);
+                        Trigger.CheckTrigger(SQLH, table, this.DaemonConfig.DbVersion);
                     }
                 }
 
+                foreach (SQLHLite SQLHLite in DaemonConfig.GetSqlLiteConnections())
+                {
+                    IVersionControlTable controlTable = new VersionControl.VersionControlTable();
+                    if (!SQLHLite.TableExists(controlTable.TableName))
+                    {
+                        controlTable.CreateTable(SQLHLite);
+                    }
+                }
+                if (OnInicializate != null)
+                {
+                    if (!OnInicializate.Invoke())
+                    {
+                        return;
+                    }
+                }
                 IsInited = true;
             }
             catch (Exception ex)
@@ -321,7 +360,7 @@ namespace SyncService.Daemon
                         if (NadaQueHacer)
                         {
                             FactorDeDescanso++;
-                            if (FactorDeDescanso >DaemonConfig.MaxSleep)
+                            if (FactorDeDescanso > DaemonConfig.MaxSleep)
                             {
                                 FactorDeDescanso = DaemonConfig.MaxSleep;
                             }
@@ -391,40 +430,27 @@ namespace SyncService.Daemon
         {
             try
             {
-                bool Debugging = Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging;
+                // bool Debugging = Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging;
 
                 IReader reader = null;
                 IQuery query = Select.BulidFrom(
                     Upload ? this.DaemonConfig.Destination : this.DaemonConfig.Source);
-                if (query.SQLH is SQLHLite lite)
+                if (!string.IsNullOrEmpty(SelectLiteQuery) && query.SQLH is SQLHLite lite)
                 {
-                    reader = lite.Leector($@"SELECT ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL
-                        ORDER BY (CASE WHEN TABLA = 'R_MESAS' 
-                        THEN 1 
-                        WHEN TABLA = 'R_COMANDAS' 
-                        THEN 2 
-                        WHEN TABLA = 'TAMANIOS_COMANDAS' 
-                        THEN 3
-                        WHEN TABLA = 'OPCIONES_COMANDAS' 
-                        THEN 4 
-                        WHEN TABLA = 'MODIFICADORES_COMANDAS' 
-                        THEN 5 
-                        WHEN TABLA = 'PERSONALIZADOS_COMANDAS' 
-                        THEN 6 
-                        WHEN TABLA = 'COMANDAS_PART' 
-                        THEN 7 
-                        ELSE 8 END
-                        ),ID {(Debugging ? "" : "LIMIT 25")};");
+                    reader = lite.Leector(SelectLiteQuery);
                 }
                 else if (query.SQLH is SQLH sql)
                 {
                     reader = sql.Leector(
-                    $@"SELECT {(Debugging ? "" : "TOP 25")} ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL WHERE NOT EXISTS(SELECT ID_DISPOSITIVO FROM DESCARGAS_VERSIONES 
+                    $@"SELECT TOP 25 ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL WHERE NOT EXISTS(SELECT ID_DISPOSITIVO FROM DESCARGAS_VERSIONES 
                       WHERE DESCARGAS_VERSIONES.ID_DESCARGA=VERSION_CONTROL.ID AND ID_DISPOSITIVO=@ID_DISPOSITIVO) ORDER BY TABLA DESC,LLAVE ASC;"
                       , CommandType.Text, false,
                     new SqlParameter("ID_DISPOSITIVO", DeviceId));
                 }
-
+                if (reader is null)
+                {
+                    return false;
+                }
                 if (!reader.Read())
                 {
                     NadaQueHacer = true;
@@ -435,24 +461,33 @@ namespace SyncService.Daemon
                     do
                     {
                         string Accion = Convert.ToString(reader[1]);
-                        Pendings.Enqueue(
-                            new Pendientes(
+                        Pendientes pendiente = new Pendientes(
                                 Accion == "I" ? AccionDemonio.INSERT :
                                 Accion == "U" ? AccionDemonio.UPDATE :
                                 Accion == "D" ? AccionDemonio.DELETE : AccionDemonio.INVALIDA,
-                                reader[3], Convert.ToString(reader[2]), Convert.ToInt32(reader[0])));
+                                reader[3], Convert.ToString(reader[2]), Convert.ToInt32(reader[0]));
+
+                        if (pendiente.LLave is string iave && string.IsNullOrEmpty(iave))
+                        {
+                            DireccionActual = Upload ? DireccionDemonio.TO_ORIGIN : DireccionDemonio.TO_DESTINY;
+                            pendiente.Sincronizado(DaemonConfig, DireccionActual);
+                            continue;
+                        }
                         if (IsSleepRequested)
                         {
+                            Pendings.Clear();
+                            TotalPendientes = Pendings.Count;
                             NadaQueHacer = true;
                             return false;
                         }
+                        Pendings.Enqueue(pendiente);
 
                     } while (reader.Read());
                     TotalPendientes = Pendings.Count;
                     DireccionActual = Upload ? DireccionDemonio.TO_ORIGIN : DireccionDemonio.TO_DESTINY;
                     ProcesarAcciones(DireccionActual);
                     DireccionActual = DireccionDemonio.INVALID;
-
+                    this.Pendings.Clear();
                     NadaQueHacer = false;
                     return true;
                 }
@@ -502,8 +537,7 @@ namespace SyncService.Daemon
                 }
             }
         }
-
-        internal void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
+        public void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
         {
             using (SQLHelper.SQLHLite SQLHLite = new SQLHLite(new FileInfo(con.DatabasePath)))
             {

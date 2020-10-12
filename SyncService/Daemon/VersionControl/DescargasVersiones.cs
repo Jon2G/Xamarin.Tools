@@ -19,5 +19,15 @@ namespace SyncService.Daemon.VersionControl
                 ID_DESCARGA INT, --FOREIGN KEY REFERENCES VERSION_CONTROL,
                 ID_DISPOSITIVO VARCHAR(100) FOREIGN KEY REFERENCES DISPOSITVOS_TABLETS)");
         }
+
+        public void CreateTable(SQLHLite SQLH)
+        {
+            SQLH.EXEC(
+                @"CREATE TABLE DESCARGAS_VERSIONES
+                (
+                ID INTEGER PRIMARY KEY,
+                ID_DESCARGA INTEGER,
+                ID_DISPOSITIVO TEXT)");
+        }
     }
 }

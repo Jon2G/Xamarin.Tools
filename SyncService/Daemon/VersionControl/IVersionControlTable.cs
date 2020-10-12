@@ -9,5 +9,6 @@ namespace SyncService.Daemon.VersionControl
     {
         string TableName { get; }
         void CreateTable(SQLH SQLH);
+        void CreateTable(SQLHLite SQLH);
     }
 }

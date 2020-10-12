@@ -9,9 +9,11 @@ namespace SQLHelper.Abstractions
 {
     public class Update : IQuery
     {
+        private bool ReplaceOnSqlite;
         private readonly Dictionary<string, object> WhereParameters;
         private Update(BaseSQLHelper SQLH, string TableName) : base(SQLH, TableName)
         {
+            this.ReplaceOnSqlite = true;
             this.WhereParameters = new Dictionary<string, object>();
         }
         public static Update BulidFrom(BaseSQLHelper SQLH, string TableName)
@@ -64,14 +66,50 @@ namespace SQLHelper.Abstractions
         }
         protected override string BuildLiteQuery()
         {
-            StringBuilder builder = new StringBuilder()
-                .Append("REPLACE INTO ")
-                .Append(TableName)
-                .Append(" (")
-                .Append(string.Join(",", this.Parameters.Select(x => x.Key)))
-                .Append(") VALUES (")
-                .Append(string.Join(",", this.Parameters.Select(x => "?")))
-                .Append(")");
+            StringBuilder builder = new StringBuilder();
+            if (this.ReplaceOnSqlite)
+            {
+                builder
+                    .Append("REPLACE INTO ")
+                    .Append(TableName)
+                    .Append(" (")
+                    .Append(string.Join(",", this.Parameters.Select(x => x.Key)))
+                    .Append(") VALUES (")
+                    .Append(string.Join(",", this.Parameters.Select(x => "?")))
+                    .Append(")");
+
+            }
+            else
+            {
+                builder
+                    .Append("UPDATE ")
+                    .Append(TableName)
+                    .Append(" SET ");
+                foreach (var field in this.Parameters)
+                {
+                    builder.Append(field.Key).Append("=?,");
+                }
+                if (builder[builder.Length - 1] == ',')
+                {
+                    builder = builder.Remove(builder.Length - 1, 1);
+                }
+
+                if (this.WhereParameters.Any())
+                {
+                    builder.Append(" WHERE ");
+                }
+                foreach (var field in this.Parameters)
+                {
+                    builder.Append(field.Key).Append("=? AND ");
+                }
+                string query = builder.ToString().Trim();
+
+                if (query.EndsWith("AND"))
+                {
+                    int index = query.LastIndexOf("AND");
+                    builder = builder.Remove(index, 3);
+                }
+            }
             return builder.ToString();
         }
         public override void Dispose()
@@ -96,11 +134,21 @@ namespace SQLHelper.Abstractions
             }
             else if (this.SQLH is SQLHLite sqlite)
             {
-                IEnumerable<object> parameters = this.Parameters.Select(x => x.Value);
+                List<object> parameters = this.Parameters.Select(x => x.Value).ToList();
 
+                if (!this.ReplaceOnSqlite)
+                {
+                    parameters.AddRange(this.WhereParameters.Select(x => x.Value));
+                }
                 return sqlite.EXEC(BuildLiteQuery(), parameters.ToArray());
             }
             throw new NotSupportedException("No sql connection set");
+        }
+
+        public Update NoReplaceOnSqlite()
+        {
+            this.ReplaceOnSqlite = false;
+            return this;
         }
     }
 }

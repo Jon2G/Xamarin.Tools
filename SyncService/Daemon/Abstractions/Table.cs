@@ -15,18 +15,31 @@ namespace SyncService.Daemon.Abstractions
 {
     public class Table
     {
+        public TableDirection TableDirection;
         public readonly string Name;
         public readonly string PrimaryKey;
         public readonly string[] Fields;
         private bool ShouldReserveNewId;
+        public int Priority { get; private set; }
         private readonly Dictionary<string, string> ForeignKeys;
         public Func<Table, Pendientes, ValoresOriginales, bool> CustomUploadAction;
         public Table(string Name, string PrimaryKey, params string[] Fields)
         {
+            this.TableDirection = TableDirection.DOWNLOAD;
             this.Name = Name;
             this.PrimaryKey = PrimaryKey;
             this.Fields = (new string[] { PrimaryKey }).Concat(Fields).ToArray();
             ForeignKeys = new Dictionary<string, string>();
+        }
+        public Table SetTableDirection(TableDirection TableDirection)
+        {
+            this.TableDirection = TableDirection;
+            return this;
+        }
+        public Table SetPriority(int Priority)
+        {
+            this.Priority = Priority;
+            return this;
         }
         public Table SetCustomUploadAction(Func<Table, Pendientes, ValoresOriginales, bool> CustomUploadAction)
         {
@@ -54,7 +67,7 @@ namespace SyncService.Daemon.Abstractions
                 }
                 if (pendiente.Accion == AccionDemonio.DELETE)
                 {
-                    IQuery query = ConsultaTabla(config,pendiente, pendiente.Accion, direccion);
+                    IQuery query = ConsultaTabla(config, pendiente, pendiente.Accion, direccion);
                     query.Execute();
                 }
                 else
@@ -83,11 +96,10 @@ namespace SyncService.Daemon.Abstractions
             }
 
             //si no dio error entoces esta ok 
-            pendiente.Sincronizado(config, direccion, this);
+            pendiente.Sincronizado(config, direccion);
             return true;
 
         }
-
         private void Upload(DaemonConfig config, Pendientes pendiente, List<ValoresOriginales> valoresOriginales)
         {
             foreach (ValoresOriginales row in valoresOriginales)
@@ -96,9 +108,13 @@ namespace SyncService.Daemon.Abstractions
                 object NewPk = OldPk;
                 if (ShouldReserveNewId)
                 {
-                    if (config.Destination is SQLH)
+                    if (config.Source is SQLH)
                     {
-                        row[0] = NewPk = ReserveNewId(config);
+                        object NewValue = ReserveNewId(config);
+                        if (NewValue!=null)
+                        {
+                            row[0] = NewPk = NewValue;
+                        }
                     }
                 }
                 if (ForeignKeys.Any())
@@ -108,6 +124,7 @@ namespace SyncService.Daemon.Abstractions
                         Update.BulidFrom(config.Destination, Fkey.Key)
                             .AddField(Fkey.Value, NewPk)
                             .Where(Fkey.Key, OldPk)
+                            .NoReplaceOnSqlite()
                             .Execute();
                         //Sqlh.SQLHLite.EXEC($"UPDATE {Fkey.Key} SET {Fkey.Value}=? WHERE {Fkey.Value}=?", NewPk, OldPk);
                     }
@@ -126,24 +143,26 @@ namespace SyncService.Daemon.Abstractions
                     query.AddField(Fields[i], row.Valores[i]);
                 }
                 query.Where(PrimaryKey, NewPk);
-                query.Execute();
+                if (query.Execute() == SQLH.Error)
+                {
+                    throw new Exception("Sincronización fallida");
+                }
             }
         }
         private object ReserveNewId(DaemonConfig config)
         {
-            if (config.Destination is SQLH SQLH)
+            if (config.Source is SQLH SQLH)
             {
                 return SQLH.Single<object>($"INSERT INTO {Name} DEFAULT VALUES SELECT SCOPE_IDENTITY();", false, System.Data.CommandType.Text);
             }
             return null;
         }
-
         private List<ValoresOriginales> ValoresRegistroOriginal(DaemonConfig config, Pendientes pendiente, DireccionDemonio direccion)
         {
             //Recuperar valores de el registro original
             int fila = 0;
             List<ValoresOriginales> valores = new List<ValoresOriginales>();
-            using (Select select = (Select)ConsultaTabla(config,pendiente, AccionDemonio.SELECT, direccion))
+            using (Select select = (Select)ConsultaTabla(config, pendiente, AccionDemonio.SELECT, direccion))
             {
                 using (IReader reader = select.ExecuteReader())
                 {
@@ -212,7 +231,6 @@ namespace SyncService.Daemon.Abstractions
             ShouldReserveNewId = ReserveNewId;
             return this;
         }
-
         public Table Affects(string TableName, string ForeignKey)
         {
             ForeignKeys.Add(TableName, ForeignKey);

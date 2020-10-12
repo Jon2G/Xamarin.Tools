@@ -126,7 +126,7 @@ namespace Tools.Forms.Controls.Pages
                 Exception ex;
                 //using (Acr.UserDialogs.UserDialogs.Instance.Loading("Intentando conectar..."))
                 //{
-                ex = await this.NewDBConection.PruebaConexion(Test);
+                ex = this.NewDBConection.PruebaConexion(Test);
                 //}
                 ToogleStatus(ex);
                 if (ex != null)
@@ -146,7 +146,7 @@ namespace Tools.Forms.Controls.Pages
                         new DispositivosTablets(),new DescargasVersiones(), new TriggersInfo()
                     })
                     {
-                        if (!this.NewDBConection.ExisteTabla(controlTable.TableName))
+                        if (!this.NewDBConection.TableExists(controlTable.TableName))
                         {
                             controlTable.CreateTable(this.NewDBConection);
                         }
@@ -196,7 +196,7 @@ namespace Tools.Forms.Controls.Pages
         private async Task<bool> ProbarConexionAsync(string Test, bool MostrarMensajesStatus = true)
         {
             await Task.Yield();
-            Exception ex = await this.NewDBConection.PruebaConexion(Test);
+            Exception ex = this.NewDBConection.PruebaConexion(Test);
             if (ex != null)
             {
                 if (MostrarMensajesStatus)

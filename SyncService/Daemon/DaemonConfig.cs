@@ -36,5 +36,19 @@ namespace SyncService.Daemon
             }
             return connections;
         }
+        internal IEnumerable<SQLHLite> GetSqlLiteConnections()
+        {
+            List<SQLHLite> connections = new List<SQLHLite>();
+            if (Source is SQLHLite sql)
+            {
+                connections.Add(sql);
+            }
+            if (Destination is SQLHLite sql1)
+            {
+                connections.Add(sql1);
+            }
+            return connections;
+        }
+        
     }
 }

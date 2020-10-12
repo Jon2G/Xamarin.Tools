@@ -70,11 +70,11 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
             return (!string.IsNullOrEmpty(pin));
         }
 
-        public async Task<Exception> ProbarConexion(SQLH SQLH)
+        public Exception ProbarConexion(SQLH SQLH)
         {
             Exception resultado = null;
             UserDialogs.Instance.ShowLoading("Intentando conectar...", MaskType.Black);
-            resultado = await SQLH.PruebaConexion();
+            resultado = SQLH.PruebaConexion();
             UserDialogs.Instance.HideLoading();
             return resultado;
         }
@@ -96,7 +96,7 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
                         , this.NombreDB, this.Servidor, this.Puerto, this.Usuario, this.Password, this.CadenaCon
                         , this.IdentificadorDispositivo);
 
-                if(SQLH.ExisteTabla("COMANDERAS_MOVILES"))
+                if(SQLH.TableExists("COMANDERAS_MOVILES"))
                 {
                     existeRegistro = SQLH.Exists(
                         "SELECT *FROM COMANDERAS_MOVILES WHERE ID_DIPOSITIVO=@ID", false,

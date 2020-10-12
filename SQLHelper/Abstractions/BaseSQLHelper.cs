@@ -4,8 +4,9 @@ using System.Text;
 
 namespace SQLHelper.Interfaces
 {
-    public class BaseSQLHelper:IDisposable
+    public abstract class BaseSQLHelper : IDisposable
     {
+        public Exception LastException { get; protected set; }
         public event EventHandler OnConnectionStringChanged;
         public const int Error = -2;
         private string _ConnectionString;
@@ -26,6 +27,12 @@ namespace SQLHelper.Interfaces
         {
             this.ConnectionString = ConnectionString;
         }
+        /// <summary>
+        /// Deterima si existe una tabla con el nombre proporcionado
+        /// </summary>
+        /// <param name="TableName">Nombre de la tabla a buscar</param>
+        /// <returns>Un booleano que indica si la table existe ó no</returns>
+        public abstract bool TableExists(string TableName);
         public string FormatTime(TimeSpan TimeSpan)
         {
             return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
@@ -41,7 +48,7 @@ namespace SQLHelper.Interfaces
 
         public void Dispose()
         {
-         
+
         }
     }
 }

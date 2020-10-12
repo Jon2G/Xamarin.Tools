@@ -25,6 +25,7 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
                     {
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(Mensaje, "Atención.");
                     }
+                    await CrossPermissions.Current.RequestPermissionsAsync(Permiso);
                     status = await basePermission.CheckPermissionStatusAsync();
                 }
                 return (status == PermissionStatus.Granted);

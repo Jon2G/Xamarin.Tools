@@ -32,7 +32,7 @@
   <ItemGroup>
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.2" />
     <PackageReference Include="TouchView" Version="4.1.81" />
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1534" />
   </ItemGroup>
 
   <ItemGroup>

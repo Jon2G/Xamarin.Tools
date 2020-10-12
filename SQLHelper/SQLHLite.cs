@@ -292,7 +292,7 @@ namespace SQLHelper
                 return reader?.Read() ?? false;
             }
         }
-        public bool TableExists(string TableName)
+        public override bool TableExists(string TableName)
         {
             using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
             {

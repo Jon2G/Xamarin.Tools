@@ -343,7 +343,7 @@ namespace SQLHelper
             if (!desconexion)
             {
                 //Asegurarse
-                foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME", "SOCKET" })
+                foreach (string identificados in new string[] { "INVALID OBJECT NAME", "FK_DESCARGAS", "INVALID COLUMN NAME", "SOCKET","TIMEOUT" })
                     if (
                         (exception?.Message?.ToUpper()?.Contains(identificados) ?? false)
                         ||

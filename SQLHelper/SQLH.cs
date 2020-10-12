@@ -22,11 +22,28 @@ namespace SQLHelper
         {
 
         }
-        public async Task<Exception> PruebaConexion(string CadenaCon = null)
+        public async Task<Exception> PruebaConexionAsync(string CadenaCon = null)
         {
             try
             {
                 await Task.Yield();
+                using SqlConnection con = string.IsNullOrEmpty(CadenaCon) ? Con() : new SqlConnection(CadenaCon);
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT 1", con) { CommandType = CommandType.Text })
+                {
+                    cmd.ExecuteScalar();
+                }
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+            return null;
+        }
+        public Exception PruebaConexion(string CadenaCon = null)
+        {
+            try
+            {
                 using SqlConnection con = string.IsNullOrEmpty(CadenaCon) ? Con() : new SqlConnection(CadenaCon);
                 con.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT 1", con) { CommandType = CommandType.Text })
@@ -160,30 +177,42 @@ namespace SQLHelper
         }
         public int EXEC(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parametros)
         {
-            int Rows = -1;
+            LastException = null;
+            int Rows = SQLH.Error;
+
             using (SqlConnection con = Con())
             {
-                con.Open();
-                using SqlCommand cmd = new SqlCommand(sql, con)
-                { CommandType = commandType };
-                if (parametros.Any(x => x.Value is null))
+                try
                 {
-                    foreach (SqlParameter t in parametros)
+                    con.Open();
+                    using SqlCommand cmd = new SqlCommand(sql, con)
+                    { CommandType = commandType };
+                    if (parametros.Any(x => x.Value is null))
                     {
-                        if (t.Value is null)
+                        foreach (SqlParameter t in parametros)
                         {
-                            t.Value = DBNull.Value;
+                            if (t.Value is null)
+                            {
+                                t.Value = DBNull.Value;
+                            }
+                            if (!parametros.Any(x => x.Value is null))
+                                break;
                         }
-                        if (!parametros.Any(x => x.Value is null))
-                            break;
                     }
+                    cmd.Parameters.AddRange(parametros);
+                    if (Reportar)
+                        ReportaTransaccion(cmd);
+                    Rows = cmd.ExecuteNonQuery();
                 }
-                cmd.Parameters.AddRange(parametros);
-                if (Reportar)
-                    ReportaTransaccion(cmd);
-                Rows = cmd.ExecuteNonQuery();
-                con.Close();
-
+                catch (Exception ex)
+                {
+                    LastException = ex;
+                    Log.LogMe(ex);
+                }
+                finally
+                {
+                    con.Close();
+                }
             }
             return Rows;
         }
@@ -455,10 +484,11 @@ namespace SQLHelper
         {
             return Exists($@"SELECT 1 FROM sys.columns WHERE name = N'{Campo}' AND Object_ID = Object_ID(N'{Tabla}')", false);
         }
-        public bool ExisteTabla(string Tabla)
+        public override bool TableExists(string TableName)
         {
-            return Exists($"(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{Tabla}')", false);
+            return Exists($"(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{TableName}')", false);
         }
+
         public bool TieneIdentidad(string Tabla)
         {
             return Exists("SELECT * from syscolumns where id = Object_ID(@TABLE_NAME) and colstat & 1 = 1", false,

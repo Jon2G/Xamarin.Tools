@@ -4,7 +4,7 @@ using System.Text;
 //Alias para poder trabajar con mas facilidad
 using SqlConnection = SQLite.SQLiteConnection;
 using SqlCommand = SQLite.SQLiteCommand;
-using SqlDataReader =SQLHelper.SQLiteNetExtensions.ReaderItem;
+using SqlDataReader = SQLHelper.SQLiteNetExtensions.ReaderItem;
 using System.Linq;
 using System.Diagnostics;
 using SQLHelper.SQLiteNetExtensions;
@@ -32,17 +32,29 @@ namespace SQLHelper.Readers
 
         public bool Read()
         {
-            if (this._Reader is null)
+            try
             {
-                this._Reader = this.Connection.ExecuteReader(Command).ToList();
-                this.Fila = 0;
-            }
-            else
-            {
-                Fila++;
-            }
+                if (this._Reader is null)
+                {
+                    this._Reader = this.Connection.ExecuteReader(Command).ToList();
+                    this.Fila = 0;
+                }
+                else
+                {
+                    Fila++;
+                }
 
-            return (this._Reader.Count > this.Fila);
+                return (this._Reader.Count > this.Fila);
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex);
+                return false;
+            }
+            finally
+            {
+                Connection.Close();
+            }
         }
         public object this[int index]
         {

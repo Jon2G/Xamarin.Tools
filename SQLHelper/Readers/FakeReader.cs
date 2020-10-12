@@ -13,19 +13,19 @@ namespace SQLHelper.Readers
         {
 
         }
-        public override object this[int ordinal] => throw new NotImplementedException();
+        public override object this[int ordinal] => null;
 
-        public override object this[string name] => throw new NotImplementedException();
+        public override object this[string name] => null;
 
-        public override int Depth => throw new NotImplementedException();
+        public override int Depth => 0;
 
-        public override int FieldCount => throw new NotImplementedException();
+        public override int FieldCount => 0;
 
-        public override bool HasRows => throw new NotImplementedException();
+        public override bool HasRows => false;
 
-        public override bool IsClosed => throw new NotImplementedException();
+        public override bool IsClosed => true;
 
-        public override int RecordsAffected => throw new NotImplementedException();
+        public override int RecordsAffected => 0;
 
         public override bool GetBoolean(int ordinal)
         {

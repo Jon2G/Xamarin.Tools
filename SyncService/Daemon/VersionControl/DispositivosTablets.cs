@@ -23,5 +23,19 @@ namespace SyncService.Daemon.VersionControl
                             GEO_ID VARCHAR(500) NOT NULL DEFAULT NEWID()
                             )");
         }
+
+        public void CreateTable(SQLHLite SQLH)
+        {
+            SQLH.EXEC(
+                @"CREATE TABLE DISPOSITVOS_TABLETS
+                            (
+                            ID INTEGER AUTOINCREMENT,
+                            ID_DISPOSITIVO TEXT PRIMARY KEY,
+                            ULTIMA_CONEXION TEXT,
+                            AUTORIZADO INTEGER DEFAULT 0,
+                            RECUERDA_USUARIO TEXT,
+                            GEO_ID TEXT
+                            )");
+        }
     }
 }

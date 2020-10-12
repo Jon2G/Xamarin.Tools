@@ -2,7 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:plugin="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin"
-             xmlns:controls="clr-namespace:Tools.Forms.Controls"
+             xmlns:controls="clr-namespace:Tools.Forms.Controls" xmlns:views="clr-namespace:Tools.Forms.Controls.Views"
              x:Class="Tools.Forms.Controls.NotificationBar.CustomToolBar"
              x:Name="Me">
     <ContentView.Content>
@@ -39,10 +39,14 @@
             <plugin:ProgressRing IsVisible="{Binding IsProgressVisible,Source={Reference Me}}" 
                                  HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" 
                                  HeightRequest="30" WidthRequest="30"
-                                 x:Name="Progress" Progress="{Binding ProgressSource}"
+                                 x:Name="Progress" Progress="{Binding ProgressSource,Source={Reference Me}}"
                                  BackgroundColor="Transparent" Margin="0"/>
 
-            <controls:MyImage HorizontalOptions="End"  HeightRequest="30" MySource="icono.png"/>
+            <views:MyButton HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
+                              ImgSource="{Binding Logo,Source={Reference Me}}"
+                              IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
+                              Text="{Binding LogoText,Source={Reference Me}}"
+                            />
 
             <StackLayout WidthRequest="30"/>
         </StackLayout>
