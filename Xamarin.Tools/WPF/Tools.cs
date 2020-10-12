@@ -37,7 +37,10 @@ namespace Plugin.Xamarin.Tools.WPF
 
             return Shared.Tools.Instance;
         }
-
+        public static ToolsImplementation Instance
+        {
+            get => (ToolsImplementation)Plugin.Xamarin.Tools.Shared.Tools.Instance;
+        }
         //static AbstractTools currentInstance;
         //public static AbstractTools Instance
         //{
