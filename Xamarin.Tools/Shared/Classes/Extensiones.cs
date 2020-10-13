@@ -13,10 +13,30 @@ namespace Plugin.Xamarin.Tools.Shared.Classes
 {
     public static class Extensiones
     {
+#if NET462
+        public static System.Windows.Media.ImageSource ByteToImage(byte[] imageData)
+        {
+            if (imageData is null)
+            {
+                return null;
+            }
+            System.Windows.Media.Imaging.BitmapImage biImg = new System.Windows.Media.Imaging.BitmapImage();
+            MemoryStream ms = new MemoryStream(imageData);
+            biImg.BeginInit();
+            biImg.StreamSource = ms;
+            biImg.EndInit();
+
+            System.Windows.Media.ImageSource imgSrc = biImg as System.Windows.Media.ImageSource;
+
+            return imgSrc;
+        }
+#else
+
         public static ImageSource ByteToImage(this byte[] ByteArray)
         {
             return ImageSource.FromStream(() => new MemoryStream(ByteArray));
         }
+#endif
 
         public static byte[] ImageToByte(this ImageSource ImageSource)
         {
