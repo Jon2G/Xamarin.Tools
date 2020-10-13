@@ -1,4 +1,5 @@
 ﻿using Plugin.Xamarin.Tools.Shared.Converters;
+using SQLHelper.Linker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,10 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+
 namespace Tools.Forms.Controls.Views
 {
+    [Preserve(AllMembers = true)]
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MyButton : ContentView
     {
