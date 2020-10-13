@@ -34,7 +34,6 @@ namespace SyncService.Daemon
         #endregion
         private Table[] Schema;
         public event EventHandler OnConnectionStateChanged;
-        public event EventHandler OnConnectionStatusChanged;
         public event Func<bool> OnInicializate;
         private readonly Queue<Pendientes> Pendings;
         private int _Processed;
@@ -512,7 +511,7 @@ namespace SyncService.Daemon
                 }
                 try
                 {
-                    Pendientes pendiente = Pendings.Dequeue();
+                     Pendientes pendiente = Pendings.Dequeue();
                     Table table = Schema.FirstOrDefault(x => x.Name == pendiente.Tabla);
                     if (table != null)
                     {
