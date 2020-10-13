@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Plugin.Xamarin.Tools.Shared.Classes
+namespace Tools
 {
     public abstract class ViewModelBase<T> : INotifyPropertyChanged
     {

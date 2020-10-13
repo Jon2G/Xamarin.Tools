@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tools.Forms.Controls.Pages.CadenaConexion
+namespace Tools.CadenaConexion
 {
     public enum ConnectionState
     {

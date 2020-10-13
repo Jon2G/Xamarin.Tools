@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Tools.Forms.Controls.Pages.CadenaConexion;
 
-namespace Plugin.Xamarin.Tools.Shared.Models.CadenaCon
+namespace Tools.CadenaConexion
 {
     public class Empresas
     {
@@ -27,7 +26,7 @@ namespace Plugin.Xamarin.Tools.Shared.Models.CadenaCon
             return empresas;
 
         }
-        public Configuracion CadenaCon(string Empresa)
+        public Configuracion CadenaCon(string Empresa,string DeviceId)
         {
             Configuracion configuracion = null;
 
@@ -48,7 +47,7 @@ namespace Plugin.Xamarin.Tools.Shared.Models.CadenaCon
                             Convert.ToString(reader[2]),
                             Convert.ToString(reader[3]),
                             Convert.ToString(reader[4]),
-                            Convert.ToString(reader[5]).Replace(@"\\", @"\"));
+                            Convert.ToString(reader[5]).Replace(@"\\", @"\"),DeviceId);
                     }
                 }
             }

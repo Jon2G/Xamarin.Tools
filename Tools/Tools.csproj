@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.454" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
-    <ProjectReference Include="..\Tools\Tools.csproj" />
-    <ProjectReference Include="..\Xamarin.Tools\Xamarin.Tools.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 ﻿using Acr.UserDialogs;
-using Tools.Forms.Controls.Pages.CadenaConexion;
+
 using SQLHelper;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ using Xamarin.Forms.Xaml;
 using Log = SQLHelper.Log;
 using Plugin.Xamarin.Tools.Shared.Converters;
 using SyncService.Daemon.VersionControl;
+using Tools.CadenaConexion;
 
 namespace Tools.Forms.Controls.Pages
 {
@@ -52,7 +53,7 @@ namespace Tools.Forms.Controls.Pages
         {
             InitializeComponent();
             this.DBConection = DBConection;
-            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection);
+            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId);
             this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
         }
         public static bool IsActive()
@@ -68,7 +69,7 @@ namespace Tools.Forms.Controls.Pages
         {
             InitializeComponent();
             this.DBConection = DBConection;
-            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection);
+            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId);
             this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }

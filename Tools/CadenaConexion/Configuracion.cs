@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tools.Forms.Controls.Pages.CadenaConexion
+namespace Tools.CadenaConexion
 {
-    public class Configuracion:Plugin.Xamarin.Tools.Shared.Classes.ViewModelBase<Configuracion>
+    public class Configuracion : ViewModelBase<Configuracion>
     {
         public string CadenaCon { get; set; }
         public string IdentificadorDispositivo { get; private set; }
@@ -20,22 +20,22 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
         public string Usuario { get; set; }
         public string Password { get; set; }
         public string Empresa { get; set; }
-        public Configuracion(string CadenaCon)
+        public Configuracion(string CadenaCon, string DeviceId)
         {
-            this.IdentificadorDispositivo = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId;
+            this.IdentificadorDispositivo = DeviceId;
             this.CadenaCon = CadenaCon;
         }
-        public Configuracion(string NombreDB, string Servidor, string Puerto, string Usuario, string Password, string CadenaCon)
+        public Configuracion(string NombreDB, string Servidor, string Puerto, string Usuario, string Password, string CadenaCon, string DeviceId)
         {
             this.NombreDB = NombreDB;
             this.Servidor = Servidor;
             this.Puerto = Puerto;
             this.Usuario = Usuario;
             this.Password = Password;
-            this.IdentificadorDispositivo = Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId;
+            this.IdentificadorDispositivo = DeviceId;
             this.CadenaCon = CadenaCon;
         }
-        public static Configuracion ObtenerConfiguracion(SQLHLite SQLHLite)
+        public static Configuracion ObtenerConfiguracion(SQLHLite SQLHLite, string DeviceId)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
                             Convert.ToString(reader[2]),
                             Convert.ToString(reader[3]),
                             Convert.ToString(reader[4]),
-                            Convert.ToString(reader[5]).Replace(@"\\", @"\"));
+                            Convert.ToString(reader[5]).Replace(@"\\", @"\"), DeviceId);
                     }
                 }
             }
@@ -62,7 +62,7 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
             {
                 Log.LogMe(ex, "Al recuperar la configuración");
             }
-            return new Configuracion(string.Empty);
+            return new Configuracion(string.Empty,string.Empty);
         }
         public static bool IsUserDefined(SQLHLite SQLHLite)
         {
@@ -80,9 +80,9 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
         }
         public static Configuracion PorDefecto()
         {
-            return new Configuracion(string.Empty);
+            return new Configuracion(string.Empty,string.Empty);
         }
-        public void Salvar(SQLHLite SQLHLite,SQLH SQLH)
+        public void Salvar(SQLHLite SQLHLite, SQLH SQLH)
         {
             try
             {
@@ -96,11 +96,11 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
                         , this.NombreDB, this.Servidor, this.Puerto, this.Usuario, this.Password, this.CadenaCon
                         , this.IdentificadorDispositivo);
 
-                if(SQLH.TableExists("COMANDERAS_MOVILES"))
+                if (SQLH.TableExists("COMANDERAS_MOVILES"))
                 {
                     existeRegistro = SQLH.Exists(
                         "SELECT *FROM COMANDERAS_MOVILES WHERE ID_DIPOSITIVO=@ID", false,
-                        new SqlParameter("ID",this.IdentificadorDispositivo));
+                        new SqlParameter("ID", this.IdentificadorDispositivo));
                     if (!existeRegistro)
                     {
                         SQLH.EXEC(
@@ -122,7 +122,7 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
         public static Configuracion BuildFrom(
             string NombreDB = "", string Password = "",
             string Puerto = "", string Servidor = "",
-            string Usuario = "")
+            string Usuario = "",string DeviceId="")
         {
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Data Source=TCP:")
@@ -147,13 +147,14 @@ namespace Tools.Forms.Controls.Pages.CadenaConexion
                 Replace('\n', ' ').
                 Replace('\r', ' ').ToString().
                 Split(';');
-            return new Configuracion(string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim())
+            return new Configuracion(string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim(),DeviceId)
             {
                 NombreDB = NombreDB,
                 Password = Password,
                 Puerto = Puerto,
                 Servidor = Servidor,
-                Usuario = Usuario
+                Usuario = Usuario,
+               
             };
         }
     }

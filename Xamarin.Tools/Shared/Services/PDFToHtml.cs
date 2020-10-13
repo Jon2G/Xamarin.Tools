@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using Tools;
 using Xamarin.Forms;
 
 namespace Plugin.Xamarin.Tools.Shared.Services

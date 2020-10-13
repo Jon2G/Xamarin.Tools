@@ -30,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.454" />
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.2" />
+    <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="TouchView" Version="4.1.81" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1534" />
   </ItemGroup>
@@ -38,6 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
     <ProjectReference Include="..\SyncService\SyncService.csproj" />
+    <ProjectReference Include="..\Tools\Tools.csproj" />
     <ProjectReference Include="..\Xamarin.Tools\Xamarin.Tools.csproj" />
   </ItemGroup>
 
