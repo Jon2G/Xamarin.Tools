@@ -7,10 +7,6 @@
 
 
   <ItemGroup>
-    <Page Include="Blumitech\BlumLogin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </Page>
 	  <Page Include="Controls\NotificationBar\CustomToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -45,10 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Blumitech\BlumLogin.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
     <Compile Update="Controls\NotificationBar\CustomToolBar.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>

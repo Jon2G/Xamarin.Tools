@@ -1,4 +1,4 @@
-﻿using Tools.Forms.Controls.Pages;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using Xamarin.Forms.Xaml;
 namespace Tools.Forms.Blumitech
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class BlumLogin : BasePage
+    public partial class BlumLogin : Page
     {
         private string _UserName;
         private string _Password;
@@ -78,6 +78,10 @@ namespace Tools.Forms.Blumitech
         private void Btn_Clicked(object sender, EventArgs e)
         {
             this.SubmitCommand.Execute(this);
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }

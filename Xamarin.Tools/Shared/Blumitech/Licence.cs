@@ -97,6 +97,48 @@ namespace Tools.Forms.Blumitech
 
             return CrossConnectivity.Current.IsConnected;
         }
+        public async Task<bool> IsAuthorizated()
+        {
+            if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
+                || !Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.IsDevice
+                )
+            {
+                return true;
+            }
+            bool Autorized = false;
+            ProjectActivationState state = ProjectActivationState.Unknown;
+            if (!DoIHaveInternet())
+            {
+                state = ProjectActivationState.ConnectionFailed;
+            }
+            else
+            {
+                state = await Autheticate(AppName);
+            }
+            switch (state)
+            {
+                case ProjectActivationState.Active:
+                    Log.LogMe("Project is active");
+                    Autorized = true;
+                    break;
+                case ProjectActivationState.Expired:
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("La licencia para usar esta aplicación ha expirado", "Acceso denegado");
+                    break;
+                case ProjectActivationState.Denied:
+                    Log.LogMe("Acces denied");
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo no cuenta con la licencia para usar esta aplicación", "Acceso denegado");
+                    break;
+                case ProjectActivationState.LoginRequired:
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
+//
+                    Autorized = false;
+                    break;
+                case ProjectActivationState.ConnectionFailed:
+                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Revise su conexión a internet", "Atención");
+                    break;
+            }
+            return Autorized;
+        }
         public async Task<bool> IsAuthorizated(Page page)
         {
             if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
@@ -130,7 +172,7 @@ namespace Tools.Forms.Blumitech
                     break;
                 case ProjectActivationState.LoginRequired:
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
-                    BlumLogin login = new BlumLogin(page.Background, this).LockModal() as BlumLogin;
+                    BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
                     await page.Navigation.PushModalAsync(login, true);
                     Autorized = false;
                     break;

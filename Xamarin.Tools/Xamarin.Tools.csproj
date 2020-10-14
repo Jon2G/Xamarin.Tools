@@ -125,6 +125,7 @@
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
   </ItemGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+    <Compile Remove="Shared\Blumitech\**\*.cs" />
     <Compile Remove="Shared\Converters\**\*.cs" />
     <Compile Remove="Shared\Classes\Extensiones.cs" />
     <Compile Remove="Shared\Classes\Permisos.cs" />
@@ -265,6 +266,9 @@
 
 
   <ItemGroup>
+    <Compile Update="Shared\Blumitech\BlumLogin.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Shared\Classes\Permisos.cs">
       <SubType></SubType>
     </Compile>
@@ -292,6 +296,30 @@
     <PackageReference Include="Mono.Data.Sqlite">
       <Version>1.0.61</Version>
     </PackageReference>
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <None Remove="Shared\Blumitech\BlumLogin.xaml.cs" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <None Remove="Shared\Blumitech\Licence.cs" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <None Remove="Shared\Blumitech\ProjectActivationState.cs" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <None Remove="Shared\Blumitech\WebService.cs" />
   </ItemGroup>
 
 
