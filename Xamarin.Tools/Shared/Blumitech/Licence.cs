@@ -1,4 +1,4 @@
-﻿using Plugin.Connectivity;
+﻿
 using Tools.Forms.Blumitech;
 using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
@@ -23,7 +23,9 @@ namespace Tools.Forms.Blumitech
             this.AppName = AppName;
             AppKeys = new Dictionary<string, string>() {
                 { "InventarioFisico","INVIS001"},
-                { "MyGourmetPOS","MGPOS2020"}
+                { "MyGourmetPOS","MGPOS2020"},
+                { "Alta y Modificación de Artículos","ALTA2020"}
+
             };
             WebService = new WebService(DeviceId);
         }
@@ -90,54 +92,27 @@ namespace Tools.Forms.Blumitech
             }
             return brand;
         }
-        private bool DoIHaveInternet()
-        {
-            if (!CrossConnectivity.IsSupported)
-                return true;
 
-            return CrossConnectivity.Current.IsConnected;
-        }
-        public async Task<bool> IsAuthorizated()
+        public async Task<ProjectActivationState> IsAuthorizated()
         {
-            if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
-                || !Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.IsDevice
-                )
-            {
-                return true;
-            }
-            bool Autorized = false;
+            //if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
+            //    || !Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.IsDevice
+            //    )
+            //{
+            //    return true;
+            //}
+            //bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
-            if (!DoIHaveInternet())
-            {
-                state = ProjectActivationState.ConnectionFailed;
-            }
-            else
-            {
-                state = await Autheticate(AppName);
-            }
-            switch (state)
-            {
-                case ProjectActivationState.Active:
-                    Log.LogMe("Project is active");
-                    Autorized = true;
-                    break;
-                case ProjectActivationState.Expired:
-                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("La licencia para usar esta aplicación ha expirado", "Acceso denegado");
-                    break;
-                case ProjectActivationState.Denied:
-                    Log.LogMe("Acces denied");
-                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo no cuenta con la licencia para usar esta aplicación", "Acceso denegado");
-                    break;
-                case ProjectActivationState.LoginRequired:
-                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
-//
-                    Autorized = false;
-                    break;
-                case ProjectActivationState.ConnectionFailed:
-                    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Revise su conexión a internet", "Atención");
-                    break;
-            }
-            return Autorized;
+            //if (!DoIHaveInternet())
+            //{
+            //    state = ProjectActivationState.ConnectionFailed;
+            //}
+            //else
+            //{
+            state = await Autheticate(AppName);
+            // }
+
+            return state;
         }
         public async Task<bool> IsAuthorizated(Page page)
         {
@@ -149,14 +124,14 @@ namespace Tools.Forms.Blumitech
             }
             bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
-            if (!DoIHaveInternet())
-            {
-                state = ProjectActivationState.ConnectionFailed;
-            }
-            else
-            {
-                state = await Autheticate(AppName);
-            }
+            //if (!DoIHaveInternet())
+            //{
+            //    state = ProjectActivationState.ConnectionFailed;
+            //}
+            //else
+            // {
+            state = await Autheticate(AppName);
+            //  }
             switch (state)
             {
                 case ProjectActivationState.Active:
@@ -172,8 +147,8 @@ namespace Tools.Forms.Blumitech
                     break;
                 case ProjectActivationState.LoginRequired:
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
-                    BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
-                    await page.Navigation.PushModalAsync(login, true);
+                    //     BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
+                    //   await page.Navigation.PushModalAsync(login, true);
                     Autorized = false;
                     break;
                 case ProjectActivationState.ConnectionFailed:
@@ -183,20 +158,36 @@ namespace Tools.Forms.Blumitech
             return Autorized;
         }
 
-        internal async Task<bool> RegisterDevice(string userName, string password)
+        public async Task<bool> RegisterDevice(string userName, string password)
         {
             string response = await WebService.DevicesLeft(AppKey, userName);
             switch (response)
             {
                 case "ERROR":
                 case "INVALID_REQUEST":
+#if NETCOREAPP
+
+
+#else
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Revise su conexión a internet", "Atención");
+#endif
+
                     return false;
                 case "CUSTOMER_NOT_FOUND":
+#if NETCOREAPP
+
+
+#else
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Registro invalido", "Atención");
+#endif
                     return false;
                 case "PROJECT_NOT_FOUND":
+#if NETCOREAPP
+
+
+#else
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No esta contratado este servicio", "Atención");
+#endif
                     return false;
             }
             if (!int.TryParse(response, out int left))
@@ -205,7 +196,11 @@ namespace Tools.Forms.Blumitech
             }
             if (left <= 0)
             {
+#if NETCOREAPP
+#else
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
+
+#endif
                 return false;
             }
             else
@@ -217,14 +212,23 @@ namespace Tools.Forms.Blumitech
                 switch (await WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform, Name, Model))
                 {
                     case "NO_DEVICES_LEFT":
+#if NETCOREAPP
+#else
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No le quedan mas dispositivos para este proyecto", "Atención", "Ok");
+#endif
                         break;
                     case "PROJECT_NOT_ENROLLED":
+#if NETCOREAPP
+#else
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("No esta contratado este servicio", "Atención");
+#endif
                         break;
                     case "SUCCES":
                         left--;
+#if NETCOREAPP
+#else
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
+#endif
                         return true;
                 }
             }

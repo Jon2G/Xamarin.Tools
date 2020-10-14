@@ -124,8 +124,11 @@
     <PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
   </ItemGroup>
+  
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-    <Compile Remove="Shared\Blumitech\**\*.cs" />
+    <Compile Include="Shared\Blumitech\**\*.cs" />
+    <Compile Remove="Shared\Blumitech\BlumLogin.xaml" />
+    <Compile Remove="Shared\Blumitech\BlumLogin.xaml.cs" />
     <Compile Remove="Shared\Converters\**\*.cs" />
     <Compile Remove="Shared\Classes\Extensiones.cs" />
     <Compile Remove="Shared\Classes\Permisos.cs" />
@@ -306,22 +309,7 @@
 
 
 
-  <ItemGroup>
-    <None Remove="Shared\Blumitech\Licence.cs" />
-  </ItemGroup>
-
-
-
-  <ItemGroup>
-    <None Remove="Shared\Blumitech\ProjectActivationState.cs" />
-  </ItemGroup>
-
-
-
-  <ItemGroup>
-    <None Remove="Shared\Blumitech\WebService.cs" />
-  </ItemGroup>
-
+  
 
 
 
