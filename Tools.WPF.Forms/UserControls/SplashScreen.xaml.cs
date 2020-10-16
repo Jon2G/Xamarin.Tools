@@ -13,15 +13,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Tools.WPF.Forms
+namespace Tools.WPF.Forms.UserControls
 {
     /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
+    /// Lógica de interacción para SplashScreen.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SplashScreen : UserControl
     {
-        public MainWindow()
+        public string Titulo { get; set; }
+        public SplashScreen(string Titulo)
         {
+            this.Titulo = Titulo;
             InitializeComponent();
         }
     }

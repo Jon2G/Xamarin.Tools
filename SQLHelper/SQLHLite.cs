@@ -18,7 +18,7 @@ namespace SQLHelper
 {
     public class SQLHLite : BaseSQLHelper
     {
-        public EventHandler OnCreateDB;
+        public event EventHandler OnCreateDB;
         //private FileInfo file;
         public readonly string RutaDb;
         public readonly string DBVersion;
