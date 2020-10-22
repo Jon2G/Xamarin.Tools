@@ -14,8 +14,8 @@
     netstandard1.0;netstandard2.0;MonoAndroid90;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
     For UWP update the version number with a version number you have installed.
     -->
-    <AssemblyName>Plugin.Xamarin.Tools</AssemblyName>
-    <RootNamespace>Plugin.Xamarin.Tools</RootNamespace>
+    <AssemblyName>Tools</AssemblyName>
+    <RootNamespace>Tools</RootNamespace>
     <PackageId>Plugin.Xamarin.Tools</PackageId>
 
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
@@ -74,7 +74,7 @@
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1560" />
     <PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
   </ItemGroup>
 
@@ -133,14 +133,6 @@
     <Compile Remove="Shared\Classes\Extensiones.cs" />
     <Compile Remove="Shared\Classes\Permisos.cs" />
     <Compile Remove="Shared\Services.PhotoPicker.cs" />
-    <Compile Remove="Shared\Services\PDFToHtml.cs" />
-    <Compile Remove="Shared\Services\Interfaces\IPhotoPickerService.cs" />
-    <Compile Remove="Shared\Services\Interfaces\IPrintHTML.cs" />
-    <Compile Remove="Shared\Services\Interfaces\IPDFConverter.cs" />
-    <Compile Remove="Shared\Services\IPhotoPickerService.cs" />
-    <Compile Remove="Shared\Services\PDFConverter.cs" />
-    <Compile Remove="Shared\Services\PhotoPicker.cs" />
-    <Compile Remove="Shared\Services\PrintHTML.cs" />
     <Compile Remove="Shared\Effects\**\*.cs" />
     <PackageReference Remove="Xamarin.Forms" Version="4.8.0.1364" />
 
@@ -154,9 +146,6 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net462')) ">
     <Compile Include="WPF\**\*.cs" />
     <Page Include="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
-    <None Update="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
     <Compile Include="WPF\Services\ICustomMessageBox\CustomMessageBoxService.cs" />
 
     <Reference Include="PresentationCore">
@@ -228,18 +217,10 @@
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
     <ProjectReference Include="..\Tools\Tools.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="WPF\Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
   </ItemGroup>
 
 

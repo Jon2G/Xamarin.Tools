@@ -1,12 +1,13 @@
 ﻿using Android.Content;
-using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Droid;
+using Tools.Services.Interfaces;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.Droid.Services
+namespace Tools.Droid.Services
 {
     internal class PhotoPickerService : IPhotoPickerService
     {
@@ -21,49 +22,49 @@ namespace Plugin.Xamarin.Tools.Droid.Services
             intent.SetType("image/*");
             intent.SetAction(Intent.ActionGetContent);
 
-            ToolsImplementation tools = (Shared.Tools.Instance as ToolsImplementation);
+            ToolsImplementation tools = Data.Tools.Instance as ToolsImplementation;
             // Start the picture-picker activity (resumes in MainActivity.cs)
             tools.MainActivity.StartActivityForResult(Intent.CreateChooser(intent, "Select Picture"), PickImageId);
             ////ADD ON PLATAFORM SPECIFIC
-        //    protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
-        //    {
-        //    base.OnActivityResult(requestCode, resultCode, intent);
+            //    protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
+            //    {
+            //    base.OnActivityResult(requestCode, resultCode, intent);
 
-        //    if (requestCode == PickImageId)
-        //    {
-        //        if ((resultCode == Result.Ok) && (intent != null))
-        //        {
-        //            Android.Net.Uri uri = intent.Data;
-        //            Stream stream = ContentResolver.OpenInputStream(uri);
-        //            byte[] bits = null;
-        //            try
-        //            {
-        //                using (var memoryStream = new MemoryStream())
-        //                {
-        //                    stream.CopyTo(memoryStream);
-        //                    bits = memoryStream.ToArray();
-        //                }
-        //                Tuple<byte[], ImageSource> tuple = new Tuple<byte[], ImageSource>(bits,
-        //                    ImageSource.FromStream(() => new MemoryStream(bits)));
-        //                PickImageTaskCompletionSource.SetResult(tuple);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Log.LogMe(ex, "Al obtener la imagen despues de ser abierta");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            PickImageTaskCompletionSource.SetResult(null);
-        //        }
-        //    }
-        //}
-        /////////////////////////////
+            //    if (requestCode == PickImageId)
+            //    {
+            //        if ((resultCode == Result.Ok) && (intent != null))
+            //        {
+            //            Android.Net.Uri uri = intent.Data;
+            //            Stream stream = ContentResolver.OpenInputStream(uri);
+            //            byte[] bits = null;
+            //            try
+            //            {
+            //                using (var memoryStream = new MemoryStream())
+            //                {
+            //                    stream.CopyTo(memoryStream);
+            //                    bits = memoryStream.ToArray();
+            //                }
+            //                Tuple<byte[], ImageSource> tuple = new Tuple<byte[], ImageSource>(bits,
+            //                    ImageSource.FromStream(() => new MemoryStream(bits)));
+            //                PickImageTaskCompletionSource.SetResult(tuple);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Log.LogMe(ex, "Al obtener la imagen despues de ser abierta");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            PickImageTaskCompletionSource.SetResult(null);
+            //        }
+            //    }
+            //}
+            /////////////////////////////
 
-        // Save the TaskCompletionSource object as a MainActivity property
-        PickImageTaskCompletionSource = new TaskCompletionSource<Tuple<byte[], ImageSource>>();
+            // Save the TaskCompletionSource object as a MainActivity property
+            PickImageTaskCompletionSource = new TaskCompletionSource<Tuple<byte[], ImageSource>>();
             // Return Task object
             return PickImageTaskCompletionSource.Task;
         }
-}
+    }
 }

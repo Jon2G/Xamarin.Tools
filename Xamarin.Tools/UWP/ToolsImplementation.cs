@@ -1,5 +1,4 @@
-﻿using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Services;
+﻿using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
@@ -8,10 +7,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using Tools.Data;
+using Tools.Services;
+using Tools.Enums;
 using Xamarin.Forms;
 
 
-namespace Plugin.Xamarin.Tools.UWP
+namespace Tools.UWP
 {
     public class ToolsImplementation : AbstractTools
     {
@@ -42,12 +44,12 @@ namespace Plugin.Xamarin.Tools.UWP
         public override void CriticalAlert(object sender, EventArgs e)
         {
             CustomMessageBox.Current
-                .ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
+                .ShowOK(sender.ToString(), "Alerta", "Entiendo", CustomMessageBoxImage.Error);
         }
         #region UWP Especific
         public static ToolsImplementation UWPInstance
         {
-            get => Shared.Tools.Instance as ToolsImplementation;
+            get => Data.Tools.Instance as ToolsImplementation;
         }
         private bool? _IsInDesingMode;
         public new bool IsInDesingMode

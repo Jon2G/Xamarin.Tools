@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Plugin.Xamarin.Tools.Shared;
+using Tools.Data;
 
 namespace Tools.Forms.Blumitech
 {
@@ -116,7 +116,7 @@ namespace Tools.Forms.Blumitech
         }
         public async Task<bool> IsAuthorizated(Page page)
         {
-            if (Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging
+            if (Data.Tools.Instance.Debugging
                 || !Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.IsDevice
                 )
             {

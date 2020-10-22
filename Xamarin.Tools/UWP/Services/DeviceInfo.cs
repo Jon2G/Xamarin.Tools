@@ -10,7 +10,7 @@ using Windows.System.Profile;
 
 namespace Plugin.Xamarin.Tools.UWP.Services
 {
-    public class DeviceInfo : Shared.Services.Interfaces.IDeviceInfo
+    public class DeviceInfo : Tools.Services.Interfaces.IDeviceInfo
     {
         public string MacAdress
         {

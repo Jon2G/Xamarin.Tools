@@ -1,5 +1,5 @@
 ﻿using Foundation;
-using Plugin.Xamarin.Tools.Shared;
+using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System;
@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Tools.Data;
+using Tools.Services;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
-namespace Plugin.Xamarin.Tools.iOS
+namespace Tools.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
@@ -42,7 +44,7 @@ namespace Plugin.Xamarin.Tools.iOS
         }
         public override void CriticalAlert(object sender, EventArgs e)
         {
-            Shared.Services.CustomMessageBox.Current.ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
+            CustomMessageBox.Current.ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
         }
         public UIInterfaceOrientationMask GetSupportedInterfaceOrientations(Page mainPage)
         {
@@ -72,7 +74,7 @@ namespace Plugin.Xamarin.Tools.iOS
         private void Page_Disappearing(object sender, EventArgs e)
         {
             (sender as Page).Disappearing -= Page_Disappearing;
-            UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.Unknown)), new NSString("orientation"));
+            UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)UIInterfaceOrientation.Unknown), new NSString("orientation"));
         }
     }
 }

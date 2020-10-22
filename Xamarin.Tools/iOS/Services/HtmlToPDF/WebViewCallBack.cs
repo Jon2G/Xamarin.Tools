@@ -6,9 +6,10 @@ using System.Text;
 using CoreGraphics;
 using Foundation;
 using Plugin.Xamarin.Tools.Shared.Services;
+using Tools.Shared.Services;
 using UIKit;
 using WebKit;
-using static Plugin.Xamarin.Tools.Shared.Services.PDFToHtml;
+using static  Tools.Shared.Services.PDFToHtml;
 
 namespace Plugin.Xamarin.Tools.iOS.Services.HtmlToPDF
 {

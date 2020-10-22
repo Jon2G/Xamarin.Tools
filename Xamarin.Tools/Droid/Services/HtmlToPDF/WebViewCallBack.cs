@@ -13,8 +13,9 @@ using Android.Views;
 using Android.Webkit;
 using Android.Widget;
 using Plugin.Xamarin.Tools.Shared.Services;
+using Tools.Shared.Services;
 using Xamarin.Forms;
-using static Plugin.Xamarin.Tools.Shared.Services.PDFToHtml;
+using static Tools.Shared.Services.PDFToHtml;
 
 namespace Plugin.Xamarin.Tools.Droid.Services.HtmlToPDF
 {

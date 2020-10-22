@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncServiceTest", "SyncServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.Forms", "Tools.Forms\Tools.Forms.csproj", "{1224B0D0-4675-4CB5-9691-EBAC1056A1E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.WPF.Forms", "Tools.WPF.Forms\Tools.WPF.Forms.csproj", "{65E84E8A-8E99-47AB-A09E-1A61749A77E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.WPF", "Tools.WPF.Forms\Tools.WPF.csproj", "{65E84E8A-8E99-47AB-A09E-1A61749A77E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{3727A404-D8BA-40D8-9380-BE9C3CD2A889}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{3727A404-D8BA-40D8-9380-BE9C3CD2A889}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

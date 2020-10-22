@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.UWP;
 using SQLHelper;
+using Tools.Data;
 using Xamarin.Forms;
 
 
-namespace Plugin.Xamarin.Tools.UWP
+namespace Tools.UWP
 {
     /// <summary>
     /// Interface for Xamarin.Tools
@@ -21,17 +20,15 @@ namespace Plugin.Xamarin.Tools.UWP
         /// </summary>
         public static AbstractTools Init(string LibraryPath)
         {
-           
-            
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
-            Shared.Tools.Set(new ToolsImplementation());
-            Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
-            Shared.Tools.Instance.SetLibraryPath(LibraryPath);
+            Data.Tools.Set(new ToolsImplementation());
+            Data.Tools.Instance.SetDebugging(Debugger.IsAttached);
+            Data.Tools.Instance.SetLibraryPath(LibraryPath);
 
-            
-       //     ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
+
+            //     ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 
 
             #region DependencyServices
@@ -43,8 +40,8 @@ namespace Plugin.Xamarin.Tools.UWP
             // DependencyService.Register<Screenshot>();
             //DependencyService.Register<CustomMessageBoxService>();
             #endregion
-            Shared.Tools.Instance.SetDebugging(Debugger.IsAttached);
-            return Shared.Tools.Instance;
+            Data.Tools.Instance.SetDebugging(Debugger.IsAttached);
+            return Data.Tools.Instance;
         }
 
         //static AbstractTools currentInstance;

@@ -14,7 +14,6 @@ using Xamarin.Forms.Platform.Android;
 using DroidWebView = Android.Webkit.WebView;
 using Android.Text;
 using System.IO;
-using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
 using System.Threading.Tasks;
 using Plugin.CurrentActivity;
@@ -22,8 +21,10 @@ using Plugin.Xamarin.Tools.Shared.Services;
 using Android.Webkit;
 using Android.Graphics.Pdf;
 using Java.IO;
+using Tools.Shared.Services;
+using Tools.Services.Interfaces;
 
-namespace Plugin.Xamarin.Tools.Droid.Services.HtmlToPDF
+namespace Tools.Droid.Services.HtmlToPDF
 {
     public class PrintHTML : IPrintHTML
     {

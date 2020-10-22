@@ -7,7 +7,8 @@ using Plugin.Xamarin.Tools.Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static Plugin.Xamarin.Tools.Shared.Services.PDFToHtml;
+using Tools.Shared.Services;
+using static Tools.Shared.Services.PDFToHtml;
 
 namespace Plugin.Xamarin.Tools.Droid.Services.HtmlToPDF
 {

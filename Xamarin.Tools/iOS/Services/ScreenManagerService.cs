@@ -1,12 +1,13 @@
-﻿using Plugin.Xamarin.Tools.Shared.Enums;
+﻿using Tools.Enums;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 using x = Xamarin.Forms;
+using Tools.Services.Interfaces;
 
-namespace Plugin.Xamarin.Tools.iOS.Services
+namespace Tools.iOS.Services
 {
     public class ScreenManagerService : IScreenManager
     {

@@ -4,9 +4,10 @@ using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tools.Shared.Services;
 using UIKit;
 using WebKit;
-using static Plugin.Xamarin.Tools.Shared.Services.PDFToHtml;
+using static Tools.Shared.Services.PDFToHtml;
 
 namespace Plugin.Xamarin.Tools.iOS.Services.HtmlToPDF
 {

@@ -5,13 +5,13 @@ using System.Text;
 using Android.App;
 using Android.Util;
 using Android.Views;
-using Plugin.Xamarin.Tools.Shared;
-using Plugin.Xamarin.Tools.Shared.Enums;
-using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
+using Tools.Enums;
+using Tools.Data;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Tools.Services;
 
-namespace Plugin.Xamarin.Tools.Droid
+namespace Tools.Droid
 {
     public class ToolsImplementation : AbstractTools
     {
@@ -38,7 +38,7 @@ namespace Plugin.Xamarin.Tools.Droid
 
         public override void CriticalAlert(object sender, EventArgs e)
         {
-          Shared.Services.CustomMessageBox.Current.ShowOK(sender.ToString(), "Alerta", "Entiendo", Shared.Enums.CustomMessageBoxImage.Error);
+            CustomMessageBox.Current.ShowOK(sender.ToString(), "Alerta", "Entiendo", CustomMessageBoxImage.Error);
         }
 
         public override AbstractTools SetDebugging(bool Debugging)

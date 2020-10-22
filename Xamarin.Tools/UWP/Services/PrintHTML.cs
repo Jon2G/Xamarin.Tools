@@ -7,18 +7,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Services.Interfaces;
 using Windows.UI.Xaml.Printing;
 
-namespace Plugin.Xamarin.Tools.UWP.Services
+namespace Tools.UWP.Services
 {
-    internal class PrintHTML : IPrintHTML
+    public class PrintHTML : IPrintHTML
     {
 
         public bool Print(string HTML, string Printer)
         {
             try
             {
-                DirectoryInfo TicketsPath = new DirectoryInfo(Shared.Tools.Instance.LibraryPath + "\\TICKETS");
+                DirectoryInfo TicketsPath = new DirectoryInfo(Data.Tools.Instance.LibraryPath + "\\TICKETS");
                 if (!TicketsPath.Exists)
                 {
                     TicketsPath.Create();
@@ -52,19 +53,19 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             }
             return false;
         }
-        private  bool PrintToPDF(string HTML, string TicketPath, string Printer)
+        private bool PrintToPDF(string HTML, string TicketPath, string Printer)
         {
             try
             {
                 FileInfo pdfile = new FileInfo($"{TicketPath}.pdf");
 
 
-                IronPdf.HtmlToPdf Renderer = new IronPdf.HtmlToPdf();
+                HtmlToPdf Renderer = new HtmlToPdf();
                 Renderer.PrintOptions.SetCustomPaperSizeinMilimeters(72, 3000);
                 Renderer.RenderHtmlAsPdf(HTML)
                     .SaveAs(pdfile.FullName);
 
-                    
+
                 if (pdfile.Exists)
                 {
                     return PrintPDF(Printer, pdfile.FullName, 1);
@@ -83,7 +84,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             try
             {
                 // Now print the PDF document
-                PdfDocument Pdf = IronPdf.PdfDocument.FromFile(filename);
+                PdfDocument Pdf = PdfDocument.FromFile(filename);
                 Pdf.Print(printer);
 
                 return true;

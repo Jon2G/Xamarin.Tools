@@ -1,5 +1,5 @@
 ﻿
-using Plugin.Xamarin.Tools.Shared.Enums;
+using Tools.Enums;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,9 @@ using System.Text;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Tools.Services.Interfaces;
 
-namespace Plugin.Xamarin.Tools.UWP.Services
+namespace Tools.UWP.Services
 {
     public class ScreenManagerService : IScreenManager
     {
@@ -24,7 +25,7 @@ namespace Plugin.Xamarin.Tools.UWP.Services
             ApplicationView view = ApplicationView.GetForCurrentView();
             switch (ScreenMode)
             {
-                case ScreenMode.FullScreen:               
+                case ScreenMode.FullScreen:
                     view.TryEnterFullScreenMode();
                     break;
                 case ScreenMode.HideControlsBar:

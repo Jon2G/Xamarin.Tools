@@ -1,4 +1,4 @@
-﻿using Plugin.Xamarin.Tools.Shared.Classes;
+﻿
 using SQLHelper;
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Tools.Extensions;
+using Tools.WPF.Extensions;
 
-namespace Tools.WPF.Forms.Controls
+namespace Tools.WPF.Controls
 {
     public class MyImage : System.Windows.Controls.Image
     {
@@ -21,7 +23,7 @@ namespace Tools.WPF.Forms.Controls
                 new FrameworkPropertyMetadata(
                     string.Empty,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    (o, e) => ((MyImage)o).MySource = ((string)e.NewValue)));
+                    (o, e) => ((MyImage)o).MySource = (string)e.NewValue));
 
         public void CambiarImagen(string filepath)
         {
@@ -44,7 +46,7 @@ namespace Tools.WPF.Forms.Controls
                 {
                     if (value[0] == '\\')
                     {
-                        value = string.Concat(Plugin.Xamarin.Tools.WPF.Tools.Instance.LibraryPath, value);
+                        value = string.Concat(Data.Tools.Instance.LibraryPath, value);
                     }
                 }
                 if (value == MySource) return;
@@ -70,7 +72,7 @@ namespace Tools.WPF.Forms.Controls
             get
             {
                 byte[] bytes = null;
-                var bitmapSource = this.Source as BitmapSource;
+                var bitmapSource = Source as BitmapSource;
                 var encoder = new PngBitmapEncoder();
                 if (bitmapSource != null)
                 {
@@ -89,10 +91,10 @@ namespace Tools.WPF.Forms.Controls
 
         private async void UpdateImage()
         {
-            string file = this.MySource;
+            string file = MySource;
             // this is asynchronous and won't block UI
             // first generate rough preview
-            if (Plugin.Xamarin.Tools.WPF.Tools.Instance.IsInDesingMode)
+            if (Data.Tools.Instance.IsInDesingMode)
             {
                 if (!File.Exists(file))
                 {
@@ -103,7 +105,7 @@ namespace Tools.WPF.Forms.Controls
                 {
                     try
                     {
-                        this.CurrentImage = new BitmapImage(new Uri(file));
+                        CurrentImage = new BitmapImage(new Uri(file));
                     }
                     catch (Exception ex)
                     {
@@ -113,7 +115,7 @@ namespace Tools.WPF.Forms.Controls
 
                 return;
             }
-            this.CurrentImage = await Generate(file, 320);
+            CurrentImage = await Generate(file, 320);
             // then generate quality preview
             //this.CurrentImage = await Generate(file, 1920);
         }
@@ -123,7 +125,7 @@ namespace Tools.WPF.Forms.Controls
             {
                 try
                 {
-                    if (Plugin.Xamarin.Tools.WPF.Tools.Instance.IsInDesingMode)
+                    if (Data.Tools.Instance.IsInDesingMode)
                     {
                         return null;
                     }
@@ -147,7 +149,7 @@ namespace Tools.WPF.Forms.Controls
         {
             try
             {
-                Source = this.CurrentImage;
+                Source = CurrentImage;
             }
             catch (Exception ex)
             {
@@ -161,7 +163,7 @@ namespace Tools.WPF.Forms.Controls
                 nameof(XSource), typeof(Xamarin.Forms.ImageSource), typeof(MyImage),
                 new FrameworkPropertyMetadata(null,
             FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-            (o, e) => ((MyImage)o).XSource = ((Xamarin.Forms.ImageSource)e.NewValue)));
+            (o, e) => ((MyImage)o).XSource = (Xamarin.Forms.ImageSource)e.NewValue));
         private Xamarin.Forms.ImageSource _XSource;
         public Xamarin.Forms.ImageSource XSource
         {
@@ -176,7 +178,7 @@ namespace Tools.WPF.Forms.Controls
         private async void UpdateXImage()
         {
             await Task.Yield();
-            this.Source = Extensiones.ByteToImage(XSource.ImageToByte());
+            Source = Extensiones.ByteToImage(XSource.ImageToByte());
         }
         #endregion
         public MyImage() : base()
@@ -186,7 +188,7 @@ namespace Tools.WPF.Forms.Controls
 
         ~MyImage()
         {
-            this._currentImage = null;
+            _currentImage = null;
         }
     }
 }

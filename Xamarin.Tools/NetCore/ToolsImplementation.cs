@@ -1,10 +1,10 @@
-﻿using Plugin.Xamarin.Tools.Shared;
-using SQLHelper;
+﻿using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Data;
 
 namespace Plugin.Xamarin.Tools.NetCore
 {

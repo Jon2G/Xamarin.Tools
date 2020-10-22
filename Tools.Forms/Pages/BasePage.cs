@@ -1,8 +1,8 @@
-﻿using Plugin.Xamarin.Tools.Shared.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tools.Enums;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform;

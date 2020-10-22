@@ -1,44 +1,44 @@
 ﻿using Android.App;
 using Android.Views;
-using Plugin.Xamarin.Tools.Shared.Enums;
-using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
+using Tools.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tools.Services.Interfaces;
 
-namespace Plugin.Xamarin.Tools.Droid.Services
+namespace Tools.Droid.Services
 {
     public class ScreenManagerService : IScreenManager
     {
         private readonly Activity Activity;
         public ScreenManagerService()
         {
-            this.Activity = (Plugin.Xamarin.Tools.Shared.Tools.Instance as Droid.ToolsImplementation).MainActivity;
+            Activity = (Data.Tools.Instance as Droid.ToolsImplementation).MainActivity;
         }
         public void SetScreenMode(ScreenMode ScreenMode)
         {
 
-            this.Activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
+            Activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
 
-            int uiOptions = (int)this.Activity.Window.DecorView.SystemUiVisibility;
+            int uiOptions = (int)Activity.Window.DecorView.SystemUiVisibility;
             uiOptions |= (int)SystemUiFlags.LowProfile;
             switch (ScreenMode)
             {
                 case ScreenMode.FullScreen:
-                    this.Activity.Window.AddFlags(WindowManagerFlags.Fullscreen);
+                    Activity.Window.AddFlags(WindowManagerFlags.Fullscreen);
                     uiOptions |= (int)SystemUiFlags.Fullscreen;
                     uiOptions |= (int)SystemUiFlags.ImmersiveSticky;
                     uiOptions |= (int)SystemUiFlags.HideNavigation;
                     break;
                 case ScreenMode.HideControlsBar:
-                    this.Activity.Window.AddFlags(WindowManagerFlags.Fullscreen);
+                    Activity.Window.AddFlags(WindowManagerFlags.Fullscreen);
                     break;
                 case ScreenMode.Normal:
                     uiOptions |= (int)SystemUiFlags.Visible;
                     break;
 
             }
-            this.Activity.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
+            Activity.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
         }
     }
 }

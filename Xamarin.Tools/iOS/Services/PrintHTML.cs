@@ -8,12 +8,14 @@ using Foundation;
 using Plugin.Xamarin.Tools.Shared.Services;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
+using Tools.Shared.Services;
+using Tools.Services.Interfaces;
 using UIKit;
 using WebKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-namespace Plugin.Xamarin.Tools.iOS.Services
+namespace Tools.iOS.Services
 {
     public class PrintHTML : IPrintHTML
     {
@@ -30,7 +32,7 @@ namespace Plugin.Xamarin.Tools.iOS.Services
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
+                Log.LogMe(ex, "Al guardar el archivo html");
                 return false;
             }
             return false;
@@ -81,7 +83,7 @@ namespace Plugin.Xamarin.Tools.iOS.Services
                 {
                     if (!completed && err != null)
                     {
-                        SQLHelper.Log.LogMe($"Al imprimir ticket pdf:\n{err}");
+                        Log.LogMe($"Al imprimir ticket pdf:\n{err}");
                     }
                 });
 

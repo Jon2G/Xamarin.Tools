@@ -3,7 +3,7 @@ using Android.OS;
 using Android.Print;
 using Java.IO;
 
-namespace Plugin.Xamarin.Tools.Droid.Services
+namespace Tools.Droid.Services
 {
     internal class CustomPrintDocumentAdapter : PrintDocumentAdapter
     {

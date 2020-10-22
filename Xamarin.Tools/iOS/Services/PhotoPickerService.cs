@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Foundation;
 using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
 using SQLHelper;
+using Tools.Services.Interfaces;
 using UIKit;
 using Xamarin.Forms;
 
-namespace Plugin.Xamarin.Tools.iOS.Services
+namespace Tools.iOS.Services
 {
     internal class PhotoPickerService : IPhotoPickerService
     {

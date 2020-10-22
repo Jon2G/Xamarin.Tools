@@ -1,10 +1,10 @@
-﻿using Plugin.Xamarin.Tools.Shared.Enums;
-using Plugin.Xamarin.Tools.Shared.Services.Interfaces;
+﻿using Tools.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tools.Services.Interfaces;
 
-namespace Plugin.Xamarin.Tools.Droid.Services
+namespace Tools.Droid.Services
 {
     internal class CustomMessageBoxService : ICustomMessageBox
     {

@@ -11,7 +11,7 @@ using Xamarin.Forms.PlatformConfiguration;
 
 namespace Plugin.Xamarin.Tools.iOS.Services
 {
-    public class DeviceInfo : Shared.Services.Interfaces.IDeviceInfo
+    public class DeviceInfo : Tools.Services.Interfaces.IDeviceInfo
     {
         public string MacAdress
         {
