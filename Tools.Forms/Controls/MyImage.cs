@@ -1,5 +1,4 @@
 ﻿using FFImageLoading.Forms;
-using Plugin.Xamarin.Tools.Shared.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +23,7 @@ namespace Tools.Forms.Controls
             }
         }
 
-        [TypeConverter(typeof(MyImageSourceConverter))]
+        [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource MySource
         {
             get { return (ImageSource)GetValue(MySourceProperty); }

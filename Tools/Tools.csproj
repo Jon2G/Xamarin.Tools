@@ -6,9 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.454" />
+    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.462" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1560" />
+	  <PackageReference Include="Plugin.Permissions">
+		  <Version>6.0.1</Version>
+	  </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

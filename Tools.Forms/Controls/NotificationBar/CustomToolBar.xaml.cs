@@ -1,4 +1,4 @@
-﻿using Plugin.Xamarin.Tools.Shared.Converters;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace Tools.Forms.Controls.NotificationBar
         public static readonly BindableProperty LogoProperty = BindableProperty.Create(
             propertyName: nameof(Logo), returnType: typeof(ImageSource), declaringType: typeof(CustomToolBar), defaultValue: null);
 
-        [TypeConverter(typeof(MyImageSourceConverter))]
+        [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Logo
         {
             get { return (ImageSource)GetValue(LogoProperty); }

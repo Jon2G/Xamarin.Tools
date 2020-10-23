@@ -21,7 +21,10 @@ namespace Tools.Data
         public abstract ITools InitAll(string LogDirectory, bool AlertAfterCritical = false);
         public abstract ITools InitLoggin(string LogDirectory = "Logs", bool AlertAfterCritical = false);
         public abstract AbstractTools SetDebugging(bool Debugging);
-        public abstract void CriticalAlert(object sender, EventArgs e);
+        public virtual void CriticalAlert(object sender, EventArgs e)
+        {
+            Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
+        }
         public AbstractTools SetLibraryPath(string LibraryPath)
         {
             _LibraryPath = LibraryPath;

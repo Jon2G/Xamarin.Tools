@@ -1,6 +1,5 @@
 ﻿using Plugin.Fingerprint;
 using Plugin.Fingerprint.Abstractions;
-using Plugin.Xamarin.Tools.Shared.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

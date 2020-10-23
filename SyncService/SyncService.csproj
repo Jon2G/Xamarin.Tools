@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
-    <ProjectReference Include="..\Tools\Tools.csproj" />
-    <ProjectReference Include="..\Xamarin.Tools\Xamarin.Tools.csproj" />
   </ItemGroup>
 
 </Project>

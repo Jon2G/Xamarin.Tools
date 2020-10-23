@@ -4,27 +4,25 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using Tools.Enums;
 using Tools.Services;
+using Tools.Services.Interfaces;
 using Xamarin.Forms;
 
-namespace Tools.Shared.Services
+namespace Tools.Services
 {
     public class PDFToHtml : ViewModelBase<PDFToHtml>, IDisposable
     {
-        public enum PDFEnum
-        {
-            Started = 0,
-            Failed = 1,
-            Completed = 2
-        }
+
         public EventHandler OnCompleted;
         public EventHandler OnFailed;
 
         private bool ispdfloading;
         private PDFEnum pDFEnum;
-
-        public PDFToHtml(string HTML, string FileName)
+        private readonly IPDFConverter PDFConverter;
+        public PDFToHtml(string HTML, string FileName,IPDFConverter PDFConverter)
         {
+            this.PDFConverter = PDFConverter;
             this.FileName = FileName;
             HTMLString = HTML;
         }
@@ -77,21 +75,23 @@ namespace Tools.Shared.Services
 
             PDFStreamArray = null;
         }
-
         public void GeneratePDF()
         {
+
             try
             {
                 Status = PDFEnum.Started;
                 FilePath = CreateTempPath(FileName);
                 FileStream = File.Create(FilePath);
-                PDFConverter.Current.ConvertHTMLtoPDF(this);
+                this.PDFConverter.ConvertHTMLtoPDF(this);
             }
             catch (Exception ex)
             {
                 SQLHelper.Log.LogMe(ex, "ERROR");
             }
+
         }
+
 
         public static string CreateTempPath(string fileName)
         {

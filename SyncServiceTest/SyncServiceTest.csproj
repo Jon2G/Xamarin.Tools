@@ -119,9 +119,9 @@
       <Project>{31d9c504-c7b8-4e4c-8550-d8b157d84a53}</Project>
       <Name>SyncService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Xamarin.Tools\Xamarin.Tools.csproj">
+    <ProjectReference Include="..\Xamarin.Tools\Tools.PLC.csproj">
       <Project>{7bbcc834-d7e4-4341-9f0f-dfd70bc65f98}</Project>
-      <Name>Xamarin.Tools</Name>
+      <Name>Tools.PLC</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

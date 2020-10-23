@@ -1,4 +1,4 @@
-﻿using Plugin.Xamarin.Tools.Shared.Converters;
+﻿
 using SQLHelper.Linker;
 using System;
 using System.Collections.Generic;
@@ -152,7 +152,7 @@ namespace Tools.Forms.Controls.Views
         public static readonly BindableProperty ImgSourceProperty = BindableProperty.Create(
             propertyName: nameof(ImgSource), returnType: typeof(ImageSource), declaringType: typeof(MyButton), defaultValue: null);
         
-        [TypeConverter(typeof(MyImageSourceConverter))]
+        [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource ImgSource
         {
             get { return (ImageSource)GetValue(ImgSourceProperty); }

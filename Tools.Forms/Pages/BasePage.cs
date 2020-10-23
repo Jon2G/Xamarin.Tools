@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Enums;
+using Tools.Services.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform;
@@ -131,9 +132,9 @@ namespace Tools.Forms.Controls.Pages
             await Navigation.PopToRootAsync(true);
 
         }
-        public void SetScreenMode(ScreenMode Screen)
-        {
-            Plugin.Xamarin.Tools.Shared.Services.ScreenManager.Current.SetScreenMode(Screen);
+        public void SetScreenMode(IScreenManager ScreenManager, ScreenMode Screen)
+       {
+            ScreenManager.SetScreenMode(Screen);
         }
     }
 }

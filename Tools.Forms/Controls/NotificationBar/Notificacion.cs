@@ -1,5 +1,4 @@
-﻿using Plugin.Xamarin.Tools.Shared.Classes;
-using Plugin.Xamarin.Tools.Shared.Converters;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +10,7 @@ namespace Tools.Forms.Controls.NotificationBar
     public class Notificacion : ViewModelBase<Notificacion>
     {
         public ImageSource _Imagen;
-        [TypeConverter(typeof(MyImageSourceConverter))]
+        [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Imagen
         {
             get => _Imagen;
@@ -32,7 +31,7 @@ namespace Tools.Forms.Controls.NotificationBar
             this.Imagen = Icono;
             this.Color = Color;
             this.Texto = Texto;
-            this.Command = new CommonCommand(x => Click());
+            this.Command = new Extensions.CommonCommand(x => Click());
         }
 
         private bool Click()

@@ -11,9 +11,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 using Log = SQLHelper.Log;
-using Plugin.Xamarin.Tools.Shared.Converters;
-using SyncService.Daemon.VersionControl;
 using Tools.CadenaConexion;
+using Tools.Daemon.VersionControl;
 
 namespace Tools.Forms.Controls.Pages
 {
@@ -22,7 +21,7 @@ namespace Tools.Forms.Controls.Pages
     {
         public static readonly BindableProperty LogoProperty = BindableProperty.Create(
             propertyName: nameof(Logo), returnType: typeof(ImageSource), declaringType: typeof(CadenaCon), defaultValue: null);
-        [TypeConverter(typeof(MyImageSourceConverter))]
+        [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Logo
         {
             get { return (ImageSource)GetValue(LogoProperty); }
@@ -48,14 +47,9 @@ namespace Tools.Forms.Controls.Pages
         public event EventHandler Confirmado;
         private Configuracion Configuracion;
         private readonly SQLHLite DBConection;
+        private readonly Tools.Services.Interfaces.IDeviceInfo DeviceInfo;
         public SQLH NewDBConection { get; private set; }
-        public CadenaCon(SQLHLite DBConection)
-        {
-            InitializeComponent();
-            this.DBConection = DBConection;
-            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId);
-            this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
-        }
+
         public static bool IsActive()
         {
             if ((Application.Current.MainPage.Navigation.ModalStack.Any() && Application.Current.MainPage.Navigation.ModalStack.LastOrDefault() is CadenaCon)
@@ -65,16 +59,26 @@ namespace Tools.Forms.Controls.Pages
             }
             return false;
         }
-        public CadenaCon(SQLHLite DBConection, Exception ex)
+        public CadenaCon(Tools.Services.Interfaces.IDeviceInfo DeviceInfo, SQLHLite DBConection)
         {
+            this.DeviceInfo = DeviceInfo;
             InitializeComponent();
             this.DBConection = DBConection;
-            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId);
+            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
+            this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
+        }
+        public CadenaCon(Tools.Services.Interfaces.IDeviceInfo DeviceInfo,SQLHLite DBConection, Exception ex)
+        {
+            this.DeviceInfo = DeviceInfo;
+            InitializeComponent();
+            this.DBConection = DBConection;
+            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
             this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }
-        public CadenaCon(SQLHLite DBConection, Configuracion Configuracion)
+        public CadenaCon(Tools.Services.Interfaces.IDeviceInfo DeviceInfo,SQLHLite DBConection, Configuracion Configuracion)
         {
+            this.DeviceInfo = DeviceInfo;
             InitializeComponent();
             try
             {
@@ -156,7 +160,7 @@ namespace Tools.Forms.Controls.Pages
                     this.NewDBConection.EXEC(
                         "DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = @ID_DISPOSITIVO",
                         System.Data.CommandType.Text, false,
-                        new SqlParameter("ID_DISPOSITIVO", Plugin.Xamarin.Tools.Shared.Services.DeviceInfo.Current.DeviceId));
+                        new SqlParameter("ID_DISPOSITIVO", this.DeviceInfo.DeviceId));
 
                     if (this.Navigation.ModalStack.Count > 0)
                     {
