@@ -42,7 +42,7 @@ namespace Tools.WPF.Forms.Extensions
                 case TextBox txt:
                     return;
                 case ComboBox combo:
-                    combo.IsDropDownOpen = true;
+                    //combo.IsDropDownOpen = true;
                     return;
 
             }

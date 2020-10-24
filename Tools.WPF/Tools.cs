@@ -24,13 +24,13 @@ namespace Tools.WPF
         public static AbstractTools Init()
         {
 
-            
+
             Xamarin.Forms.Forms.Init();
 
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
-            Data.Tools.Set(new ToolsImplementation());
+            Data.Tools.Set(new ToolsImplementation().SetLibraryPath(Environment.CurrentDirectory));
             Data.Tools.Instance.SetDebugging(Debugger.IsAttached);
 
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();

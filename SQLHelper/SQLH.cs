@@ -296,7 +296,7 @@ namespace SQLHelper
             using (SqlConnection con = Con())
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = CommandType.StoredProcedure })
+                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = CommandType.Text })
                 {
                     cmd.Parameters.AddRange(parameters);
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -318,7 +318,10 @@ namespace SQLHelper
             }
             return result;
         }
-        //ListaTupla
+        public List<T> Lista<T>(string sql)
+        {
+            return Lista<T>(sql, CommandType.Text, false, 0);
+        }
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.StoredProcedure, params SqlParameter[] parameters)
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();

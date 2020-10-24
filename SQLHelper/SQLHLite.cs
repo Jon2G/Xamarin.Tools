@@ -28,7 +28,7 @@ namespace SQLHelper
             {
                 throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
             }
-            FileInfo db = new FileInfo(Path.Combine(SQLHelper.Instance.LibraryPath, DBName));
+            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}\\{DBName}");
             this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
@@ -87,7 +87,7 @@ namespace SQLHelper
             connection.Execute("DROP TABLE IF EXISTS DB_VERSION");
             connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
             connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
-            OnCreateDB?.Invoke(connection, EventArgs.Empty);
+            OnCreateDB?.Invoke(this, EventArgs.Empty);
             connection.Close();
         }
         public bool EliminarDB()
