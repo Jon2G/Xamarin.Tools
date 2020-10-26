@@ -184,6 +184,9 @@
 	
 	<ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
 		<ProjectReference Include="..\Tools.UWP\Tools.UWP.csproj" />
+		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+			<Version>6.2.10</Version>
+		</PackageReference>
 	</ItemGroup>
 
 

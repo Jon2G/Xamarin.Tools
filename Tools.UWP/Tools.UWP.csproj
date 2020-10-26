@@ -139,7 +139,7 @@
       <Version>7.1.0.462</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.9</Version>
+      <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>6.1.1</Version>
@@ -150,7 +150,7 @@
     <PackageReference Include="Xam.Plugins.Forms.ProgressRing">
       <Version>0.1.2</Version>
     </PackageReference>
-    <PackageReference Include="IronPdf" Version="2020.8.0" />
+    <PackageReference Include="IronPdf" Version="2020.10.3.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj">
