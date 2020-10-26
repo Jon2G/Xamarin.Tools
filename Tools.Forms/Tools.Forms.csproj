@@ -43,8 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Services\BlumLogin.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Pages\DeviceRegister.xaml.cs">
+      <DependentUpon>DeviceRegister.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\NotificationBar\CustomToolBar.xaml.cs">
       <SubType>Code</SubType>

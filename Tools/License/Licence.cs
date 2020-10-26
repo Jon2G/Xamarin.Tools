@@ -13,21 +13,25 @@ namespace Tools.License
 {
     public abstract class Licence
     {
+        public const string LoginSite = "https://ecommerce.blumitech.com.mx/";
         private readonly Dictionary<string, string> AppKeys;
         private readonly WebService WebService;
         private readonly string AppName;
         private string AppKey;
         private readonly IDeviceInfo DeviceInfo;
         private readonly ICustomMessageBox CustomMessageBox;
+        public string Reason { get; private set; }
         protected abstract void OpenRegisterForm();
 
         protected Licence(ICustomMessageBox CustomMessageBox, IDeviceInfo DeviceInfo, string AppName)
         {
+            this.Reason = "Desconocido...";
             this.CustomMessageBox = CustomMessageBox;
             this.DeviceInfo = DeviceInfo;
             this.AppName = AppName;
             AppKeys = new Dictionary<string, string>() {
                 { "InventarioFisico","INVIS001"},
+                { "EtiquetadorApp","ETIQUETADOR_2020"},
                 { "MyGourmetPOS","MGPOS2020"},
                 { "Alta y Modificación de Artículos","ALTA2020"}
 
@@ -110,22 +114,25 @@ namespace Tools.License
                     Autorized = true;
                     break;
                 case ProjectActivationState.Expired:
-
-                    this.CustomMessageBox.Show("La licencia para usar esta aplicación ha expirado", "Acceso denegado");
+                    this.Reason = "La licencia para usar esta aplicación ha expirado";
+                    this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.Denied:
                     Log.LogMe("Acces denied");
-                    this.CustomMessageBox.Show("Este dispositivo no cuenta con la licencia para usar esta aplicación", "Acceso denegado");
+                    this.Reason = "Este dispositivo no cuenta con la licencia para usar esta aplicación";
+                    this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.LoginRequired:
-                    this.CustomMessageBox.Show("Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación", "Acceso denegado");
+                    this.Reason = "Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación";
+                    this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     OpenRegisterForm();
                     //     BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
                     //   await page.Navigation.PushModalAsync(login, true);
                     Autorized = false;
                     break;
                 case ProjectActivationState.ConnectionFailed:
-                    this.CustomMessageBox.Show("Revise su conexión a internet", "Atención");
+                    this.Reason = "Revise su conexión a internet";
+                    this.CustomMessageBox.Show(this.Reason, "Atención");
                     break;
             }
             return Autorized;

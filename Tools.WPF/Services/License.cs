@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tools.WPF.Pages;
 using BaseLicense = Tools.License.Licence;
 namespace Tools.WPF.Services
 {
@@ -11,9 +12,13 @@ namespace Tools.WPF.Services
 
         }
 
-        protected override async void OpenRegisterForm()
+        protected override void OpenRegisterForm()
         {
-            throw new NotImplementedException();
+            DeviceRegister register = new DeviceRegister(this, new ICustomMessageBox.CustomMessageBoxService())
+            {
+                Owner = Tools.Instance.VentanaPadre()
+            };
+            register.ShowDialog();
         }
     }
 }

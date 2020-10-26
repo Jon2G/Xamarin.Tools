@@ -6,7 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="Pages\DeviceRegister.xaml" />
+    <EmbeddedResource Remove="Pages\SplashScreen.xaml" />
     <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Imgs\logo.png" />
   </ItemGroup>
 
 
@@ -27,6 +33,11 @@
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
     <ProjectReference Include="..\Tools\Tools.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="Imgs\logo.png" />
   </ItemGroup>
 
 </Project>

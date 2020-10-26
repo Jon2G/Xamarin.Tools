@@ -1,5 +1,4 @@
 ﻿using SyncService.Daemon;
-using SyncService.Daemon.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Daemon;
+using Tools.Daemon.Abstractions;
+using Tools.WPF.Services;
 
 namespace SyncServiceTest
 {
@@ -25,7 +27,7 @@ namespace SyncServiceTest
                 .AddConnection(Daemon.OriginName, new SQLHelper.SQLH(""))
                 .AddConnection(Daemon.DestinationName, new SQLHelper.SQLHLite(new FileInfo("a.db")));
 
-            Daemon.Init("1.0.0")
+            Daemon.Init(new Tools.WPF.Services.DeviceInfo(),"1.0.0")
                   .SetSchema(
                 new Table("ESTACIONES", "ESTACION", "MONEDA", "ALMACEN", "VENTA", "IMPFACT", "IMPREM"
                 , "TANTOSREM", "IMPDEV", "PTICKET", "IMPSALIDAS", "TIPO_ESTACION", "COCINA_IMPRIME_COMANDAS"

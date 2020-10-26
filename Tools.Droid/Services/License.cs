@@ -15,7 +15,7 @@ namespace Tools.Droid.Services
         {
             var page = Xamarin.Forms.Application.Current.MainPage;
 
-            Forms.Blumitech.BlumLogin login = new Forms.Blumitech.BlumLogin(page.Background, this) as Forms.Blumitech.BlumLogin;
+            Forms.Pages.DeviceRegister login = new Forms.Pages.DeviceRegister(page.Background, this,new CustomMessageBoxService());
             await page.Navigation.PushModalAsync(login, true);
         }
     }

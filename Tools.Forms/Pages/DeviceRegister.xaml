@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page 
-                 xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
-             xmlns:vm="clr-namespace:Tools.Forms.Blumitech"
              mc:Ignorable="d" x:Name="Me"
-             x:Class="Tools.Forms.Blumitech.BlumLogin">
+             x:Class="Tools.Forms.Pages.DeviceRegister">
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
 
@@ -24,7 +23,7 @@
                     <StackLayout Margin="5" Padding="10" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
                         <Label TextColor="Black" FontAttributes="Bold" Text="Correo electrónico:" FontSize="Large"/>
                         <Entry BindingContext="{Binding Source={Reference Me}}"
-                    Text="{Binding UserName}" x:Name="TxtUser"
+                    Text="{Binding UserName}" 
                     Keyboard="Email"
                     Placeholder="sample@domain.com"
                     FontSize="Medium" TextColor="Black"
@@ -33,12 +32,11 @@
                         <Label TextColor="Black" FontAttributes="Bold" Text="Password:" FontSize="Large"/>
                         <Entry  BindingContext="{Binding Source={Reference Me}}"
                     Text="{Binding Password}"
-                    x:Name="TxtPass" 
                     Placeholder="*******" IsPassword="True" FontSize="Medium" 
                     TextColor="Black" Margin="0,0,10,0" TextChanged="PasswordChanged"/>
                     </StackLayout>
 
-                    <Button Margin="5" BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Clicked="Btn_Clicked" BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
+                    <Button Margin="5" BindingContext="{Binding Source={Reference Me}}" x:Name="Btn" Clicked="LogIn"  BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
                 </StackLayout>
             </Frame>
 

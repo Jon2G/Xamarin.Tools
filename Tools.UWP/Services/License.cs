@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tools.Forms.Pages;
 using BaseLicense = Tools.License.Licence;
 namespace Tools.UWP.Services
 {
@@ -15,7 +16,7 @@ namespace Tools.UWP.Services
         {
             var page = Xamarin.Forms.Application.Current.MainPage;
 
-            Forms.Blumitech.BlumLogin login = new Forms.Blumitech.BlumLogin(page.Background, this) as Forms.Blumitech.BlumLogin;
+            DeviceRegister login = new DeviceRegister(page.Background, this,new CustomMessageBoxService());
             await page.Navigation.PushModalAsync(login, true);
         }
     }
