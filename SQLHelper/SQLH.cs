@@ -115,6 +115,10 @@ namespace SQLHelper
             }
             con.Close();
         }
+        public T Single<T>(string sql,params SqlParameter[] parameters)
+        {
+            return Single<T>(sql, false, CommandType.Text, parameters);
+        }
         public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text)
         {
             T result = default;

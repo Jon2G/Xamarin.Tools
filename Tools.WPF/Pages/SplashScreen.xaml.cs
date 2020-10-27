@@ -27,7 +27,6 @@ namespace Tools.WPF.Pages
             this.Activated += Window_Activated;
             InitializeComponent();
         }
-
         private async void Window_Activated(object sender, EventArgs e)
         {
             await Task.Yield();
@@ -35,11 +34,10 @@ namespace Tools.WPF.Pages
             {
                 this.IsActivated = true;
                 this.Activated -= Window_Activated;
-                await Task.Delay(TimeSpan.FromSeconds(2));
+                await Task.Delay(TimeSpan.FromSeconds(1));
                 OnShowed?.Invoke(sender, e);
             }
         }
-
         public void Failure(string Reason)
         {
             this.Background = new LinearGradientBrush()
