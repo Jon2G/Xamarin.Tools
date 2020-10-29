@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Tools.Reflection
+namespace SQLHelper.Reflection
 {
     public class ReflectionCaller : IDisposable
     {
@@ -18,7 +18,7 @@ namespace Tools.Reflection
         }
         public ReflectionCaller(string AssemblyName)
         {
-            string Library = Data.Tools.Instance.LibraryPath;
+            string Library = SQLHelper.Instance.LibraryPath;
             Dll = SearchAssembly(AssemblyName);
             if (Dll is null)
             {

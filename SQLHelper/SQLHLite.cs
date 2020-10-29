@@ -13,11 +13,16 @@ using System.Text;
 using System.Diagnostics;
 using SQLHelper.Readers;
 using SQLHelper.Interfaces;
+using SQLHelper.Reflection;
 
 namespace SQLHelper
 {
     public class SQLHLite : BaseSQLHelper
     {
+        private Type AssemblyType;
+        private string ScriptResourceName;
+
+        [Obsolete("Use ScriptResourceName")]
         public event EventHandler OnCreateDB;
         //private FileInfo file;
         public readonly string RutaDb;
@@ -28,9 +33,15 @@ namespace SQLHelper
             {
                 throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
             }
-            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}\\{DBName}");
+            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
             this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
+        }
+
+        public void SetDbScriptResource(Type AssemblyType, string ScriptResourceName)
+        {
+            this.AssemblyType = AssemblyType;
+            this.ScriptResourceName = ScriptResourceName;
         }
 
         public SQLHLite(FileInfo file)
@@ -87,9 +98,40 @@ namespace SQLHelper
             connection.Execute("DROP TABLE IF EXISTS DB_VERSION");
             connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
             connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
-            OnCreateDB?.Invoke(this, EventArgs.Empty);
+
+            if (AssemblyType != null && !string.IsNullOrEmpty(this.ScriptResourceName))
+            {
+                CreateDbFromScript(connection);
+            }
+            else
+            {
+                OnCreateDB?.Invoke(this, EventArgs.Empty);
+            }
             connection.Close();
         }
+        private void CreateDbFromScript(SqlConnection connection)
+        {
+            string sql = string.Empty;
+            using (ReflectionCaller reflection = new ReflectionCaller())
+            {
+                using (Stream stream = reflection.GetAssembly(this.AssemblyType)
+                .GetResource("Sqlite.sql"))
+                {
+                    using (StreamReader reader = new System.IO.StreamReader(stream, Encoding.UTF7))
+                    {
+                        sql = reader.ReadToEnd();
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(sql))
+            {
+                this.Batch(connection, sql);
+            }
+            this.AssemblyType = null;
+            this.ScriptResourceName = null;
+
+        }
+
         public bool EliminarDB()
         {
             try
