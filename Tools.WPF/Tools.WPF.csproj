@@ -25,6 +25,7 @@
     </PropertyGroup>
   </Target>
   <ItemGroup>
+    <EmbeddedResource Remove="Controls\RangoFechas\DateRange.xaml" />
     <EmbeddedResource Remove="Pages\DeviceRegister.xaml" />
     <EmbeddedResource Remove="Pages\SplashScreen.xaml" />
     <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
