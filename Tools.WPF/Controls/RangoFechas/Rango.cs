@@ -14,8 +14,12 @@ namespace Tools.WPF.Controls.RangoFechas
             get => _Inicio;
             set
             {
-                _Inicio = value;
-                OnPropertyChanged(nameof(Inicio));
+                if (_Inicio != value)
+                {
+                    _Inicio = value;
+                    OnPropertyChanged();
+                    OnDateChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
         private DateTime? _Fin;
@@ -24,8 +28,12 @@ namespace Tools.WPF.Controls.RangoFechas
             get => _Fin;
             set
             {
-                _Fin = value;
-                OnPropertyChanged(nameof(Fin));
+                if (_Fin != value)
+                {
+                    _Fin = value;
+                    OnPropertyChanged();
+                    OnDateChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
         private bool _TodasLasFechas;
@@ -35,28 +43,29 @@ namespace Tools.WPF.Controls.RangoFechas
             set
             {
                 _TodasLasFechas = value;
-                OnPropertyChanged(nameof(TodasLasFechas));
-                if (TodasLasFechas)
-                {
-                    Fin =
-                    Inicio = null;
-                }
-                else
-                {
-                    Inicio = DateTime.Now;
-                    Fin = DateTime.Now;
-                }
+                OnPropertyChanged();
+                OnDateChanged?.Invoke(this, EventArgs.Empty);
+                //if (TodasLasFechas)
+                //{
+                //    Fin =
+                //    Inicio = null;
+                //}
+                //else
+                //{
+                //    Inicio = DateTime.Now;
+                //    Fin = DateTime.Now;
+                //}
             }
         }
         public bool Cancelado { get; set; }
         public bool Excel { get; set; }
-
+        public event EventHandler OnDateChanged;
         public Rango()
         {
             Excel = false;
             Cancelado = false;
-            Inicio = DateTime.Now;
-            Fin = DateTime.Now;
+            _Inicio = DateTime.Now;
+            _Fin = DateTime.Now;
         }
     }
 }

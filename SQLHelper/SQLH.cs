@@ -115,7 +115,7 @@ namespace SQLHelper
             }
             con.Close();
         }
-        public T Single<T>(string sql,params SqlParameter[] parameters)
+        public T Single<T>(string sql, params SqlParameter[] parameters)
         {
             return Single<T>(sql, false, CommandType.Text, parameters);
         }
@@ -474,6 +474,10 @@ namespace SQLHelper
                 Log.LogMeSQL(GetCommandText(cmd));
                 return null;
             }
+        }
+        public Task<Reader> AsyncLeector(string sql, params SqlParameter[] parameters)
+        {
+            return AsyncLeector(sql, CommandType.Text, false, parameters);
         }
         public bool Exists(string sql, bool Reportar = false, params SqlParameter[] parametros)
         {
