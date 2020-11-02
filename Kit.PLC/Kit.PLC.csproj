@@ -70,10 +70,7 @@
 
 
 	<ItemGroup>
-		<!--<PackageReference Include="System.Data.Common" Version="4.3.0" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1560" />
-		<PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />-->
+
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
@@ -87,99 +84,24 @@
 		<ProjectReference Include="..\Kit.Droid\Kit.Droid.csproj" />
 		
 		<Compile Include="Droid\**\*.cs" />
-
-		<!--<PackageReference Include="Plugin.CurrentActivity" Version="2.1.0.4" />
-		<PackageReference Include="DeviceId" Version="5.1.1" />
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="IronPdf" Version="2020.8.0" />
-		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
-
-
-		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-
-		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
-		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
-		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
-		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
-		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
 		<ProjectReference Include="..\Kit.iOS\Kit.iOS.csproj" />
 		
 		<Compile Include="iOS\**\*.cs" />
-		<!--<PackageReference Include="DeviceId" Version="5.1.1" />
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="IronPdf" Version="2020.8.0" />
-		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
 
-
-		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-
-		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
-		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
-
-		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
-		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
-		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
 		<ProjectReference Include="..\Kit.NetCore\Kit.NetCore.csproj" />
 		<Compile Include="Shared\Blumitech\**\*.cs" />
-		<!--<PackageReference Remove="Xamarin.Forms" Version="4.8.0.1364" />-->
-
 		<Compile Include="NetCore\**\*.cs" />
-
-		<!--<PackageReference Include="DeviceId" Version="5.1.1" />
-		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />-->
-
-
 	</ItemGroup>
 	<ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
 
 		<ProjectReference Include="..\Kit.WPF\Kit.WPF.csproj" />
 		<Compile Include="WPF\**\*.cs" />
-
-
-		<!--<Reference Include="PresentationCore">
-			<HintPath>..\..\Git\GourmetPOS\Assambles\PresentationCore.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Xaml">
-			<HintPath>..\..\Git\GourmetPOS\Assambles\System.Xaml.dll</HintPath>
-		</Reference>
-		<PackageReference Include="WindowsBase" Version="4.6.1055">
-		</PackageReference>
-		<PackageReference Include="PresentationFramework" Version="4.6.0" />
-		<PackageReference Include="HtmlRenderer.Core" Version="1.5.0.6">
-		</PackageReference>
-		<PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6">
-		</PackageReference>
-		--><!--<PackageReference Include="iTextSharp">
-			<Version>5.5.13.1</Version>
-		</PackageReference>--><!--
-		<PackageReference Include="PdfiumViewer" Version="2.13.0" />
-
-		<PackageReference Include="DeviceId" Version="5.1.1" />
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="IronPdf" Version="2020.8.0" />
-
-		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
-
-
-		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-
-		<PackageReference Include="Xamarin.Forms.Platform.WPF" Version="4.8.0.1451" />
-		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
-		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
-		<PackageReference Include="ceTe.DynamicPDF.Printing.NET" Version="4.13.0" />
-
-		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
-		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
-		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
@@ -200,21 +122,7 @@
 
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<!--<PackageReference Include="DeviceId" Version="5.1.1" />
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="IronPdf" Version="2020.9.0" />
 
-		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
-
-		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
-
-		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
-		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
-
-		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
-		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
-		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
 	</ItemGroup>
 
 
