@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:plugin="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin"
+             xmlns:controls="clr-namespace:Kit.Forms.Controls" xmlns:views="clr-namespace:Kit.Forms.Controls.Views"
+             x:Class="Kit.Forms.Controls.NotificationBar.CustomToolBar"
+             x:Name="Me">
+    <ContentView.Content>
+        <StackLayout  Spacing="3" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+
+            <controls:MyImageButton MySource="menu_bar.png" Clicked="ToogleMenu"
+                         Margin="5" HeightRequest="30" IsVisible="{Binding IsSandwichVisible,Source={Reference Me}}"
+                         HorizontalOptions="Start" x:Name="IconMenu"/>
+
+            <StackLayout Margin="5" Padding="0" HeightRequest="30" HorizontalOptions="FillAndExpand" BindableLayout.ItemsSource="{Binding Notificaciones}" BindingContext="{Binding Modelo,Source={Reference Me}}"
+             Orientation="Horizontal">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HeightRequest="30">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Click"/>
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <controls:MyImage HeightRequest="30" MySource="{Binding Imagen,Mode=OneWay}" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <Frame CornerRadius="10" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" BackgroundColor="{Binding Color,Mode=OneWay}" BindingContext="{Binding .}"/>
+                            <Label HorizontalOptions="CenterAndExpand" Grid.RowSpan="2" Grid.Column="1" VerticalOptions="CenterAndExpand" Text="{Binding Texto,Mode=OneWay}" FontSize="Medium" TextColor="Black" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+
+            <plugin:ProgressRing IsVisible="{Binding IsProgressVisible,Source={Reference Me}}" 
+                                 HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" 
+                                 HeightRequest="30" WidthRequest="30"
+                                 x:Name="Progress" Progress="{Binding ProgressSource,Source={Reference Me}}"
+                                 BackgroundColor="Transparent" Margin="0"/>
+
+            <views:MyButton HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
+                              ImgSource="{Binding Logo,Source={Reference Me}}"
+                              IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
+                              Text="{Binding LogoText,Source={Reference Me}}"
+                            />
+
+            <StackLayout WidthRequest="30"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

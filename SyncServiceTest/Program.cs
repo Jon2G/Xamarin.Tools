@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tools.Daemon;
-using Tools.Daemon.Abstractions;
-using Tools.WPF.Services;
+using Kit.Daemon;
+using Kit.Daemon.Abstractions;
+using Kit.WPF.Services;
 
 namespace SyncServiceTest
 {

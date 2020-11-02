@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Kit.WPF.Controls.RangoFechas.DateRange"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="120" MinHeight="115" MinWidth="520" d:DesignWidth="525">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="127*"></ColumnDefinition>
+                <ColumnDefinition Width="261*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock FontSize="14" VerticalAlignment="Center" Text="Fecha Inicial:" Grid.Column="0" TextAlignment="Center" Height="19" Margin="0,7"/>
+            <DatePicker FontSize="14" VerticalAlignment="Center" Grid.Column="1"  VerticalContentAlignment="Center" x:Name="DtFInicial"
+                        SelectedDate="{Binding Rango.Inicio}" 
+                        DisplayDateEnd="{Binding Rango.InicioMaxDate}"
+                        Margin="3" Height="27"/>
+        </Grid>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="127*"></ColumnDefinition>
+                <ColumnDefinition Width="261*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock FontSize="14" VerticalAlignment="Center" Text="Fecha Final:" Grid.Column="0" TextAlignment="Center"/>
+            <DatePicker Grid.Row="0" FontSize="14" VerticalAlignment="Center" Grid.Column="1"  VerticalContentAlignment="Center" x:Name="DtFFinal" SelectedDate="{Binding Rango.Fin}" DisplayDateStart="{Binding Rango.MinDate}" DisplayDateEnd="{Binding Rango.FinMaxDate}" Margin="3"/>
+            <CheckBox IsChecked="{Binding Fechas.TodasLasFechas}" FontSize="16" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                              Content="Mostrar todas las fechas." HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+        </Grid>
+    </DockPanel>
+</UserControl>

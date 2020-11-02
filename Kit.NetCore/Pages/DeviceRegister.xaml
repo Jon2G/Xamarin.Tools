@@ -1,0 +1,39 @@
+﻿<Window x:Class="Kit.NetCore.Pages.DeviceRegister"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kit.NetCore.Pages"
+        xmlns:controls="clr-namespace:Kit.NetCore.Controls"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d" WindowStyle="ToolWindow"  ResizeMode="NoResize" 
+        Title="Por favor inicie sesión" Width="346.902" FontSize="18" Height="403.432">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFFF944B" Offset="1"/>
+            <GradientStop Color="White"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <StackPanel>
+        <controls:MyImage Source="/Tools.NetCore;component/Imgs/logo.png" Height="80"/>
+        <TextBlock Text="Por favor inicie sesión" TextAlignment="Center" Background="MidnightBlue" DockPanel.Dock="Top" Foreground="White"/>
+        <StackPanel Margin="10">
+
+
+            <TextBlock Text="Usuario:"/>
+            <TextBox Margin="5" Name="TxtUsuario" Text="{Binding UserName}" DataContext="{Binding Model}"/>
+
+            <TextBlock Text="Contraseña:"/>
+            <PasswordBox Margin="5" Name="Pssword"/>
+
+            <Button Background="White" Margin="5" Click="LogIn">
+                <TextBlock Text="Iniciar sesión"/>
+            </Button>
+            <TextBlock>           
+                <Hyperlink Click="Hyperlink_RequestNavigate">
+                    Registarse
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+</Window>   

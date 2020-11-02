@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Controls\STextBox.xaml" />
+    <EmbeddedResource Remove="Pages\DeviceRegister.xaml" />
+    <EmbeddedResource Remove="Pages\SplashScreen.xaml" />
+    <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Imgs\logo.png" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="Services\DeviceInfo.cs" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoCompleteTextBox" Version="1.1.1" />
+    <PackageReference Include="DeviceId" Version="5.2.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
+    <ProjectReference Include="..\Kit\Kit.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="Imgs\logo.png" />
+  </ItemGroup>
+
+</Project>

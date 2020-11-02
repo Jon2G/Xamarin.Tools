@@ -1,0 +1,254 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+
+	<PropertyGroup>
+		<!--Work around so the conditions work below-->
+		<TargetFrameworks></TargetFrameworks>
+		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>-->
+
+		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>-->
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1</TargetFrameworks>
+
+		<!--Feel free to add as many targets as you need below
+    netstandard1.0;netstandard2.0;MonoAndroid90;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
+    For UWP update the version number with a version number you have installed.
+    -->
+		<AssemblyName>Kit.PLC</AssemblyName>
+		<RootNamespace>Kit.PLC</RootNamespace>
+		<PackageId>Plugin.Xamarin.Tools</PackageId>
+
+		<Product>$(AssemblyName) ($(TargetFramework))</Product>
+		<AssemblyVersion>1.0.0.8</AssemblyVersion>
+		<AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
+		<Version>1.0.0.7</Version>
+		<PackageVersion>1.0.0.8</PackageVersion>
+		<PackOnBuild>true</PackOnBuild>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>default</LangVersion>
+		<DefineConstants>$(DefineConstants);</DefineConstants>
+
+		<UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
+		<LangVersion>latest</LangVersion>
+		<DebugType>portable</DebugType>
+
+		<!--TODO: Fill these in-->
+		<PackageLicenseUrl></PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</RepositoryUrl>
+		<PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
+		<PackageIconUrl>ICON URL</PackageIconUrl>
+		<PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, Xamarin.Tools</PackageTags>
+
+		<Title>Xamarin.Tools Plugin for Xamarin and Windows</Title>
+		<Summary>Summary of nuget</Summary>
+		<Description>Set of several tools and dependency services for xamarin</Description>
+
+
+		<Owners>YOU</Owners>
+		<Authors>BlumJonathanGG</Authors>
+		<Copyright>Copyright 2020</Copyright>
+
+		<!--When built in 2019 will remove extra references on pack-->
+		<DisableExtraReferences>true</DisableExtraReferences>
+		<Company>BlumJonathanGG</Company>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+		<DebugSymbols>true</DebugSymbols>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<!--<PackageReference Include="System.Data.Common" Version="4.3.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1560" />
+		<PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />-->
+	</ItemGroup>
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+		<ProjectReference Include="..\Kit\Kit.csproj" />
+
+	</ItemGroup>
+
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+
+		<ProjectReference Include="..\Kit.Droid\Kit.Droid.csproj" />
+		
+		<Compile Include="Droid\**\*.cs" />
+
+		<!--<PackageReference Include="Plugin.CurrentActivity" Version="2.1.0.4" />
+		<PackageReference Include="DeviceId" Version="5.1.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="IronPdf" Version="2020.8.0" />
+		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+
+
+		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
+
+		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
+		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
+		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
+		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
+	</ItemGroup>
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+		<ProjectReference Include="..\Kit.iOS\Kit.iOS.csproj" />
+		
+		<Compile Include="iOS\**\*.cs" />
+		<!--<PackageReference Include="DeviceId" Version="5.1.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="IronPdf" Version="2020.8.0" />
+		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+
+
+		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
+
+		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
+		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+
+		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
+		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
+		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
+	</ItemGroup>
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+		<ProjectReference Include="..\Kit.NetCore\Kit.NetCore.csproj" />
+		<Compile Include="Shared\Blumitech\**\*.cs" />
+		<!--<PackageReference Remove="Xamarin.Forms" Version="4.8.0.1364" />-->
+
+		<Compile Include="NetCore\**\*.cs" />
+
+		<!--<PackageReference Include="DeviceId" Version="5.1.1" />
+		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />-->
+
+
+	</ItemGroup>
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
+
+		<ProjectReference Include="..\Kit.WPF\Kit.WPF.csproj" />
+		<Compile Include="WPF\**\*.cs" />
+
+
+		<!--<Reference Include="PresentationCore">
+			<HintPath>..\..\Git\GourmetPOS\Assambles\PresentationCore.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Xaml">
+			<HintPath>..\..\Git\GourmetPOS\Assambles\System.Xaml.dll</HintPath>
+		</Reference>
+		<PackageReference Include="WindowsBase" Version="4.6.1055">
+		</PackageReference>
+		<PackageReference Include="PresentationFramework" Version="4.6.0" />
+		<PackageReference Include="HtmlRenderer.Core" Version="1.5.0.6">
+		</PackageReference>
+		<PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6">
+		</PackageReference>
+		--><!--<PackageReference Include="iTextSharp">
+			<Version>5.5.13.1</Version>
+		</PackageReference>--><!--
+		<PackageReference Include="PdfiumViewer" Version="2.13.0" />
+
+		<PackageReference Include="DeviceId" Version="5.1.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="IronPdf" Version="2020.8.0" />
+
+		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+
+
+		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
+
+		<PackageReference Include="Xamarin.Forms.Platform.WPF" Version="4.8.0.1451" />
+		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
+		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+		<PackageReference Include="ceTe.DynamicPDF.Printing.NET" Version="4.13.0" />
+
+		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
+		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
+		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
+	</ItemGroup>
+	
+	<ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
+		<ProjectReference Include="..\Kit.UWP\Kit.UWP.csproj" />
+		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+			<Version>6.2.10</Version>
+		</PackageReference>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
+		<ProjectReference Include="..\Kit\Kit.csproj" />
+
+	</ItemGroup>
+
+
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<!--<PackageReference Include="DeviceId" Version="5.1.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="IronPdf" Version="2020.9.0" />
+
+		<PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+
+		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+		<PackageReference Include="Xamarin.Forms.InputKit" Version="3.3.1" />
+
+		<PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
+		<PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+
+		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
+		<PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
+		<PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />-->
+	</ItemGroup>
+
+
+
+
+
+
+
+	<ItemGroup>
+		<Compile Include="Services\CustomMessageBox.cs" />
+		<Compile Include="Services\DataShare.cs" />
+		<Compile Include="Services\DeviceInfo.cs" />
+		<Compile Include="Services\FolderPermissions.cs" />
+		<Compile Include="Services\License.cs" />
+		<Compile Include="Services\PDFConverter.cs" />
+		<Compile Include="Services\PDFSaveAndOpen.cs" />
+		<Compile Include="Services\PhotoPicker.cs" />
+		<Compile Include="Services\PrintHTML.cs" />
+		<Compile Include="Services\QRCode.cs" />
+		<Compile Include="Services\ScreenManager.cs" />
+		<Compile Include="Services\ScreenshotService.cs" />
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <None Remove="Services\License.cs" />
+	</ItemGroup>
+
+
+
+
+
+
+
+
+</Project>

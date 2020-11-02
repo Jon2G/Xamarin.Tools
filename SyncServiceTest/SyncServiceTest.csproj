@@ -118,13 +118,13 @@
       <Project>{094e8cbd-1194-4397-bc30-d972e3814aeb}</Project>
       <Name>SQLHelper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Tools.WPF\Tools.WPF.csproj">
+    <ProjectReference Include="..\Kit.WPF\Kit.WPF.csproj">
       <Project>{65e84e8a-8e99-47ab-a09e-1a61749a77e2}</Project>
-      <Name>Tools.WPF</Name>
+      <Name>Kit.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Tools\Tools.csproj">
+    <ProjectReference Include="..\Kit\Kit.csproj">
       <Project>{3727A404-D8BA-40D8-9380-BE9C3CD2A889}</Project>
-      <Name>Tools</Name>
+      <Name>Kit</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
