@@ -25,7 +25,7 @@
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="30*"/>
             </Grid.RowDefinitions>
-            <controls:MyImage Grid.Column="1" Grid.Row="1" Source="/Tools.WPF;component/Imgs/logo.png" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:MyImage Grid.Column="1" Grid.Row="1" Source="/Kit.WPF;component/Imgs/logo.png" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
     </DockPanel>
 </Window>
