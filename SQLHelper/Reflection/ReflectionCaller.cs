@@ -92,7 +92,7 @@ namespace SQLHelper.Reflection
         }
         public Stream GetResource(string ResourceName)
         {
-            string fullname = Dll.GetManifestResourceNames().First(x => x.EndsWith(ResourceName));
+            string fullname = Dll.GetManifestResourceNames().FirstOrDefault(x => x.EndsWith(ResourceName));
             if (string.IsNullOrEmpty(ResourceName))
             {
                 return null;

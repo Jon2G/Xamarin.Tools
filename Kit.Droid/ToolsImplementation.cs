@@ -9,12 +9,13 @@ using Kit.Enums;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Kit.Services;
+using Kit.Droid.Services;
 
 namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
     {
-        public Activity MainActivity { get; internal set; }
+        public MainActivity MainActivity { get; internal set; }
         public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
         {
             Debugging = Debugger.IsAttached;

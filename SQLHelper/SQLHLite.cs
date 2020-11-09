@@ -95,7 +95,10 @@ namespace SQLHelper
         }
         private void Crear(SqlConnection connection)
         {
-            connection.Execute("DROP TABLE IF EXISTS DB_VERSION");
+            if (TableExists("DB_VERSION"))
+            {
+                connection.Execute("DROP TABLE DB_VERSION");
+            }
             connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
             connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
 
@@ -115,7 +118,7 @@ namespace SQLHelper
             using (ReflectionCaller reflection = new ReflectionCaller())
             {
                 using (Stream stream = reflection.GetAssembly(this.AssemblyType)
-                .GetResource("Sqlite.sql"))
+                .GetResource(this.ScriptResourceName))
                 {
                     using (StreamReader reader = new System.IO.StreamReader(stream, Encoding.UTF7))
                     {
@@ -334,12 +337,16 @@ namespace SQLHelper
                 return reader?.Read() ?? false;
             }
         }
-        public override bool TableExists(string TableName)
+        public bool TableExists(SQLiteConnection con, string TableName)
         {
-            using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
+            using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';", con))
             {
                 return reader?.Read() ?? false;
             }
+        }
+        public override bool TableExists(string TableName)
+        {
+            return TableExists(Conecction(), TableName);
         }
         public void Batch(string sql)
         {
