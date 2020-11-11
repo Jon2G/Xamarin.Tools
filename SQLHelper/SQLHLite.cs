@@ -114,14 +114,9 @@ namespace SQLHelper
             string sql = string.Empty;
             using (ReflectionCaller reflection = new ReflectionCaller())
             {
-                using (Stream stream = reflection.GetAssembly(this.AssemblyType)
-                .GetResource("Sqlite.sql"))
-                {
-                    using (StreamReader reader = new System.IO.StreamReader(stream, Encoding.UTF7))
-                    {
-                        sql = reader.ReadToEnd();
-                    }
-                }
+                sql = ReflectionCaller.ToText(reflection
+                    .GetAssembly(this.AssemblyType)
+                    .GetResource("Sqlite.sql"));
             }
             if (!string.IsNullOrEmpty(sql))
             {

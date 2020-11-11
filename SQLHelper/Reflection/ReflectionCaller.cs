@@ -99,11 +99,29 @@ namespace SQLHelper.Reflection
             }
             return Dll.GetManifestResourceStream(fullname);
         }
+        public List<string> FindResources(Func<string, bool> condition)
+        {
+            return Dll.GetManifestResourceNames().Where(condition).ToList();
+        }
         public object Instance()
         {
             return Activator.CreateInstance(Type);
         }
 
+        public static string ToText(Stream stream, Encoding Enconding = null)
+        {
+            if (Enconding is null)
+            {
+                Enconding = Encoding.UTF7;
+            }
+            string text = null;
+            using (StreamReader reader = new System.IO.StreamReader(stream, Enconding))
+            {
+                text = reader.ReadToEnd();
+            }
+            stream.Close();
+            return text;
+        }
         public override string ToString()
         {
             return base.ToString();
