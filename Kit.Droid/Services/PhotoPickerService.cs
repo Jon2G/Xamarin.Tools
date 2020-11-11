@@ -13,7 +13,6 @@ namespace Kit.Droid.Services
     {
         // Field, property, and method for Picture Picker
         public const int PickImageId = 1000;
-        public static TaskCompletionSource<Tuple<byte[], ImageSource>> PickImageTaskCompletionSource { set; get; }
 
         public Task<Tuple<byte[], ImageSource>> GetImageAsync()
         {
@@ -25,6 +24,9 @@ namespace Kit.Droid.Services
             ToolsImplementation tools = Kit.Tools.Instance as ToolsImplementation;
             // Start the picture-picker activity (resumes in MainActivity.cs)
             tools.MainActivity.StartActivityForResult(Intent.CreateChooser(intent, "Select Picture"), PickImageId);
+            // Save the TaskCompletionSource object as a MainActivity property
+            tools.MainActivity.PickImageTaskCompletionSource = new TaskCompletionSource<Tuple<byte[], ImageSource>>();
+
             ////ADD ON PLATAFORM SPECIFIC
             //    protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
             //    {
@@ -61,10 +63,9 @@ namespace Kit.Droid.Services
             //}
             /////////////////////////////
 
-            // Save the TaskCompletionSource object as a MainActivity property
-            PickImageTaskCompletionSource = new TaskCompletionSource<Tuple<byte[], ImageSource>>();
+
             // Return Task object
-            return PickImageTaskCompletionSource.Task;
+            return tools.MainActivity.PickImageTaskCompletionSource.Task;
         }
     }
 }

@@ -14,6 +14,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Log = SQLHelper.Log;
 using Application = Android.App.Application;
+using Kit.Droid.Services;
 
 namespace Kit.Droid
 {
@@ -22,7 +23,7 @@ namespace Kit.Droid
         /// <summary>
         /// Initialize android user dialogs
         /// </summary>
-        public static AbstractTools Init(Activity activity, Bundle bundle)
+        public static AbstractTools Init(MainActivity activity, Bundle bundle)
         {
             Xamarin.Essentials.Platform.Init(activity, bundle);
             Xamarin.Forms.Forms.Init(activity, bundle);
