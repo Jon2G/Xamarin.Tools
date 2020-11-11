@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Kit.Forms.Pages;
-using BaseLicense = Kit.License.Licence;
+using BaseLicense = Kit.License.License;
 namespace Kit.UWP.Services
 {
     public sealed class License : BaseLicense

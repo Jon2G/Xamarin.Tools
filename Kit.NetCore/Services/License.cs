@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Kit.NetCore.Pages;
-using BaseLicense = Kit.License.Licence;
+using BaseLicense = Kit.License.License;
 namespace Kit.NetCore.Services
 {
     public class License : BaseLicense

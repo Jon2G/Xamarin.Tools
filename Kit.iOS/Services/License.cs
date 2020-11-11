@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Kit.Forms.Pages;
 using Kit.iOS.Services;
-using BaseLicense = Kit.License.Licence;
+using BaseLicense = Kit.License.License;
 namespace Kit.iOS.Services
 {
     public class License : BaseLicense

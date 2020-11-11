@@ -23,7 +23,7 @@ namespace Kit.WPF.Pages
     public partial class DeviceRegister : Window
     {
         public DeviceRegisterModel Model { get; private set; }
-        public DeviceRegister(Licence Licence, ICustomMessageBox CustomMesaggeBox)
+        public DeviceRegister(License.License Licence, ICustomMessageBox CustomMesaggeBox)
         {    
             this.Model = new DeviceRegisterModel(Licence, CustomMesaggeBox);
             this.DataContext = this.Model;
@@ -33,7 +33,7 @@ namespace Kit.WPF.Pages
         }
         private void Hyperlink_RequestNavigate(object sender, RoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(License.Licence.LoginSite));
+            Process.Start(new ProcessStartInfo(License.License.LoginSite));
             e.Handled = true;
         }
         private async void LogIn(object sender, RoutedEventArgs e)

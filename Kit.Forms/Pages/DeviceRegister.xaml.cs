@@ -16,7 +16,7 @@ namespace Kit.Forms.Pages
     public partial class DeviceRegister : Page
     {
         public DeviceRegisterModel Model { get;private set; }
-        public DeviceRegister(Brush brush, Licence Licence,ICustomMessageBox CustomMesaggeBox)
+        public DeviceRegister(Brush brush, License.License Licence,ICustomMessageBox CustomMesaggeBox)
         {
             this.Model = new DeviceRegisterModel(Licence, CustomMesaggeBox);
             this.Background = brush;
@@ -44,7 +44,7 @@ namespace Kit.Forms.Pages
         }
         private void Registrarse(object sender, EventArgs e)
         {
-            Launcher.OpenAsync(new Uri(License.Licence.LoginSite));
+            Launcher.OpenAsync(new Uri(License.License.LoginSite));
         }
         protected override bool OnBackButtonPressed()
         {

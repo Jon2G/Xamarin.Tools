@@ -10,7 +10,7 @@ using SQLHelper;
 
 namespace Kit.License
 {
-    public abstract class Licence
+    public abstract class License
     {
         public const string LoginSite = "https://ecommerce.blumitech.com.mx/";
         private readonly Dictionary<string, string> AppKeys;
@@ -22,7 +22,7 @@ namespace Kit.License
         public string Reason { get; private set; }
         protected abstract void OpenRegisterForm();
 
-        protected Licence(ICustomMessageBox CustomMessageBox, IDeviceInfo DeviceInfo, string AppName)
+        protected License(ICustomMessageBox CustomMessageBox, IDeviceInfo DeviceInfo, string AppName)
         {
             this.Reason = "Desconocido...";
             this.CustomMessageBox = CustomMessageBox;

@@ -13,9 +13,9 @@ namespace Kit.License
         public bool IsValidated { get; set; }
         public string UserName { get => _UserName; set { _UserName = value; OnPropertyChanged(); } }
         public string Password { get => _Password; set { _Password = value; OnPropertyChanged(); } }
-        public Licence Licence { get; set; }
+        public License Licence { get; set; }
         private readonly ICustomMessageBox CustomMessageBox;
-        public DeviceRegisterModel(Licence licence, ICustomMessageBox CustomMessageBox)
+        public DeviceRegisterModel(License licence, ICustomMessageBox CustomMessageBox)
         {
             this.CustomMessageBox = CustomMessageBox;
             this.Licence = licence;

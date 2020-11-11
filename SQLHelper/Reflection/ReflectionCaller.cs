@@ -92,18 +92,32 @@ namespace SQLHelper.Reflection
         }
         public Stream GetResource(string ResourceName)
         {
-            string fullname = Dll.GetManifestResourceNames().FirstOrDefault(x => x.EndsWith(ResourceName));
+            string fullname = Dll.GetManifestResourceNames().First(x => x.EndsWith(ResourceName));
             if (string.IsNullOrEmpty(ResourceName))
             {
                 return null;
             }
             return Dll.GetManifestResourceStream(fullname);
         }
+        public List<string> FindResources(Func<string, bool> condition)
+        {
+            return Dll.GetManifestResourceNames().Where(condition).ToList();
+        }
         public object Instance()
         {
             return Activator.CreateInstance(Type);
         }
 
+        public static string ToText(Stream stream)
+        {
+            string text = null;
+            using (StreamReader reader = new System.IO.StreamReader(stream, Encoding.UTF7))
+            {
+                text = reader.ReadToEnd();
+            }
+            stream.Close();
+            return text;
+        }
         public override string ToString()
         {
             return base.ToString();

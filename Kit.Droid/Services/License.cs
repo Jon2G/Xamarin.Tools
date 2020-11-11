@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BaseLicense = Kit.License.Licence;
+using BaseLicense = Kit.License.License;
 namespace Kit.Droid.Services
 {
     public class License : BaseLicense

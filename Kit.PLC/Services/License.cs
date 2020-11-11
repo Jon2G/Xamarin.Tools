@@ -4,7 +4,7 @@ using System.Text;
 using Kit;
 using Kit.License;
 using Kit.Services.Interfaces;
-using BaseLicense = Kit.License.Licence;
+using BaseLicense = Kit.License.License;
 
 namespace Kit.PLC.Services
 {

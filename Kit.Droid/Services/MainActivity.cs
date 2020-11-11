@@ -11,6 +11,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using FFImageLoading.Forms.Platform;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using SQLHelper;
@@ -61,11 +62,12 @@ namespace Kit.Droid.Services
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            global::Xamarin.Forms.Forms.SetFlags("Expander_Experimental", "Brush_Experimental");
+            global::Xamarin.Forms.Forms.SetFlags("Expander_Experimental", "Brush_Experimental", "Shapes_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
-            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(false);
+            CachedImageRenderer.InitImageViewHandler();
+            CachedImageRenderer.Init(false);
             UserDialogs.Init(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
