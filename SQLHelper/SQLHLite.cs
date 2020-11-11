@@ -95,7 +95,10 @@ namespace SQLHelper
         }
         private void Crear(SqlConnection connection)
         {
-            connection.Execute("DROP TABLE IF EXISTS DB_VERSION");
+            if (TableExists("DB_VERSION"))
+            {
+                connection.Execute("DROP TABLE DB_VERSION");
+            }
             connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
             connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
 
@@ -116,7 +119,7 @@ namespace SQLHelper
             {
                 sql = ReflectionCaller.ToText(reflection
                     .GetAssembly(this.AssemblyType)
-                    .GetResource("Sqlite.sql"));
+                    .GetResource(this.ScriptResourceName));
             }
             if (!string.IsNullOrEmpty(sql))
             {
