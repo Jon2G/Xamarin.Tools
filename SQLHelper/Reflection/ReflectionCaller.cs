@@ -92,7 +92,7 @@ namespace SQLHelper.Reflection
         }
         public Stream GetResource(string ResourceName)
         {
-            string fullname = Dll.GetManifestResourceNames().First(x => x.EndsWith(ResourceName));
+            string fullname = Dll.GetManifestResourceNames().FirstOrDefault(x => x.EndsWith(ResourceName));
             if (string.IsNullOrEmpty(ResourceName))
             {
                 return null;
@@ -108,10 +108,14 @@ namespace SQLHelper.Reflection
             return Activator.CreateInstance(Type);
         }
 
-        public static string ToText(Stream stream)
+        public static string ToText(Stream stream, Encoding Enconding = null)
         {
+            if (Enconding is null)
+            {
+                Enconding = Encoding.UTF7;
+            }
             string text = null;
-            using (StreamReader reader = new System.IO.StreamReader(stream, Encoding.UTF7))
+            using (StreamReader reader = new System.IO.StreamReader(stream, Enconding))
             {
                 text = reader.ReadToEnd();
             }

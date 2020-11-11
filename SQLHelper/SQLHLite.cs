@@ -117,14 +117,9 @@ namespace SQLHelper
             string sql = string.Empty;
             using (ReflectionCaller reflection = new ReflectionCaller())
             {
-                using (Stream stream = reflection.GetAssembly(this.AssemblyType)
-                .GetResource(this.ScriptResourceName))
-                {
-                    using (StreamReader reader = new System.IO.StreamReader(stream, Encoding.UTF7))
-                    {
-                        sql = reader.ReadToEnd();
-                    }
-                }
+                sql = ReflectionCaller.ToText(reflection
+                    .GetAssembly(this.AssemblyType)
+                    .GetResource(this.ScriptResourceName));
             }
             if (!string.IsNullOrEmpty(sql))
             {
@@ -337,16 +332,12 @@ namespace SQLHelper
                 return reader?.Read() ?? false;
             }
         }
-        public bool TableExists(SQLiteConnection con, string TableName)
+        public override bool TableExists(string TableName)
         {
-            using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';", con))
+            using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
             {
                 return reader?.Read() ?? false;
             }
-        }
-        public override bool TableExists(string TableName)
-        {
-            return TableExists(Conecction(), TableName);
         }
         public void Batch(string sql)
         {
