@@ -62,7 +62,7 @@ namespace Kit.CadenaConexion
             {
                 Log.LogMe(ex, "Al recuperar la configuración");
             }
-            return new Configuracion(string.Empty,string.Empty);
+            return new Configuracion(string.Empty, string.Empty);
         }
         public static bool IsUserDefined(SQLHLite SQLHLite)
         {
@@ -80,7 +80,7 @@ namespace Kit.CadenaConexion
         }
         public static Configuracion PorDefecto()
         {
-            return new Configuracion(string.Empty,string.Empty);
+            return new Configuracion(string.Empty, string.Empty);
         }
         public void Salvar(SQLHLite SQLHLite, SQLH SQLH)
         {
@@ -91,9 +91,9 @@ namespace Kit.CadenaConexion
                 bool existeRegistro = SQLHLite.Exists("SELECT *FROM CONFIGURACION");
                 SQLHLite.EXEC(
                     existeRegistro ?
-                        "UPDATE CONFIGURACION SET NOMBREDB=?,SERVIDOR=?,PUERTO=?,USUARIO=?,PASSWORD=?,CADENA_CON=?,ID_DISPOSITIVO=?" :
-                        "INSERT INTO CONFIGURACION (NOMBREDB,SERVIDOR,PUERTO,USUARIO,PASSWORD,CADENA_CON,ID_DISPOSITIVO) VALUES(?,?,?,?,?,?,?)"
-                        , this.NombreDB, this.Servidor, this.Puerto, this.Usuario, this.Password, this.CadenaCon
+                        "UPDATE CONFIGURACION SET NOMBRE=?,NOMBREDB=?,SERVIDOR=?,PUERTO=?,USUARIO=?,PASSWORD=?,CADENA_CON=?,ID_DISPOSITIVO=?" :
+                        "INSERT INTO CONFIGURACION (NOMBRE,NOMBREDB,SERVIDOR,PUERTO,USUARIO,PASSWORD,CADENA_CON,ID_DISPOSITIVO) VALUES(?,?,?,?,?,?,?)"
+                        , this.Empresa, this.NombreDB, this.Servidor, this.Puerto, this.Usuario, this.Password, this.CadenaCon
                         , this.IdentificadorDispositivo);
 
                 if (SQLH.TableExists("COMANDERAS_MOVILES"))
@@ -122,7 +122,7 @@ namespace Kit.CadenaConexion
         public static Configuracion BuildFrom(
             string NombreDB = "", string Password = "",
             string Puerto = "", string Servidor = "",
-            string Usuario = "",string DeviceId="")
+            string Usuario = "", string DeviceId = "")
         {
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Data Source=TCP:")
@@ -147,14 +147,14 @@ namespace Kit.CadenaConexion
                 Replace('\n', ' ').
                 Replace('\r', ' ').ToString().
                 Split(';');
-            return new Configuracion(string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim(),DeviceId)
+            return new Configuracion(string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim(), DeviceId)
             {
                 NombreDB = NombreDB,
                 Password = Password,
                 Puerto = Puerto,
                 Servidor = Servidor,
                 Usuario = Usuario,
-               
+
             };
         }
     }

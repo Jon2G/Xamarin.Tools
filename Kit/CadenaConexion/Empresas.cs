@@ -20,13 +20,13 @@ namespace Kit.CadenaConexion
             {
                 while (reader.Read())
                 {
-                    empresas.Add(reader[0].ToString());
+                    empresas.Add(reader[0]?.ToString() ?? $"EMP{empresas.Count}");
                 }
             }
             return empresas;
 
         }
-        public Configuracion CadenaCon(string Empresa,string DeviceId)
+        public Configuracion CadenaCon(string Empresa, string DeviceId)
         {
             Configuracion configuracion = null;
 
@@ -47,7 +47,7 @@ namespace Kit.CadenaConexion
                             Convert.ToString(reader[2]),
                             Convert.ToString(reader[3]),
                             Convert.ToString(reader[4]),
-                            Convert.ToString(reader[5]).Replace(@"\\", @"\"),DeviceId);
+                            Convert.ToString(reader[5]).Replace(@"\\", @"\"), DeviceId);
                     }
                 }
             }

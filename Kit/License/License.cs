@@ -97,12 +97,12 @@ namespace Kit.License
 
         public async Task<bool> IsAuthorizated()
         {
-            if (Tools.Instance.Debugging
-                || !DeviceInfo.IsDevice
-                )
-            {
-                return true;
-            }
+            //if (Tools.Instance.Debugging
+            //    || !DeviceInfo.IsDevice
+            //    )
+            //{
+            //    return true;
+            //}
             bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
             state = await Autheticate(AppName);
