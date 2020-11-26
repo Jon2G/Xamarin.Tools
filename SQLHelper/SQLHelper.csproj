@@ -5,9 +5,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.4" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.113.5" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.113.6" />
   </ItemGroup>
 </Project>

@@ -162,6 +162,21 @@ namespace SQLHelper
             }
             return con;
         }
+        public SQLiteAsyncConnection ConecctionAsync()
+        {
+            SQLiteAsyncConnection con;
+            try
+            {
+                con = new SQLiteAsyncConnection(this.RutaDb);
+                return con;
+            }
+            catch (Exception ex)
+            {
+                con = null;
+                Log.LogMe(ex);
+            }
+            return con;
+        }
         public int Querry(string sql, params object[] args)
         {
             int afectadas = -1;

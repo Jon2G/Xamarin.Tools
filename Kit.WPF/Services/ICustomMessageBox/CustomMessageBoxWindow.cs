@@ -120,7 +120,11 @@ namespace Kit.WPF.Services.ICustomMessageBox
                 }
                 else
                 {
-                    this.Style = Owner.Style;
+                    if (Owner.Style != null)
+                        if (Owner.Style.TargetType == typeof(Window))
+                        {
+                            this.Style = Owner.Style;
+                        }
                 }
                 this.WindowStartupLocation = this.Owner != null ?
                     WindowStartupLocation.CenterOwner : WindowStartupLocation.CenterScreen;
