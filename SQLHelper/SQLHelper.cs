@@ -56,5 +56,10 @@ namespace SQLHelper
         {
             return value == DBNull.Value || value == null;
         }
+        public static object IfNull(object value, object ifnull)
+        {
+            return IsNull(value) ? ifnull : value;
+        }
+
     }
 }

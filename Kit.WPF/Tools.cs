@@ -37,7 +37,7 @@ namespace Kit.WPF
 
             return Kit.Tools.Instance;
         }
-        public static ToolsImplementation Instance
+        public static new ToolsImplementation Instance
         {
             get => (ToolsImplementation)Kit.Tools.Instance;
         }
