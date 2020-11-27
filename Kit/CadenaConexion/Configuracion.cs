@@ -92,7 +92,7 @@ namespace Kit.CadenaConexion
                 SQLHLite.EXEC(
                     existeRegistro ?
                         "UPDATE CONFIGURACION SET NOMBRE=?,NOMBREDB=?,SERVIDOR=?,PUERTO=?,USUARIO=?,PASSWORD=?,CADENA_CON=?,ID_DISPOSITIVO=?" :
-                        "INSERT INTO CONFIGURACION (NOMBRE,NOMBREDB,SERVIDOR,PUERTO,USUARIO,PASSWORD,CADENA_CON,ID_DISPOSITIVO) VALUES(?,?,?,?,?,?,?)"
+                        "INSERT INTO CONFIGURACION (NOMBRE,NOMBREDB,SERVIDOR,PUERTO,USUARIO,PASSWORD,CADENA_CON,ID_DISPOSITIVO) VALUES(?,?,?,?,?,?,?,?)"
                         , this.Empresa, this.NombreDB, this.Servidor, this.Puerto, this.Usuario, this.Password, this.CadenaCon
                         , this.IdentificadorDispositivo);
 
