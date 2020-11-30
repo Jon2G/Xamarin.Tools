@@ -311,6 +311,61 @@ namespace Kit.Extensions
                 ts.Add(elemento);
             }
         }
+        public static string Dia(DayOfWeek day)
+        {
+            switch (day)
+            {
+                case DayOfWeek.Sunday:
+                    return "Domingo";
+                case DayOfWeek.Monday:
+                    return "Lunes";
+                case DayOfWeek.Tuesday:
+                    return "Martes";
+                case DayOfWeek.Wednesday:
+                    return "Miércoles";
+                case DayOfWeek.Thursday:
+                    return "Jueves";
+                case DayOfWeek.Friday:
+                    return "Viernes";
+                case DayOfWeek.Saturday:
+                    return "Sábado";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+        }
+        public static string Mes(int Mes)
+        {
+            switch (Mes)
+            {
+                case 1:
+                    return "Enero";
+                case 2:
+                    return "Febrero";
+                case 3:
+                    return "Marzo";
+                case 4:
+                    return "Abril";
+                case 5:
+                    return "Mayo";
+                case 6:
+                    return "Junio";
+                case 7:
+                    return "Julio";
+                case 8:
+                    return "Agosto";
+                case 9:
+                    return "Septiembre";
+                case 10:
+                    return "Octubre";
+                case 11:
+                    return "Noviembre";
+                case 12:
+                    return "Diciembre";
+                default:
+                    throw new ArgumentException();
+            }
+        }
 
     }
 }

@@ -4577,86 +4577,92 @@ namespace Kit.Droid
 			// aapt resource value: 0x7F0D0027
 			public static int accessibility_fingerprint_dialog_help_area = 2131558439;
 			
-			// aapt resource value: 0x7F0D0028
-			public static int appbar_scrolling_view_behavior = 2131558440;
-			
 			// aapt resource value: 0x7F0D0029
-			public static int bottom_sheet_behavior = 2131558441;
+			public static int appbar_scrolling_view_behavior = 2131558441;
+			
+			// aapt resource value: 0x7F0D0028
+			public static int app_name = 2131558440;
 			
 			// aapt resource value: 0x7F0D002A
-			public static int character_counter_content_description = 2131558442;
+			public static int bottom_sheet_behavior = 2131558442;
 			
 			// aapt resource value: 0x7F0D002B
-			public static int character_counter_pattern = 2131558443;
+			public static int character_counter_content_description = 2131558443;
 			
 			// aapt resource value: 0x7F0D002C
-			public static int confirm_device_credential_password = 2131558444;
+			public static int character_counter_pattern = 2131558444;
 			
 			// aapt resource value: 0x7F0D002D
-			public static int default_error_msg = 2131558445;
+			public static int confirm_device_credential_password = 2131558445;
 			
 			// aapt resource value: 0x7F0D002E
-			public static int fab_transformation_scrim_behavior = 2131558446;
+			public static int default_error_msg = 2131558446;
 			
 			// aapt resource value: 0x7F0D002F
-			public static int fab_transformation_sheet_behavior = 2131558447;
+			public static int fab_transformation_scrim_behavior = 2131558447;
 			
 			// aapt resource value: 0x7F0D0030
-			public static int fingerprint_dialog_touch_sensor = 2131558448;
+			public static int fab_transformation_sheet_behavior = 2131558448;
 			
 			// aapt resource value: 0x7F0D0031
-			public static int fingerprint_error_hw_not_available = 2131558449;
+			public static int fingerprint_dialog_touch_sensor = 2131558449;
 			
 			// aapt resource value: 0x7F0D0032
-			public static int fingerprint_error_hw_not_present = 2131558450;
+			public static int fingerprint_error_hw_not_available = 2131558450;
 			
 			// aapt resource value: 0x7F0D0033
-			public static int fingerprint_error_lockout = 2131558451;
+			public static int fingerprint_error_hw_not_present = 2131558451;
 			
 			// aapt resource value: 0x7F0D0034
-			public static int fingerprint_error_no_fingerprints = 2131558452;
+			public static int fingerprint_error_lockout = 2131558452;
 			
 			// aapt resource value: 0x7F0D0035
-			public static int fingerprint_error_user_canceled = 2131558453;
+			public static int fingerprint_error_no_fingerprints = 2131558453;
 			
 			// aapt resource value: 0x7F0D0036
-			public static int fingerprint_not_recognized = 2131558454;
+			public static int fingerprint_error_user_canceled = 2131558454;
 			
 			// aapt resource value: 0x7F0D0037
-			public static int generic_error_user_canceled = 2131558455;
+			public static int fingerprint_not_recognized = 2131558455;
 			
 			// aapt resource value: 0x7F0D0038
-			public static int hide_bottom_view_on_scroll_behavior = 2131558456;
+			public static int generic_error_user_canceled = 2131558456;
 			
 			// aapt resource value: 0x7F0D0039
-			public static int library_name = 2131558457;
+			public static int hello = 2131558457;
 			
 			// aapt resource value: 0x7F0D003A
-			public static int mtrl_chip_close_icon_content_description = 2131558458;
+			public static int hide_bottom_view_on_scroll_behavior = 2131558458;
 			
 			// aapt resource value: 0x7F0D003B
-			public static int overflow_tab_title = 2131558459;
+			public static int library_name = 2131558459;
 			
 			// aapt resource value: 0x7F0D003C
-			public static int password_toggle_content_description = 2131558460;
+			public static int mtrl_chip_close_icon_content_description = 2131558460;
 			
 			// aapt resource value: 0x7F0D003D
-			public static int path_password_eye = 2131558461;
+			public static int overflow_tab_title = 2131558461;
 			
 			// aapt resource value: 0x7F0D003E
-			public static int path_password_eye_mask_strike_through = 2131558462;
+			public static int password_toggle_content_description = 2131558462;
 			
 			// aapt resource value: 0x7F0D003F
-			public static int path_password_eye_mask_visible = 2131558463;
+			public static int path_password_eye = 2131558463;
 			
 			// aapt resource value: 0x7F0D0040
-			public static int path_password_strike_through = 2131558464;
+			public static int path_password_eye_mask_strike_through = 2131558464;
 			
 			// aapt resource value: 0x7F0D0041
-			public static int search_menu_title = 2131558465;
+			public static int path_password_eye_mask_visible = 2131558465;
 			
 			// aapt resource value: 0x7F0D0042
-			public static int status_bar_notification_info_overflow = 2131558466;
+			public static int path_password_strike_through = 2131558466;
+			
+			// aapt resource value: 0x7F0D0043
+			public static int search_menu_title = 2131558467;
+			
+			// aapt resource value: 0x7F0D0044
+			public static int status_bar_notification_info_overflow = 2131558468;
 			
 			static String()
 			{
