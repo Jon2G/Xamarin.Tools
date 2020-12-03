@@ -43,6 +43,7 @@
     <Compile Include="Classes\PreviewControllerDS.cs" />
     <Compile Include="Effects\ViewLifecycleEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AppDelegate.cs" />
     <Compile Include="Services\CustomMessageBoxService.cs" />
     <Compile Include="Services\DataShare.cs" />
     <Compile Include="Services\DeviceInfo.cs" />
