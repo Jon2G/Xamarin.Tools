@@ -6,7 +6,7 @@ using Kit.License;
 using Kit.Services.Interfaces;
 using BaseLicense = Kit.License.License;
 
-namespace Kit.PLC.Services
+namespace Kit.Services
 {
     public class License
     {

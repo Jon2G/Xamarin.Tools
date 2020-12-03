@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kit.PLC.Services
+namespace Kit.Services
 {
     public class CameraService
     {
