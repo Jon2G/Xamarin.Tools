@@ -18,8 +18,24 @@ namespace Kit.Extensions
         {
             return ImageSource.FromStream(() => new MemoryStream(ByteArray));
         }
-
-
+        public static byte[] GetByteArray(this Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
+        }
+        public static async Task<byte[]> GetByteArray(StreamImageSource streamImageSource)
+        {
+            var stream = await streamImageSource.Stream.Invoke(System.Threading.CancellationToken.None);
+            return stream.GetByteArray();
+        }
         public static byte[] ImageToByte(this ImageSource ImageSource)
         {
             StreamImageSource streamImageSource = (StreamImageSource)ImageSource;
@@ -65,6 +81,9 @@ namespace Kit.Extensions
             var res = NumeroALetras(Convert.ToDouble(entero)) + dec;
             return $"{res} {Leyenda}";
         }
+
+
+
         private static string NumeroALetras(double value)
         {
             string num2Text; value = Math.Truncate(value);

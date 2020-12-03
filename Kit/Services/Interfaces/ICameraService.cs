@@ -4,6 +4,7 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,11 @@ namespace Kit.Services.Interfaces
     {
         PermissionStatus cameraOK;
         PermissionStatus storageOK;
-
+        bool IsInited;
+        public ICameraService()
+        {
+            this.IsInited = false;
+        }
         public async Task Init()
         {
             await CrossMedia.Current.Initialize();
@@ -24,10 +29,15 @@ namespace Kit.Services.Interfaces
                 cameraOK = await CrossPermissions.Current.RequestPermissionAsync<CameraPermission>();
                 storageOK = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
             }
+            this.IsInited = true;
         }
 
         public async Task<MediaFile> TakePhoto()
         {
+            if (!IsInited)
+            {
+                await Init();
+            }
             if (cameraOK == PermissionStatus.Granted
                 && storageOK == PermissionStatus.Granted
                 && CrossMedia.Current.IsCameraAvailable
@@ -50,9 +60,12 @@ namespace Kit.Services.Interfaces
 
             return null;
         }
-
         public async Task<MediaFile> ChoosePhoto()
         {
+            if (!IsInited)
+            {
+                await Init();
+            }
             if (CrossMedia.Current.IsPickPhotoSupported)
             {
                 var file = await CrossMedia.Current.PickPhotoAsync();
@@ -61,9 +74,25 @@ namespace Kit.Services.Interfaces
 
             return null;
         }
-
+        public async Task<List<MediaFile>> ChoosePhotos()
+        {
+            if (!IsInited)
+            {
+                await Init();
+            }
+            if (CrossMedia.Current.IsPickPhotoSupported)
+            {
+                List<MediaFile> files = await CrossMedia.Current.PickPhotosAsync();
+                return files;
+            }
+            return null;
+        }
         public async Task<MediaFile> TakeVideo()
         {
+            if (!IsInited)
+            {
+                await Init();
+            }
             if (cameraOK == PermissionStatus.Granted
                 && storageOK == PermissionStatus.Granted
                 && CrossMedia.Current.IsTakeVideoSupported)
@@ -75,9 +104,12 @@ namespace Kit.Services.Interfaces
 
             return null;
         }
-
         public async Task<MediaFile> ChooseVideo()
         {
+            if (!IsInited)
+            {
+                await Init();
+            }
             if (CrossMedia.Current.IsPickVideoSupported)
             {
                 var file = await CrossMedia.Current.PickVideoAsync();

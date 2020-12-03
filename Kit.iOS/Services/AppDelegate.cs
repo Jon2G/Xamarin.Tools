@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using FFImageLoading.Forms.Platform;
+using FFImageLoading.Transformations;
 using Foundation;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Kit.iOS.Services
             //global::Xamarin.Forms.Forms.Init();
             //global::Xamarin.Forms.FormsMaterial.Init();
 
-
+            new TintTransformation();
             Kit.iOS.Tools.Init().InitAll(Kit.Tools.Instance.LibraryPath, true);
             LoadApplication((Xamarin.Forms.Application)Activator.CreateInstance(typeof(T)));
             return base.FinishedLaunching(app, options);
