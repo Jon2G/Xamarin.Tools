@@ -148,9 +148,9 @@ namespace Kit.License
             return result;
         }
 
-        internal async Task<string> Enroll(string appKey, string userName, string password, string DeviceBrand, string Platform, string Name, string Model)
+        internal async Task<string> EnrollDevice(string DeviceBrand, string Platform, string Name, string Model, string AppKey, string UserName, string Password)
         {
-            ResponseResult response = await GET(Url, "EnrollDevice", DeviceId, DeviceBrand, Platform, Name, Model, appKey, userName, password);
+            ResponseResult response = await GET(Url, "EnrollDevice", this.DeviceId, DeviceBrand, Platform, Name, Model, AppKey, UserName, Password);
             return response.Response;
         }
 

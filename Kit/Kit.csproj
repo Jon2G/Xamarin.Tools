@@ -4,7 +4,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.468" />
+    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.470" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
     <PackageReference Include="Plugin.Permissions" Version="6.0.1" />

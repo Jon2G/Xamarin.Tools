@@ -21,7 +21,7 @@ namespace Kit.Droid.Services
             intent.SetType("image/*");
             intent.SetAction(Intent.ActionGetContent);
 
-            ToolsImplementation tools = Kit.Tools.Instance as ToolsImplementation;
+            ToolsImplementation tools =Kit.Tools.Instance as ToolsImplementation;
             // Start the picture-picker activity (resumes in MainActivity.cs)
             tools.MainActivity.StartActivityForResult(Intent.CreateChooser(intent, "Select Picture"), PickImageId);
             // Save the TaskCompletionSource object as a MainActivity property
