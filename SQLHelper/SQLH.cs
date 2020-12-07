@@ -491,6 +491,10 @@ namespace SQLHelper
             }
             return result;
         }
+        public bool Exists(string sql, params SqlParameter[] parametros)
+        {
+            return Exists(sql, false, parametros);
+        }
         public bool ExisteCampo(string Tabla, string Campo)
         {
             return Exists($@"SELECT 1 FROM sys.columns WHERE name = N'{Campo}' AND Object_ID = Object_ID(N'{Tabla}')", false);

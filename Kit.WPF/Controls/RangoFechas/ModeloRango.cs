@@ -39,6 +39,8 @@ namespace Kit.WPF.Controls.RangoFechas
         {
             FinMaxDate =
             InicioMaxDate = DateTime.Now;
+            Fin = FinMaxDate;
+            Inicio = DateTime.Now.AddMonths(-1);
             PropertyChanged += ModeloRango_PropertyChanged;
         }
 

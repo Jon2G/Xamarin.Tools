@@ -1,0 +1,52 @@
+﻿<controls:ObservableUserControl  xmlns:controls="clr-namespace:Kit.WPF.Controls"
+                                 x:Class="Kit.WPF.Controls.RangoFechas.DateRangeHorizontal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Kit.WPF.Controls.RangoFechas"
+             mc:Ignorable="d" x:Name="Me">
+    <DockPanel DataContext="{Binding Rango,ElementName=Me}">
+        <CheckBox VerticalAlignment="Center" DockPanel.Dock="Bottom" Checked="CheckBox_Checked"
+                      Unchecked="CheckBox_Checked"
+                      IsChecked="{Binding TodasLasFechasNull,Mode=TwoWay}" 
+                      FontSize="16" 
+                      Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                      Content="Mostrar todas las fechas."
+                      HorizontalAlignment="Center" 
+                      HorizontalContentAlignment="Center"/>
+        <DockPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="TxtIni" FontSize="14" VerticalAlignment="Center" Text="Desde:" Grid.Column="0" TextAlignment="Center" Height="19" Margin="0,7"/>
+                <DatePicker FontSize="14" VerticalAlignment="Center" Grid.Column="1" 
+                        VerticalContentAlignment="Center" 
+                        x:Name="DtFInicial"
+                        SelectedDate="{Binding Inicio}" 
+                        DisplayDateEnd="{Binding InicioMaxDate}"
+                        Margin="3" Height="27"/>
+                <TextBlock Width="{Binding ActualWidth,ElementName=TxtIni}" FontSize="14" VerticalAlignment="Center" Text="hasta:" Grid.Column="2" TextAlignment="Center"/>
+                <DatePicker
+                        FontSize="14" VerticalAlignment="Center"
+                        Grid.Column="3"  
+                        VerticalContentAlignment="Center" 
+                        x:Name="DtFFinal" 
+                        SelectedDate="{Binding Fin}"
+                        DisplayDateStart="{Binding MinDate}" 
+                        DisplayDateEnd="{Binding FinMaxDate}"
+                        Margin="3"/>
+            </Grid>
+
+            
+
+        </DockPanel>
+
+
+
+    </DockPanel>
+</controls:ObservableUserControl>

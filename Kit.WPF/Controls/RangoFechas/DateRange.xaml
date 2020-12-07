@@ -13,9 +13,12 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="TxtIni" FontSize="14" VerticalAlignment="Center" Text="Fecha Inicial:" Grid.Column="0" TextAlignment="Center" Height="19" Margin="0,7"/>
-            <DatePicker FontSize="14" VerticalAlignment="Center" Grid.Column="1"  VerticalContentAlignment="Center" x:Name="DtFInicial"
-                        SelectedDate="{Binding Rango.Inicio}" 
-                        DisplayDateEnd="{Binding Rango.InicioMaxDate}"
+            <DatePicker FontSize="14" VerticalAlignment="Center" Grid.Column="1" 
+                        VerticalContentAlignment="Center" 
+                        x:Name="DtFInicial"
+                        DataContext="{Binding Rango,ElementName=Me}"
+                        SelectedDate="{Binding Inicio}" 
+                        DisplayDateEnd="{Binding InicioMaxDate}"
                         Margin="3" Height="27"/>
         </Grid>
         <Grid DockPanel.Dock="Top">
@@ -28,9 +31,25 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Width="{Binding ActualWidth,ElementName=TxtIni}" FontSize="14" VerticalAlignment="Center" Text="Fecha Final:" Grid.Column="0" TextAlignment="Center"/>
-            <DatePicker Grid.Row="0" FontSize="14" VerticalAlignment="Center" Grid.Column="1"  VerticalContentAlignment="Center" x:Name="DtFFinal" SelectedDate="{Binding Rango.Fin}" DisplayDateStart="{Binding Rango.MinDate}" DisplayDateEnd="{Binding Rango.FinMaxDate}" Margin="3"/>
-            <CheckBox IsChecked="{Binding Rango.TodasLasFechas,Mode=TwoWay,ElementName=Me}" FontSize="16" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
-                              Content="Mostrar todas las fechas." HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+            <DatePicker Grid.Row="0"
+                        FontSize="14" VerticalAlignment="Center"
+                        Grid.Column="1"  
+                        VerticalContentAlignment="Center" 
+                        x:Name="DtFFinal" 
+                        DataContext="{Binding Rango,ElementName=Me}"
+                        SelectedDate="{Binding Fin}"
+                        DisplayDateStart="{Binding MinDate}" 
+                        DisplayDateEnd="{Binding FinMaxDate}"
+                        Margin="3"/>
+            <CheckBox Checked="CheckBox_Checked"
+                      Unchecked="CheckBox_Checked"
+                      DataContext="{Binding Rango,ElementName=Me}"
+                      IsChecked="{Binding TodasLasFechasNull,Mode=TwoWay}" 
+                      FontSize="16" 
+                      Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                      Content="Mostrar todas las fechas."
+                      HorizontalAlignment="Center" 
+                      HorizontalContentAlignment="Center"/>
         </Grid>
     </DockPanel>
 </controls:ObservableUserControl>

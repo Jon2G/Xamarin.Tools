@@ -36,6 +36,18 @@ namespace Kit.WPF.Controls.RangoFechas
                 }
             }
         }
+        public bool? TodasLasFechasNull
+        {
+            get => _TodasLasFechas;
+            set
+            {
+                if (value is bool b)
+                {
+                    this.TodasLasFechas = b;
+                }
+
+            }
+        }
         private bool _TodasLasFechas;
         public bool TodasLasFechas
         {
@@ -44,6 +56,7 @@ namespace Kit.WPF.Controls.RangoFechas
             {
                 _TodasLasFechas = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TodasLasFechasNull));
                 OnDateChanged?.Invoke(this, EventArgs.Empty);
                 //if (TodasLasFechas)
                 //{

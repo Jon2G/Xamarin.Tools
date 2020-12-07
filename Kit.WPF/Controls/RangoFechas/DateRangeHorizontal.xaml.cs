@@ -12,13 +12,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Kit.WPF.Controls;
 namespace Kit.WPF.Controls.RangoFechas
 {
     /// <summary>
-    /// Lógica de interacción para DateRange.xaml
+    /// Lógica de interacción para DateRangeHorizontal.xaml
     /// </summary>
-    public partial class DateRange : ObservableUserControl
+    public partial class DateRangeHorizontal : ObservableUserControl
     {
         #region Rango
         private ModeloRango _Rango;
@@ -34,16 +34,15 @@ namespace Kit.WPF.Controls.RangoFechas
         #endregion
 
         public Rango Fechas { get => (Rango)Rango; }
-        public DateRange()
+        public DateRangeHorizontal()
         {
             this.Rango = new ModeloRango();
-            this.DataContext = this;
             InitializeComponent();
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            this.Fechas.TodasLasFechas = (bool)(sender as CheckBox).IsChecked;
+            //this.Fechas.TodasLasFechas = (bool)(sender as CheckBox).IsChecked;
         }
     }
 }
