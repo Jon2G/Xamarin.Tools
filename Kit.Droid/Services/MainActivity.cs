@@ -17,6 +17,9 @@ using Plugin.Permissions;
 using SQLHelper;
 using Xamarin.Forms;
 
+[assembly: UsesFeature("android.hardware.camera", Required = false)]
+[assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
+
 namespace Kit.Droid.Services
 {
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
