@@ -17,6 +17,9 @@ using Plugin.Permissions;
 using SQLHelper;
 using Xamarin.Forms;
 
+[assembly: UsesFeature("android.hardware.camera", Required = false)]
+[assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
+
 namespace Kit.Droid.Services
 {
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
@@ -72,7 +75,7 @@ namespace Kit.Droid.Services
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
-            Kit.Droid.Tools.Init(this, savedInstanceState).InitAll(Kit.Tools.Instance.LibraryPath, true);
+            Kit.Droid.Tools.Init(this, savedInstanceState).InitAll(Plugin.Xamarin.Tools.Shared.Tools.Instance.LibraryPath, true);
             Instance = this; //ImagePicker
         }
 

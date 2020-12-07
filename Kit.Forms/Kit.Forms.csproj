@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.468" />
+    <PackageReference Include="Acr.UserDialogs" Version="7.1.0.470" />
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.2" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.7" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />

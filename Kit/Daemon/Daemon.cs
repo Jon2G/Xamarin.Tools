@@ -429,7 +429,7 @@ namespace Kit.Daemon
         {
             try
             {
-                // bool Debugging = Plugin.Xamarin.Tools.Shared.Tools.Instance.Debugging;
+                // bool Debugging =Kit.Tools.Instance.Debugging;
 
                 IReader reader = null;
                 IQuery query = Select.BulidFrom(

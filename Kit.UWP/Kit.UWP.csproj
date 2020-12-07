@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.1.0.466</Version>
+      <Version>7.1.0.468</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
@@ -151,6 +151,9 @@
       <Version>0.1.2</Version>
     </PackageReference>
     <PackageReference Include="IronPdf" Version="2020.10.3.3" />
+    <PackageReference Include="Xamarin.Plugin.FilePicker">
+      <Version>2.1.41</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\SQLHelper.csproj">

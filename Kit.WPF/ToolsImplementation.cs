@@ -46,7 +46,7 @@ namespace Kit.WPF
         #region UWP Especific
         public static ToolsImplementation UWPInstance
         {
-            get => Kit.Tools.Instance as ToolsImplementation;
+            get =>Kit.Tools.Instance as ToolsImplementation;
         }
 
         public Window VentanaPadre()

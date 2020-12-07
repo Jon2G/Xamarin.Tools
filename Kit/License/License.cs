@@ -139,66 +139,57 @@ namespace Kit.License
 
         public async Task<bool> RegisterDevice(string userName, string password)
         {
-            string response = await WebService.DevicesLeft(AppKey, userName);
+            string DeviceBrand = GetDeviceBrand();
+            string Platform = GetDevicePlatform();
+            string Name = GetDeviceName();
+            string Model = GetDeviceModel();
+            switch (await WebService.EnrollDevice(DeviceBrand, Platform, Name, Model, AppKey, userName, password))
+            {
+                case "NO_DEVICES_LEFT":
+
+                    this.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
+
+                    break;
+                case "PROJECT_NOT_ENROLLED":
+
+                    this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
+
+                    break;
+                case "SUCCES":
+                    int left = await GetDevicesLeft(AppKey, userName);
+                    if (left != -1)
+                    {
+                        this.CustomMessageBox.Show($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
+                    }
+                    else
+                    {
+                        this.CustomMessageBox.Show($"Registro exitoso", "Atención");
+                    }
+                    return true;
+            }
+            return false;
+        }
+        private async Task<int> GetDevicesLeft(string AppKey, string UserName)
+        {
+            string response = await WebService.DevicesLeft(AppKey, UserName);
             switch (response)
             {
                 case "ERROR":
                 case "INVALID_REQUEST":
-
-
                     this.CustomMessageBox.Show("Revise su conexión a internet", "Atención");
-
-
-                    return false;
+                    return -1;
                 case "CUSTOMER_NOT_FOUND":
-
                     this.CustomMessageBox.Show("Registro invalido", "Atención");
-
-                    return false;
+                    return -1;
                 case "PROJECT_NOT_FOUND":
-
                     this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
-
-                    return false;
+                    return -1;
             }
-            if (!int.TryParse(response, out int left))
+            if (int.TryParse(response, out int left))
             {
-                return false;
+                return left;
             }
-            if (left <= 0)
-            {
-
-                this.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
-
-
-                return false;
-            }
-            else
-            {
-                string DeviceBrand = GetDeviceBrand();
-                string Platform = GetDevicePlatform();
-                string Name = GetDeviceName();
-                string Model = GetDeviceModel();
-                switch (await WebService.Enroll(AppKey, userName, password, DeviceBrand, Platform, Name, Model))
-                {
-                    case "NO_DEVICES_LEFT":
-
-                        this.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
-
-                        break;
-                    case "PROJECT_NOT_ENROLLED":
-
-                        this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
-
-                        break;
-                    case "SUCCES":
-                        left--;
-                        this.CustomMessageBox.Show($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
-
-                        return true;
-                }
-            }
-            return false;
+            return -1;
         }
 
 

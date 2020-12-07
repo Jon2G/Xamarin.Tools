@@ -127,6 +127,7 @@
 
 
 	<ItemGroup>
+		<Compile Include="Services\CameraService.cs" />
 		<Compile Include="Services\CustomMessageBox.cs" />
 		<Compile Include="Services\DataShare.cs" />
 		<Compile Include="Services\DeviceInfo.cs" />
@@ -151,6 +152,13 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
+	  <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.1.41" />
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <None Remove="Services\CameraService.cs" />
 	</ItemGroup>
 
 

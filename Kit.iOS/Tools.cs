@@ -13,10 +13,11 @@ using UserNotifications;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Log = SQLHelper.Log;
+using FFImageLoading.Forms.Platform;
 
 namespace Kit.iOS
 {
-    public abstract class Tools : Kit.Tools
+    public class Tools : Kit.Tools
     {
         public static AbstractTools Init()
         {
@@ -25,12 +26,14 @@ namespace Kit.iOS
             FormsMaterial.Init();
 
             Rg.Plugins.Popup.Popup.Init();
-
+            CachedImageRenderer.Init();
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
             Set(new ToolsImplementation());
             Instance.SetDebugging(Debugger.IsAttached);
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+            TouchEffect.iOS.TouchEffectPreserver.Preserve();
+            TouchEffect.iOS.PlatformTouchEff.Preserve();
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
             {
@@ -50,5 +53,6 @@ namespace Kit.iOS
             }
             return Kit.Tools.Instance;
         }
+
     }
 }
