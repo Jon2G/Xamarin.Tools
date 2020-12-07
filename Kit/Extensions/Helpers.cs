@@ -330,7 +330,7 @@ namespace Kit.Extensions
                 ts.Add(elemento);
             }
         }
-        public static string Dia(DayOfWeek day)
+        public static string Dia(this DayOfWeek day)
         {
             switch (day)
             {

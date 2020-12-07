@@ -15,9 +15,11 @@ namespace Kit.Services.Interfaces
         PermissionStatus cameraOK;
         PermissionStatus storageOK;
         bool IsInited;
+        bool IsOpen;
         public ICameraService()
         {
             this.IsInited = false;
+            this.IsOpen = false;
         }
         public async Task Init()
         {
@@ -66,9 +68,15 @@ namespace Kit.Services.Interfaces
             {
                 await Init();
             }
+            if (IsOpen)
+            {
+                return null;
+            }
             if (CrossMedia.Current.IsPickPhotoSupported)
             {
+                this.IsOpen = true;
                 var file = await CrossMedia.Current.PickPhotoAsync();
+                this.IsOpen = false;
                 return file;
             }
 
@@ -80,9 +88,15 @@ namespace Kit.Services.Interfaces
             {
                 await Init();
             }
+            if (IsOpen)
+            {
+                return null;
+            }
             if (CrossMedia.Current.IsPickPhotoSupported)
             {
+                this.IsOpen = true;
                 List<MediaFile> files = await CrossMedia.Current.PickPhotosAsync();
+                this.IsOpen = false;
                 return files;
             }
             return null;
