@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.470" />
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.2" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.7" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.8" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="TouchView" Version="4.1.99" />
     <PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
