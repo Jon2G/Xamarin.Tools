@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLHelper", "SQLHelper\SQLHelper.csproj", "{094E8CBD-1194-4397-BC30-D972E3814AEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kit.SQLHelper", "SQLHelper\Kit.SQLHelper.csproj", "{094E8CBD-1194-4397-BC30-D972E3814AEB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncServiceTest", "SyncServiceTest\SyncServiceTest.csproj", "{FC10E004-FF42-4BB6-9810-177FBD48C919}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kit.Forms", "Kit.Forms\Kit.Forms.csproj", "{1224B0D0-4675-4CB5-9691-EBAC1056A1E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kit", "Kit\Kit.csproj", "{3727A404-D8BA-40D8-9380-BE9C3CD2A889}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kit.Shared", "Kit\Kit.Shared.csproj", "{3727A404-D8BA-40D8-9380-BE9C3CD2A889}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kit.Droid", "Kit.Droid\Kit.Droid.csproj", "{69924835-CCFB-4764-A16F-F31295748C29}"
 EndProject

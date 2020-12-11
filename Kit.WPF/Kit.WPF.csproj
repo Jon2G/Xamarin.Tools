@@ -4,7 +4,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Tools.WPF.Forms</AssemblyTitle>
-    <Product>Tools.WPF.Forms</Product>
+    <Product>Kit.WPF</Product>
     <Copyright>Copyright ©  2020</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
@@ -17,6 +17,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+    <Authors>Jonathan Eduardo García García</Authors>
+    <Version>1.0.0.7</Version>
+    <Company>Jouna77</Company>
   </PropertyGroup>
   <Import Project="..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets" Condition="Exists('..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -60,8 +63,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\SQLHelper.csproj" />
-    <ProjectReference Include="..\Kit\Kit.csproj" />
+    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
+    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Imgs\logo.png" />
