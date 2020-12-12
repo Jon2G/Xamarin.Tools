@@ -13,7 +13,7 @@ namespace Kit.Droid.Services
         private readonly Activity Activity;
         public ScreenManagerService()
         {
-            Activity = (Plugin.Xamarin.Tools.Shared.Tools.Instance as Droid.ToolsImplementation).MainActivity;
+            Activity = (Kit.Tools.Instance as Droid.ToolsImplementation).MainActivity;
         }
         public void SetScreenMode(ScreenMode ScreenMode)
         {

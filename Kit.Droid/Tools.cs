@@ -31,7 +31,7 @@ namespace Kit.Droid
 
             Acr.UserDialogs.UserDialogs.Init(activity);
             CrossCurrentActivity.Current.Init(activity, bundle);
-            Rg.Plugins.Popup.Popup.Init(activity, bundle);
+            Rg.Plugins.Popup.Popup.Init(activity);
 
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;

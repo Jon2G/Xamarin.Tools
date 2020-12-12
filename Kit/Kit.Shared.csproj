@@ -7,7 +7,7 @@
     <Product>Kit.Shared</Product>
     <Company>Jouna77</Company>
     <PackageId>Kit.Shared</PackageId>
-    <RootNamespace>Kit.Shared</RootNamespace>
+    <RootNamespace>Kit</RootNamespace>
     <AssemblyName>Kit.Shared</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
