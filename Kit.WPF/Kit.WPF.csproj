@@ -18,8 +18,9 @@
   <PropertyGroup>
     <StartupObject />
     <Authors>Jonathan Eduardo García García</Authors>
-    <Version>1.0.0.7</Version>
+    <Version>1.0.1.0</Version>
     <Company>Jouna77</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <Import Project="..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets" Condition="Exists('..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

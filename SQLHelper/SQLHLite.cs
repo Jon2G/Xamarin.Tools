@@ -79,13 +79,7 @@ namespace SQLHelper
             string dbVersion = null;
             try
             {
-                using (IReader reader = new LiteReader(Conecction(), "SELECT VERSION FROM DB_VERSION"))
-                {
-                    if (reader.Read())
-                    {
-                        dbVersion = reader[0].ToString();
-                    }
-                }
+                dbVersion = Single<string>("SELECT VERSION FROM DB_VERSION");
             }
             catch (Exception ex)
             {

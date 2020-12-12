@@ -7,6 +7,7 @@
 		<ProductVersion>8.0.30703</ProductVersion>
 		<PackOnBuild>true</PackOnBuild>
 		<SchemaVersion>2.0</SchemaVersion>
+		<TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
 		<ProjectGuid>{69924835-CCFB-4764-A16F-F31295748C29}</ProjectGuid>
 		<ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
 		<TemplateGuid>{9ef11e43-1701-4396-8835-8392d57abb70}</TemplateGuid>
@@ -19,14 +20,14 @@
 		<AndroidResgenFile></AndroidResgenFile>
 		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
 		<AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-		<TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
 		<AndroidUseAapt2>true</AndroidUseAapt2>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.0.8</Version>
-		<AssemblyVersion>1.0.0.8</AssemblyVersion>
-		<FileVersion>1.0.0.8</FileVersion>
+		<Version>1.0.1.0</Version>
+		<AssemblyVersion>1.0.1.0</AssemblyVersion>
+		<FileVersion>1.0.1.0</FileVersion>
 		<Authors>Jonathan Eduardo García García</Authors>
 		<Company>Jouna77</Company>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<DebugSymbols>true</DebugSymbols>
@@ -56,28 +57,6 @@
 		<Reference Include="System.Xml" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
-		<Compile Include="Effects\ViewLifecycleEffect.cs" />
-		<Compile Include="Properties\AssemblyInfo.cs" />
-		<Compile Include="Services\CustomMessageBoxService.cs" />
-		<Compile Include="Services\CustomPrintDocumentAdapter.cs" />
-		<Compile Include="Services\DataShare.cs" />
-		<Compile Include="Services\DeviceInfo.cs" />
-		<Compile Include="Services\FolderPermissions.cs" />
-		<Compile Include="Services\HtmlToPDF\PDFConverter.cs" />
-		<Compile Include="Services\HtmlToPDF\PdfLayoutResultCallback.cs" />
-		<Compile Include="Services\HtmlToPDF\PrintHTML.cs" />
-		<Compile Include="Services\HtmlToPDF\WebViewCallBack.cs" />
-		<Compile Include="Services\License.cs" />
-		<Compile Include="Services\MainActivity.cs" />
-		<Compile Include="Services\PDFSaveAndOpen.cs" />
-		<Compile Include="Services\PhotoPickerService.cs" />
-		<Compile Include="Services\QRCode.cs" />
-		<Compile Include="Services\ScreenManagerService.cs" />
-		<Compile Include="Services\Screenshot.cs" />
-		<Compile Include="Tools.cs" />
-		<Compile Include="ToolsImplementation.cs" />
-	</ItemGroup>-->
 	<ItemGroup>
 <PackageReference Include="Xamarin.Android.Support.Compat" Version="28.0.0.3" />
 		<PackageReference Include="Xamarin.Android.Support.Core.UI" Version="28.0.0.3" />
@@ -136,19 +115,11 @@
 			<Name>Kit.Shared</Name>
 		</ProjectReference>
 	</ItemGroup>
-	<!--<Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />-->
-	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 
 	<!--https://github.com/onovotny/MSBuildSdkExtras/issues/174-->
 	<Target Name="_RemoveNonExistingResgenFile" BeforeTargets="CoreCompile" Condition="'$(_SdkSetAndroidResgenFile)' == 'true' And '$(AndroidResgenFile)' != '' And !Exists('$(AndroidResgenFile)')">
 		<ItemGroup>
-			<Compile Remove="$(AndroidResgenFile)"/>
+			<Compile Remove="$(AndroidResgenFile)" />
 		</ItemGroup>
 	</Target>
 
