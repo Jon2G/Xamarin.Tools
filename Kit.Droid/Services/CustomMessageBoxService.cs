@@ -3,28 +3,31 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Kit.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace Kit.Droid.Services
 {
     public class CustomMessageBoxService : ICustomMessageBox
     {
-        public CustomMessageBoxResult Show(string messageBoxText)
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText)
         {
-            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText);
+            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(messageBoxText);
             return CustomMessageBoxResult.OK;
         }
 
-        public CustomMessageBoxResult Show(string messageBoxText, string caption)
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption)
         {
-            throw new NotImplementedException();
+            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(messageBoxText, caption);
+            return CustomMessageBoxResult.OK;
         }
 
-        public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button)
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption, CustomMessageBoxButton button)
         {
-            throw new NotImplementedException();
+            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(messageBoxText, caption, "Ok");
+            return CustomMessageBoxResult.OK;
         }
 
-        public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
         {
             string text = null;
             switch (button)
@@ -33,49 +36,57 @@ namespace Kit.Droid.Services
                     text = "Ok";
                     break;
             }
-            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText, caption, text);
+            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(messageBoxText, caption, text);
             return CustomMessageBoxResult.OK;
         }
 
-        public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText)
+        public async Task<CustomMessageBoxResult> ShowOK(string messageBoxText, string caption, string okButtonText)
         {
-            throw new NotImplementedException();
-        }
-
-        public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
-        {
-            Acr.UserDialogs.UserDialogs.Instance.Alert(messageBoxText, caption, okButtonText);
+            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(messageBoxText, caption, okButtonText);
             return CustomMessageBoxResult.OK;
         }
 
-        public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
+        public async Task<CustomMessageBoxResult> ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(messageBoxText, caption, okButtonText);
+            return CustomMessageBoxResult.OK;
         }
 
-        public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        public async Task<CustomMessageBoxResult> ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return CustomMessageBoxResult.None;
         }
 
-        public CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText)
+        public async Task<CustomMessageBoxResult> ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText, CustomMessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return CustomMessageBoxResult.None;
         }
 
-        public CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon)
+        public async Task<CustomMessageBoxResult> ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return CustomMessageBoxResult.None;
         }
 
-        public CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)
+        public async Task<CustomMessageBoxResult> ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return CustomMessageBoxResult.None;
+
         }
 
-        public CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        public async Task<CustomMessageBoxResult> ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return CustomMessageBoxResult.None;
+        }
+
+        public async Task<CustomMessageBoxResult> ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        {
+            await Task.Yield();
+            return CustomMessageBoxResult.None;
         }
     }
 }

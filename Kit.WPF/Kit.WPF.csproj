@@ -18,9 +18,10 @@
   <PropertyGroup>
     <StartupObject />
     <Authors>Jonathan Eduardo García García</Authors>
-    <Version>1.0.1.0</Version>
+    <Version>1.0.2.0</Version>
     <Company>Jouna77</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>toolbox.png</PackageIcon>
   </PropertyGroup>
   <Import Project="..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets" Condition="Exists('..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -36,21 +37,11 @@
     <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ceTe.DynamicPDF.Printing.NET" Version="4.15.0" />
     <PackageReference Include="DeviceId" Version="5.2.0" />
-    <PackageReference Include="DynamicPDF" Version="8.0.0.0" />
-    <PackageReference Include="HtmlRenderer.Core" Version="1.5.0.6" />
-    <PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6" />
     <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
-    <PackageReference Include="PdfiumViewer" Version="2.13.0.0" />
-    <PackageReference Include="PDFsharp" Version="1.50.5147" />
     <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-    <PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
-    <PackageReference Include="Xamarin.Forms.Platform.WPF" Version="4.8.0.1687" />
-    <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.1.41" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
@@ -69,5 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Imgs\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\toolbox.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>

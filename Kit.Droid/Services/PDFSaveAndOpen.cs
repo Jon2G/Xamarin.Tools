@@ -17,7 +17,7 @@ namespace Kit.Droid.Services
 {
     public class PDFSaveAndOpen : IPDFSaveAndOpen
     {
-        public async Task SaveAndView(string fileName, MemoryStream stream, PDFOpenContext context = PDFOpenContext.InApp, string contentType = "application / pdf")
+        public async Task SaveAndView(string fileName, MemoryStream stream, PDFOpenContext context = PDFOpenContext.InApp, string contentType = "application/pdf")
         {
             await Task.Yield();
             string exception = string.Empty;

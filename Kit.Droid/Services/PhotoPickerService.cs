@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Kit.Droid;
-using Kit.Services.Interfaces;
 using Xamarin.Forms;
+using Kit.Services.Interfaces;
 
 namespace Kit.Droid.Services
 {

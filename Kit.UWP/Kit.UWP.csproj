@@ -150,10 +150,8 @@
     <PackageReference Include="Xam.Plugins.Forms.ProgressRing">
       <Version>0.1.2</Version>
     </PackageReference>
-    <PackageReference Include="IronPdf" Version="2020.12.2" />
-    <PackageReference Include="Xamarin.Plugin.FilePicker">
-      <Version>2.1.41</Version>
-    </PackageReference>
+
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj">

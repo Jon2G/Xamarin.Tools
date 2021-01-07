@@ -1,164 +1,124 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
-	<PropertyGroup>
-		<!--Work around so the conditions work below-->
-		<TargetFrameworks></TargetFrameworks>
-		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>
+  <PropertyGroup>
+    <!--Work around so the conditions work below-->
+    <TargetFrameworks></TargetFrameworks>
+    <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net45</TargetFrameworks>-->
 
-		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>-->
-		
-		
-		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
-		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1</TargetFrameworks>
+    <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>-->
 
-		<!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">Xamarin.iOS10;MonoAndroid90;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
+
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;netcoreapp3.1</TargetFrameworks>
+
+    <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">Xamarin.iOS10;MonoAndroid90;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
 		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">Xamarin.iOS10;MonoAndroid90;netcoreapp3.1</TargetFrameworks>-->
 
-		<!--Feel free to add as many targets as you need below
+    <!--Feel free to add as many targets as you need below
     netstandard1.0;netstandard2.0;MonoAndroid90;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
     For UWP update the version number with a version number you have installed.
     -->
-		<AssemblyName>Kit.PLC</AssemblyName>
-		<RootNamespace>Kit.PLC</RootNamespace>
-		<PackageId>Kit.PLC</PackageId>
+    <AssemblyName>Kit.PLC</AssemblyName>
+    <RootNamespace>Kit.PLC</RootNamespace>
+    <PackageId>Kit.PLC</PackageId>
 
-		<Product>Kit.PLC</Product>
-		<AssemblyVersion>1.0.1.0</AssemblyVersion>
-		<AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
-		<Version>1.0.1.0</Version>
-		<PackageVersion>1.0.1.0</PackageVersion>
-		<PackOnBuild>true</PackOnBuild>
-		<NeutralLanguage>en</NeutralLanguage>
-		<LangVersion>default</LangVersion>
-		<DefineConstants>$(DefineConstants);</DefineConstants>
+    <Product>Kit.PLC</Product>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
+    <Version>1.0.2.0</Version>
+    <PackageVersion>1.0.2.0</PackageVersion>
+    <PackOnBuild>true</PackOnBuild>
+    <NeutralLanguage>en</NeutralLanguage>
+    <LangVersion>default</LangVersion>
+    <DefineConstants>$(DefineConstants);</DefineConstants>
 
-		<UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 
-		<LangVersion>latest</LangVersion>
-		<DebugType>portable</DebugType>
+    <LangVersion>latest</LangVersion>
+    <DebugType>portable</DebugType>
 
-		<!--TODO: Fill these in-->
-		<PackageLicenseUrl></PackageLicenseUrl>
-		<PackageProjectUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</RepositoryUrl>
-		<PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
-		<PackageIconUrl>ICON URL</PackageIconUrl>
-		<PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, Xamarin.Tools</PackageTags>
+    <!--TODO: Fill these in-->
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BlumJonathanGG/Xamarin.Tools</RepositoryUrl>
+    <PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, Xamarin.Tools</PackageTags>
 
-		<Title>Xamarin.Tools Plugin for Xamarin and Windows</Title>
-		<Summary>Summary of nuget</Summary>
-		<Description>Set of several tools and dependency services for xamarin</Description>
-
-
-		<Owners>YOU</Owners>
-		<Authors>Jonathan Eduardo García García</Authors>
-		<Copyright>Copyright 2020</Copyright>
-
-		<!--When built in 2019 will remove extra references on pack-->
-		<DisableExtraReferences>true</DisableExtraReferences>
-		<Company>Jouna77</Company>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
-		<DebugSymbols>true</DebugSymbols>
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)'=='Release' ">
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
+    <Title>Xamarin.Tools Plugin for Xamarin and Windows</Title>
+    <Summary>Summary of nuget</Summary>
+    <Description>Set of several tools and dependency services for xamarin</Description>
 
 
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <Owners>YOU</Owners>
+    <Authors>Jonathan Eduardo García García</Authors>
+    <Copyright>Copyright 2020</Copyright>
 
-		<ProjectReference Include="..\Kit.Droid\Kit.Droid.csproj" />
-		
-		<Compile Include="Droid\**\*.cs" />
-	</ItemGroup>
+    <!--When built in 2019 will remove extra references on pack-->
+    <DisableExtraReferences>true</DisableExtraReferences>
+    <Company>Jouna77</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageIcon>toolbox.png</PackageIcon>
+  </PropertyGroup>
 
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-		<ProjectReference Include="..\Kit.iOS\Kit.iOS.csproj" />
-		
-		<Compile Include="iOS\**\*.cs" />
-
-	</ItemGroup>
-
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-		<ProjectReference Include="..\Kit.NetCore\Kit.NetCore.csproj" />
-		<Compile Include="Shared\Blumitech\**\*.cs" />
-		<Compile Include="NetCore\**\*.cs" />
-	</ItemGroup>
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
-
-		<ProjectReference Include="..\Kit.WPF\Kit.WPF.csproj" />
-		<Compile Include="WPF\**\*.cs" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
-		<ProjectReference Include="..\Kit.UWP\Kit.UWP.csproj" />
-		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-			<Version>6.2.10</Version>
-		</PackageReference>
-	</ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
 
-	<ItemGroup>
-		<ProjectReference Include="..\Kit\Kit.Shared.csproj" />
-		<ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
-	</ItemGroup>
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+
+    <ProjectReference Include="..\Kit.Droid\Kit.Droid.csproj" />
+
+    <Compile Include="Droid\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <ProjectReference Include="..\Kit.iOS\Kit.iOS.csproj" />
+
+    <Compile Include="iOS\**\*.cs" />
+
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+    <ProjectReference Include="..\Kit.NetCore\Kit.NetCore.csproj" />
+    <Compile Include="Shared\Blumitech\**\*.cs" />
+    <Compile Include="NetCore\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net47')) ">
+
+    <ProjectReference Include="..\Kit.WPF\Kit.WPF.csproj" />
+    <Compile Include="WPF\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
+    <ProjectReference Include="..\Kit.UWP\Kit.UWP.csproj" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.11</Version>
+    </PackageReference>
+  </ItemGroup>
 
 
-
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<ProjectReference Include="..\Kit\Kit.Shared.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
+    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
+  </ItemGroup>
 
 
 
 
-
-
-
-	<ItemGroup>
-		<Compile Include="Services\CameraService.cs" />
-		<Compile Include="Services\CustomMessageBox.cs" />
-		<Compile Include="Services\DataShare.cs" />
-		<Compile Include="Services\DeviceInfo.cs" />
-		<Compile Include="Services\FolderPermissions.cs" />
-		<Compile Include="Services\License.cs" />
-		<Compile Include="Services\PDFConverter.cs" />
-		<Compile Include="Services\PDFSaveAndOpen.cs" />
-		<Compile Include="Services\PhotoPicker.cs" />
-		<Compile Include="Services\PrintHTML.cs" />
-		<Compile Include="Services\QRCode.cs" />
-		<Compile Include="Services\ScreenManager.cs" />
-		<Compile Include="Services\ScreenshotService.cs" />
-	</ItemGroup>
-
-
-
-	<ItemGroup>
-	  <None Remove="Services\License.cs" />
-	</ItemGroup>
-
-
-
-	<ItemGroup>
-	  <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
-	  <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.1.41" />
-	</ItemGroup>
-
-
-
-	<ItemGroup>
-	  <None Remove="Services\CameraService.cs" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
+  </ItemGroup>
 
 
 
@@ -166,5 +126,23 @@
 
 
 
-
+  <ItemGroup>
+    <Compile Include="Services\CustomMessageBox.cs" />
+    <Compile Include="Services\DataShare.cs" />
+    <Compile Include="Services\DeviceInfo.cs" />
+    <Compile Include="Services\FolderPermissions.cs" />
+    <Compile Include="Services\License.cs" />
+    <Compile Include="Services\PDFConverter.cs" />
+    <Compile Include="Services\PDFSaveAndOpen.cs" />
+    <Compile Include="Services\PrintHTML.cs" />
+    <Compile Include="Services\QRCode.cs" />
+    <Compile Include="Services\ScreenManager.cs" />
+    <Compile Include="Services\ScreenshotService.cs" />
+    <None Remove="Services\License.cs" />
+    <None Include="..\toolbox.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
+  </ItemGroup>
 </Project>

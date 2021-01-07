@@ -411,7 +411,10 @@ namespace SQLHelper
             try
             {
                 SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
-                cmd.Parameters.AddRange(parameters);
+                if (parameters != null)
+                {
+                    cmd.Parameters.AddRange(parameters);
+                }
                 cmd.Connection.Open();
                 if (Reportar)
                     ReportaTransaccion(cmd);
@@ -425,6 +428,7 @@ namespace SQLHelper
                 {
                     throw ex;
                 }
+                this.LastException = ex;
                 return new FakeReader();
 
             }

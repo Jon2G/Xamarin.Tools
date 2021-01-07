@@ -7,21 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using Kit.Services;
-using Xamarin.Forms;
 using Application = System.Windows.Application;
 
 namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
+        public override ITools Init(ICustomMessageBox CustomMessageBox, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
             Debugging = Debugger.IsAttached;
-            return InitLoggin(LogDirectory, AlertAfterCritical);
-        }
-
-        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
-        {
             if (AlertAfterCritical)
             {
                 Log.Init(LogDirectory, CriticalAlert);
@@ -81,6 +75,8 @@ namespace Kit.WPF
                 return null;
             }
         }
+
+
         #endregion
     }
 }

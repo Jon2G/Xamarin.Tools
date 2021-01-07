@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.WPF.Services;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using SQLHelper;
-using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 using Log = SQLHelper.Log;
 
 namespace Kit.WPF
@@ -23,14 +21,11 @@ namespace Kit.WPF
         public static AbstractTools Init()
         {
 
-
-            Xamarin.Forms.Forms.Init();
-
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Kit.Tools.Set(new ToolsImplementation().SetLibraryPath(Environment.CurrentDirectory));
-           Kit.Tools.Instance.SetDebugging(Debugger.IsAttached);
+            Kit.Tools.Instance.SetDebugging(Debugger.IsAttached);
 
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 

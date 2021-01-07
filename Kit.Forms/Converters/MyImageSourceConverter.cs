@@ -4,7 +4,7 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Kit.Converters
+namespace Kit.Forms.Converters
 {
     [TypeConversion(typeof(ImageSource))]
     public class MyImageSourceConverter : TypeConverter

@@ -7,6 +7,7 @@ namespace Kit
 {
     public abstract class AbstractTools : ITools
     {
+        public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox;
         public bool Debugging { get; protected set; }
         private string _LibraryPath;
         public string LibraryPath
@@ -18,12 +19,11 @@ namespace Kit
 
         }
         public static AbstractTools Instance => Tools.Instance;
-        public abstract ITools InitAll(string LogDirectory, bool AlertAfterCritical = false);
-        public abstract ITools InitLoggin(string LogDirectory = "Logs", bool AlertAfterCritical = false);
+        public abstract ITools Init(Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox, string LogDirectory = "Logs", bool AlertAfterCritical = false);
         public abstract AbstractTools SetDebugging(bool Debugging);
         public virtual void CriticalAlert(object sender, EventArgs e)
         {
-            Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
+            CustomMessageBox.ShowOK(sender.ToString(), "Alerta", "Entiendo");
         }
         public AbstractTools SetLibraryPath(string LibraryPath)
         {

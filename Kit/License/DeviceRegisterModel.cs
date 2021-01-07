@@ -27,7 +27,7 @@ namespace Kit.License
             IsValidated = !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
             if (!IsValidated)
             {
-                CustomMessageBox.ShowOK("Debe llenar todos los campos correctamente", "Alerta", "OK");
+                await CustomMessageBox.ShowOK("Debe llenar todos los campos correctamente", "Alerta", "OK");
                 return false;
             }
             if (await this.Licence.Login(UserName, Password))
@@ -39,7 +39,7 @@ namespace Kit.License
             }
             else
             {
-                CustomMessageBox.ShowOK("Usuario o contraseña incorrectos", "Alerta", "OK");
+               await CustomMessageBox.ShowOK("Usuario o contraseña incorrectos", "Alerta", "OK");
             }
             return false;
         }

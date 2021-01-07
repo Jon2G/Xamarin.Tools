@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 using Kit.Enums;
 using Kit.Services.Interfaces;
 using SQLHelper;
@@ -114,16 +113,16 @@ namespace Kit.License
                     break;
                 case ProjectActivationState.Expired:
                     this.Reason = "La licencia para usar esta aplicación ha expirado";
-                    this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                   await this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.Denied:
                     Log.LogMe("Acces denied");
                     this.Reason = "Este dispositivo no cuenta con la licencia para usar esta aplicación";
-                    this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                    await this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.LoginRequired:
                     this.Reason = "Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación";
-                    this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                    await this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     OpenRegisterForm();
                     //     BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
                     //   await page.Navigation.PushModalAsync(login, true);
@@ -131,7 +130,7 @@ namespace Kit.License
                     break;
                 case ProjectActivationState.ConnectionFailed:
                     this.Reason = "Revise su conexión a internet";
-                    this.CustomMessageBox.Show(this.Reason, "Atención");
+                    await this.CustomMessageBox.Show(this.Reason, "Atención");
                     break;
             }
             return Autorized;
@@ -147,23 +146,23 @@ namespace Kit.License
             {
                 case "NO_DEVICES_LEFT":
 
-                    this.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
+                    await this.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
 
                     break;
                 case "PROJECT_NOT_ENROLLED":
 
-                    this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
+                    await this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
 
                     break;
                 case "SUCCES":
                     int left = await GetDevicesLeft(AppKey, userName);
                     if (left != -1)
                     {
-                        this.CustomMessageBox.Show($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
+                        await this.CustomMessageBox.Show($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
                     }
                     else
                     {
-                        this.CustomMessageBox.Show($"Registro exitoso", "Atención");
+                        await this.CustomMessageBox.Show($"Registro exitoso", "Atención");
                     }
                     return true;
             }
@@ -176,13 +175,13 @@ namespace Kit.License
             {
                 case "ERROR":
                 case "INVALID_REQUEST":
-                    this.CustomMessageBox.Show("Revise su conexión a internet", "Atención");
+                    await this.CustomMessageBox.Show("Revise su conexión a internet", "Atención");
                     return -1;
                 case "CUSTOMER_NOT_FOUND":
-                    this.CustomMessageBox.Show("Registro invalido", "Atención");
+                    await this.CustomMessageBox.Show("Registro invalido", "Atención");
                     return -1;
                 case "PROJECT_NOT_FOUND":
-                    this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
+                    await this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
                     return -1;
             }
             if (int.TryParse(response, out int left))

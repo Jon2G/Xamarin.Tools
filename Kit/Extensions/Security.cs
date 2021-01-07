@@ -23,5 +23,6 @@ namespace Kit.Extensions
             }
             return NewCadena;
         }
+
     }
 }

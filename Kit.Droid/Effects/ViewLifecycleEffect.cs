@@ -3,9 +3,9 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using View = Android.Views.View;
-using ViewLifecycleEffectBase = Kit.Effects.ViewLifecycleEffect;
-[assembly: ResolutionGroupName(Kit.Effects.ViewLifecycleEffect.EffectGroupName)]
-[assembly: ExportEffect(typeof(Kit.Droid.Effects.ViewLifecycleEffect), Kit.Effects.ViewLifecycleEffect.EffectName)]
+using ViewLifecycleEffectBase = Kit.Forms.Effects.ViewLifecycleEffect;
+[assembly: ResolutionGroupName(ViewLifecycleEffectBase.EffectGroupName)]
+[assembly: ExportEffect(typeof(Kit.Droid.Effects.ViewLifecycleEffect), ViewLifecycleEffectBase.EffectName)]
 namespace Kit.Droid.Effects
 {
 

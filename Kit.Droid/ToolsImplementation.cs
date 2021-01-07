@@ -10,20 +10,17 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Kit.Services;
 using Kit.Droid.Services;
+using Kit.Services.Interfaces;
 
 namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
     {
         public MainActivity MainActivity { get; internal set; }
-        public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
+        public override ITools Init(ICustomMessageBox CustomMessageBox, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
+            this.CustomMessageBox = CustomMessageBox;
             Debugging = Debugger.IsAttached;
-            return InitLoggin(LogDirectory, AlertAfterCritical);
-        }
-
-        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical)
-        {
             if (AlertAfterCritical)
             {
                 SQLHelper.Log.Init(LogDirectory, CriticalAlert);
@@ -32,7 +29,6 @@ namespace Kit.Droid
             {
                 SQLHelper.Log.Init(LogDirectory);
             }
-
             return this;
         }
 

@@ -1,4 +1,4 @@
-﻿using FFImageLoading;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,7 +29,7 @@ namespace Kit.WPF.Services
             using (Stream fileStream = new MemoryStream())
             {
                 pngImage.Save(fileStream);
-                buffer = fileStream.ToByteArray();
+                buffer = Kit.Extensions.Helpers.GetByteArray(fileStream);
             }
 
             return buffer;

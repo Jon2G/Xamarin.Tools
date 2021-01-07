@@ -7,7 +7,7 @@ using System.Text;
 using Kit.Enums;
 using Kit.Services;
 using Kit.Services.Interfaces;
-using Xamarin.Forms;
+
 
 namespace Kit.Services
 {
@@ -111,15 +111,15 @@ namespace Kit.Services
             return path;
         }
 
-        private async void UpdatePDFStatus(PDFEnum newValue)
+        private void UpdatePDFStatus(PDFEnum newValue)
         {
             if (newValue == PDFEnum.Started)
                 IsPDFGenerating = true;
             else if (newValue == PDFEnum.Failed)
             {
                 OnFailed?.Invoke(this, EventArgs.Empty);
-                IsPDFGenerating = false;
-                await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Pdf no generado");
+                IsPDFGenerating = false;               
+               // await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Pdf no generado");
                 SQLHelper.Log.LogMe("PDFEnum.Failed");
             }
             else if (newValue == PDFEnum.Completed)

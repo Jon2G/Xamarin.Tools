@@ -1,10 +1,11 @@
 ﻿using Kit.Enums;
-using inter= Kit.Services.Interfaces.ICustomMessageBox;
+using inter = Kit.Services.Interfaces.ICustomMessageBox;
 using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace Kit.WPF.Services.ICustomMessageBox
 {
@@ -14,9 +15,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// Displays a message box that has a message and returns a result.
         /// </summary>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult Show(string messageBoxText)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText);
             msg.ShowDialog();
 
@@ -28,9 +30,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// </summary>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult Show(string messageBoxText, string caption)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption);
             msg.ShowDialog();
 
@@ -42,9 +45,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// </summary>
         /// <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult Show(Window owner, string messageBoxText)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> Show(Window owner, string messageBoxText)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText)
             {
                 Owner = owner
@@ -60,9 +64,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult Show(Window owner, string messageBoxText, string caption)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> Show(Window owner, string messageBoxText, string caption)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption)
             {
                 Owner = owner
@@ -78,9 +83,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="button">A System.Windows.CustomMessageBoxButton value that specifies which button or buttons to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption, CustomMessageBoxButton button)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, button);
             msg.ShowDialog();
 
@@ -94,9 +100,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="button">A System.Windows.CustomMessageBoxButton value that specifies which button or buttons to display.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption, CustomMessageBoxButton button, CustomMessageBoxImage icon)
         {
+            await Task.Yield();
             Application.Current.Dispatcher.Invoke(delegate
             {
                 try
@@ -119,9 +126,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="messageBoxText">A System.String that specifies the text to display.</param>
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowOK(string messageBoxText, string caption, string okButtonText)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OK)
             {
                 OkButtonText = okButtonText
@@ -139,9 +147,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OK, icon)
             {
                 OkButtonText = okButtonText
@@ -160,9 +169,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OKCancel)
             {
                 OkButtonText = okButtonText,
@@ -183,9 +193,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="okButtonText">A System.String that specifies the text to display within the OK button.</param>
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowOKCancel(string messageBoxText, string caption, string okButtonText, string cancelButtonText, CustomMessageBoxImage icon)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.OKCancel, icon)
             {
                 OkButtonText = okButtonText,
@@ -205,9 +216,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <param name="yesButtonText">A System.String that specifies the text to display within the Yes button.</param>
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNo)
             {
                 YesButtonText = yesButtonText,
@@ -228,9 +240,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="yesButtonText">A System.String that specifies the text to display within the Yes button.</param>
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNo, icon)
             {
                 YesButtonText = yesButtonText,
@@ -251,9 +264,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="yesButtonText">A System.String that specifies the text to display within the Yes button.</param>
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNoCancel)
             {
                 YesButtonText = yesButtonText,
@@ -276,9 +290,10 @@ namespace Kit.WPF.Services.ICustomMessageBox
         /// <param name="noButtonText">A System.String that specifies the text to display within the No button.</param>
         /// <param name="cancelButtonText">A System.String that specifies the text to display within the Cancel button.</param>
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
-        /// <returns>A System.Windows.CustomMessageBoxResult value that specifies which message box button is clicked by the user.</returns>
-        public CustomMessageBoxResult ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon)
+        /// <returns>A System.Windows.async Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
+        public async Task<CustomMessageBoxResult> ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon)
         {
+            await Task.Yield();
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, CustomMessageBoxButton.YesNoCancel, icon)
             {
                 YesButtonText = yesButtonText,

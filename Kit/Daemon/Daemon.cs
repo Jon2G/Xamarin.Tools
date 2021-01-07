@@ -19,7 +19,6 @@ using Kit.Daemon.Abstractions;
 using Kit.Daemon.VersionControl;
 using Kit.Enums;
 using Kit.Services.Interfaces;
-using Xamarin.Forms.Internals;
 using Log = SQLHelper.Log;
 
 namespace Kit.Daemon

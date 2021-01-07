@@ -1,5 +1,4 @@
-﻿using Acr.UserDialogs;
-using SQLHelper;
+﻿using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -73,9 +72,9 @@ namespace Kit.CadenaConexion
         public Exception ProbarConexion(SQLH SQLH)
         {
             Exception resultado = null;
-            UserDialogs.Instance.ShowLoading("Intentando conectar...", MaskType.Black);
+            // UserDialogs.Instance.ShowLoading("Intentando conectar...", MaskType.Black);
             resultado = SQLH.PruebaConexion();
-            UserDialogs.Instance.HideLoading();
+            //UserDialogs.Instance.HideLoading();
             return resultado;
         }
         public static Configuracion PorDefecto()
