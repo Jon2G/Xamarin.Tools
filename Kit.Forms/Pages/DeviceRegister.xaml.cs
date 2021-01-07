@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Kit.Forms.Controls.Pages;
 using Kit.License;
 using Kit.Services.Interfaces;
 using Xamarin.Essentials;
@@ -13,7 +14,7 @@ using Xamarin.Forms.Xaml;
 namespace Kit.Forms.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DeviceRegister : Page
+    public partial class DeviceRegister : ContentPage
     {
         public DeviceRegisterModel Model { get;private set; }
         public DeviceRegister(Brush brush, License.License Licence,ICustomMessageBox CustomMesaggeBox)
