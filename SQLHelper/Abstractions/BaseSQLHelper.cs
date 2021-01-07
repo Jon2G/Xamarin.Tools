@@ -33,11 +33,11 @@ namespace SQLHelper.Interfaces
         /// <param name="TableName">Nombre de la tabla a buscar</param>
         /// <returns>Un booleano que indica si la table existe ó no</returns>
         public abstract bool TableExists(string TableName);
-        public string FormatTime(TimeSpan TimeSpan)
+        public static string FormatTime(TimeSpan TimeSpan)
         {
             return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
         }
-        public string FormatTime(DateTime TimeSpan)
+        public static string FormatTime(DateTime TimeSpan)
         {
             //using (SQLiteConnection lite = Conecction())
             //{

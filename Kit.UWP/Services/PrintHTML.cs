@@ -1,5 +1,5 @@
 ﻿
-using IronPdf;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -59,10 +59,10 @@ namespace Kit.UWP.Services
                 FileInfo pdfile = new FileInfo($"{TicketPath}.pdf");
 
 
-                HtmlToPdf Renderer = new HtmlToPdf();
-                Renderer.PrintOptions.SetCustomPaperSizeinMilimeters(72, 3000);
-                Renderer.RenderHtmlAsPdf(HTML)
-                    .SaveAs(pdfile.FullName);
+                //HtmlToPdf Renderer = new HtmlToPdf();
+                //Renderer.PrintOptions.SetCustomPaperSizeinMilimeters(72, 3000);
+                //Renderer.RenderHtmlAsPdf(HTML)
+                //    .SaveAs(pdfile.FullName);
 
 
                 if (pdfile.Exists)
@@ -83,8 +83,8 @@ namespace Kit.UWP.Services
             try
             {
                 // Now print the PDF document
-                PdfDocument Pdf = PdfDocument.FromFile(filename);
-                Pdf.Print(printer);
+                //PdfDocument Pdf = PdfDocument.FromFile(filename);
+                //Pdf.Print(printer);
 
                 return true;
             }

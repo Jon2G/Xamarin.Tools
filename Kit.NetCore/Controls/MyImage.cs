@@ -157,30 +157,30 @@ namespace Kit.NetCore.Controls
             }
         }
         #endregion
-        #region XSource
-        public static readonly DependencyProperty XSourceProperty =
-            DependencyProperty.Register(
-                nameof(XSource), typeof(Xamarin.Forms.ImageSource), typeof(MyImage),
-                new FrameworkPropertyMetadata(null,
-            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-            (o, e) => ((MyImage)o).XSource = (Xamarin.Forms.ImageSource)e.NewValue));
-        private Xamarin.Forms.ImageSource _XSource;
-        public Xamarin.Forms.ImageSource XSource
-        {
-            get => _XSource;
-            set
-            {
-                _XSource = value;
-                UpdateXImage();
-            }
+        //#region XSource
+        //public static readonly DependencyProperty XSourceProperty =
+        //    DependencyProperty.Register(
+        //        nameof(XSource), typeof(Xamarin.Forms.ImageSource), typeof(MyImage),
+        //        new FrameworkPropertyMetadata(null,
+        //    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+        //    (o, e) => ((MyImage)o).XSource = (Xamarin.Forms.ImageSource)e.NewValue));
+        //private Xamarin.Forms.ImageSource _XSource;
+        //public Xamarin.Forms.ImageSource XSource
+        //{
+        //    get => _XSource;
+        //    set
+        //    {
+        //        _XSource = value;
+        //        UpdateXImage();
+        //    }
 
-        }
-        private async void UpdateXImage()
-        {
-            await Task.Yield();
-            Source = Extensiones.ByteToImage(XSource.ImageToByte());
-        }
-        #endregion
+        //}
+        //private async void UpdateXImage()
+        //{
+        //    await Task.Yield();
+        //    Source = Extensiones.ByteToImage(XSource.ImageToByte());
+        //}
+        //#endregion
         public MyImage() : base()
         {
 

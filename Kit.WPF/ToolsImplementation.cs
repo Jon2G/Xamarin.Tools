@@ -13,8 +13,9 @@ namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(ICustomMessageBox CustomMessageBox, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
+            this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
             Debugging = Debugger.IsAttached;
             if (AlertAfterCritical)
             {

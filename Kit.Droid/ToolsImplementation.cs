@@ -17,9 +17,9 @@ namespace Kit.Droid
     public class ToolsImplementation : AbstractTools
     {
         public MainActivity MainActivity { get; internal set; }
-        public override ITools Init(ICustomMessageBox CustomMessageBox, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
-            this.CustomMessageBox = CustomMessageBox;
+            this.CustomMessageBox = new Services.CustomMessageBoxService();
             Debugging = Debugger.IsAttached;
             if (AlertAfterCritical)
             {

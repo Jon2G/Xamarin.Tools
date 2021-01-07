@@ -19,7 +19,7 @@ namespace Kit
 
         }
         public static AbstractTools Instance => Tools.Instance;
-        public abstract ITools Init(Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox, string LogDirectory = "Logs", bool AlertAfterCritical = false);
+        public abstract ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false);
         public abstract AbstractTools SetDebugging(bool Debugging);
         public virtual void CriticalAlert(object sender, EventArgs e)
         {

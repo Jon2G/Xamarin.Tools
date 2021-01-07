@@ -14,14 +14,9 @@ namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
-
-        public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
+        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
-            return InitLoggin(LogDirectory, AlertAfterCritical);
-        }
-
-        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
-        {
+            this.CustomMessageBox = new Services.CustomMessageBoxService();
             Debugging = Debugger.IsAttached;
             if (AlertAfterCritical)
             {
@@ -33,6 +28,8 @@ namespace Kit.iOS
             }
             return this;
         }
+
+
 
         public override AbstractTools SetDebugging(bool Debugging)
         {

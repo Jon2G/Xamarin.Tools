@@ -1,4 +1,5 @@
-﻿using SQLHelper;
+﻿using Kit.Services.Interfaces;
+using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,14 +13,10 @@ namespace Kit.NetCore
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
+        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
+            this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
             Debugging = Debugger.IsAttached;
-            return InitLoggin(LogDirectory, AlertAfterCritical);
-        }
-
-        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
-        {
             if (AlertAfterCritical)
             {
                 Log.Init(LogDirectory, CriticalAlert);

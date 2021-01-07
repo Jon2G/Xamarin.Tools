@@ -6,10 +6,10 @@ using Kit.iOS.Effects;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using EffectsBase = Kit.Effects;
+using EffectsBase = Kit.Forms.Effects;
 
-[assembly: ResolutionGroupName(Kit.Effects.ViewLifecycleEffect.EffectGroupName)]
-[assembly: ExportEffect(typeof(ViewLifecycleEffect), Kit.Effects.ViewLifecycleEffect.EffectName)]
+[assembly: ResolutionGroupName(Kit.Forms.Effects.ViewLifecycleEffect.EffectGroupName)]
+[assembly: ExportEffect(typeof(ViewLifecycleEffect), Kit.Forms.Effects.ViewLifecycleEffect.EffectName)]
 
 namespace Kit.iOS.Effects
 {

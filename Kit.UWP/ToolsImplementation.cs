@@ -14,14 +14,10 @@ namespace Kit.UWP
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools InitAll(string LogDirectory, bool AlertAfterCritical = false)
+        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
+            this.CustomMessageBox = new Services.CustomMessageBoxService();
             Debugging = Debugger.IsAttached;
-            return InitLoggin(LogDirectory, AlertAfterCritical);
-        }
-
-        public override ITools InitLoggin(string LogDirectory, bool AlertAfterCritical = false)
-        {
             if (AlertAfterCritical)
             {
                 Log.Init(LogDirectory, CriticalAlert);
@@ -32,6 +28,8 @@ namespace Kit.UWP
             }
             return this;
         }
+
+
 
         public override AbstractTools SetDebugging(bool Debugging)
         {

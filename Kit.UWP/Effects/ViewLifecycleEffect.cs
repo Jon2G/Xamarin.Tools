@@ -5,10 +5,10 @@ using System.Linq;
 using Windows.UI.Xaml;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
-using BaseViewLifecycleEffect = Kit.Effects.ViewLifecycleEffect;
+using BaseViewLifecycleEffect = Kit.Forms.Effects.ViewLifecycleEffect;
 
-[assembly: ResolutionGroupName(Kit.Effects.ViewLifecycleEffect.EffectGroupName)]
-[assembly: ExportEffect(typeof(ViewLifecycleEffect), Kit.Effects.ViewLifecycleEffect.EffectName)]
+[assembly: ResolutionGroupName(Kit.Forms.Effects.ViewLifecycleEffect.EffectGroupName)]
+[assembly: ExportEffect(typeof(ViewLifecycleEffect), Kit.Forms.Effects.ViewLifecycleEffect.EffectName)]
 namespace Kit.UWP.Effects
 {
     public class ViewLifecycleEffect : PlatformEffect

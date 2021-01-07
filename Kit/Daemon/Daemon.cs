@@ -535,6 +535,13 @@ namespace Kit.Daemon
                 }
             }
         }
+        /// <summary>
+        /// Le indica a la base de datos de sqlite que existe un nuevo registro que debe ser sincronizado
+        /// </summary>
+        /// <param name="con"></param>
+        /// <param name="TableName"></param>
+        /// <param name="PrimaryKeyValue"></param>
+        /// <param name="Accion"></param>
         public void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
         {
             using (SQLHLite SQLHLite = new SQLHLite(new FileInfo(con.DatabasePath)))
