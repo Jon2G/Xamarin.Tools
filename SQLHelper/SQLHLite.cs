@@ -38,10 +38,11 @@ namespace SQLHelper
             this.DBVersion = DBVersion;
         }
 
-        public void SetDbScriptResource(Type AssemblyType, string ScriptResourceName)
+        public SQLHLite SetDbScriptResource<T>(string ScriptResourceName)
         {
-            this.AssemblyType = AssemblyType;
+            this.AssemblyType = typeof(T);
             this.ScriptResourceName = ScriptResourceName;
+            return this;
         }
 
         public SQLHLite(FileInfo file)
@@ -58,7 +59,7 @@ namespace SQLHelper
         /// Comprueba que la base de datos exista y que sea la versión mas reciente
         /// de lo contrario crea una nueva base de datos
         /// </summary>
-        public void RevisarBaseDatos()
+        public SQLHLite RevisarBaseDatos()
         {
             FileInfo db = new FileInfo(this.RutaDb);
 
@@ -72,7 +73,26 @@ namespace SQLHelper
                 db.Delete();
                 Crear(Conecction());
             }
+            return this;
         }
+        public SQLHLite RevisarTablaConfiguracion()
+        {
+            if (!this.TableExists("CONFIGURACION"))
+            {
+                this.EXEC(@"CREATE TABLE CONFIGURACION (
+ID INTEGER IDENTITY(1,1) PRIMARY KEY, 
+ID_DISPOSITIVO TEXT NOT NULL,
+NOMBREDB TEXT,
+NOMBRE TEXT,
+SERVIDOR TEXT,
+PUERTO TEXT,
+USUARIO TEXT,
+PASSWORD TEXT,
+CADENA_CON TEXT NOT NULL);");
+            }
+            return this;
+        }
+
 
         public string GetDbVersion()
         {

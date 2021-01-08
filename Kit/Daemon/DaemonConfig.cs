@@ -15,7 +15,7 @@ namespace Kit.Daemon
         /// <summary>
         /// Maximo que puede creceer el tiempo de descanso en segundos
         /// </summary>
-        public readonly int MaxSleep;
+        public int MaxSleep { get; private set; }
         internal DaemonConfig(string DbVersion, BaseSQLHelper Source, BaseSQLHelper Destination, int MaxSleep = 30)
         {
             this.DbVersion = DbVersion;
@@ -36,6 +36,12 @@ namespace Kit.Daemon
             }
             return connections;
         }
+
+        public void SetMaxSleep(int MaxSleep=30)
+        {
+            this.MaxSleep = MaxSleep;
+        }
+
         internal IEnumerable<SQLHLite> GetSqlLiteConnections()
         {
             List<SQLHLite> connections = new List<SQLHLite>();

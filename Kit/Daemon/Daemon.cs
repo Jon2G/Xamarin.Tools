@@ -20,7 +20,6 @@ using Kit.Daemon.VersionControl;
 using Kit.Enums;
 using Kit.Services.Interfaces;
 using Log = SQLHelper.Log;
-
 namespace Kit.Daemon
 {
     public class Daemon : ViewModelBase<Daemon>
@@ -92,6 +91,13 @@ namespace Kit.Daemon
                 }
             }
         }
+        public int PackageSize { get; private set; }
+        public Daemon SetPackageSize(int PackageSize = 25)
+        {
+            this.PackageSize = PackageSize;
+            BuildSqliteSelectQuery();
+            return this;
+        }
         public DireccionDemonio DireccionActual
         {
             get;
@@ -116,11 +122,12 @@ namespace Kit.Daemon
 
         private Daemon()
         {
-            DireccionActual = DireccionDemonio.INVALID;
-            IsInited = false;
-            Pendings = new Queue<Pendientes>();
-            Processed = 0;
-            Schema = new Table[0];
+            this.DireccionActual = DireccionDemonio.INVALID;
+            this.IsInited = false;
+            this.Pendings = new Queue<Pendientes>();
+            this.Processed = 0;
+            this.Schema = new Table[0];
+            this.PackageSize = 25;
         }
         public static Daemon Init(IDeviceInfo DeviceInfo, string DbVersion, int MaxSleep = 30)
         {
@@ -145,6 +152,11 @@ namespace Kit.Daemon
         public Daemon SetSchema(params Table[] tables)
         {
             Schema = tables;
+            BuildSqliteSelectQuery();
+            return Current;
+        }
+        private void BuildSqliteSelectQuery()
+        {
             SelectLiteQuery = string.Empty;
             if (Schema.Any(x => x.TableDirection != TableDirection.DOWNLOAD))
             {
@@ -160,16 +172,16 @@ namespace Kit.Daemon
                     }
 
                     builder.Append(" WHEN TABLA = '")
-                        .Append(table.Name)
-                        .Append("' THEN ").Append(table.Priority);
+                                        .Append(table.Name)
+                                        .Append("' THEN ").Append(table.Priority);
                 }
                 MaxPriority++;
                 builder.Append(" ELSE ").Append(MaxPriority).Append(" END),ID")
-                    .Append(Debugging ? ";" : "LIMIT 25;");
+                    .Append(this.PackageSize <= 0 ? ";" : $" LIMIT {this.PackageSize};");
                 SelectLiteQuery = builder.ToString();
             }
-            return Current;
         }
+
         public async void Reset()
         {
             await Sleep();
@@ -237,8 +249,19 @@ namespace Kit.Daemon
             //this.WaitHandle?.Dispose();
             //this.WaitHandle = null;
         }
-        private bool NadaQueHacer { get; set; }
-        private int FactorDeDescanso { get; set; }
+        public bool NadaQueHacer { get; private set; }
+        private int _FactorDeDescanso;
+        public int FactorDeDescanso
+        {
+            get => _FactorDeDescanso;
+            private set
+            {
+                _FactorDeDescanso = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Inactive));
+            }
+        }
+        public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);
         private bool IsInited;
         private void Initialize()
         {
@@ -440,8 +463,8 @@ namespace Kit.Daemon
                 else if (query.SQLH is SQLH sql)
                 {
                     reader = sql.Leector(
-                    $@"SELECT TOP 25 ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL WHERE NOT EXISTS(SELECT ID_DISPOSITIVO FROM DESCARGAS_VERSIONES 
-                      WHERE DESCARGAS_VERSIONES.ID_DESCARGA=VERSION_CONTROL.ID AND ID_DISPOSITIVO=@ID_DISPOSITIVO) ORDER BY TABLA DESC,LLAVE ASC;"
+                    $@"SELECT {(this.PackageSize <= 0 ? "" : $"TOP {this.PackageSize}")} ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL WHERE NOT EXISTS(SELECT ID_DISPOSITIVO FROM DESCARGAS_VERSIONES 
+                      WHERE DESCARGAS_VERSIONES.ID_DESCARGA = VERSION_CONTROL.ID AND ID_DISPOSITIVO = @ID_DISPOSITIVO) ORDER BY TABLA DESC, LLAVE ASC; "
                       , CommandType.Text, false,
                     new SqlParameter("ID_DISPOSITIVO", DeviceId));
                 }
@@ -511,7 +534,7 @@ namespace Kit.Daemon
                 try
                 {
                     Pendientes pendiente = Pendings.Dequeue();
-                    Table table = Schema.FirstOrDefault(x => x.Name == pendiente.Tabla);
+                    Table table = Schema.FirstOrDefault(x => string.Compare(x.Name, pendiente.Tabla, true) == 0);
                     if (table != null)
                     {
                         if (!table.Execute(DaemonConfig, pendiente, direccion))
@@ -522,6 +545,10 @@ namespace Kit.Daemon
                                 return;
                             }
                         }
+                    }
+                    else
+                    {
+                        Log.LogMe($"[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{pendiente.Tabla}'");
                     }
                     Processed++;
                 }

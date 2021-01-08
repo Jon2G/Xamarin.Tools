@@ -17,7 +17,10 @@ namespace Kit.Extensions
                 {
                     can = true;
                 }
-                can = CanExecuteFunction.Invoke();
+                else
+                {
+                    can = CanExecuteFunction.Invoke();
+                }
                 if (can != _CanExecute)
                 {
                     _CanExecute = can;
