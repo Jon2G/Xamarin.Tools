@@ -24,10 +24,10 @@
     <PackageId>Kit.PLC</PackageId>
 
     <Product>Kit.PLC</Product>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
-    <Version>1.0.2.0</Version>
-    <PackageVersion>1.0.2.0</PackageVersion>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <AssemblyFileVersion>1.1.2.1</AssemblyFileVersion>
+    <Version>1.1.2.0</Version>
+    <PackageVersion>1.1.2.0</PackageVersion>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>

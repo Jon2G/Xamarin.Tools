@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.2.0</Version>
+    <Version>1.1.2.0</Version>
     <PackageId>Kit.SQLHelper</PackageId>
     <Authors>Jonathan Eduardo García García</Authors>
     <Company>Jouna77</Company>

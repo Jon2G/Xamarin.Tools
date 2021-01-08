@@ -23,9 +23,9 @@
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.2.0</Version>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.1.2.0</Version>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
     <Authors>Jonathan Eduardo García García</Authors>
     <Company>Jouna77</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
