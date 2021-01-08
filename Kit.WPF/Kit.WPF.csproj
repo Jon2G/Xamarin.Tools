@@ -18,7 +18,7 @@
   <PropertyGroup>
     <StartupObject />
     <Authors>Jonathan Eduardo García García</Authors>
-    <Version>1.0.2.0</Version>
+    <Version>1.1.2.0</Version>
     <Company>Jouna77</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
@@ -37,6 +37,7 @@
     <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="DeviceId" Version="5.2.0" />
     <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
     <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
@@ -44,6 +45,36 @@
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Stimulsoft.Base">
+      <HintPath>Assamblies\Stimulsoft.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Controls">
+      <HintPath>Assamblies\Stimulsoft.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Controls.Win">
+      <HintPath>Assamblies\Stimulsoft.Controls.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Editor">
+      <HintPath>Assamblies\Stimulsoft.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report">
+      <HintPath>Assamblies\Stimulsoft.Report.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.Check">
+      <HintPath>Assamblies\Stimulsoft.Report.Check.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.Design">
+      <HintPath>Assamblies\Stimulsoft.Report.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.Helper">
+      <HintPath>Assamblies\Stimulsoft.Report.Helper.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.Win">
+      <HintPath>Assamblies\Stimulsoft.Report.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.Wpf">
+      <HintPath>Assamblies\Stimulsoft.Report.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
