@@ -47,13 +47,18 @@ namespace Kit.CadenaConexion
                 {
                     if (reader.Read())
                     {
-                        return new Configuracion(
+                        Configuracion config = new Configuracion(
                             Convert.ToString(reader[0]),
                             Convert.ToString(reader[1]).Replace(@"\\", @"\"),
                             Convert.ToString(reader[2]),
                             Convert.ToString(reader[3]),
                             Convert.ToString(reader[4]),
                             Convert.ToString(reader[5]).Replace(@"\\", @"\"), DeviceId);
+                        if (string.IsNullOrEmpty(config.CadenaCon))
+                        {
+                            config= BuildFrom(config);
+                        }
+                        return config;
                     }
                 }
             }
@@ -117,7 +122,10 @@ namespace Kit.CadenaConexion
             //    Demon.Current.Awake();
             //}
         }
-
+        public static Configuracion BuildFrom(Configuracion configuracion)
+        {
+            return BuildFrom(configuracion.NombreDB, configuracion.Password, configuracion.Puerto, configuracion.Servidor, configuracion.Usuario, configuracion.IdentificadorDispositivo);
+        }
         public static Configuracion BuildFrom(
             string NombreDB = "", string Password = "",
             string Puerto = "", string Servidor = "",

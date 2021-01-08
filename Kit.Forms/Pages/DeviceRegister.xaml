@@ -16,7 +16,7 @@
                    VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Padding="0" 
                    CornerRadius="5" BorderColor="Black" Margin="10">
                 <StackLayout Margin="0">
-                    <Label Margin="0,0,0,10" BackgroundColor="DarkBlue" 
+                    <Label Margin="0,0,0,10" BackgroundColor="#00415B" 
                            HorizontalOptions="FillAndExpand" VerticalOptions="Start" 
                            FontSize="Title" HorizontalTextAlignment="Center" 
                            VerticalTextAlignment="Center" TextColor="White" Text="Registrar dispositivo"/>
@@ -36,11 +36,11 @@
                     TextColor="Black" Margin="0,0,10,0" TextChanged="PasswordChanged"/>
                     </StackLayout>
 
-                    <Button Margin="5" BindingContext="{Binding Model,Source={Reference Me}}" x:Name="Btn" Clicked="LogIn"  BackgroundColor="DarkBlue" TextColor="Gray" Text="Iniciar sesión"/>
+                    <Button Margin="5" BindingContext="{Binding Model,Source={Reference Me}}" x:Name="Btn" Clicked="LogIn"  BackgroundColor="#00415B" TextColor="Gray" Text="Iniciar sesión"/>
                 </StackLayout>
             </Frame>
 
-            <Label TextColor="Blue" TextDecorations="Underline" FontSize="Small"  Text="Crear cuenta" HorizontalOptions="Start">
+            <Label TextColor="#00415B" TextDecorations="Underline" FontSize="Small"  Text="Crear cuenta" HorizontalOptions="Start">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Registrarse"/>
                 </Label.GestureRecognizers>

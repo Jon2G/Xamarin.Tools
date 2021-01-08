@@ -75,7 +75,16 @@ namespace SQLHelper
             }
             return this;
         }
-        public SQLHLite RevisarTablaConfiguracion()
+        private void RevisarTablaDbVersion(SqlConnection connection)
+        {
+            if (TableExists("DB_VERSION"))
+            {
+                return;
+            }
+            connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
+            connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
+        }
+        private void RevisarTablaConfiguracion()
         {
             if (!this.TableExists("CONFIGURACION"))
             {
@@ -90,7 +99,7 @@ USUARIO TEXT,
 PASSWORD TEXT,
 CADENA_CON TEXT NOT NULL);");
             }
-            return this;
+            return;
         }
 
 
@@ -113,9 +122,8 @@ CADENA_CON TEXT NOT NULL);");
             {
                 connection.Execute("DROP TABLE DB_VERSION");
             }
-            connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
-            connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
-
+            RevisarTablaDbVersion(connection);
+            RevisarTablaConfiguracion();
             if (AssemblyType != null && !string.IsNullOrEmpty(this.ScriptResourceName))
             {
                 CreateDbFromScript(connection);
