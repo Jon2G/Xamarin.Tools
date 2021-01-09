@@ -60,7 +60,8 @@ namespace SQLHelper
         {
             return IsNull(value) ? ifnull : value;
         }
-    
+
+
 
     }
 }

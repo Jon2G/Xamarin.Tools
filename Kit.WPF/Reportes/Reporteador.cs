@@ -31,6 +31,7 @@ namespace Kit.WPF.Reportes
             StiOptions.Designer.AllowUseWinControl = true;
             StiOptions.Viewer.AllowUseDragDrop =
             StiOptions.Designer.AllowUseDragDrop = false;
+            this.RutaReportes = RutaReportes;
             if (RutaReportes[0] == '/')
             {
                 RutaReportes = $"{Kit.Tools.Instance.LibraryPath}{RutaReportes}";
@@ -48,7 +49,7 @@ namespace Kit.WPF.Reportes
         /// <returns></returns>
         public Reporteador MostrarReporte(string archivo_mrt, params Variable[] diccionario)
         {
-            FileInfo mrt = new FileInfo(archivo_mrt);
+            FileInfo mrt = new FileInfo(this.RutaReportes+"\\"+archivo_mrt);
             if (!mrt.Exists)
             {
                 throw new FileNotFoundException($"No se econtro el reporte en:{mrt.FullName}");

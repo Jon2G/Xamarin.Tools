@@ -291,7 +291,7 @@ namespace Kit.Daemon
                             , CommandType.Text, false, new SqlParameter("ID_DISPOSITIVO", DeviceId));
                     }
 
-                    foreach (Table table in Schema)//this.Schema.Where(x => !x.IsTriggerChecked))
+                    foreach (Table table in Schema.Where(x => x.TableDirection != TableDirection.UPLOAD))//this.Schema.Where(x => !x.IsTriggerChecked))
                     {
                         if (IsSleepRequested || OffLine)
                         {
