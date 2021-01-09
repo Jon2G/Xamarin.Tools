@@ -31,10 +31,11 @@ namespace SQLHelper
         {
             if (SQLHelper.Instance is null)
             {
-                throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
+                throw new Exception("Please call SQLHelper.Init before using it");
             }
-            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
-            this.RutaDb = db.FullName;
+
+            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}\\{DBName}");
+            this.RutaDb = db.FullName; 
             this.DBVersion = DBVersion;
         }
 
