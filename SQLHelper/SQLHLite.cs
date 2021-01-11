@@ -34,7 +34,7 @@ namespace SQLHelper
                 throw new Exception("Please call SQLHelper.Init before using it");
             }
 
-            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}\\{DBName}");
+            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
             this.RutaDb = db.FullName; 
             this.DBVersion = DBVersion;
         }

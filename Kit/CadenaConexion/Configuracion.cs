@@ -134,10 +134,10 @@ namespace Kit.CadenaConexion
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Data Source=TCP:")
                 .Append(Servidor)
-                .Append((!string.IsNullOrEmpty(Puerto.Trim()) ? "," + Puerto : ""))//no puerto no lo pongo
+                .Append((!string.IsNullOrEmpty(Puerto?.Trim()) ? "," + Puerto : ""))//no puerto no lo pongo
                 .Append(";Initial Catalog=")
                 .Append(NombreDB);
-            if (string.IsNullOrEmpty(Usuario.Trim()) && string.IsNullOrEmpty(Password.Trim()))//no usuario no contraseña credenciales por defecto
+            if (string.IsNullOrEmpty(Usuario?.Trim()) && string.IsNullOrEmpty(Password?.Trim()))//no usuario no contraseña credenciales por defecto
             {
                 ConnectionString.Append(";Integrated Security=True;");
             }

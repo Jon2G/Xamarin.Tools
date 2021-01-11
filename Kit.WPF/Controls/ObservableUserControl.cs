@@ -1,4 +1,5 @@
 ﻿
+using Kit.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,10 +11,12 @@ using System.Windows.Controls;
 
 namespace Kit.WPF.Controls
 {
-    public class ObservableUserControl : UserControl, INotifyPropertyChanged
+    public class ObservableUserControl : UserControl, KitINotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
+
+
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -26,5 +29,15 @@ namespace Kit.WPF.Controls
             handler?.Invoke(this, args);
         }
         #endregion
+        public T SetValue<T>(T Value, [CallerMemberName] string propertyName = null)
+        {
+            OnPropertyChanged(propertyName);
+            return Value;
+        }
+        public object SetValue(object Value, [CallerMemberName] string propertyName = null)
+        {
+            OnPropertyChanged(propertyName);
+            return Value;
+        }
     }
 }

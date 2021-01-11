@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kit.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -6,7 +7,8 @@ using System.Text;
 
 namespace Kit
 {
-    public abstract class ViewModelBase<T> : INotifyPropertyChanged
+
+    public abstract class ViewModelBase<T> : KitINotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -32,5 +34,6 @@ namespace Kit
                 new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
     }
 }
