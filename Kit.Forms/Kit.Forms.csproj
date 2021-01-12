@@ -10,6 +10,7 @@
     <FileVersion>1.1.2.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
+    <UserSecretsId>25b2aca8-9550-4b99-8c1d-ddcb80b6f324</UserSecretsId>
   </PropertyGroup>
 
 
@@ -35,10 +36,11 @@
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.470" />
     <PackageReference Include="Plugin.Fingerprint" Version="2.1.3" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.9" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.10" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="TouchView" Version="4.1.99" />
     <PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />
     <PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
@@ -52,6 +54,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\Leector.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Pages\DeviceRegister.xaml.cs">
       <DependentUpon>DeviceRegister.xaml</DependentUpon>
     </Compile>
@@ -59,7 +64,7 @@
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Pages\CadenaConexion\CadenaCon.xaml.cs">
+    <Compile Update="Pages\CadenaCon.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -78,6 +83,12 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Pages\ShareCadenaCon.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

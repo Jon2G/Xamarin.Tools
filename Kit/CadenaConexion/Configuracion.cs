@@ -6,19 +6,25 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using ZXing.Net.Mobile.Forms;
 
 namespace Kit.CadenaConexion
 {
     public class Configuracion : ViewModelBase<Configuracion>
     {
         public string CadenaCon { get; set; }
-        public string IdentificadorDispositivo { get; private set; }
+        public string IdentificadorDispositivo { get; set; }
         public string NombreDB { get; set; }
         public string Servidor { get; set; }
         public string Puerto { get; set; }
         public string Usuario { get; set; }
         public string Password { get; set; }
         public string Empresa { get; set; }
+        /// <summary>
+        /// WARNING  SOLO PARA REFLEXIÓN XML
+        /// </summary>
+        public Configuracion() { }
         public Configuracion(string CadenaCon, string DeviceId)
         {
             this.IdentificadorDispositivo = DeviceId;
@@ -56,7 +62,7 @@ namespace Kit.CadenaConexion
                             Convert.ToString(reader[5]).Replace(@"\\", @"\"), DeviceId);
                         if (string.IsNullOrEmpty(config.CadenaCon))
                         {
-                            config= BuildFrom(config);
+                            config = BuildFrom(config);
                         }
                         return config;
                     }
@@ -163,6 +169,17 @@ namespace Kit.CadenaConexion
                 Usuario = Usuario,
 
             };
+        }
+
+        public string Serialize()
+        {
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(Kit.CadenaConexion.Configuracion));
+            using (var sww = new StringWriter())
+            {
+                xsSubmit.Serialize(sww, this);
+                string xml = sww.ToString();
+                return xml;
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<pages:BasePage  xmlns:pages="clr-namespace:Kit.Forms.Controls.Pages"
+<pages:BasePage  xmlns:pages="clr-namespace:Kit.Forms.Pages"
                  xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" BackgroundColor="White"
                  xmlns:views="clr-namespace:Kit.Forms.Controls.Views"
-                 x:Class="Kit.Forms.Controls.Pages.CadenaCon" x:Name="Me">
+                 x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
             <Image IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
@@ -28,20 +28,20 @@
                                 <Editor HeightRequest="200" TextColor="Black" VerticalOptions="FillAndExpand" Text="" FontSize="Subtitle" x:Name="TxtCadenaCon"/>
                             </Frame>
                         </Grid>
-                        <StackLayout VerticalOptions="End" HorizontalOptions="Fill">
-                            <Frame  Padding="1" Margin="0" BorderColor="Black">
-                                <Button x:Name="BtnProbar" Clicked="ProbarConexion" FontSize="Body" BackgroundColor="White"  Text="Probar conexión"/>
-                            </Frame>
+                        
+                        <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="Fill">
+                            <Grid ColumnDefinitions="*,*">
+                                <Button x:Name="BtnProbar" HeightRequest="70" Clicked="ProbarConexion" FontSize="Body" BackgroundColor="WhiteSmoke"  Text="Probar conexión"/>
+                                <Button Grid.Column="1" x:Name="BtnGuardar" Clicked="Guardar" FontSize="Body"  BackgroundColor="WhiteSmoke"  Text="Guardar y utilizar"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Button HeightRequest="70" Text="Guardar y renovar base local" Clicked="GuardarRenovar_Touched" BackgroundColor="WhiteSmoke"/>
+                                <Button Grid.Column="1" x:Name="BtnCancelar" Clicked="Cancelar" BackgroundColor="WhiteSmoke"  Text="Salir sin hacer nada"/>
+                            </Grid>
+                        
+                                <Button HeightRequest="70" Text="Importar cadena de conexión" Clicked="Importar_Touched" BackgroundColor="WhiteSmoke"/>
+                            
 
-                            <Frame Padding="1" Margin="0" BorderColor="Black">
-                                <Button x:Name="BtnGuardar" Clicked="Guardar" FontSize="Body"  BackgroundColor="White"  Text="Guardar y utilizar"/>
-                            </Frame>
-
-                            <views:MyButton Padding="10" StackHorizontalOptions="CenterAndExpand" Text="Guardar y renovar base local" Touched="GuardarRenovar_Touched"/>
-
-                            <Frame  Padding="1" Margin="0" BorderColor="Black">
-                                <Button x:Name="BtnCancelar" Clicked="Cancelar" FontSize="Body" BackgroundColor="White"  Text="Salir sin hacer nada"/>
-                            </Frame>
                         </StackLayout>
                     </StackLayout>
                 </ScrollView>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Kit.Enums;
+using Kit.Forms.Controls.Pages;
 using Kit.Services.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -10,7 +11,7 @@ using Xamarin.Forms.Platform;
 
 
 
-namespace Kit.Forms.Controls.Pages
+namespace Kit.Forms.Pages
 {
     public class BasePage : ContentPage
     {
@@ -36,8 +37,8 @@ namespace Kit.Forms.Controls.Pages
         public event EventHandler<PageOrientationEventArgs> OnOrientationChanged = (e, a) => { };
         private void InitOrientationPage()
         {
-            _width = this.Width;
-            _height = this.Height;
+            _width = Width;
+            _height = Height;
         }
 
         protected override void OnSizeAllocated(double width, double height)
@@ -56,27 +57,27 @@ namespace Kit.Forms.Controls.Pages
 
             // Has the device been rotated ?
             if (!Equals(width, oldWidth))
-                OnOrientationChanged.Invoke(this, new PageOrientationEventArgs((width < height) ? PageOrientation.Vertical : PageOrientation.Horizontal));
+                OnOrientationChanged.Invoke(this, new PageOrientationEventArgs(width < height ? PageOrientation.Vertical : PageOrientation.Horizontal));
         }
         public PageOrientation ActualOrientation
         {
-            get => ((this.Width < this.Height) ? PageOrientation.Vertical : PageOrientation.Horizontal);
+            get => Width < Height ? PageOrientation.Vertical : PageOrientation.Horizontal;
         }
 
         public BasePage()
         {
-            this.LockedOrientation = DeviceOrientation.Other;
-            this.IsModalLocked = false;
+            LockedOrientation = DeviceOrientation.Other;
+            IsModalLocked = false;
             InitOrientationPage();
             //IdentidadVisual.Inicializar(this);
         }
         public DeviceOrientation LockedOrientation { get; private set; }
         protected BasePage LockOrientation(DeviceOrientation Orientation)
         {
-            this.LockedOrientation = Orientation;
+            LockedOrientation = Orientation;
             if (Device.RuntimePlatform == Device.Android)
             {
-                MessagingCenter.Send(this, this.LockedOrientation.ToString());
+                MessagingCenter.Send(this, LockedOrientation.ToString());
             }
             return this;
         }
@@ -111,7 +112,7 @@ namespace Kit.Forms.Controls.Pages
         protected bool IsModalLocked { get; private set; }
         public BasePage LockModal()
         {
-            this.IsModalLocked = !this.IsModalLocked;
+            IsModalLocked = !IsModalLocked;
             return this;
         }
         protected override bool OnBackButtonPressed()
@@ -121,7 +122,7 @@ namespace Kit.Forms.Controls.Pages
                 popUp.BackButtonPressed();
                 return true;
             }
-            if (this.IsModalLocked)
+            if (IsModalLocked)
             {
                 return true;
             }
@@ -133,7 +134,7 @@ namespace Kit.Forms.Controls.Pages
 
         }
         public void SetScreenMode(IScreenManager ScreenManager, ScreenMode Screen)
-       {
+        {
             ScreenManager.SetScreenMode(Screen);
         }
     }

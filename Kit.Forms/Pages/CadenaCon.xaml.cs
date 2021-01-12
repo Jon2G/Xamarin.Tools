@@ -14,7 +14,7 @@ using Log = SQLHelper.Log;
 using Kit.CadenaConexion;
 using Kit.Daemon.VersionControl;
 
-namespace Kit.Forms.Controls.Pages
+namespace Kit.Forms.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CadenaCon : BasePage
@@ -67,7 +67,7 @@ namespace Kit.Forms.Controls.Pages
             this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
             this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo,SQLHLite DBConection, Exception ex)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLHLite DBConection, Exception ex)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -76,7 +76,7 @@ namespace Kit.Forms.Controls.Pages
             this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo,SQLHLite DBConection, Configuracion Configuracion)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLHLite DBConection, Configuracion Configuracion)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -247,5 +247,10 @@ namespace Kit.Forms.Controls.Pages
                 }
             }
         }
+        private async void Importar_Touched(object sender, EventArgs e)
+        {
+        
+        }
+
     }
 }

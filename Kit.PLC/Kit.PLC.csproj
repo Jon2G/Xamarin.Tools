@@ -127,6 +127,7 @@
 
 
   <ItemGroup>
+    <Compile Include="Services\BrightnessService.cs" />
     <Compile Include="Services\CustomMessageBox.cs" />
     <Compile Include="Services\DataShare.cs" />
     <Compile Include="Services\DeviceInfo.cs" />
@@ -144,5 +145,15 @@
       <PackagePath></PackagePath>
     </None>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
+  </ItemGroup>
+
+
+
+
+
+
+
+  <ItemGroup>
+    <None Remove="Services\BrightnessService.cs" />
   </ItemGroup>
 </Project>

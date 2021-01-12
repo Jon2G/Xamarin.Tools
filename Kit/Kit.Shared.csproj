@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
