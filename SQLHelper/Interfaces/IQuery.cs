@@ -4,16 +4,18 @@ using System.Text;
 
 namespace SQLHelper.Interfaces
 {
-    public abstract class IQuery : IDisposable
+    public abstract class IQuery: IDisposable
     {
         public readonly BaseSQLHelper SQLH;
         protected readonly Dictionary<string, object> Parameters;
         protected readonly string TableName;
+        //protected bool PreventSqlInjection;
         protected IQuery(BaseSQLHelper SQLH, string TableName)
         {
             this.SQLH = SQLH;
             this.Parameters = new Dictionary<string, object>();
             this.TableName = TableName;
+            //this.PreventSqlInjection = false;
         }
         public abstract int Execute();
 
@@ -28,5 +30,10 @@ namespace SQLHelper.Interfaces
         {
             this.Parameters.Clear();
         }
+        //public IQuery PreventInjection(bool PreventInjection = true)
+        //{
+        //    this.PreventSqlInjection = PreventInjection;
+        //    return this;
+        //}
     }
 }

@@ -154,7 +154,14 @@ namespace Kit.Extensions
             data = new DataTable(tipo.Name);
             foreach (PropertyInfo p in tipo.GetProperties())
             {
-                data.Columns.Add(p.Name, p.PropertyType);
+                if (p.PropertyType.IsEnum)
+                {
+                    data.Columns.Add(p.Name, typeof(string));
+                }
+                else
+                {
+                    data.Columns.Add(p.Name, p.PropertyType);
+                }
             }
 
             lista.ForEach(v =>
