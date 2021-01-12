@@ -35,7 +35,7 @@ namespace SQLHelper
             }
 
             FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
-            this.RutaDb = db.FullName; 
+            this.RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
 
@@ -323,6 +323,10 @@ CADENA_CON TEXT NOT NULL);");
                     {
                         result.Columns.Add(reader.Fields[i]);
                     }
+                }
+                else 
+                {
+                    return result;
                 }
                 do
                 {

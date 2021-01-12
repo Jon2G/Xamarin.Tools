@@ -17,7 +17,7 @@
                         VerticalContentAlignment="Center" 
                         x:Name="DtFInicial"
                         DataContext="{Binding Rango,ElementName=Me}"
-                        SelectedDate="{Binding Inicio}" 
+                        SelectedDate="{Binding Inicio}"  IsEnabled="{Binding SeleccionaFecha}"
                         DisplayDateEnd="{Binding InicioMaxDate}"
                         Margin="3" Height="27"/>
         </Grid>
@@ -37,7 +37,7 @@
                         VerticalContentAlignment="Center" 
                         x:Name="DtFFinal" 
                         DataContext="{Binding Rango,ElementName=Me}"
-                        SelectedDate="{Binding Fin}"
+                        SelectedDate="{Binding Fin}" IsEnabled="{Binding SeleccionaFecha}"
                         DisplayDateStart="{Binding MinDate}" 
                         DisplayDateEnd="{Binding FinMaxDate}"
                         Margin="3"/>

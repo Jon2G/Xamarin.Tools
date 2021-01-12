@@ -48,6 +48,16 @@ namespace Kit.WPF.Controls.RangoFechas
 
             }
         }
+        private bool _SeleccionaFecha;
+        public bool SeleccionaFecha
+        {
+            get => _SeleccionaFecha;
+            set
+            {
+                _SeleccionaFecha = value;
+                OnPropertyChanged();
+            }
+        }
         private bool _TodasLasFechas;
         public bool TodasLasFechas
         {
@@ -58,6 +68,7 @@ namespace Kit.WPF.Controls.RangoFechas
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(TodasLasFechasNull));
                 OnDateChanged?.Invoke(this, EventArgs.Empty);
+                SeleccionaFecha = !TodasLasFechas;
                 //if (TodasLasFechas)
                 //{
                 //    Fin =
