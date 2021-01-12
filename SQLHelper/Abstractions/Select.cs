@@ -1,4 +1,5 @@
 ﻿using SQLHelper.Interfaces;
+using SQLHelper.Readers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -52,6 +53,11 @@ namespace SQLHelper.Abstractions
         }
         public Select Where(string Field, object value)
         {
+            //if (this.PreventSqlInjection && value is string s && s.Contains('\''))
+            //{
+            //    Log.DebugMe("[WARNING] INYECCIÓN DE SQL EVITADA");
+            //    return (Select)this.AddParameter(Field, s.Replace("\'", ""));
+            //}
             return (Select)this.AddParameter(Field, value);
         }
         protected override string BuildQuery()
@@ -76,11 +82,16 @@ namespace SQLHelper.Abstractions
         }
         protected override string BuildLiteQuery()
         {
-            StringBuilder builder = new StringBuilder()
-                .Append("SELECT ")
-                  .Append(string.Join(",", this.SelectionFields))
-                  .Append(" FROM ")
-                  .Append(TableName);
+            StringBuilder builder = new StringBuilder().Append("SELECT ");
+            if (!this.SelectionFields.Any())
+            {
+                builder.Append(" * ");
+            }
+            else
+            {
+                builder.Append(string.Join(",", this.SelectionFields));
+            }
+            builder.Append(" FROM ").Append(TableName);
             if (this.Parameters.Any())
             {
                 builder.Append(" WHERE");
@@ -90,8 +101,12 @@ namespace SQLHelper.Abstractions
                         .Append(pair.Key)
                         .Append(" ='")
                         .Append(pair.Value)
-                        .Append('\'');
+                        .Append('\'');//.Append(" AND");
                 }
+                //if (this.Parameters.Any())
+                //{
+                //    builder.Remove(builder.Length - 3, 3);
+                //}
             }
             return builder.ToString();
         }
@@ -122,7 +137,10 @@ namespace SQLHelper.Abstractions
             }
             throw new NotSupportedException("No sql connection set");
         }
-
+        //public new Select PreventInjection(bool PreventInjection = true)
+        //{
+        //    return (Select)base.PreventInjection(PreventInjection);
+        //}
 
     }
 }
