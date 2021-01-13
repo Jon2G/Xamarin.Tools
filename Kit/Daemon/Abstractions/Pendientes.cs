@@ -24,7 +24,6 @@ namespace Kit.Daemon.Abstractions
             this.Tabla = Tabla.ToUpper();
             this.Id = Id;
         }
-
         internal void Sincronizado(DaemonConfig config, DireccionDemonio direccion)
         {
             try
@@ -55,6 +54,20 @@ namespace Kit.Daemon.Abstractions
             {
                 Log.LogMeDemonio(ex, "Al marcar como finalizada la sincronización");
             }
+        }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                sb.Append(this.Accion).Append(" ").Append(this.Tabla)
+                .Append(" [").Append(this.LLave).Append("]");
+            }
+            catch (Exception ex)
+            {
+                Log.LogMeDemonio(ex, "Al convertir este pendiete en su representación ToString");
+            }
+            return sb.ToString();
         }
     }
 }

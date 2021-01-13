@@ -22,6 +22,13 @@ namespace Kit.Daemon.Abstractions
                     {
                         SQLH.EXEC($"DROP TRIGGER {TriggerName}", System.Data.CommandType.Text, false);
                     }
+
+                    //REMOVE OLD TRIGGERS
+                    if (SQLH.TriggerExists($"{Table.Name}_Tablet"))
+                    {
+                        SQLH.EXEC($"DROP TRIGGER {Table.Name}_Tablet");
+                    }
+
                     SQLH.EXEC($@"CREATE TRIGGER dbo.{TriggerName} ON dbo.{Table.Name} AFTER INSERT,DELETE,UPDATE AS 
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from

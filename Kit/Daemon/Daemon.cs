@@ -43,7 +43,8 @@ namespace Kit.Daemon
             set
             {
                 _Processed = value;
-                OnPropertyChanged(nameof(Progress));
+                Raise(() => this.Progress);
+                //OnPropertyChanged(nameof(Progress));
             }
         }
         public static string DeviceId { get; private set; }
@@ -104,6 +105,17 @@ namespace Kit.Daemon
             private set;
         }
         private string SelectLiteQuery;
+        private Pendientes _PendienteActual;
+        public Pendientes PendienteActual
+        {
+            get => _PendienteActual;
+            set
+            {
+                _PendienteActual = value;
+                Raise(() => this.PendienteActual);
+                //OnPropertyChanged();
+            }
+        }
         private static Daemon Born()
         {
             Daemon demon = new Daemon()
@@ -119,7 +131,6 @@ namespace Kit.Daemon
             Current.IsInited = false;
             Awake();
         }
-
         private Daemon()
         {
             this.DireccionActual = DireccionDemonio.INVALID;
@@ -181,7 +192,6 @@ namespace Kit.Daemon
                 SelectLiteQuery = builder.ToString();
             }
         }
-
         public async void Reset()
         {
             await Sleep();
@@ -544,7 +554,7 @@ namespace Kit.Daemon
         private void ProcesarAcciones(DireccionDemonio direccion)
         {
             Processed = 0;
-
+            PendienteActual = null;
             while (Pendings.Any())
             {
                 if (IsSleepRequested)
@@ -554,11 +564,11 @@ namespace Kit.Daemon
                 }
                 try
                 {
-                    Pendientes pendiente = Pendings.Dequeue();
-                    Table table = Schema.FirstOrDefault(x => string.Compare(x.Name, pendiente.Tabla, true) == 0);
+                    this.PendienteActual = Pendings.Dequeue();
+                    Table table = Schema.FirstOrDefault(x => string.Compare(x.Name, this.PendienteActual.Tabla, true) == 0);
                     if (table != null)
                     {
-                        if (!table.Execute(DaemonConfig, pendiente, direccion))
+                        if (!table.Execute(DaemonConfig, this.PendienteActual, direccion))
                         {
                             if (direccion == DireccionDemonio.TO_ORIGIN)//deben ir en un orden especifico
                             {
@@ -569,7 +579,7 @@ namespace Kit.Daemon
                     }
                     else
                     {
-                        Log.LogMe($"[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{pendiente.Tabla}'");
+                        Log.LogMe($"[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{this.PendienteActual.Tabla}'");
                     }
                     Processed++;
                 }
@@ -580,6 +590,10 @@ namespace Kit.Daemon
                         Debugger.Break();
                     }
                     Log.LogMeDemonio(ex, "Al sincronizar");
+                }
+                finally
+                {
+                    this.PendienteActual = null;
                 }
             }
         }
