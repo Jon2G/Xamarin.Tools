@@ -25,10 +25,17 @@ namespace Kit.Forms.Controls
         }
 
         public ICommand ButtonCommand { get; private set; }
-
-        public CodigoDeBarras()
+        public List<BarcodeFormat> BarcodeFormats { get; set; }
+        public CodigoDeBarras(params BarcodeFormat[] BarcodeFormats)
         {
             ButtonCommand = new Command(OnButtomCommand);
+            this.BarcodeFormats = new List<BarcodeFormat>(BarcodeFormats);
+            if (this.BarcodeFormats.Count <= 0)
+            {
+                this.BarcodeFormats.Add(BarcodeFormat.QR_CODE);
+                this.BarcodeFormats.Add(BarcodeFormat.CODE_128);
+                this.BarcodeFormats.Add(BarcodeFormat.EAN_13);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,12 +49,7 @@ namespace Kit.Forms.Controls
         private void OnButtomCommand()
         {
             var options = new MobileBarcodeScanningOptions();
-            options.PossibleFormats = new List<BarcodeFormat>
-            {
-                BarcodeFormat.QR_CODE,
-                BarcodeFormat.CODE_128,
-                BarcodeFormat.EAN_13
-            };
+            options.PossibleFormats = this.BarcodeFormats;
             ZXingScannerPage page = new ZXingScannerPage(options) { Title = "Leector de codigos de barras" };
             ToolbarItem closeItem = new ToolbarItem { Text = "Cerrar" };
             closeItem.Clicked += (sender, e) =>

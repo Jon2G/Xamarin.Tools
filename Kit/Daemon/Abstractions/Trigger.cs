@@ -12,17 +12,10 @@ namespace Kit.Daemon.Abstractions
         {
             try
             {
-                if (Daemon.OffLine)
-                {
-                    return;
-                }
                 string TriggerName = $"{Table.Name}_TRIGGER";
                 string version = SQLH.Single<string>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
                      , false, System.Data.CommandType.Text, new SqlParameter("NAME", TriggerName));
-                if (Daemon.OffLine)
-                {
-                    return;
-                }
+
                 if (version != DbVersion)
                 {
                     if (SQLH.TriggerExists(TriggerName))

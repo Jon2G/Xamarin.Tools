@@ -13,6 +13,8 @@ using Xamarin.Forms.Xaml;
 using Log = SQLHelper.Log;
 using Kit.CadenaConexion;
 using Kit.Daemon.VersionControl;
+using Kit.Forms.Controls;
+using ZXing;
 
 namespace Kit.Forms.Pages
 {
@@ -43,13 +45,13 @@ namespace Kit.Forms.Pages
                 OnPropertyChanged();
             }
         }
-
+        public Leector Leector { get; set; }
         public event EventHandler Confirmado;
         private Configuracion Configuracion;
         private readonly SQLHLite DBConection;
         private readonly Services.Interfaces.IDeviceInfo DeviceInfo;
         public SQLH NewDBConection { get; private set; }
-
+        public bool ShouldSetUpDaemon { get; set; }
         public static bool IsActive()
         {
             if ((Application.Current.MainPage.Navigation.ModalStack.Any() && Application.Current.MainPage.Navigation.ModalStack.LastOrDefault() is CadenaCon)
@@ -95,6 +97,10 @@ namespace Kit.Forms.Pages
         private void BasePage_Appearing(object sender, EventArgs e)
         {
             this.LockOrientation(DeviceOrientation.Portrait);
+            CargarCadena();
+        }
+        private void CargarCadena()
+        {
             TxtDbName.Text = this.Configuracion.NombreDB;
             TxtContraseña.Text = this.Configuracion.Password;
             TxtPuerto.Text = this.Configuracion.Puerto;
@@ -104,8 +110,10 @@ namespace Kit.Forms.Pages
         }
         private void BasePage_Disappearing(object sender, EventArgs e)
         {
-            //Confirmado?.Invoke(sender, e);
-            //Confirmado = null;
+            if (this.Leector != null)
+            {
+                this.Leector.CodigoEntrante -= Leector_CodigoEntrante;
+            }
         }
         private void RecargaCadena(object sender, TextChangedEventArgs e)
         {
@@ -147,20 +155,10 @@ namespace Kit.Forms.Pages
 
                     this.NewDBConection.ChangeConnectionString(this.Configuracion.CadenaCon);
 
-                    foreach (IVersionControlTable controlTable in new IVersionControlTable[] {
-                        new DispositivosTablets(),new DescargasVersiones(), new TriggersInfo()
-                    })
+                    if (this.ShouldSetUpDaemon)
                     {
-                        if (!this.NewDBConection.TableExists(controlTable.TableName))
-                        {
-                            controlTable.CreateTable(this.NewDBConection);
-                        }
+                        Daemon.Daemon.Current.SetUp(NewDBConection);
                     }
-
-                    this.NewDBConection.EXEC(
-                        "DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = @ID_DISPOSITIVO",
-                        System.Data.CommandType.Text, false,
-                        new SqlParameter("ID_DISPOSITIVO", this.DeviceInfo.DeviceId));
 
                     if (this.Navigation.ModalStack.Count > 0)
                     {
@@ -228,12 +226,10 @@ namespace Kit.Forms.Pages
             TxtEstado.Text = ex?.Message ?? "Correcto";
             Img.Source = ex is null ? "usbok.png" : "usbbad.png";
         }
-
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(TxtEstado.Text, "Información", "Ok");
         }
-
         private async void GuardarRenovar_Touched(object sender, EventArgs e)
         {
             using (Acr.UserDialogs.UserDialogs.Instance.Loading("Espere un momento..."))
@@ -247,10 +243,26 @@ namespace Kit.Forms.Pages
                 }
             }
         }
-        private async void Importar_Touched(object sender, EventArgs e)
+        private void Importar_Touched(object sender, EventArgs e)
         {
-        
+            if (this.Leector is null)
+            {
+                this.Leector = new Leector(BarcodeFormat.QR_CODE);
+                this.Leector.CodigoEntrante += Leector_CodigoEntrante;
+            }
+            this.Leector.Abrir();
         }
-
+        private void Leector_CodigoEntrante(object sender, EventArgs e)
+        {
+            if (sender is Leector leector)
+            {
+                leector.CodigoEntrante -= Leector_CodigoEntrante;
+                if (!string.IsNullOrEmpty(leector.CodigoBarras))
+                {
+                    Configuracion = Configuracion.DeSerialize(leector.CodigoBarras);
+                    this.CargarCadena();
+                }
+            }
+        }
     }
 }

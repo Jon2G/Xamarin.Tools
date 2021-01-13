@@ -32,7 +32,7 @@ namespace Kit.Daemon
         private Thread Thread { get; set; }
         private EventWaitHandle WaitHandle { get; set; }
         #endregion
-        private Table[] Schema;
+        public Table[] Schema { get; private set; }
         public event EventHandler OnConnectionStateChanged;
         public event Func<bool> OnInicializate;
         private readonly Queue<Pendientes> Pendings;
@@ -212,6 +212,27 @@ namespace Kit.Daemon
             Thread.Start();
         }
         /// <summary>
+        /// Comprueba que las tablas de versión coincidan con la versión de este servicio, las crea ó renueva según sea el caso
+        /// </summary>
+        public void SetUp(SQLH Connection)
+        {
+            using (var reflex = new SQLHelper.Reflection.ReflectionCaller())
+            {
+                foreach (IVersionControlTable table in reflex.GetInheritedClasses<IVersionControlTable>(Connection).OrderBy(x => x.Priority))
+                {
+                    if (table.GetVersion() != DaemonConfig.DbVersion)
+                    {
+                        table.DropTable();
+                        if (!Connection.TableExists(table.TableName))
+                        {
+                            table.CreateTable();
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Despierta al demonio en caso de que este dormido,si no esta presente lo invoca,
         /// si esta ocupado le indica que busque por cambios nuevos
         /// </summary>
@@ -304,10 +325,10 @@ namespace Kit.Daemon
 
                 foreach (SQLHLite SQLHLite in DaemonConfig.GetSqlLiteConnections())
                 {
-                    IVersionControlTable controlTable = new VersionControlTable();
+                    IVersionControlTable controlTable = new VersionControlTable(SQLHLite);
                     if (!SQLHLite.TableExists(controlTable.TableName))
                     {
-                        controlTable.CreateTable(SQLHLite);
+                        controlTable.CreateTable();
                     }
                 }
                 if (OnInicializate != null)

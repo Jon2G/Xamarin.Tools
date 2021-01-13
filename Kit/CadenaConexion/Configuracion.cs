@@ -1,4 +1,5 @@
-﻿using SQLHelper;
+﻿using Newtonsoft.Json;
+using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using ZXing.Net.Mobile.Forms;
 
@@ -173,13 +175,12 @@ namespace Kit.CadenaConexion
 
         public string Serialize()
         {
-            XmlSerializer xsSubmit = new XmlSerializer(typeof(Kit.CadenaConexion.Configuracion));
-            using (var sww = new StringWriter())
-            {
-                xsSubmit.Serialize(sww, this);
-                string xml = sww.ToString();
-                return xml;
-            }
+            return JsonConvert.SerializeObject(this);
+        }
+
+        public static Configuracion DeSerialize(string codigoBarras)
+        {
+           return JsonConvert.DeserializeObject<Configuracion>(codigoBarras);
         }
     }
 }

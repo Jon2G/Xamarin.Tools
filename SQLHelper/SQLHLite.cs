@@ -211,7 +211,7 @@ CADENA_CON TEXT NOT NULL);");
 
             return afectadas;
         }
-        public T Single<T>(string sql)
+        public override T Single<T>(string sql)
         {
             T result = default;
             try
@@ -256,6 +256,10 @@ CADENA_CON TEXT NOT NULL);");
             return result;
         }
 
+        public override int EXEC(string sql)
+        {
+            return EXEC(sql);
+        }
         public int EXEC(string sql, params object[] parametros)
         {
             Log.DebugMe(sql);
@@ -324,7 +328,7 @@ CADENA_CON TEXT NOT NULL);");
                         result.Columns.Add(reader.Fields[i]);
                     }
                 }
-                else 
+                else
                 {
                     return result;
                 }

@@ -7,9 +7,9 @@ namespace Kit.Daemon.VersionControl
 {
     public class TriggersInfo : IVersionControlTable
     {
-        private const string TableName = "TRIGGERS_INFO";
-        string IVersionControlTable.TableName => TableName;
-        public void CreateTable(SQLH SQLH)
+        public TriggersInfo(SQLH SQLH) : base(SQLH, 2) { }
+        public override string TableName => "TRIGGERS_INFO";
+        protected override void CreateTable(SQLH SQLH)
         {
             SQLH.EXEC(@"CREATE TABLE TRIGGERS_INFO
                 (
@@ -19,7 +19,7 @@ namespace Kit.Daemon.VersionControl
                 )");
         }
 
-        public void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SQLHLite SQLH)
         {
             SQLH.EXEC(@"CREATE TABLE TRIGGERS_INFO
                 (

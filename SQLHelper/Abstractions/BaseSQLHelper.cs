@@ -33,19 +33,17 @@ namespace SQLHelper.Interfaces
         /// <param name="TableName">Nombre de la tabla a buscar</param>
         /// <returns>Un booleano que indica si la table existe ó no</returns>
         public abstract bool TableExists(string TableName);
-        public static string FormatTime(TimeSpan TimeSpan)
-        {
-            return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
-        }
-        public static string FormatTime(DateTime TimeSpan)
-        {
-            //using (SQLiteConnection lite = Conecction())
-            //{
-            //'2020-09-17T12:27:55'  Formato universal de fecha y hora sql server
-            return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");
-            //}
-        }
-
+        /// <summary>
+        /// Ejecuta una consulta sin parametros ni argumentos en la conexión actual
+        /// </summary>
+        /// <param name="sql"></param>
+        public abstract int EXEC(string sql);
+        /// <summary>
+        /// Regresa el primer elemento leido en la primer columna y le realiza un casting a T
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public abstract T Single<T>(string sql);
         public void Dispose()
         {
 

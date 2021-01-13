@@ -115,6 +115,10 @@ namespace SQLHelper
             }
             con.Close();
         }
+        public override T Single<T>(string sql)
+        {
+            return Single<T>(sql);
+        }
         public T Single<T>(string sql, params SqlParameter[] parameters)
         {
             return Single<T>(sql, false, CommandType.Text, parameters);
@@ -151,9 +155,9 @@ namespace SQLHelper
         }
         public static bool IsInjection(params string[] values)
         {
-            foreach(string value in values)
+            foreach (string value in values)
             {
-                if(IsInjection(value))
+                if (IsInjection(value))
                 {
                     return true;
                 }
@@ -198,6 +202,10 @@ namespace SQLHelper
                 }
             }
             return result;
+        }
+        public override int EXEC(string sql)
+        {
+            return EXEC(sql);
         }
         public int EXEC(string sql, params SqlParameter[] parametros)
         {

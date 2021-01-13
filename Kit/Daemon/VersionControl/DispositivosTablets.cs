@@ -7,10 +7,10 @@ namespace Kit.Daemon.VersionControl
 {
     public class DispositivosTablets : IVersionControlTable
     {
-        private const string TableName = "DISPOSITVOS_TABLETS";
-        string IVersionControlTable.TableName => TableName;
+        public DispositivosTablets(SQLH SQLH) :base(SQLH,4) { }
+        public override string TableName => "DISPOSITVOS_TABLETS";
 
-        public void CreateTable(SQLH SQLH)
+        protected override void CreateTable(SQLH SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DISPOSITVOS_TABLETS
@@ -19,12 +19,12 @@ namespace Kit.Daemon.VersionControl
                             ID_DISPOSITIVO VARCHAR(100) PRIMARY KEY,
                             ULTIMA_CONEXION DATETIME,
                             AUTORIZADO BIT DEFAULT 0,
-                            RECUERDA_USUARIO VARCHAR(100),
+                            NOMBRE VARCHAR(MAX),
                             GEO_ID VARCHAR(500) NOT NULL DEFAULT NEWID()
                             )");
         }
 
-        public void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SQLHLite SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DISPOSITVOS_TABLETS

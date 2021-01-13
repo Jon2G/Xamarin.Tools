@@ -1,16 +1,21 @@
-﻿using SQLHelper;
+﻿using Kit.Daemon.Abstractions;
+using Kit.Enums;
+using SQLHelper;
+using SQLHelper.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Kit.Daemon.VersionControl
 {
     public class VersionControlTable : IVersionControlTable
     {
-        private const string TableName = "VERSION_CONTROL";
-        string IVersionControlTable.TableName => TableName;
+        public VersionControlTable(BaseSQLHelper SQLH) : base(SQLH, 3) { }
 
-        public void CreateTable(SQLH SQLH)
+        public override string TableName => "VERSION_CONTROL";
+
+        protected override void CreateTable(SQLH SQLH)
         {
             SQLH.EXEC(@"CREATE TABLE VERSION_CONTROL
                     (
@@ -19,9 +24,10 @@ namespace Kit.Daemon.VersionControl
                     TABLA  varchar(50),
                     CAMPO VARCHAR(50),
                     LLAVE sql_variant);");
+            ResetVersionControl(Daemon.Current.Schema.Where(x => x.TableDirection != TableDirection.UPLOAD));
         }
 
-        public void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SQLHLite SQLH)
         {
             SQLH.EXEC(@"CREATE TABLE VERSION_CONTROL
                     (
@@ -30,6 +36,17 @@ namespace Kit.Daemon.VersionControl
                     TABLA  TEXT,
                     CAMPO TEXT,
                     LLAVE BLOB);");
+        }
+        public void ResetVersionControl(IEnumerable<Table> Tables)
+        {
+            foreach (Table table in Tables)
+            {
+                if (!table.Fields.Any())
+                {
+                    return;
+                }
+                Trigger.CheckTrigger((SQLH)SQLH, table, Daemon.Current.DaemonConfig.DbVersion);
+            }
         }
     }
 }

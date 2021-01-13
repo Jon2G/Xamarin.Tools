@@ -7,10 +7,11 @@ namespace Kit.Daemon.VersionControl
 {
     public class DescargasVersiones : IVersionControlTable
     {
-        private const string TableName = "DESCARGAS_VERSIONES";
-        string IVersionControlTable.TableName => TableName;
+        public DescargasVersiones(SQLH SQLH) : base(SQLH, 5) { }
+        public override string TableName => "DESCARGAS_VERSIONES";
 
-        public void CreateTable(SQLH SQLH)
+
+        protected override void CreateTable(SQLH SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DESCARGAS_VERSIONES
@@ -18,9 +19,11 @@ namespace Kit.Daemon.VersionControl
                 ID INT IDENTITY(1,1) PRIMARY KEY,
                 ID_DESCARGA INT, --FOREIGN KEY REFERENCES VERSION_CONTROL,
                 ID_DISPOSITIVO VARCHAR(100) FOREIGN KEY REFERENCES DISPOSITVOS_TABLETS)");
+
+            SQLH.EXEC($"DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = '{Kit.Daemon.Daemon.DeviceId}'");
         }
 
-        public void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SQLHLite SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DESCARGAS_VERSIONES
@@ -29,5 +32,7 @@ namespace Kit.Daemon.VersionControl
                 ID_DESCARGA INTEGER,
                 ID_DISPOSITIVO TEXT)");
         }
+
+
     }
 }
