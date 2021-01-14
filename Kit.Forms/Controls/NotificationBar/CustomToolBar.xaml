@@ -38,11 +38,27 @@
                 </BindableLayout.ItemTemplate>
             </StackLayout>
 
-            <plugin:ProgressRing IsVisible="{Binding IsProgressVisible,Source={Reference Me}}" 
+            <plugin:ProgressRing ProgressColor="Coral" IsVisible="{Binding IsProgressVisible,Source={Reference Me}}" 
                                  HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" 
-                                 HeightRequest="30" WidthRequest="30"
+                                 HeightRequest="30" WidthRequest="30" BindingContext="{Binding Source={Reference Me}}"
                                  x:Name="Progress" Progress="{Binding ProgressSource,Source={Reference Me}}"
-                                 BackgroundColor="Transparent" Margin="0"/>
+                                 BackgroundColor="Transparent" Margin="0">
+                <plugin:ProgressRing.Style>
+                    <Style TargetType="{x:Type plugin:ProgressRing}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ProgressSource}" Value="1"
+                                         TargetType="{x:Type plugin:ProgressRing}">
+                                <Setter Property="ProgressColor" Value="LightGreen"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding ProgressSource}" Value="0"
+                                         TargetType="{x:Type plugin:ProgressRing}">
+                                <Setter Property="RingBaseColor" Value="#C9E9C9"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </plugin:ProgressRing.Style>
+            </plugin:ProgressRing>
 
             <views:MyButton HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
                               ImgSource="{Binding Logo,Source={Reference Me}}"
