@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:plugin="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin"
              xmlns:controls="clr-namespace:Kit.Forms.Controls" xmlns:views="clr-namespace:Kit.Forms.Controls.Views"
-             x:Class="Kit.Forms.Controls.NotificationBar.CustomToolBar"
+             xmlns:noti="clr-namespace:Kit.Forms.Controls.NotificationBar"
+             x:Class="Kit.Forms.Controls.NotificationBar.CustomToolBar" BindingContext="{Static noti:Notificaciones.Instance}"
+             BackgroundColor="{Binding Color}"
              x:Name="Me">
     <ContentView.Content>
         <StackLayout  Spacing="3" Orientation="Horizontal" HorizontalOptions="FillAndExpand">

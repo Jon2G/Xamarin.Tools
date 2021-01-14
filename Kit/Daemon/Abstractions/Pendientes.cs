@@ -60,8 +60,44 @@ namespace Kit.Daemon.Abstractions
             StringBuilder sb = new StringBuilder();
             try
             {
-                sb.Append(this.Accion).Append(" ").Append(this.Tabla)
-                .Append(" [").Append(this.LLave).Append("]");
+                switch (this.Accion)
+                {
+                    case AccionDemonio.UPDATE:
+                        sb.Append("Actualizando");
+                        break;
+                    case AccionDemonio.INSERT:
+                        sb.Append("Descargando");
+                        break;
+                    case AccionDemonio.DELETE:
+                        sb.Append("Eliminando");
+                        break;
+                    case AccionDemonio.SELECT:
+                        sb.Append("Recuperando");
+                        break;
+                    default:
+                        sb.Append("NONE");
+                        break;
+                }
+                sb.Append(" ");
+                switch (this.Tabla)
+                {
+                    case "LINEAS":
+                        sb.Append("lineas");
+                        break;
+                    case "PRODS":
+                        sb.Append("productos");
+                        break;
+                    case "ALMACEN":
+                        sb.Append("almacenes");
+                        break;
+                    case "CLAVESADD":
+                        sb.Append("códigos de barras");
+                        break;
+                    default:
+                        sb.Append(this.Tabla);
+                        break;
+                }
+                sb.Append(" [").Append(this.LLave).Append("]");
             }
             catch (Exception ex)
             {

@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace Kit.Forms.Controls.NotificationBar
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CustomToolBar : ContentView, INotificaciones
+    public partial class CustomToolBar : ContentView
     {
         public static readonly BindableProperty LogoTextProperty = BindableProperty.Create(
             propertyName: nameof(LogoText), returnType: typeof(string), declaringType: typeof(CustomToolBar), defaultValue: null);
@@ -111,9 +111,5 @@ namespace Kit.Forms.Controls.NotificationBar
             }
         }
 
-        void INotificaciones.Refresh()
-        {
-            this.BackgroundColor = Color.FromHex(Notificaciones.Instance.Color);
-        }
     }
 }

@@ -348,6 +348,7 @@ namespace Kit.Daemon
                         return;
                     }
                 }
+                Log.OnConecctionLost += Log_OnConecctionLost;
                 IsInited = true;
             }
             catch (Exception ex)
@@ -355,6 +356,12 @@ namespace Kit.Daemon
                 Log.LogMeDemonio(ex, "Al inicializar el demonio");
             }
         }
+
+        private void Log_OnConecctionLost(object sender, EventArgs e)
+        {
+            Daemon.OffLine = true;
+        }
+
         private void Start()
         {
             do

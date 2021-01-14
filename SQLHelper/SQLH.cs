@@ -243,7 +243,7 @@ namespace SQLHelper
                 catch (Exception ex)
                 {
                     LastException = ex;
-                    Log.LogMe(ex);
+                    Log.AlertOnDBConnectionError(LastException);
                 }
                 finally
                 {
@@ -285,7 +285,8 @@ namespace SQLHelper
                     {
                         throw;
                     }
-
+                    LastException = ex;
+                    Log.AlertOnDBConnectionError(LastException);
                     Rows = SQLH.Error;
                 }
 

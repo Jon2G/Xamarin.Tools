@@ -22,10 +22,10 @@ namespace SQLHelper
         public static void Init(string LogDirectory, EventHandler CriticalAction = null)
         {
             Log.LogDirectory = LogDirectory;
-            Log.CriticalLogPath = $"{Log.LogDirectory}\\Critical.log";
-            Log.LogPath = $"{Log.LogDirectory}\\AppData.log";
-            Log.BackgroundLogPath = $"{Log.LogDirectory}\\AppDataDemonio.log";
-            Log.DBLogPath = $"{Log.LogDirectory}\\SQL_T.sql";
+            Log.CriticalLogPath = $"{Log.LogDirectory}/Critical.log";
+            Log.LogPath = $"{Log.LogDirectory}/AppData.log";
+            Log.BackgroundLogPath = $"{Log.LogDirectory}/AppDataDemonio.log";
+            Log.DBLogPath = $"{Log.LogDirectory}/SQL_T.sql";
             if (!Directory.Exists(Log.LogDirectory))
             {
                 Directory.CreateDirectory(Log.LogDirectory);

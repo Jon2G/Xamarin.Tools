@@ -11,17 +11,16 @@ namespace Kit.Forms.Controls.NotificationBar
 {
     public class Notificaciones : ViewModelBase<Notificaciones>
     {
+        private static Notificaciones _Instance;
         public static Notificaciones Instance
         {
-            get; set;
+            get => _Instance;
+            set
+            {
+                _Instance = value;
+                OnGlobalPropertyChanged();
+            }
         }
-
-        public static Notificaciones Init(string Color = "#37FFFFFF")
-        {
-            NotificationBar.Notificaciones.Instance= new NotificationBar.Notificaciones(Color);
-            return Instance;
-        }
-
         private string _Color;
         public string Color
         {
@@ -29,47 +28,24 @@ namespace Kit.Forms.Controls.NotificationBar
             set
             {
                 _Color = value;
-                OnPropertyChanged();
+                Raise(() => this.Color);
             }
         }
         public ObservableCollection<Notificacion> Elementos { get; private set; }
-        private readonly Dictionary<object, INotificaciones> NotificationsBars;
-        public Notificaciones(string Color)
+        public static Notificaciones Init(string Color = "#37FFFFFF")
+        {
+            NotificationBar.Notificaciones.Instance = new NotificationBar.Notificaciones(Color);
+            return Instance;
+        }
+        public Notificaciones(string Color = "#37FFFFFF")
         {
             this.Color = Color;
             this.Elementos = new ObservableCollection<Notificacion>();
-            this.NotificationsBars = new Dictionary<object, INotificaciones>();
         }
         ~Notificaciones()
         {
 
         }
-
-        public void Unsuscribe(object owner)
-        {
-            if (NotificationsBars.ContainsKey(owner))
-            {
-                NotificationsBars.Remove(owner);
-            }
-        }
-        public void Suscribe(object owner, INotificaciones customToolBar)
-        {
-            customToolBar.Refresh();
-            if (NotificationsBars.ContainsKey(owner))
-            {
-                return;
-            }
-            NotificationsBars.Add(owner, customToolBar);
-        }
-
-        public void Refresh()
-        {
-            foreach (KeyValuePair<object, INotificaciones> bar in NotificationBar.Notificaciones.Instance.NotificationsBars)
-            {
-                bar.Value.Refresh();
-            }
-        }
-
         private async Task Notificar(Notificacion Notificacion)
         {
             await Device.InvokeOnMainThreadAsync(() =>
