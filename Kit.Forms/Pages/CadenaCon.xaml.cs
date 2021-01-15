@@ -45,7 +45,7 @@ namespace Kit.Forms.Pages
                 OnPropertyChanged();
             }
         }
-        public Leector Leector { get; set; }
+        public Lector Leector { get; set; }
         public event EventHandler Confirmado;
         private Configuracion Configuracion;
         private readonly SQLHLite DBConection;
@@ -247,20 +247,28 @@ namespace Kit.Forms.Pages
         {
             if (this.Leector is null)
             {
-                this.Leector = new Leector(BarcodeFormat.QR_CODE);
+                this.Leector = new Lector(BarcodeFormat.QR_CODE);
                 this.Leector.CodigoEntrante += Leector_CodigoEntrante;
             }
             this.Leector.Abrir();
         }
         private void Leector_CodigoEntrante(object sender, EventArgs e)
         {
-            if (sender is Leector leector)
+            if (sender is Lector leector)
             {
                 leector.CodigoEntrante -= Leector_CodigoEntrante;
                 if (!string.IsNullOrEmpty(leector.CodigoBarras))
                 {
-                    Configuracion = Configuracion.DeSerialize(leector.CodigoBarras);
-                    this.CargarCadena();
+                    var configuracion_qr = Configuracion.DeSerialize(leector.CodigoBarras);
+                    if(configuracion_qr != null)
+                    {
+                        this.Configuracion = configuracion_qr;
+                        this.CargarCadena();
+                    }
+                    else
+                    {
+                        Acr.UserDialogs.UserDialogs.Instance.Alert("Formato Qr incorrecto", "Incorrecto", "Ok");
+                    }
                 }
             }
         }

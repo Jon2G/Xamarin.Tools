@@ -263,7 +263,7 @@ namespace Kit.Daemon
         /// <summary>
         /// Duerme al demonio hasta que se vuelva a despertar 
         /// </summary>
-        public async Task Sleep()
+        public async Task<Daemon> Sleep()
         {
             await Task.Yield();
             while (IsAwake)
@@ -272,14 +272,15 @@ namespace Kit.Daemon
                 WaitHandle.Reset();
                 if (OffLine)
                 {
-                    return;
+                    return this;
                 }
-                Thread.Sleep(TimeSpan.FromSeconds(1));
+                Thread.Sleep(TimeSpan.FromMilliseconds(500));
             }
             IsSleepRequested = false;
             //this.Thread = null;
             //this.WaitHandle?.Dispose();
             //this.WaitHandle = null;
+            return this;
         }
         public bool NadaQueHacer { get; private set; }
         private int _FactorDeDescanso;

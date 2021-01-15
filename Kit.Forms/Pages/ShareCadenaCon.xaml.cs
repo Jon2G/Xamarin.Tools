@@ -17,8 +17,9 @@ namespace Kit.Forms.Pages
         public string Code { get; set; }
         public float Brightness { get; set; }
         public IBrightnessService BrightnessService { get; set; }
-        public ShareCadenaCon(string Code, IBrightnessService BrightnessService)
+        public ShareCadenaCon(string Title,string Code, IBrightnessService BrightnessService)
         {
+            this.TxtTitle.Text = Title;
             this.Code = Code;
             this.BrightnessService = BrightnessService;
             InitializeComponent();

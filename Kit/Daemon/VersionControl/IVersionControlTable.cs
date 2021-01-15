@@ -3,9 +3,10 @@ using SQLHelper.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SQLHelper.Linker;
 namespace Kit.Daemon.VersionControl
 {
+    [Preserve(AllMembers = true)]
     public abstract class IVersionControlTable : IComparable<IVersionControlTable>
     {
         public readonly int Priority;

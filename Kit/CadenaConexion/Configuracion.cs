@@ -180,7 +180,17 @@ namespace Kit.CadenaConexion
 
         public static Configuracion DeSerialize(string codigoBarras)
         {
-           return JsonConvert.DeserializeObject<Configuracion>(codigoBarras);
+            Configuracion configuracion = null;
+            try
+            {
+                configuracion = JsonConvert.DeserializeObject<Configuracion>(codigoBarras);
+                return configuracion;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
     }
 }

@@ -6,9 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using SQLHelper.Linker;
 namespace Kit.Daemon.VersionControl
 {
+    [Preserve(AllMembers = true)]
     public class VersionControlTable : IVersionControlTable
     {
         public VersionControlTable(BaseSQLHelper SQLH) : base(SQLH, 3) { }

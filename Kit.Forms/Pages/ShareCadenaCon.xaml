@@ -8,6 +8,7 @@
             <StackLayout Padding="10" VerticalOptions="Center" 
                 HorizontalOptions="CenterAndExpand">
                 <Label Text="Cadena de conexión" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label x:Name="TxtTitle" Text="" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
                 <forms:ZXingBarcodeImageView HeightRequest="350" WidthRequest="350" BarcodeFormat="QR_CODE" BarcodeValue="{Binding Code,Source={Reference Me}}">
                     <forms:ZXingBarcodeImageView.BarcodeOptions>
                         <qrcode:QrCodeEncodingOptions Height="700" Width="700"/>

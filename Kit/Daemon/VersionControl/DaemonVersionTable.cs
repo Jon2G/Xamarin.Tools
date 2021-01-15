@@ -2,6 +2,7 @@
 using Kit.Enums;
 using SQLHelper;
 using SQLHelper.Interfaces;
+using SQLHelper.Linker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Text;
 
 namespace Kit.Daemon.VersionControl
 {
+    [Preserve(AllMembers =true)]
     public class DaemonVersionTable : IVersionControlTable
     {
         public const string Name = "DAEMON_VERSION";

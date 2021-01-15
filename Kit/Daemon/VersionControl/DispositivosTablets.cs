@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SQLHelper.Linker;
 namespace Kit.Daemon.VersionControl
 {
+    [Preserve(AllMembers = true)]
     public class DispositivosTablets : IVersionControlTable
     {
         public DispositivosTablets(SQLH SQLH) :base(SQLH,4) { }

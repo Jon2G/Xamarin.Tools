@@ -6,9 +6,9 @@
                  x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
-            <Image IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
+            <!--<Image IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
                    Margin="0" HeightRequest="45" Source="{Binding Logo,Source={Reference Me}}"
-                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>-->
             <Label Margin="0,10" BackgroundColor="#00415B" HorizontalOptions="FillAndExpand" VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" Text="Cadena de conexión"/>
             <Grid Margin="5" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView VerticalScrollBarVisibility="Default" HorizontalScrollBarVisibility="Never">
