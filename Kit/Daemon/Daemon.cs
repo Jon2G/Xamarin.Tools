@@ -365,84 +365,98 @@ namespace Kit.Daemon
 
         private void Start()
         {
-            do
+            try
             {
-                lock (Locker)
-                {
-                    try
-                    {
-                        if (IsSleepRequested)
-                        {
-                            IsAwake = false;
-                            WaitHandle.WaitOne();
-                        }
-                        IsAwake = true;
 
-                        if (OffLine)
+                do
+                {
+                    lock (Locker)
+                    {
+                        try
                         {
-                            if (!TryToConnect())
+                            if (IsSleepRequested)
                             {
-                                OffLine = true;
-                                WaitHandle?.WaitOne(TimeSpan.FromSeconds(10));
+                                IsAwake = false;
+                                WaitHandle.WaitOne();
+                            }
+                            IsAwake = true;
+
+                            if (OffLine)
+                            {
+                                if (!TryToConnect())
+                                {
+                                    OffLine = true;
+                                    WaitHandle?.WaitOne(TimeSpan.FromSeconds(10));
+                                }
+                                else
+                                {
+                                    OffLine = false;
+                                }
+                                NadaQueHacer = false;
                             }
                             else
                             {
-                                OffLine = false;
-                            }
-                            NadaQueHacer = false;
-                        }
-                        else
-                        {
-                            if (!IsInited)
-                            {
-                                Initialize();
-                                Start();
-                                return;
-                            }
-
-                            try
-                            {
-                                //Asumir que no hay pendientes
-                                NadaQueHacer = true;
-                                //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
-                                if (!Sync(true) && !IsSleepRequested)
+                                if (!IsInited)
                                 {
-                                    //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                    Sync(false);
+                                    Initialize();
+                                    Start();
+                                    return;
                                 }
 
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.LogMeDemonio(ex, "Al leer datos");
-                            }
-                        }
-                        if (NadaQueHacer)
-                        {
-                            FactorDeDescanso++;
-                            if (FactorDeDescanso > DaemonConfig.MaxSleep)
-                            {
-                                FactorDeDescanso = DaemonConfig.MaxSleep;
-                            }
-                            //Descansar :)
-                            Log.DebugMe($"Rest :{FactorDeDescanso} mins.");
-                            IsAwake = false;
-                            WaitHandle?.WaitOne(TimeSpan.FromSeconds(FactorDeDescanso));
-                            IsAwake = true;
-                        }
-                        else
-                        {
-                            //Trabajar!!
-                            FactorDeDescanso = 0;
-                        }
+                                try
+                                {
+                                    //Asumir que no hay pendientes
+                                    NadaQueHacer = true;
+                                    //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
+                                    if (!Sync(true) && !IsSleepRequested)
+                                    {
+                                        //actualizar los cambios pendientes en nuestra copia local (si es que hay)
+                                        Sync(false);
+                                    }
 
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.LogMeDemonio(ex, "Al leer datos");
+                                }
+                            }
+                            if (NadaQueHacer)
+                            {
+                                FactorDeDescanso++;
+                                if (FactorDeDescanso > DaemonConfig.MaxSleep)
+                                {
+                                    FactorDeDescanso = DaemonConfig.MaxSleep;
+                                }
+                                //Descansar :)
+                                Log.DebugMe($"Rest :{FactorDeDescanso} mins.");
+                                IsAwake = false;
+                                WaitHandle?.WaitOne(TimeSpan.FromSeconds(FactorDeDescanso));
+                                IsAwake = true;
+                            }
+                            else
+                            {
+                                //Trabajar!!
+                                FactorDeDescanso = 0;
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.LogMeDemonio(ex, "En start");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Log.LogMeDemonio(ex, "En start");
-                    }
-                }
-            } while (true);
+                } while (true);
+
+            }
+            catch (Exception ex)
+            {
+
+                Log.LogMeDemonio(ex, "En la rutina Run principal");
+            }
+            finally
+            {
+                Start();
+            }
         }
         public bool IsTableSynced(int id)
         {
@@ -520,28 +534,34 @@ namespace Kit.Daemon
                 {
                     do
                     {
-                        string Accion = Convert.ToString(reader[1]);
-                        Pendientes pendiente = new Pendientes(
-                                Accion == "I" ? AccionDemonio.INSERT :
-                                Accion == "U" ? AccionDemonio.UPDATE :
-                                Accion == "D" ? AccionDemonio.DELETE : AccionDemonio.INVALIDA,
-                                reader[3], Convert.ToString(reader[2]), Convert.ToInt32(reader[0]));
-
-                        if (pendiente.LLave is string iave && string.IsNullOrEmpty(iave))
+                        try
                         {
-                            DireccionActual = Upload ? DireccionDemonio.TO_ORIGIN : DireccionDemonio.TO_DESTINY;
-                            pendiente.Sincronizado(DaemonConfig, DireccionActual);
-                            continue;
-                        }
-                        if (IsSleepRequested)
-                        {
-                            Pendings.Clear();
-                            TotalPendientes = Pendings.Count;
-                            NadaQueHacer = true;
-                            return false;
-                        }
-                        Pendings.Enqueue(pendiente);
+                            string Accion = Convert.ToString(reader[1]);
+                            Pendientes pendiente = new Pendientes(
+                                    Accion == "I" ? AccionDemonio.INSERT :
+                                    Accion == "U" ? AccionDemonio.UPDATE :
+                                    Accion == "D" ? AccionDemonio.DELETE : AccionDemonio.INVALIDA,
+                                    reader[3], Convert.ToString(reader[2]), Convert.ToInt32(reader[0]));
 
+                            if (pendiente.LLave is string iave && string.IsNullOrEmpty(iave))
+                            {
+                                DireccionActual = Upload ? DireccionDemonio.TO_ORIGIN : DireccionDemonio.TO_DESTINY;
+                                pendiente.Sincronizado(DaemonConfig, DireccionActual);
+                                continue;
+                            }
+                            if (IsSleepRequested)
+                            {
+                                Pendings.Clear();
+                                TotalPendientes = Pendings.Count;
+                                NadaQueHacer = true;
+                                return false;
+                            }
+                            Pendings.Enqueue(pendiente);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.LogMe(ex, "Al sincronizar");
+                        }
                     } while (reader.Read());
                     TotalPendientes = Pendings.Count;
                     DireccionActual = Upload ? DireccionDemonio.TO_ORIGIN : DireccionDemonio.TO_DESTINY;
