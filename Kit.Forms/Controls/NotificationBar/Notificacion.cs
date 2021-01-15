@@ -1,4 +1,5 @@
 ﻿
+using Kit.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,7 +32,7 @@ namespace Kit.Forms.Controls.NotificationBar
             this.Imagen = Icono;
             this.Color = Color;
             this.Texto = Texto;
-            this.Command = new Extensions.CommonCommand(x => Click());
+            this.Command = new CommonCommand(x => Click());
         }
 
         private bool Click()

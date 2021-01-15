@@ -22,6 +22,7 @@ using Kit.Services.Interfaces;
 using Log = SQLHelper.Log;
 namespace Kit.Daemon
 {
+    [Preserve(AllMembers =true)]
     public class Daemon : ViewModelBase<Daemon>
     {
         public const string OriginName = "ORIGINDaemon";

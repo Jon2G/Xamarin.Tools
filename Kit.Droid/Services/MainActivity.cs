@@ -90,5 +90,7 @@ namespace Kit.Droid.Services
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+
     }
 }
