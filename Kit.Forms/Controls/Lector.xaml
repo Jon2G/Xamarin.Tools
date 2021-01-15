@@ -4,7 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="Kit.Forms.Controls.Leector">
+             x:Class="Kit.Forms.Controls.Lector">
   <ContentView.Content>
         <Image x:Name="ImgCamera" BindingContext="{Binding CodigoDeBarras}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="25" Aspect="AspectFit" Source="camera.png"/>
     </ContentView.Content>

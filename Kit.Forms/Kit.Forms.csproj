@@ -54,8 +54,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\Leector.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Controls\Lector.xaml.cs">
+      <DependentUpon>Lector.xaml</DependentUpon>
     </Compile>
     <Compile Update="Pages\DeviceRegister.xaml.cs">
       <DependentUpon>DeviceRegister.xaml</DependentUpon>

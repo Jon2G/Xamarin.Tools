@@ -13,16 +13,16 @@ using ZXing;
 namespace Kit.Forms.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Leector : ContentView
+    public partial class Lector : ContentView
     {
         public event EventHandler CodigoEntrante;
         public string CodigoBarras => this.CodigoDeBarras.Result;
         private CodigoDeBarras CodigoDeBarras { get; set; }
-        public Leector()
+        public Lector()
         {
             InitializeComponent();
         }
-        public Leector(params BarcodeFormat[] BarcodeFormats)
+        public Lector(params BarcodeFormat[] BarcodeFormats)
         {
             InitializeComponent();
             Init(BarcodeFormats);
