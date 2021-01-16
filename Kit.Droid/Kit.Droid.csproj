@@ -30,6 +30,7 @@
     <Company>Jouna77</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
+    <UserSecretsId>4340845f-285e-41e0-97a6-d5680f180db2</UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

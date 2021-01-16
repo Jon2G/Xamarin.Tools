@@ -12,10 +12,9 @@ using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 using Log = SQLHelper.Log;
 using Kit.CadenaConexion;
-using Kit.Daemon.VersionControl;
 using Kit.Forms.Controls;
 using ZXing;
-
+using Kit.Daemon;
 namespace Kit.Forms.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]

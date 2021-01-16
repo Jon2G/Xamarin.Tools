@@ -216,7 +216,7 @@ CADENA_CON TEXT NOT NULL);");
             T result = default;
             try
             {
-                using (IReader reader = Leector(sql))
+                using (IReader reader = Read(sql))
                 {
                     if (reader.Read())
                     {
@@ -238,7 +238,7 @@ CADENA_CON TEXT NOT NULL);");
             T result = default;
             try
             {
-                using (IReader reader = Leector(sql, con))
+                using (IReader reader = Read(sql, con))
                 {
                     if (reader.Read())
                     {
@@ -290,7 +290,7 @@ CADENA_CON TEXT NOT NULL);");
         public List<T> Lista<T>(string sql)
         {
             List<T> result = new List<T>();
-            using (IReader reader = Leector(sql))
+            using (IReader reader = Read(sql))
             {
                 while (reader.Read())
                 {
@@ -304,7 +304,7 @@ CADENA_CON TEXT NOT NULL);");
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
 
-            using (IReader reader = Leector(sql))
+            using (IReader reader = Read(sql))
             {
                 while (reader.Read())
                 {
@@ -319,7 +319,7 @@ CADENA_CON TEXT NOT NULL);");
         public DataTable DataTable(string Querry, string TableName = null)
         {
             DataTable result = new DataTable(TableName);
-            using (LiteReader reader = (LiteReader)Leector(Querry))
+            using (LiteReader reader = (LiteReader)Read(Querry))
             {
                 if (reader.Read())
                 {
@@ -345,7 +345,7 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public IReader Leector(string sql)
+        public override IReader Read(string sql)
         {
             try
             {
@@ -359,7 +359,7 @@ CADENA_CON TEXT NOT NULL);");
         }
 
 
-        public LiteReader Leector(string sql, SqlConnection connection)
+        public LiteReader Read(string sql, SqlConnection connection)
         {
             try
             {
@@ -373,14 +373,14 @@ CADENA_CON TEXT NOT NULL);");
         }
         public bool Exists(string sql)
         {
-            using (IReader reader = Leector(sql))
+            using (IReader reader = Read(sql))
             {
                 return reader?.Read() ?? false;
             }
         }
         public override bool TableExists(string TableName)
         {
-            using (IReader reader = Leector($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
+            using (IReader reader = Read($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
             {
                 return reader?.Read() ?? false;
             }

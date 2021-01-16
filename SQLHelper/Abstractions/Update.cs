@@ -73,10 +73,18 @@ namespace SQLHelper.Abstractions
                     .Append("REPLACE INTO ")
                     .Append(TableName)
                     .Append(" (")
-                    .Append(string.Join(",", this.Parameters.Select(x => x.Key)))
-                    .Append(") VALUES (")
-                    .Append(string.Join(",", this.Parameters.Select(x => "?")))
-                    .Append(")");
+                    .Append(string.Join(",", this.Parameters.Select(x => x.Key)));
+                if (this.WhereParameters.Any())
+                {
+                    builder.Append(',').Append(string.Join(",", this.WhereParameters.Select(x => x.Key)));
+                }
+                builder.Append(") VALUES (")
+                    .Append(string.Join(",", this.Parameters.Select(x => "?")));
+                if (this.WhereParameters.Any())
+                {
+                    builder.Append(',').Append(string.Join(",", this.WhereParameters.Select(x => "?")));
+                }
+                builder.Append(")");
 
             }
             else
@@ -136,7 +144,7 @@ namespace SQLHelper.Abstractions
             {
                 List<object> parameters = this.Parameters.Select(x => x.Value).ToList();
 
-                if (!this.ReplaceOnSqlite)
+                if (this.ReplaceOnSqlite)
                 {
                     parameters.AddRange(this.WhereParameters.Select(x => x.Value));
                 }

@@ -16,7 +16,7 @@ namespace Kit.CadenaConexion
         public List<string> ListarEmpresas()
         {
             List<string> empresas = new List<string>();
-            using (var reader = SQLHLite.Leector("SELECT Nombre FROM configuracion"))
+            using (var reader = SQLHLite.Read("SELECT Nombre FROM configuracion"))
             {
                 while (reader.Read())
                 {
@@ -36,7 +36,7 @@ namespace Kit.CadenaConexion
                 {
                     SQLHLite.RevisarBaseDatos();
                 }
-                using (IReader reader = SQLHLite.Leector(
+                using (IReader reader = SQLHLite.Read(
                     "SELECT NOMBREDB,SERVIDOR,PUERTO,USUARIO,PASSWORD,CADENA_CON FROM CONFIGURACION"))
                 {
                     if (reader.Read())

@@ -34,11 +34,11 @@ namespace SQLHelper.Abstractions
                     Regex regex = new Regex(@$"\@{parameter.ParameterName}");
                     query = regex.Replace(query, $"'{parameter.Value}'");
                 }
-                return lite.Leector(query);
+                return lite.Read(query);
             }
             else if (this.SQLH is SQLH sql)
             {
-                return sql.Leector(query, CommandType.Text, false, parameters);
+                return sql.Read(query, CommandType.Text, false, parameters);
             }
             throw new NotSupportedException("No sql connection set");
         }
@@ -129,11 +129,11 @@ namespace SQLHelper.Abstractions
                 IEnumerable<SqlParameter> parameters =
                     this.Parameters.Select(x => new SqlParameter(x.Key, x.Value)).ToArray();
 
-                return sql.Leector(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
+                return sql.Read(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
             }
             else if (this.SQLH is SQLHLite sqlite)
             {
-                return sqlite.Leector(BuildLiteQuery());
+                return sqlite.Read(BuildLiteQuery());
             }
             throw new NotSupportedException("No sql connection set");
         }

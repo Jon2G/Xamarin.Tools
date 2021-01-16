@@ -126,7 +126,7 @@ namespace SQLHelper
         public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text)
         {
             T result = default;
-            using (IReader reader = Leector(sql, type, Reportar))
+            using (IReader reader = Read(sql, type, Reportar))
             {
                 if (reader.Read())
                 {
@@ -170,7 +170,7 @@ namespace SQLHelper
             T result = default;
             try
             {
-                using (var reader = Leector(sql, type, false, parametros))
+                using (var reader = Read(sql, type, false, parametros))
                 {
                     if (reader.Read())
                     {
@@ -194,7 +194,7 @@ namespace SQLHelper
         public T Single<T>(string sql, bool Reportar = true, params SqlParameter[] parametros)
         {
             T result = default;
-            using (var reader = Leector(sql, CommandType.StoredProcedure, false, parametros))
+            using (var reader = Read(sql, CommandType.StoredProcedure, false, parametros))
             {
                 if (reader.Read())
                 {
@@ -435,11 +435,15 @@ namespace SQLHelper
         {
             return DataTable(Querry, CommandType.Text, TableName, false, parameters);
         }
+        public override IReader Read(string sql)
+        {
+            return Read(sql, CommandType.Text);
+        }
         public IReader Leector(string sql, params SqlParameter[] parameters)
         {
-            return Leector(sql, CommandType.Text, false, parameters);
+            return Read(sql, CommandType.Text, false, parameters);
         }
-        public IReader Leector(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parameters)
+        public IReader Read(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parameters)
         {
             try
             {
@@ -519,7 +523,7 @@ namespace SQLHelper
         public bool Exists(string sql, bool Reportar = false, params SqlParameter[] parametros)
         {
             bool result = false;
-            using (IReader reader = Leector(sql, CommandType.Text, Reportar, parametros))
+            using (IReader reader = Read(sql, CommandType.Text, Reportar, parametros))
             {
                 if (reader != null)
                 {

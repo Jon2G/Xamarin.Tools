@@ -138,7 +138,8 @@ namespace SQLHelper.Reflection
         {
             List<T> objects = new List<T>();
             foreach (Type type in
-                Assembly.GetAssembly(typeof(T)).GetTypes()
+                AppDomain.CurrentDomain.GetAssemblies()
+                       .SelectMany(assembly => assembly.GetTypes())
                 .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
             {
                 objects.Add((T)Activator.CreateInstance(type, constructorArgs));

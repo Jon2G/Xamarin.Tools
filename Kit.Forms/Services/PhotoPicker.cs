@@ -37,7 +37,7 @@ namespace Kit.Services
         /// <returns>file picker instance</returns>
         private static IPhotoPickerService CreateDataShare()
         {
-#if NETSTANDARD1_0 || NETSTANDARD2_0||NETCOREAPP
+#if NETSTANDARD1_0 || NETSTANDARD2_1||NETCOREAPP|| NETSTANDARD
             return null;
 #else
 #if MONOANDROID

@@ -21,25 +21,15 @@ namespace Kit.Forms.Controls.NotificationBar
                 OnGlobalPropertyChanged();
             }
         }
-        private string _Color;
-        public string Color
-        {
-            get => _Color;
-            set
-            {
-                _Color = value;
-                Raise(() => this.Color);
-            }
-        }
+
         public ObservableCollection<Notificacion> Elementos { get; private set; }
-        public static Notificaciones Init(string Color = "#37FFFFFF")
+        public static Notificaciones Init()
         {
-            NotificationBar.Notificaciones.Instance = new NotificationBar.Notificaciones(Color);
+            NotificationBar.Notificaciones.Instance = new NotificationBar.Notificaciones();
             return Instance;
         }
-        public Notificaciones(string Color = "#37FFFFFF")
+        public Notificaciones()
         {
-            this.Color = Color;
             this.Elementos = new ObservableCollection<Notificacion>();
         }
         ~Notificaciones()

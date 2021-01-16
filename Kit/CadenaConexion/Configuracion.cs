@@ -50,7 +50,7 @@ namespace Kit.CadenaConexion
                 {
                     SQLHLite.RevisarBaseDatos();
                 }
-                using (IReader reader = SQLHLite.Leector(
+                using (IReader reader = SQLHLite.Read(
                     "SELECT NOMBREDB,SERVIDOR,PUERTO,USUARIO,PASSWORD,CADENA_CON FROM CONFIGURACION"))
                 {
                     if (reader.Read())
@@ -74,7 +74,7 @@ namespace Kit.CadenaConexion
             {
                 Log.LogMe(ex, "Al recuperar la configuración");
             }
-            return new Configuracion(string.Empty, string.Empty);
+            return new Configuracion(string.Empty, DeviceId);
         }
         public static bool IsUserDefined(SQLHLite SQLHLite)
         {

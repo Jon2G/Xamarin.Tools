@@ -29,32 +29,14 @@ namespace SQLHelper.Abstractions
         protected override string BuildQuery()
         {
             StringBuilder builder = new StringBuilder()
-                .Append("UPDATE ")
+                .Append("INSERT INTO ")
                 .Append(TableName)
-                .Append(" SET ");
+                .Append(" (")
+                .Append(string.Join(",", this.Parameters.Select(x => x.Key)))
+                .Append(") VALUES");
             foreach (var pair in this.Parameters)
             {
-                builder
-                    .Append(pair.Key)
-                    .Append("=@")
-                    .Append(pair.Key)
-                    .Append(", ");
-            }
-
-            if (builder[builder.Length - 2] == ',')
-            {
-                builder.Remove(builder.Length - 2, 1);
-            }
-            if (this.Parameters.Any())
-            {
-                builder.Append(" WHERE");
-                foreach (var pair in this.Parameters)
-                {
-                    builder.Append(" ")
-                        .Append(pair.Key)
-                        .Append(" =@")
-                        .Append(pair.Key);
-                }
+                builder.Append(" @").Append(pair.Key);
             }
             return builder.ToString();
         }

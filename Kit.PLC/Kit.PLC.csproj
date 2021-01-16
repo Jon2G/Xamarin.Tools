@@ -8,8 +8,7 @@
 
     <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid90;net462;uap10.0.16299</TargetFrameworks>-->
 
-
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;net47;uap10.0.18362;netcoreapp3.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;netcoreapp3.1</TargetFrameworks>
 
     <!--<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">Xamarin.iOS10;MonoAndroid90;net47;uap10.0.17763;netcoreapp3.1</TargetFrameworks>
@@ -145,6 +144,7 @@
       <PackagePath></PackagePath>
     </None>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.4" />
   </ItemGroup>
 
 

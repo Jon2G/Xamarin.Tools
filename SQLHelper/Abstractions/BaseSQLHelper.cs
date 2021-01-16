@@ -44,6 +44,12 @@ namespace SQLHelper.Interfaces
         /// <param name="sql"></param>
         /// <returns></returns>
         public abstract T Single<T>(string sql);
+        /// <summary>
+        /// Retorna un objeto IReader resultado de la consulta proporcionada
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public abstract IReader Read(string sql);
         public void Dispose()
         {
 
