@@ -119,11 +119,19 @@ namespace Kit.Daemon.Abstractions
                 {
                     foreach (var Fkey in ForeignKeys)
                     {
-                        Update.BulidFrom(Destination, Fkey.Key)
-                            .AddField(Fkey.Value, NewPk)
-                            .Where(Fkey.Key, OldPk)
-                            .NoReplaceOnSqlite()
-                            .Execute();
+                        if (Daemon.Current.DaemonConfig.GetSqlLiteConnection()
+                            .EXEC($"UPDATE {Fkey.Key} SET {Fkey.Value}=? WHERE {Fkey.Value}=?;", NewPk, OldPk) == SQLH.Error ||
+                            Daemon.Current.DaemonConfig.GetSqlLiteConnection()
+                            .EXEC($"UPDATE {pendiente.Tabla} SET {this.PrimaryKey}=? WHERE {this.PrimaryKey}=?;", NewPk, OldPk) == SQLH.Error
+                           //Update.BulidFrom(Daemon.Current.DaemonConfig.Local, Fkey.Key)
+                           //.AddField(Fkey.Value, NewPk)
+                           //.Where(Fkey.Value, OldPk)
+                           //.NoReplaceOnSqlite()
+                           //.Execute()
+                           )
+                        {
+                            return false;
+                        }
                         //Sqlh.SQLHLite.EXEC($"UPDATE {Fkey.Key} SET {Fkey.Value}=? WHERE {Fkey.Value}=?", NewPk, OldPk);
                     }
                 }

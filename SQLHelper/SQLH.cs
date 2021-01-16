@@ -439,7 +439,7 @@ namespace SQLHelper
         {
             return Read(sql, CommandType.Text);
         }
-        public IReader Leector(string sql, params SqlParameter[] parameters)
+        public IReader Read(string sql, params SqlParameter[] parameters)
         {
             return Read(sql, CommandType.Text, false, parameters);
         }

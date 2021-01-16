@@ -19,10 +19,10 @@ namespace Kit.Forms.Pages
         public IBrightnessService BrightnessService { get; set; }
         public ShareCadenaCon(string Title,string Code, IBrightnessService BrightnessService)
         {
-            this.TxtTitle.Text = Title;
             this.Code = Code;
-            this.BrightnessService = BrightnessService;
             InitializeComponent();
+            this.TxtTitle.Text = Title;
+            this.BrightnessService = BrightnessService;
         }
         protected override void OnAppearing()
         {
