@@ -147,5 +147,17 @@ namespace SQLHelper.Reflection
             objects.Sort();
             return objects;
         }
+        public List<Type> GetStaticInheritedClasses<T>(params object[] constructorArgs) 
+        {
+            List<Type> objects = new List<Type>();
+            foreach (Type type in
+                AppDomain.CurrentDomain.GetAssemblies()
+                       .SelectMany(assembly => assembly.GetTypes())
+                .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
+            {
+                objects.Add(type);
+            }
+            return objects;
+        }
     }
 }
