@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kit.Enums;
 using Kit.Services.Interfaces;
-using SQLHelper;
+using Kit.Sql;
 
 namespace Kit.License
 {

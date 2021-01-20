@@ -1,5 +1,6 @@
-﻿using SQLHelper.Interfaces;
-using SQLHelper.Readers;
+﻿using Kit.Sql.Helpers;
+using Kit.Sql.Interfaces;
+using Kit.Sql.Readers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace SQLHelper.Abstractions
+namespace Kit.Sql.Abstractions
 {
     public class Select : IQuery
     {

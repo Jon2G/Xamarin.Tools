@@ -3,7 +3,7 @@ using System.Collections.Generic;
 //Alias para poder trabajar con mas facilidad
 using SqlConnection = SQLite.SQLiteConnection;
 using SqlCommand = SQLite.SQLiteCommand;
-using SqlDataReader = SQLHelper.SQLiteNetExtensions.ReaderItem;
+using SqlDataReader = Kit.Sql.SQLiteNetExtensions.ReaderItem;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 using SQLite;
 using System.Text;
 using System.Diagnostics;
-using SQLHelper.Readers;
-using SQLHelper.Interfaces;
-using SQLHelper.Reflection;
+using Kit.Sql.Readers;
+using Kit.Sql.Interfaces;
+using Kit.Sql.Reflection;
 
-namespace SQLHelper
+namespace Kit.Sql.Helpers
 {
     public class SQLHLite : BaseSQLHelper
     {
@@ -35,13 +35,13 @@ namespace SQLHelper
             }
 
             FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
-            this.RutaDb = db.FullName;
+            RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
 
         public SQLHLite SetDbScriptResource<T>(string ScriptResourceName)
         {
-            this.AssemblyType = typeof(T);
+            AssemblyType = typeof(T);
             this.ScriptResourceName = ScriptResourceName;
             return this;
         }
@@ -53,7 +53,7 @@ namespace SQLHelper
                 throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
             }
             file.Refresh();
-            this.RutaDb = file.FullName;
+            RutaDb = file.FullName;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SQLHelper
         /// </summary>
         public SQLHLite RevisarBaseDatos()
         {
-            FileInfo db = new FileInfo(this.RutaDb);
+            FileInfo db = new FileInfo(RutaDb);
 
             if (!db.Exists)
             {
@@ -87,9 +87,9 @@ namespace SQLHelper
         }
         private void RevisarTablaConfiguracion()
         {
-            if (!this.TableExists("CONFIGURACION"))
+            if (!TableExists("CONFIGURACION"))
             {
-                this.EXEC(@"CREATE TABLE CONFIGURACION (
+                EXEC(@"CREATE TABLE CONFIGURACION (
 ID INTEGER IDENTITY(1,1) PRIMARY KEY, 
 ID_DISPOSITIVO TEXT NOT NULL,
 NOMBREDB TEXT,
@@ -125,7 +125,7 @@ CADENA_CON TEXT NOT NULL);");
             }
             RevisarTablaDbVersion(connection);
             RevisarTablaConfiguracion();
-            if (AssemblyType != null && !string.IsNullOrEmpty(this.ScriptResourceName))
+            if (AssemblyType != null && !string.IsNullOrEmpty(ScriptResourceName))
             {
                 CreateDbFromScript(connection);
             }
@@ -141,15 +141,15 @@ CADENA_CON TEXT NOT NULL);");
             using (ReflectionCaller reflection = new ReflectionCaller())
             {
                 sql = ReflectionCaller.ToText(reflection
-                    .GetAssembly(this.AssemblyType)
-                    .GetResource(this.ScriptResourceName));
+                    .GetAssembly(AssemblyType)
+                    .GetResource(ScriptResourceName));
             }
             if (!string.IsNullOrEmpty(sql))
             {
-                this.Batch(connection, sql);
+                Batch(connection, sql);
             }
-            this.AssemblyType = null;
-            this.ScriptResourceName = null;
+            AssemblyType = null;
+            ScriptResourceName = null;
 
         }
 
@@ -175,7 +175,7 @@ CADENA_CON TEXT NOT NULL);");
             SqlConnection con;
             try
             {
-                con = new SqlConnection(this.RutaDb);
+                con = new SqlConnection(RutaDb);
                 return con;
             }
             catch (Exception ex)
@@ -190,7 +190,7 @@ CADENA_CON TEXT NOT NULL);");
             SQLiteAsyncConnection con;
             try
             {
-                con = new SQLiteAsyncConnection(this.RutaDb);
+                con = new SQLiteAsyncConnection(RutaDb);
                 return con;
             }
             catch (Exception ex)
@@ -203,7 +203,7 @@ CADENA_CON TEXT NOT NULL);");
         public int Querry(string sql, params object[] args)
         {
             int afectadas = -1;
-            using (SqlConnection con = this.Conecction())
+            using (SqlConnection con = Conecction())
             {
                 afectadas = con.Execute(sql, args);
                 con.Close();
@@ -220,10 +220,10 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result = (
+                        result =
                             typeof(T).IsEnum ?
                                 (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
-                                (T)Convert.ChangeType(reader[0], typeof(T)));
+                                (T)Convert.ChangeType(reader[0], typeof(T));
                     }
                 }
             }
@@ -233,7 +233,7 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public T Single<T>(SQLiteConnection con, string sql)
+        public T Single<T>(SqlConnection con, string sql)
         {
             T result = default;
             try
@@ -242,10 +242,10 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result = (
+                        result =
                             typeof(T).IsEnum ?
                                 (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
-                                (T)Convert.ChangeType(reader[0], typeof(T)));
+                                (T)Convert.ChangeType(reader[0], typeof(T));
                     }
                 }
             }
@@ -271,7 +271,7 @@ CADENA_CON TEXT NOT NULL);");
             }
             return afectadas;
         }
-        public int EXEC(SQLiteConnection con, string sql, params object[] parametros)
+        public int EXEC(SqlConnection con, string sql, params object[] parametros)
         {
             Log.DebugMe(sql);
             return con.Execute(sql, parametros);
@@ -279,7 +279,7 @@ CADENA_CON TEXT NOT NULL);");
         public T ExecuteRead<T>(string sql, params object[] parametros)
         {
             Log.DebugMe(sql);
-            T result = default(T);
+            T result = default;
             using (SqlConnection con = Conecction())
             {
                 result = con.ExecuteScalar<T>(sql, parametros);
@@ -389,14 +389,14 @@ CADENA_CON TEXT NOT NULL);");
         {
             Batch(Conecction(), sql);
         }
-        public void Batch(SQLiteConnection con, string sql)
+        public void Batch(SqlConnection con, string sql)
         {
             StringBuilder sqlBatch = new StringBuilder();
             try
             {
                 foreach (string line in sql.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (line.ToUpperInvariant().Trim() == "--GO" || (sqlBatch.Length > 0 && sqlBatch[sqlBatch.Length - 1] == ';'))
+                    if (line.ToUpperInvariant().Trim() == "--GO" || sqlBatch.Length > 0 && sqlBatch[sqlBatch.Length - 1] == ';')
                     {
                         string batch = sqlBatch.ToString();
 

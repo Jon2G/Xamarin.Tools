@@ -3,9 +3,9 @@ using System.Drawing;
 using System.Windows;
 using Kit.Enums;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
-using Plugin.Xamarin.Tools.WPF.Utilities;
-using SQLHelper;
+using Kit.Sql;
 using Kit.WPF;
+using Kit.WPF.Utilities;
 
 namespace Kit.WPF.Services.ICustomMessageBox
 {

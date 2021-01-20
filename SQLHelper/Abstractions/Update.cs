@@ -1,11 +1,12 @@
-﻿using SQLHelper.Interfaces;
+﻿using Kit.Sql.Helpers;
+using Kit.Sql.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
-namespace SQLHelper.Abstractions
+namespace Kit.Sql.Abstractions
 {
     public class Update : IQuery
     {

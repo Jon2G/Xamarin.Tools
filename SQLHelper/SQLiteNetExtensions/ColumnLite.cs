@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SQLHelper.SQLiteNetExtensions
+namespace Kit.Sql.SQLiteNetExtensions
 {
     internal class ColumnLite
     {

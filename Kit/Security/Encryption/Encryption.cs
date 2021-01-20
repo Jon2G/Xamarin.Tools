@@ -12,10 +12,19 @@ namespace Kit.Security.Encryption
             this.Encoding = Encoding;
         }
         public abstract byte[] Encrypt(string Value);
+        public virtual string UnEncrypt(string value)
+        {
+            return ToString(UnEncrypt(ToBytes(value)));
+        }
+        public virtual byte[] ToBytes(string Value)
+        {
+            return Encoding.GetBytes(Value);
+
+        }
         public abstract byte[] UnEncrypt(byte[] Array);
         public string ToString(byte[] Array)
         {
-            if(Array is null)
+            if (Array is null)
             {
                 return string.Empty;
             }

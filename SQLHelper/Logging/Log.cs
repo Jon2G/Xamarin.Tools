@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using Kit.Sql.Helpers;
 
-namespace SQLHelper
+namespace Kit.Sql
 {
     public static class Log
     {

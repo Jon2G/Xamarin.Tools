@@ -20,7 +20,7 @@
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
+    <ProjectReference Include="..\SQLHelper\Kit.Sql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SQLHelper.Linker
+namespace Kit.Sql.Linker
 {
     public sealed class Preserve : System.Attribute
     {

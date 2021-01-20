@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.WPF.Services;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
-using SQLHelper;
-using Log = SQLHelper.Log;
+using Kit.Sql;
+using Log = Kit.Sql.Log;
 
 namespace Kit.WPF
 {

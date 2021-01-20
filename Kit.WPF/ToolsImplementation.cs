@@ -1,5 +1,5 @@
 ﻿using Kit.Services.Interfaces;
-using SQLHelper;
+using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows;
 using Kit.Services;
 using Application = System.Windows.Application;
+using Kit.Sql.Helpers;
 
 namespace Kit.WPF
 {
@@ -31,7 +32,7 @@ namespace Kit.WPF
         public override AbstractTools SetDebugging(bool Debugging)
         {
             this.Debugging = Debugging;
-            SQLHelper.SQLHelper.Instance?.SetDebugging(Debugging);
+            SQLHelper.Instance?.SetDebugging(Debugging);
             return this;
         }
         public override void CriticalAlert(object sender, EventArgs e)

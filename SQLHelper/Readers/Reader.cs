@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SQLHelper.Readers
+namespace Kit.Sql.Readers
 {
     public class Reader : IReader
     {

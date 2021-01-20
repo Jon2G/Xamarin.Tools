@@ -1,4 +1,4 @@
-﻿using SQLHelper;
+﻿using Kit.Sql;
 using Stimulsoft.Base.Drawing;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Components;

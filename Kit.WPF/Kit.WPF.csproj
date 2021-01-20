@@ -86,7 +86,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
+    <ProjectReference Include="..\SQLHelper\Kit.Sql.csproj" />
     <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>

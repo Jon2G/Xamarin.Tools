@@ -1,21 +1,21 @@
-﻿using SQLHelper;
+﻿using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Plugin.Xamarin.Tools.WPF.Utilities
+namespace Kit.WPF.Utilities
 {
     public static class ClickHelper
     {
         private static ulong Ultimo { get; set; }
 
         [DllImport("kernel32")]
-        extern static UInt64 GetTickCount64();
+        extern static ulong GetTickCount64();
 
         static ClickHelper()
         {
-            ClickHelper.Ultimo = 0;
+            Ultimo = 0;
         }
         public static bool EsValido()
         {
@@ -27,7 +27,7 @@ namespace Plugin.Xamarin.Tools.WPF.Utilities
 
             if (Diferencia > 300)
             {
-                ClickHelper.Ultimo = Actual;
+                Ultimo = Actual;
                 //Log.LogMe($"OK Diferencia:{Diferencia}");
                 return true;
             }

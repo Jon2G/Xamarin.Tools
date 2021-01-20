@@ -1,10 +1,12 @@
-﻿using SQLHelper.Interfaces;
+﻿using Kit.Sql.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
-namespace SQLHelper.Abstractions
+using Kit.Sql.Helpers;
+
+namespace Kit.Sql.Abstractions
 {
     public class Delete : IQuery
     {

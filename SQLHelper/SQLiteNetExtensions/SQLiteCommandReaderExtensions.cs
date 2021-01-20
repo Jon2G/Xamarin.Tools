@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace SQLHelper.SQLiteNetExtensions
+namespace Kit.Sql.SQLiteNetExtensions
 {
     public static class SQLiteCommandReaderExtensions
     {

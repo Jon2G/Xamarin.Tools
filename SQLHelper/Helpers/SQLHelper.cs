@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
-namespace SQLHelper
+namespace Kit.Sql.Helpers
 {
     public class SQLHelper
     {
@@ -10,7 +11,7 @@ namespace SQLHelper
         private string _LibraryPath;
         public string LibraryPath
         {
-            get => _LibraryPath ?? System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            get => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             set => _LibraryPath = value;
         }
 
@@ -52,6 +53,16 @@ namespace SQLHelper
             return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");
             //}
         }
+
+        public static object NullIfEmpty(string value)
+        {
+            if (string.IsNullOrEmpty(value?.Trim()))
+            {
+                return DBNull.Value;
+            }
+            return value;
+        }
+
         public static bool IsNull(object value)
         {
             return value == DBNull.Value || value == null;

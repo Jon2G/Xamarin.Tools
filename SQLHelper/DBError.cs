@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SQLHelper
+namespace Kit.Sql
 {
     public class DBError : Exception
     {

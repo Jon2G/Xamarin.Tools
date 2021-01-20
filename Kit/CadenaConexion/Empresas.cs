@@ -1,4 +1,5 @@
-﻿using SQLHelper;
+﻿using Kit.Sql;
+using Kit.Sql.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;

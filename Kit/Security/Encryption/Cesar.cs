@@ -35,8 +35,9 @@ namespace Kit.Security.Encryption
                 cCaracter = (char)(Value.Substring(n, 1)[0] - NewNumero);
                 NewCadena += cCaracter;
             }
-            return Encoding.GetBytes(NewCadena);
+            return ToBytes(NewCadena);
         }
+
         public override byte[] UnEncrypt(byte[] Array)
         {
             if (Array is null)
@@ -58,7 +59,7 @@ namespace Kit.Security.Encryption
                 NewCadena += cCaracter;
             }
 
-            return Encoding.GetBytes(NewCadena);
+            return ToBytes(NewCadena);
         }
 
 

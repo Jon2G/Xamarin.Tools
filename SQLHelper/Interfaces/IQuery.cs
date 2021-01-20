@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SQLHelper.Interfaces
+namespace Kit.Sql.Interfaces
 {
     public abstract class IQuery: IDisposable
     {

@@ -87,7 +87,7 @@ namespace Kit.Services
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "ERROR");
+                Kit.Sql.Log.LogMe(ex, "ERROR");
             }
 
         }
@@ -118,9 +118,9 @@ namespace Kit.Services
             else if (newValue == PDFEnum.Failed)
             {
                 OnFailed?.Invoke(this, EventArgs.Empty);
-                IsPDFGenerating = false;               
-               // await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Pdf no generado");
-                SQLHelper.Log.LogMe("PDFEnum.Failed");
+                IsPDFGenerating = false;
+                // await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Pdf no generado");
+                Kit.Sql.Log.LogMe("PDFEnum.Failed");
             }
             else if (newValue == PDFEnum.Completed)
             {

@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
 
-namespace SQLHelper.Readers
+namespace Kit.Sql.Readers
 {
     public class FakeReader : DbDataReader, IReader
     {

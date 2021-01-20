@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Kit.Sql.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace SQLHelper.Reflection
+namespace Kit.Sql.Reflection
 {
     public class ReflectionCaller : IDisposable
     {

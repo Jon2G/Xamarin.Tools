@@ -7,7 +7,7 @@
 namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
 {
     using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
-    using SQLHelper;
+    using Kit.Sql;
     using System;
     using System.Windows;
   

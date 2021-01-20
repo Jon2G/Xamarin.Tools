@@ -1,6 +1,5 @@
-﻿
-using SQLHelper.Interfaces;
-using SQLHelper.Readers;
+﻿using Kit.Sql.Interfaces;
+using Kit.Sql.Readers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SQLHelper
+namespace Kit.Sql.Helpers
 {
     public class SQLH : BaseSQLHelper
     {
@@ -90,7 +89,7 @@ namespace SQLHelper
         }
         public string TipoDato(string Tabla, string Campo)
         {
-            return Single<string>(@"SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLA AND COLUMN_NAME = @CAMPO", false, System.Data.CommandType.Text
+            return Single<string>(@"SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLA AND COLUMN_NAME = @CAMPO", false, CommandType.Text
                 , new SqlParameter("TABLA", Tabla)
                 , new SqlParameter("CAMPO", Campo)
                 );
