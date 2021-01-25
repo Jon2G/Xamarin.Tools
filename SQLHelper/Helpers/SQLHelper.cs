@@ -63,6 +63,41 @@ namespace Kit.Sql.Helpers
             return value;
         }
 
+        public static bool ToBool(object valor, bool _default = false)
+        {
+            if (IsNull(valor))
+            {
+                return _default;
+            }
+            switch (valor)
+            {
+                case short:
+                case Int32:
+                    return Convert.ToInt32(valor) == 1;
+                case bool boleano:
+                    return boleano;
+                default:
+                    return _default;
+            }
+        }
+        public static bool? ToBool(object valor, bool? _default = null)
+        {
+            if (IsNull(valor))
+            {
+                return _default;
+            }
+            switch (valor)
+            {
+                case short:
+                case Int32:
+                    return Convert.ToInt32(valor) == 1;
+                case bool boleano:
+                    return boleano;
+                default:
+                    return _default;
+            }
+        }
+
         public static bool IsNull(object value)
         {
             return value == DBNull.Value || value == null;
