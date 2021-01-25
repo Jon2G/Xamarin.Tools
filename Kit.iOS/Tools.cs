@@ -1,6 +1,6 @@
 ﻿using Foundation;
 using Kit.iOS.Services;
-using SQLHelper;
+using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,8 +12,8 @@ using UIKit;
 using UserNotifications;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Log = SQLHelper.Log;
 using FFImageLoading.Forms.Platform;
+using Log = Kit.Sql.Log;
 
 namespace Kit.iOS
 {

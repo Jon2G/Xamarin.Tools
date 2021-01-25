@@ -11,7 +11,7 @@ using Xamarin.Forms;
 using Kit.Services;
 using Kit.Droid.Services;
 using Kit.Services.Interfaces;
-
+using Log = Kit.Sql.Log;
 namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
@@ -23,11 +23,11 @@ namespace Kit.Droid
             Debugging = Debugger.IsAttached;
             if (AlertAfterCritical)
             {
-                SQLHelper.Log.Init(LogDirectory, CriticalAlert);
+                Log.Init(LogDirectory, CriticalAlert);
             }
             else
             {
-                SQLHelper.Log.Init(LogDirectory);
+                Log.Init(LogDirectory);
             }
             return this;
         }

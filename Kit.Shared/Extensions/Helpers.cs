@@ -375,21 +375,7 @@ namespace Kit.Extensions
                     throw new ArgumentException();
             }
         }
-        public static StringBuilder TrimEnd(this StringBuilder sb)
-        {
-            int index = sb.Length - 1;
-            if (index < 0) { return sb; }
-            char last = sb[index];
-            while (last == '\n' || last == '\r'&&index>0)
-            {
-                index = sb.Length - 1;
-                if (index < 0) { return sb; }
-                sb.Remove(index,1);
-                index--;
-                last = sb[index];
-            }
-            return sb;
-        }
+
 
     }
 }

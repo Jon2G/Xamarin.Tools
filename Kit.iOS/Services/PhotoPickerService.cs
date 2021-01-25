@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Foundation;
 using Kit.Services.Interfaces;
-using SQLHelper;
+using Kit.Sql;
 using UIKit;
 using Xamarin.Forms;
 

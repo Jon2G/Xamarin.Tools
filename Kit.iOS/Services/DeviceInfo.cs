@@ -1,4 +1,5 @@
 ﻿using AdSupport;
+using Kit.Sql;
 using Plugin.DeviceInfo;
 using Plugin.DeviceInfo.Abstractions;
 using System;
@@ -30,7 +31,7 @@ namespace Kit.iOS.Services
                 }
                 catch (Exception ex)
                 {
-                    SQLHelper.Log.LogMe(ex, "Trying to get the MacAdress");
+                    Log.LogMe(ex, "Trying to get the MacAdress");
                     return "Unavaible";
                 }
             }

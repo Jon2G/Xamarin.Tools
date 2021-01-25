@@ -14,7 +14,7 @@ using System.Diagnostics;
 using Kit.Sql.Readers;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Reflection;
-
+using System.Text.RegularExpressions;
 namespace Kit.Sql.Helpers
 {
     public class SQLHLite : BaseSQLHelper
@@ -394,15 +394,20 @@ CADENA_CON TEXT NOT NULL);");
             StringBuilder sqlBatch = new StringBuilder();
             try
             {
+                Regex regex = new Regex(@"^.*\(.*\);$/gms");
+                regex.Split(sql);
+
                 foreach (string line in sql.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (line.ToUpperInvariant().Trim() == "--GO" || sqlBatch.Length > 0 && sqlBatch[sqlBatch.Length - 1] == ';')
+                    if (line.ToUpperInvariant().Trim() == "--GO" || (sqlBatch.Length > 0 && EndsWith(sqlBatch, ");")))
                     {
                         string batch = sqlBatch.ToString();
-
-                        if (!string.IsNullOrEmpty(batch))
-                            EXEC(batch);
-                        sqlBatch.Clear();
+                        //if (IsBalanced(batch))
+                        //{
+                            if (!string.IsNullOrEmpty(batch))
+                                EXEC(batch);
+                            sqlBatch.Clear();
+                        //}
                     }
                     if (!line.StartsWith("--"))
                     {
@@ -420,6 +425,22 @@ CADENA_CON TEXT NOT NULL);");
             }
         }
 
+        private bool IsBalanced(string batch)
+        {
+            int open = batch.Count(x => x == '(');
+            int closed = batch.Count(x => x == ')');
+
+            return open == closed;
+        }
+
+        public bool EndsWith(StringBuilder sb, string test)
+        {
+            if (sb.Length < test.Length)
+                return false;
+
+            string end = sb.ToString(sb.Length - test.Length, test.Length);
+            return end.Equals(test);
+        }
 
 
         public int LastScopeIdentity(SqlConnection con)

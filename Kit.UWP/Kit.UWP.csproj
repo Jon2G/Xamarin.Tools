@@ -152,17 +152,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj">
-      <Project>{094e8cbd-1194-4397-bc30-d972e3814aeb}</Project>
-      <Name>Kit.SQLHelper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Kit.Forms\Kit.Forms.csproj">
       <Project>{1224b0d0-4675-4cb5-9691-ebac1056a1e3}</Project>
       <Name>Kit.Forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj">
+    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj">
       <Project>{3727A404-D8BA-40D8-9380-BE9C3CD2A889}</Project>
       <Name>Kit.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj">
+      <Project>{094e8cbd-1194-4397-bc30-d972e3814aeb}</Project>
+      <Name>Kit.Sql</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

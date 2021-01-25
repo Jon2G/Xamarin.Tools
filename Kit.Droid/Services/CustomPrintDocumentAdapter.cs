@@ -2,6 +2,7 @@
 using Android.OS;
 using Android.Print;
 using Java.IO;
+using Kit.Sql;
 
 namespace Kit.Droid.Services
 {
@@ -55,12 +56,12 @@ namespace Kit.Droid.Services
             catch (FileNotFoundException ex)
             {
                 //Catch exception
-                SQLHelper.Log.LogMe(ex);
+                Log.LogMe(ex);
             }
             catch (Exception e)
             {
                 //Catch exception
-                SQLHelper.Log.LogMe(e);
+                Log.LogMe(e);
             }
             finally
             {

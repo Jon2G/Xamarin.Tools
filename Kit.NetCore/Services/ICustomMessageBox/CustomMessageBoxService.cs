@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Kit.Enums;
-using SQLHelper;
+using Kit.Sql;
 using Interface = Kit.Services.Interfaces.ICustomMessageBox;
 
 namespace Kit.NetCore.Services.ICustomMessageBox

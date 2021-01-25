@@ -9,7 +9,7 @@ using Kit.Services;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-
+using Log= Kit.Sql.Log;
 namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
@@ -20,11 +20,11 @@ namespace Kit.iOS
             Debugging = Debugger.IsAttached;
             if (AlertAfterCritical)
             {
-                SQLHelper.Log.Init(LogDirectory, CriticalAlert);
+                Log.Init(LogDirectory, CriticalAlert);
             }
             else
             {
-                SQLHelper.Log.Init(LogDirectory);
+                Log.Init(LogDirectory);
             }
             return this;
         }

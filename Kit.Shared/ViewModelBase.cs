@@ -9,21 +9,24 @@ using System.Text;
 namespace Kit
 {
 
-    public abstract class ViewModelBase<T> : KitINotifyPropertyChanged
+    public abstract class ViewModelBase<T> : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
+        void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
+
+
+
         #endregion
 
         #region GlobalPropertyChanged
@@ -64,6 +67,10 @@ namespace Kit
                 Raise<T>(propertyExpression);
             }
         }
+
+
+
+
         #endregion
     }
 }

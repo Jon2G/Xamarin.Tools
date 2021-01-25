@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Kit.Services.Interfaces;
-using Log = SQLHelper.Log;
 
 namespace Kit.Droid.Services
 {
@@ -37,7 +36,7 @@ namespace Kit.Droid.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex);
+             Kit.Sql.Log.LogMe(ex);
             }
             return false;
         }

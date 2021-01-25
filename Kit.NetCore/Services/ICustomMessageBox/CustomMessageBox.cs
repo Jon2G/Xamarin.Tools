@@ -7,7 +7,7 @@
 namespace Kit.NetCore.Services.ICustomMessageBox
 {
     using Kit.Enums;
-    using SQLHelper;
+    using Kit.Sql;
     using System;
     using System.Windows;
 

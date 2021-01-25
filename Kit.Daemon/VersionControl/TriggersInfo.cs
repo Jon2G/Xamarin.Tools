@@ -1,8 +1,10 @@
-﻿using SQLHelper;
+﻿using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SQLHelper.Linker;
+using Kit.Sql.Linker;
+using Kit.Sql.Helpers;
+
 namespace Kit.Daemon.VersionControl
 {
     [Preserve(AllMembers = true)]

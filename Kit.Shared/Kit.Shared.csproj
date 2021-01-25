@@ -13,6 +13,7 @@
     <FileVersion>1.1.2.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
+    <Configurations>Debug;Release;Gorilla</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -20,7 +21,7 @@
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\Kit.Sql.csproj" />
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">

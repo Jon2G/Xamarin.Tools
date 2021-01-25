@@ -38,8 +38,8 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
+    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj" />
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
   </ItemGroup>
 
 

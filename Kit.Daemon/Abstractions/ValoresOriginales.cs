@@ -1,4 +1,5 @@
-﻿using SQLHelper;
+﻿using Kit.Sql;
+using Kit.Sql.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,17 +26,17 @@ namespace Kit.Daemon.Abstractions
         }
         public void Agregar(object Valor, int i)
         {
-            if (SQLHelper.SQLHelper.IsNull(Valor))
+            if (SQLHelper.IsNull(Valor))
             {
                 Valor = null;
             }
             switch (Valor)
             {
                 case TimeSpan time:
-                    Valor = SQLHelper.SQLHelper.FormatTime(time);
+                    Valor = SQLHelper.FormatTime(time);
                     break;
                 case DateTime date:
-                    Valor = SQLHelper.SQLHelper.FormatTime(date);
+                    Valor = SQLHelper.FormatTime(date);
                     break;
             }
             //switch (Valor)
