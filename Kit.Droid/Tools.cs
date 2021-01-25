@@ -9,13 +9,11 @@ using Android.Content.PM;
 using Android.OS;
 using Plugin.CurrentActivity;
 using Plugin.Fingerprint;
-using SQLHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Log = SQLHelper.Log;
 using Application = Android.App.Application;
 using Kit.Droid.Services;
-
+using Log= Kit.Sql.Log;
 namespace Kit.Droid
 {
     public class Tools : Kit.Tools

@@ -1,13 +1,14 @@
 ﻿using Kit.Daemon.Abstractions;
 using Kit.Enums;
-using SQLHelper;
-using SQLHelper.Interfaces;
+using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SQLHelper.Linker;
 using Kit.Daemon.Enums;
+using Kit.Sql.Interfaces;
+using Kit.Sql.Helpers;
+using Kit.Sql.Linker;
 
 namespace Kit.Daemon.VersionControl
 {

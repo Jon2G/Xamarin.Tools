@@ -5,7 +5,7 @@ using Kit.iOS.Services;
 using Kit.Services;
 using Kit.Services.Interfaces;
 using QuickLook;
-using SQLHelper;
+using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.IO;

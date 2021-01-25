@@ -11,6 +11,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
     <UserSecretsId>25b2aca8-9550-4b99-8c1d-ddcb80b6f324</UserSecretsId>
+    <Configurations>Debug;Release;Gorilla</Configurations>
   </PropertyGroup>
 
 
@@ -50,8 +51,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kit.Daemon\Kit.Daemon.csproj" />
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
+    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj" />
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,4 @@
 ﻿using Acr.UserDialogs;
-
-using SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,11 +8,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
-using Log = SQLHelper.Log;
 using Kit.CadenaConexion;
 using Kit.Forms.Controls;
 using ZXing;
 using Kit.Daemon;
+using Kit.Sql.Helpers;
+
 namespace Kit.Forms.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -90,7 +89,7 @@ namespace Kit.Forms.Pages
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
+                Kit.Sql.Log.LogMe(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
             }
         }
         private void BasePage_Appearing(object sender, EventArgs e)
@@ -169,7 +168,7 @@ namespace Kit.Forms.Pages
             }
             catch (Exception exx)
             {
-                SQLHelper.Log.LogMe(exx, "Al intentar cambiar la cadena de conexión desde CadenaCon.cs GuardarAsync");
+                Kit.Sql.Log.LogMe(exx, "Al intentar cambiar la cadena de conexión desde CadenaCon.cs GuardarAsync");
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(exx.Message, "Alerta");
             }
         }
@@ -236,7 +235,7 @@ namespace Kit.Forms.Pages
                 if (DBConection.EliminarDB())
                 {
                     DBConection.RevisarBaseDatos();
-                    Log.LogMe("Se elimino la base de datos");
+                    Kit.Sql.Log.LogMe("Se elimino la base de datos");
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Se elimino la base de datos local", "Atención", "Ok");
                     Guardar(sender, e);
                 }

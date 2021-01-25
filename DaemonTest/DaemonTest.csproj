@@ -102,13 +102,13 @@
       <Project>{65e84e8a-8e99-47ab-a09e-1a61749a77e2}</Project>
       <Name>Kit.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj">
+    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj">
       <Project>{3727a404-d8ba-40d8-9380-be9c3cd2a889}</Project>
       <Name>Kit.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj">
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj">
       <Project>{094e8cbd-1194-4397-bc30-d972e3814aeb}</Project>
-      <Name>Kit.SQLHelper</Name>
+      <Name>Kit.Sql</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

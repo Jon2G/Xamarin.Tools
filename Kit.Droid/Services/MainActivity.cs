@@ -14,7 +14,7 @@ using Android.Widget;
 using FFImageLoading.Forms.Platform;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
-using SQLHelper;
+using Kit.Sql;
 using Xamarin.Forms;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]

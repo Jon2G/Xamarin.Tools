@@ -3,7 +3,7 @@ using Android.OS;
 using Com.Xamarin.Formsviewgroup;
 using DeviceId;
 using Plugin.DeviceInfo.Abstractions;
-using SQLHelper;
+using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;

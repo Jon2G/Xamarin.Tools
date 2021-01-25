@@ -12,7 +12,7 @@ using System.Windows.Controls;
 
 namespace Kit.WPF.Controls
 {
-    public class ObservableUserControl : UserControl, KitINotifyPropertyChanged
+    public class ObservableUserControl : UserControl, INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

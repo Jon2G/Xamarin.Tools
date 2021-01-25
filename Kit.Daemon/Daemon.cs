@@ -1,7 +1,4 @@
-﻿using SQLHelper;
-using SQLHelper.Abstractions;
-using SQLHelper.Interfaces;
-using SQLHelper.Readers;
+﻿using Kit.Sql;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -16,10 +13,11 @@ using System.Threading.Tasks;
 using Kit.Daemon.Abstractions;
 using Kit.Daemon.VersionControl;
 using Kit.Enums;
-using Log = SQLHelper.Log;
 using Kit.Services.Interfaces;
 using Kit.Daemon.Enums;
 using Kit.Daemon.Sync;
+using Kit.Sql.Interfaces;
+using Kit.Sql.Helpers;
 
 namespace Kit.Daemon
 {
@@ -175,7 +173,7 @@ namespace Kit.Daemon
         /// </summary>
         public Daemon SetUp(SQLH Connection)
         {
-            using (var reflex = new SQLHelper.Reflection.ReflectionCaller())
+            using (var reflex = new Kit.Sql.Reflection.ReflectionCaller())
             {
                 foreach (IVersionControlTable table in reflex.GetInheritedClasses<IVersionControlTable>(Connection).OrderBy(x => x.Priority))
                 {

@@ -18,8 +18,8 @@
     netstandard1.0;netstandard2.0;MonoAndroid90;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
     For UWP update the version number with a version number you have installed.
     -->
-    <AssemblyName>Kit.PLC</AssemblyName>
-    <RootNamespace>Kit.PLC</RootNamespace>
+    <AssemblyName>Kit</AssemblyName>
+    <RootNamespace>Kit</RootNamespace>
     <PackageId>Kit.PLC</PackageId>
 
     <Product>Kit.PLC</Product>
@@ -62,9 +62,15 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageIcon>toolbox.png</PackageIcon>
+    <Configurations>Debug;Release;Gorilla</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Gorilla'">
     <DebugSymbols>true</DebugSymbols>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
@@ -108,15 +114,8 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj" />
-  </ItemGroup>
-
-
-
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj" />
+    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj" />
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
   </ItemGroup>
 
 
@@ -128,7 +127,6 @@
   <ItemGroup>
     <Compile Include="Services\BrightnessService.cs" />
     <Compile Include="Services\CustomMessageBox.cs" />
-    <Compile Include="Services\DataShare.cs" />
     <Compile Include="Services\DeviceInfo.cs" />
     <Compile Include="Services\FolderPermissions.cs" />
     <Compile Include="Services\License.cs" />

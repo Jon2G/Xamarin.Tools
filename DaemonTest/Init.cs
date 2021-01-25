@@ -5,7 +5,8 @@ using Kit.Daemon.Abstractions;
 using Kit.Daemon.Enums;
 using Kit.Enums;
 using Kit.Services;
-using SQLHelper;
+using Kit.Sql;
+using Kit.Sql.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,7 @@ namespace DaemonTest
         }
         public static SQLHLite SetDbPath()
         {
-            SQLHelper.SQLHelper.Init(Tools.Instance.LibraryPath, Tools.Instance.Debugging);
+            SQLHelper.Init(Tools.Instance.LibraryPath, Tools.Instance.Debugging);
             SQLHLite lite = new SQLHLite(Version, "Invis.db");
             //Acr.UserDialogs.UserDialogs.Instance.Alert($"Database path set to \n{lite.RutaDb}");
             return lite;

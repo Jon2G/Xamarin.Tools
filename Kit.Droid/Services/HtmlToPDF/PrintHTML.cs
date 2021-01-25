@@ -14,7 +14,7 @@ using Xamarin.Forms.Platform.Android;
 using DroidWebView = Android.Webkit.WebView;
 using Android.Text;
 using System.IO;
-using SQLHelper;
+using Kit.Sql;
 using System.Threading.Tasks;
 using Plugin.CurrentActivity;
 using Android.Webkit;
@@ -41,7 +41,7 @@ namespace Kit.Droid.Services.HtmlToPDF
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
+                Log.LogMe(ex, "Al guardar el archivo html");
                 return false;
             }
             return false;

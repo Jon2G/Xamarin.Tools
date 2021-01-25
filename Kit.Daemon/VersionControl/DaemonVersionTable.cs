@@ -1,8 +1,9 @@
 ﻿using Kit.Daemon.Abstractions;
 using Kit.Enums;
-using SQLHelper;
-using SQLHelper.Interfaces;
-using SQLHelper.Linker;
+using Kit.Sql;
+using Kit.Sql.Helpers;
+using Kit.Sql.Interfaces;
+using Kit.Sql.Linker;
 using System;
 using System.Collections.Generic;
 using System.Linq;

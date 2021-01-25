@@ -1,6 +1,4 @@
-﻿using SQLHelper;
-using SQLHelper.Abstractions;
-using SQLHelper.Interfaces;
+﻿using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -9,6 +7,10 @@ using System.Text;
 using Kit.Enums;
 using Kit.Daemon.Enums;
 using static Kit.Daemon.Helpers.Helper;
+using Kit.Sql.Helpers;
+using Kit.Sql.Interfaces;
+using Kit.Sql.Abstractions;
+
 namespace Kit.Daemon.Abstractions
 {
     public class Table
@@ -57,7 +59,7 @@ namespace Kit.Daemon.Abstractions
                 if (pendiente.Accion == AccionDemonio.DELETE)
                 {
                     IQuery query = ConsultaTabla(pendiente, pendiente.Accion, direccion);
-                    return query.Execute() != SQLHelper.SQLH.Error;
+                    return query.Execute() != SQLH.Error;
                 }
                 else
                 {

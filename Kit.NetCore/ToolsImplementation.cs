@@ -1,5 +1,6 @@
 ﻿using Kit.Services.Interfaces;
-using SQLHelper;
+using Kit.Sql;
+using Kit.Sql.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,7 +32,7 @@ namespace Kit.NetCore
         public override AbstractTools SetDebugging(bool Debugging)
         {
             this.Debugging = Debugging;
-            SQLHelper.SQLHelper.Instance?.SetDebugging(Debugging);
+            SQLHelper.Instance?.SetDebugging(Debugging);
             return this;
         }
         public override void CriticalAlert(object sender, EventArgs e)

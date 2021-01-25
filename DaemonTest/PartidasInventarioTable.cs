@@ -1,6 +1,7 @@
 ﻿using Kit.Daemon.VersionControl;
-using SQLHelper;
-using SQLHelper.Interfaces;
+using Kit.Sql;
+using Kit.Sql.Helpers;
+using Kit.Sql.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

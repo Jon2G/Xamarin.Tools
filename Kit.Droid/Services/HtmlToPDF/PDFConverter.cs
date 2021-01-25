@@ -6,6 +6,7 @@ using Kit.Enums;
 using Kit.Services;
 using Kit.Services.Interfaces;
 using static Kit.Services.PDFToHtml;
+using Kit.Sql;
 
 namespace Kit.Droid.Services.HtmlToPDF
 {
@@ -29,7 +30,7 @@ namespace Kit.Droid.Services.HtmlToPDF
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "ConvertHTMLtoPDF");
+                Log.LogMe(ex, "ConvertHTMLtoPDF");
                 _PDFToHtml.Status = PDFEnum.Failed;
             }
         }

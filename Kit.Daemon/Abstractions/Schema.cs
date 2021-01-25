@@ -1,4 +1,4 @@
-﻿using SQLHelper.Linker;
+﻿using Kit.Sql.Linker;
 using System;
 using System.Collections.Generic;
 using System.Linq;

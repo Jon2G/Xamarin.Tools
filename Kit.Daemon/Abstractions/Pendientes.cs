@@ -1,5 +1,4 @@
-﻿using SQLHelper;
-using SQLHelper.Interfaces;
+﻿using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,7 +6,8 @@ using System.Text;
 using Kit.Enums;
 using Kit.Daemon.Enums;
 using Kit.Daemon.Helpers;
-
+using Kit.Sql.Interfaces;
+using Kit.Sql.Helpers;
 namespace Kit.Daemon.Abstractions
 {
     public class Pendientes

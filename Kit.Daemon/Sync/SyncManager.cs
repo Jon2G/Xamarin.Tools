@@ -1,8 +1,9 @@
 ﻿using Kit.Daemon.Abstractions;
 using Kit.Daemon.Enums;
-using SQLHelper;
-using SQLHelper.Abstractions;
-using SQLHelper.Interfaces;
+using Kit.Sql;
+using Kit.Sql.Abstractions;
+using Kit.Sql.Helpers;
+using Kit.Sql.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

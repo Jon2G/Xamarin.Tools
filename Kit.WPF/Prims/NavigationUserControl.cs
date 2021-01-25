@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,9 +27,39 @@ namespace Kit.WPF.Prims
             var handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
+        #region PerfomanceHelpers
+        public void Raise<T>(Expression<Func<T>> propertyExpression)
+        {
+            if (this.PropertyChanged != null)
+            {
+                var body = propertyExpression.Body as MemberExpression;
+                if (body == null)
+                    throw new ArgumentException("'propertyExpression' should be a member expression");
+
+                var expression = body.Expression as ConstantExpression;
+                if (expression == null)
+                    throw new ArgumentException("'propertyExpression' body should be a constant expression");
+
+                object target = Expression.Lambda(expression).Compile().DynamicInvoke();
+
+                var e = new PropertyChangedEventArgs(body.Member.Name);
+                PropertyChanged(target, e);
+            }
+        }
+
+        public void Raise<T>(params Expression<Func<T>>[] propertyExpressions)
+        {
+            foreach (var propertyExpression in propertyExpressions)
+            {
+                Raise<T>(propertyExpression);
+            }
+        }
+
+        #endregion
         #endregion
         private readonly IRegionManager RegionManager;
         private NavigationContext NavigationContext;
+
         public NavigationUserControl() { }
 
         protected void Push<T>(Dictionary<string, object> parameters)
@@ -42,28 +73,18 @@ namespace Kit.WPF.Prims
         }
         protected void Push<T>(NavigationParameters parameters = null)
         {
-            Push<T>(ContentRegion, parameters);
+            string Name = typeof(T).Name;
+            this.RegionManager.Regions[ContentRegion].NavigationService.Journal.NavigationTarget.RequestNavigate(Name, parameters);
         }
         protected bool Pop()
         {
-            return Pop(ContentRegion);
-        }
-
-        protected void Push<T>(string Region,NavigationParameters parameters = null)
-        {
-            string Name = typeof(T).Name;
-            this.RegionManager.Regions[Region].NavigationService.Journal.NavigationTarget.RequestNavigate(Name, parameters);
-        }
-        protected bool Pop(string Region)
-        {
-            if (this.RegionManager.Regions[Region].NavigationService.Journal.CanGoBack)
+            if (this.RegionManager.Regions[ContentRegion].NavigationService.Journal.CanGoBack)
             {
-                this.RegionManager.Regions[Region].NavigationService.Journal.GoBack();
+                this.RegionManager.Regions[ContentRegion].NavigationService.Journal.GoBack();
                 return true;
             }
             return false;
         }
-
         protected void PopAll()
         {
             while (this.Pop())
@@ -82,13 +103,19 @@ namespace Kit.WPF.Prims
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext NavigationContext)
+        public virtual void OnNavigatedFrom(NavigationContext NavigationContext)
         {
+            OnNavigatedToFirstTime = true;
             this.NavigationContext = NavigationContext;
         }
-
+        private bool OnNavigatedToFirstTime = true;
         public void OnNavigatedTo(NavigationContext NavigationContext)
         {
+            if (!OnNavigatedToFirstTime)
+            {
+                return;
+            }
+            OnNavigatedToFirstTime = false;
             this.NavigationContext = NavigationContext;
             OnNavigatedTo();
         }
@@ -101,5 +128,6 @@ namespace Kit.WPF.Prims
         {
             return (T)this.NavigationContext.Parameters[Name];
         }
+
     }
 }

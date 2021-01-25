@@ -31,8 +31,19 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
     <UserSecretsId>4340845f-285e-41e0-97a6-d5680f180db2</UserSecretsId>
+    <Configurations>Debug;Release;Gorilla</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Gorilla|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
@@ -108,18 +119,15 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLHelper\Kit.SQLHelper.csproj">
-      <Project>{094e8cbd-1194-4397-bc30-d972e3814aeb}</Project>
-      <Name>Kit.SQLHelper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Kit.Forms\Kit.Forms.csproj">
       <Project>{1224b0d0-4675-4cb5-9691-ebac1056a1e3}</Project>
       <Name>Kit.Forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kit\Kit.Shared.csproj">
+    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj">
       <Project>{3727a404-d8ba-40d8-9380-be9c3cd2a889}</Project>
       <Name>Kit.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">
