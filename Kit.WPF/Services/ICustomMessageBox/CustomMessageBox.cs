@@ -4,15 +4,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox
+namespace Kit.WPF.Services.ICustomMessageBox
 {
-    using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
     using Kit.Sql;
     using System;
     using System.Windows;
-  
-    using global::Kit.Enums;
-    using global::Kit.WPF.Services.ICustomMessageBox;
+
+    using Kit.Enums;
 
     /// <summary>
     /// Displays a message box.

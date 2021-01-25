@@ -12,7 +12,7 @@ using Expression = System.Linq.Expressions.Expression;
 
 namespace Kit.WPF.Controls
 {
-    public class ObservableWindow : Window, KitINotifyPropertyChanged
+    public class ObservableWindow : Window, INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
