@@ -16,7 +16,7 @@ namespace Kit.WPF.Controls
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-
+        [Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));

@@ -13,7 +13,7 @@ using static Kit.Daemon.Helpers.Helper;
 
 namespace Kit.Daemon.Sync
 {
-    public class SyncManager : ViewModelBase<SyncManager>
+    public class SyncManager : ModelBase
     {
         private string DownloadQuery { get; set; }
         private string UploadQuery { get; set; }

@@ -9,37 +9,21 @@ using System.Text;
 namespace Kit
 {
 
-    public abstract class ViewModelBase<T> : INotifyPropertyChanged
+    public abstract class ModelBase : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-
+        [Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
-
         void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
-
-
-
         #endregion
-
-        #region GlobalPropertyChanged
-        protected static event PropertyChangedEventHandler GlobalPropertyChanged = delegate { };
-        protected static void OnGlobalPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            GlobalPropertyChanged(
-                typeof(T),
-                new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
-
-
         #region PerfomanceHelpers
         public void Raise<T>(Expression<Func<T>> propertyExpression)
         {

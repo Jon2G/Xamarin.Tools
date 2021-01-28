@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kit.WPF.Controls.RangoFechas
 {
-    public class Rango : ViewModelBase<Rango>
+    public class Rango : ModelBase
     {
         private DateTime? _Inicio;
         public DateTime? Inicio
@@ -17,7 +17,7 @@ namespace Kit.WPF.Controls.RangoFechas
                 if (_Inicio != value)
                 {
                     _Inicio = value;
-                    OnPropertyChanged();
+                    Raise(()=>Inicio);
                     OnDateChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -31,7 +31,7 @@ namespace Kit.WPF.Controls.RangoFechas
                 if (_Fin != value)
                 {
                     _Fin = value;
-                    OnPropertyChanged();
+                    Raise(()=>Fin);
                     OnDateChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -55,7 +55,7 @@ namespace Kit.WPF.Controls.RangoFechas
             set
             {
                 _SeleccionaFecha = value;
-                OnPropertyChanged();
+                Raise(()=>SeleccionaFecha);
             }
         }
         private bool _TodasLasFechas;
@@ -65,8 +65,9 @@ namespace Kit.WPF.Controls.RangoFechas
             set
             {
                 _TodasLasFechas = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(TodasLasFechasNull));
+                Raise(()=>TodasLasFechas);
+                Raise(()=>TodasLasFechasNull);
+
                 OnDateChanged?.Invoke(this, EventArgs.Empty);
                 SeleccionaFecha = !TodasLasFechas;
                 //if (TodasLasFechas)

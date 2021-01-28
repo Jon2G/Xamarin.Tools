@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.NotificationBar
 {
-    public class Notificacion : ViewModelBase<Notificacion>
+    public class Notificacion : ModelBase
     {
         public ImageSource _Imagen;
         [TypeConverter(typeof(Converters.MyImageSourceConverter))]

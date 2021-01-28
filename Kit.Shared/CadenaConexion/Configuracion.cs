@@ -14,7 +14,7 @@ using ZXing.Net.Mobile.Forms;
 
 namespace Kit.CadenaConexion
 {
-    public class Configuracion : ViewModelBase<Configuracion>
+    public class Configuracion : ModelBase
     {
         public string CadenaCon { get; set; }
         public string IdentificadorDispositivo { get; set; }
@@ -189,6 +189,7 @@ namespace Kit.CadenaConexion
             }
             catch (Exception ex)
             {
+                Log.LogMe(ex);
                 return null;
             }
 

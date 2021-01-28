@@ -12,28 +12,28 @@ namespace Kit.WPF.Controls.RangoFechas
         private DateTime _InicioMaxDate;
         public DateTime InicioMaxDate
         {
-            set { _InicioMaxDate = value; OnPropertyChanged(nameof(InicioMaxDate)); }
-            get
-            {
-                return _InicioMaxDate;
+            set { 
+                _InicioMaxDate = value; 
+                Raise(()=>InicioMaxDate);
             }
+            get => _InicioMaxDate;
         }
         private DateTime _FinMaxDate;
         public DateTime FinMaxDate
         {
-            set { _FinMaxDate = value; OnPropertyChanged(nameof(FinMaxDate)); }
-            get
-            {
-                return _FinMaxDate;
+            set { 
+                _FinMaxDate = value; 
+                Raise(()=>FinMaxDate);
             }
+            get => _FinMaxDate;
         }
         public DateTime MinDate
         {
-            set { _MinDate = value; OnPropertyChanged(nameof(MinDate)); }
-            get
-            {
-                return _MinDate;
+            set {
+                _MinDate = value;
+                Raise(()=>MinDate);
             }
+            get => _MinDate;
         }
         public ModeloRango() : base()
         {

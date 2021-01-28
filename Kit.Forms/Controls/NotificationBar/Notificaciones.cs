@@ -5,11 +5,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Kit.Model;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.NotificationBar
 {
-    public class Notificaciones : ViewModelBase<Notificaciones>
+    public class Notificaciones : StaticModel<Notificaciones>
     {
         private static Notificaciones _Instance;
         public static Notificaciones Instance

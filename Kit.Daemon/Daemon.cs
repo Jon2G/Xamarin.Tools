@@ -16,13 +16,14 @@ using Kit.Enums;
 using Kit.Services.Interfaces;
 using Kit.Daemon.Enums;
 using Kit.Daemon.Sync;
+using Kit.Model;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Helpers;
 
 namespace Kit.Daemon
 {
     [Preserve(AllMembers = true)]
-    public class Daemon : ViewModelBase<Daemon>
+    public class Daemon : StaticModel<Daemon>
     {
         public DaemonConfig DaemonConfig { get; set; }
         #region ThreadMonitor
@@ -81,8 +82,8 @@ namespace Kit.Daemon
             private set
             {
                 _FactorDeDescanso = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Inactive));
+                Raise(()=>FactorDeDescanso);
+                Raise(()=>Inactive);
             }
         }
         public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);

@@ -6,13 +6,25 @@ using Kit.Services.Interfaces;
 
 namespace Kit.License
 {
-    public sealed class DeviceRegisterModel : ViewModelBase<DeviceRegisterModel>
+    public sealed class DeviceRegisterModel : ModelBase
     {
         private string _UserName;
         private string _Password;
         public bool IsValidated { get; set; }
-        public string UserName { get => _UserName; set { _UserName = value; OnPropertyChanged(); } }
-        public string Password { get => _Password; set { _Password = value; OnPropertyChanged(); } }
+        public string UserName
+        {
+            get => _UserName; set
+            {
+                _UserName = value; Raise(() => UserName);
+            }
+        }
+        public string Password
+        {
+            get => _Password; set
+            {
+                _Password = value; Raise(() => Password);
+            }
+        }
         public License Licence { get; set; }
         private readonly ICustomMessageBox CustomMessageBox;
         public DeviceRegisterModel(License licence, ICustomMessageBox CustomMessageBox)
@@ -39,7 +51,7 @@ namespace Kit.License
             }
             else
             {
-               await CustomMessageBox.ShowOK("Usuario o contraseña incorrectos", "Alerta", "OK");
+                await CustomMessageBox.ShowOK("Usuario o contraseña incorrectos", "Alerta", "OK");
             }
             return false;
         }

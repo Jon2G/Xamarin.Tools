@@ -11,7 +11,7 @@ using Kit.Services.Interfaces;
 
 namespace Kit.Services
 {
-    public class PDFToHtml : ViewModelBase<PDFToHtml>, IDisposable
+    public class PDFToHtml : ModelBase, IDisposable
     {
 
         public EventHandler OnCompleted;
@@ -29,22 +29,22 @@ namespace Kit.Services
 
         public bool IsPDFGenerating
         {
-            get { return ispdfloading; }
+            get => ispdfloading;
             set
             {
                 ispdfloading = value;
-                OnPropertyChanged();
+                Raise(()=>IsPDFGenerating);
             }
         }
 
         public PDFEnum Status
         {
-            get { return pDFEnum; }
+            get => pDFEnum;
             set
             {
                 pDFEnum = value;
                 UpdatePDFStatus(value);
-                OnPropertyChanged();
+                Raise(()=>pDFEnum);
             }
         }
 

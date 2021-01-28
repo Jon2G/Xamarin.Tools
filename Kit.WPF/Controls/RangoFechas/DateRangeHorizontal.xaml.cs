@@ -28,7 +28,7 @@ namespace Kit.WPF.Controls.RangoFechas
             set
             {
                 _Rango = value;
-                OnPropertyChanged();
+                Raise(()=>Rango);
             }
         }
         #endregion

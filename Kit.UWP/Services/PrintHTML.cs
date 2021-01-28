@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Kit.Services.Interfaces;
 using Windows.UI.Xaml.Printing;
+using Kit.Sql.Helpers;
+using Kit.Sql;
 
 namespace Kit.UWP.Services
 {
@@ -47,7 +49,7 @@ namespace Kit.UWP.Services
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
+                Log.LogMe(ex, "Al guardar el archivo html");
                 return false;
             }
             return false;
@@ -74,7 +76,7 @@ namespace Kit.UWP.Services
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "Al convertir un ticket html a pdf");
+                Log.LogMe(ex, "Al convertir un ticket html a pdf");
             }
             return false;
         }
@@ -90,7 +92,7 @@ namespace Kit.UWP.Services
             }
             catch (Exception ex)
             {
-                SQLHelper.Log.LogMe(ex, "Al imprimir un pdf");
+                Log.LogMe(ex, "Al imprimir un pdf");
             }
             return false;
         }
