@@ -2,25 +2,48 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Kit.Services.Interfaces;
+using Kit.Sql;
+using Kit.Sql.Helpers;
 
 namespace Kit
 {
-    public abstract class AbstractTools : ITools
+    public class AbstractTools : ITools
     {
         public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox;
         public bool Debugging { get; protected set; }
+        public string DeviceId { get; protected set; }
         private string _LibraryPath;
         public string LibraryPath
         {
             get => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
-        public AbstractTools()
+        protected AbstractTools()
         {
 
         }
         public static AbstractTools Instance => Tools.Instance;
-        public abstract ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false);
-        public abstract AbstractTools SetDebugging(bool Debugging);
+
+        public virtual ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        {
+            this.DeviceId = DeviceInfo.DeviceId;
+            if (AlertAfterCritical)
+            {
+                Log.Init(LogDirectory,CriticalAlert);
+            }
+            else
+            {
+                Log.Init(LogDirectory);
+            }
+            return this;
+        }
+
+        public virtual AbstractTools SetDebugging(bool Debugging)
+        {
+            this.Debugging = Debugging;
+            Sqlh.Instance?.SetDebugging(Debugging);
+            return this;
+        }
         public virtual void CriticalAlert(object sender, EventArgs e)
         {
             CustomMessageBox.ShowOK(sender.ToString(), "Alerta", "Entiendo");

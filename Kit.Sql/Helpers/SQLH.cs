@@ -72,7 +72,7 @@ namespace Kit.Sql.Helpers
             switch (valor)
             {
                 case short:
-                case Int32:
+                case int:
                     return Convert.ToInt32(valor) == 1;
                 case bool boleano:
                     return boleano;
@@ -89,7 +89,7 @@ namespace Kit.Sql.Helpers
             switch (valor)
             {
                 case short:
-                case Int32:
+                case int:
                     return Convert.ToInt32(valor) == 1;
                 case bool boleano:
                     return boleano;

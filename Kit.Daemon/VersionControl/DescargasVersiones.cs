@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Daemon.Devices;
 using Kit.Sql.Linker;
 using Kit.Sql.Helpers;
 
@@ -23,7 +24,7 @@ namespace Kit.Daemon.VersionControl
                 ID_DESCARGA INT, --FOREIGN KEY REFERENCES VERSION_CONTROL,
                 ID_DISPOSITIVO VARCHAR(100) FOREIGN KEY REFERENCES DISPOSITVOS_TABLETS)");
 
-            SQLH.EXEC($"DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = '{Kit.Daemon.Daemon.DeviceId}'");
+            SQLH.EXEC($"DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = '{Device.Current.DeviceId}'");
         }
 
         protected override void CreateTable(SqLite SQLH)

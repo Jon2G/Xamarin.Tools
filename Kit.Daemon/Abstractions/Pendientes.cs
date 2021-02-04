@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using Kit.Daemon.Devices;
 using Kit.Enums;
 using Kit.Daemon.Enums;
 using Kit.Daemon.Helpers;
@@ -29,14 +30,14 @@ namespace Kit.Daemon.Abstractions
         {
             try
             {
-                BaseSQLHelper connection =Daemon.Current.DaemonConfig[SyncTarget.InvertDirection()];
+                BaseSQLHelper connection = Daemon.Current.DaemonConfig[SyncTarget.InvertDirection()];
 
                 if (connection is SqlServer SQLH)
                 {
                     SQLH.EXEC("INSERT INTO DESCARGAS_VERSIONES(ID_DESCARGA,ID_DISPOSITIVO) VALUES(@ID_DESCARGA,@ID_DISPOSITIVO)"
-                        , System.Data.CommandType.Text, false,
-                        new SqlParameter("ID_DESCARGA", Id),
-                        new SqlParameter("ID_DISPOSITIVO", Daemon.DeviceId));
+                            , System.Data.CommandType.Text, false,
+                            new SqlParameter("ID_DESCARGA", Id),
+                            new SqlParameter("ID_DISPOSITIVO", Device.Current.DeviceId));
                 }
                 else if (connection is SqLite SQLHLite)
                 {

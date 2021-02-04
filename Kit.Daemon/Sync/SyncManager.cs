@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Kit.Daemon.Devices;
 using static Kit.Daemon.Helpers.Helper;
 
 namespace Kit.Daemon.Sync
@@ -239,7 +240,7 @@ namespace Kit.Daemon.Sync
                 sb.Append("TOP ").Append(PackageSize);
             }
             sb.Append(@" ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL WHERE NOT EXISTS(SELECT ID_DISPOSITIVO FROM DESCARGAS_VERSIONES WHERE DESCARGAS_VERSIONES.ID_DESCARGA = VERSION_CONTROL.ID AND ID_DISPOSITIVO ='")
-                .Append(Daemon.DeviceId).Append("') --ORDER BY TABLA DESC, LLAVE ASC;");
+                .Append(Device.Current.DeviceId).Append("') --ORDER BY TABLA DESC, LLAVE ASC;");
             return sb.ToString();
         }
 

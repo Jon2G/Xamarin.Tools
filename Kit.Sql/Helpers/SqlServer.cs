@@ -131,15 +131,13 @@ namespace Kit.Sql.Helpers
                 {
                     if (reader[0] != DBNull.Value)
                     {
-                        result =
-                            typeof(T).IsEnum
-                                ? (T)Enum.Parse(typeof(T), reader[0].ToString(), true)
-                                : (T)Convert.ChangeType(reader[0], typeof(T));
+                        result = Parse<T>(reader[0]);
                     }
                 }
             }
             return result;
         }
+
 
         public static bool IsInjection(string value)
         {
@@ -173,7 +171,7 @@ namespace Kit.Sql.Helpers
                 {
                     if (reader.Read())
                     {
-                        result = (T)Convert.ChangeType(reader[0], typeof(T));
+                        result = Parse<T>(reader[0]);
                     }
                 }
                 if (Reportar)
@@ -197,7 +195,7 @@ namespace Kit.Sql.Helpers
             {
                 if (reader.Read())
                 {
-                    result = (T)Convert.ChangeType(reader[0], typeof(T));
+                    result = Parse<T>(reader[0]);
                 }
             }
             return result;
@@ -296,7 +294,7 @@ namespace Kit.Sql.Helpers
             }
             return Rows;
         }
-        public List<T> Lista<T>(string sql, CommandType type = CommandType.StoredProcedure, bool Reportar = true, int indice = 0, params SqlParameter[] parameters)
+        public List<T> Lista<T>(string sql, CommandType type = CommandType.Text, bool Reportar = true, int index = 0, params SqlParameter[] parameters)
         {
             List<T> result = new List<T>();
             try
@@ -311,7 +309,7 @@ namespace Kit.Sql.Helpers
                         {
                             while (reader.Read())
                             {
-                                result.Add((T)Convert.ChangeType(reader[indice], typeof(T)));
+                                result.Add(Parse<T>(reader[index]));
                             }
                         }
                         if (Reportar)
@@ -328,37 +326,13 @@ namespace Kit.Sql.Helpers
         }
         public List<T> Lista<T>(string sql, bool Reportar = true, int indice = 0, params SqlParameter[] parameters)
         {
-            List<T> result = new List<T>();
-            using (SqlConnection con = Con())
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = CommandType.Text })
-                {
-                    cmd.Parameters.AddRange(parameters);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            if (reader[indice] == DBNull.Value)
-                            {
-                                result.Add(default);
-                                continue;
-                            }
-                            result.Add((T)Convert.ChangeType(reader[indice], typeof(T)));
-                        }
-                    }
-                    if (Reportar)
-                        ReportaTransaccion(cmd);
-                }
-                con.Close();
-            }
-            return result;
+            return Lista<T>(sql, CommandType.Text, Reportar, indice, parameters);
         }
         public List<T> Lista<T>(string sql)
         {
             return Lista<T>(sql, CommandType.Text, false, 0);
         }
-        public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.StoredProcedure, params SqlParameter[] parameters)
+        public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.Text, params SqlParameter[] parameters)
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
             using (SqlConnection con = Con())
@@ -370,9 +344,7 @@ namespace Kit.Sql.Helpers
                     using SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        result.Add(new Tuple<T, Q>
-                            ((T)Convert.ChangeType(reader[0], typeof(T)),
-                            (Q)Convert.ChangeType(reader[1], typeof(Q))));
+                        result.Add(new Tuple<T, Q>(Parse<T>(reader[0]),Parse<Q>(reader[1])));
                     }
                 }
                 con.Close();
@@ -381,27 +353,7 @@ namespace Kit.Sql.Helpers
         }
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, params SqlParameter[] parameters)
         {
-            List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
-            using (SqlConnection con = Con())
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = CommandType.StoredProcedure })
-                {
-                    cmd.Parameters.AddRange(parameters);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            result.Add(new Tuple<T, Q>
-                                ((T)Convert.ChangeType(reader[0], typeof(T)),
-                                (Q)Convert.ChangeType(reader[1], typeof(Q))));
-                        }
-                    }
-                    ReportaTransaccion(cmd);
-                }
-                con.Close();
-            }
-            return result;
+            return ListaTupla<T,Q>(sql, CommandType.Text, parameters);
         }
         public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, bool Reportar = true, params SqlParameter[] parameters)
         {

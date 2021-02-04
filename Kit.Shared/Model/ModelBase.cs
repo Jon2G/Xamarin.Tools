@@ -14,7 +14,7 @@ namespace Kit
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         [Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
@@ -25,7 +25,7 @@ namespace Kit
         }
         #endregion
         #region PerfomanceHelpers
-        public void Raise<T>(Expression<Func<T>> propertyExpression)
+        protected void Raise<T>(Expression<Func<T>> propertyExpression)
         {
             if (this.PropertyChanged != null)
             {
@@ -44,7 +44,7 @@ namespace Kit
             }
         }
 
-        public void Raise<T>(params Expression<Func<T>>[] propertyExpressions)
+        protected void Raise<T>(params Expression<Func<T>>[] propertyExpressions)
         {
             foreach (Expression<Func<T>> propertyExpression in propertyExpressions)
             {

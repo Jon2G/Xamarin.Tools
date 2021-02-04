@@ -220,10 +220,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result =
-                            typeof(T).IsEnum ?
-                                (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
-                                (T)Convert.ChangeType(reader[0], typeof(T));
+                        result = Parse<T>(reader[0]);
                     }
                 }
             }
@@ -242,10 +239,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result =
-                            typeof(T).IsEnum ?
-                                (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
-                                (T)Convert.ChangeType(reader[0], typeof(T));
+                        result = Parse<T>(reader[0]);
                     }
                 }
             }
@@ -294,7 +288,7 @@ CADENA_CON TEXT NOT NULL);");
             {
                 while (reader.Read())
                 {
-                    result.Add((T)Convert.ChangeType(reader[0], typeof(T)));
+                    result.Add(Parse<T>(reader[0]));
                 }
             }
             return result;
@@ -308,9 +302,7 @@ CADENA_CON TEXT NOT NULL);");
             {
                 while (reader.Read())
                 {
-                    result.Add(new Tuple<T, Q>
-                        ((T)Convert.ChangeType(reader[0], typeof(T)),
-                        (Q)Convert.ChangeType(reader[1], typeof(Q))));
+                    result.Add(new Tuple<T, Q>(Parse<T>(reader[0]), Parse<Q>(reader[1])));
                 }
             }
 

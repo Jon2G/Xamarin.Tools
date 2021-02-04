@@ -17,18 +17,11 @@ namespace Kit.Droid
     public class ToolsImplementation : AbstractTools
     {
         public MainActivity MainActivity { get; internal set; }
-        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.CustomMessageBoxService();
+            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
             Debugging = Debugger.IsAttached;
-            if (AlertAfterCritical)
-            {
-                Log.Init(LogDirectory, CriticalAlert);
-            }
-            else
-            {
-                Log.Init(LogDirectory);
-            }
             return this;
         }
 

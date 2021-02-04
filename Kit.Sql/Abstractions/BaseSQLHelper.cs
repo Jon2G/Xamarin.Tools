@@ -54,5 +54,26 @@ namespace Kit.Sql.Interfaces
         {
 
         }
+
+        protected T Parse<T>(object obj)
+        {
+            var type = typeof(T);
+            try
+            {
+
+                if (type.IsEnum)
+                {
+                    return (T)Enum.Parse(typeof(T), obj.ToString(), true);
+                }
+
+                return (T)Convert.ChangeType(obj, typeof(T));
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex, $"Al convertir un dato desde Parse<T> el tipo de dato: {type.Name}=>{obj}");
+            }
+
+            return default(T);
+        }
     }
 }

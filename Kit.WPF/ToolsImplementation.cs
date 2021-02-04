@@ -14,27 +14,14 @@ namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
+            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
             Debugging = Debugger.IsAttached;
-            if (AlertAfterCritical)
-            {
-                Log.Init(LogDirectory, CriticalAlert);
-            }
-            else
-            {
-                Log.Init(LogDirectory);
-            }
             return this;
         }
 
-        public override AbstractTools SetDebugging(bool Debugging)
-        {
-            this.Debugging = Debugging;
-            Sqlh.Instance?.SetDebugging(Debugging);
-            return this;
-        }
         public override void CriticalAlert(object sender, EventArgs e)
         {
             MessageBox.Show(sender.ToString(), "Alerta", MessageBoxButton.OK, MessageBoxImage.Error);
