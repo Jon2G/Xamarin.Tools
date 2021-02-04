@@ -20,7 +20,7 @@ namespace Kit.Services
         {
             get
             {
-                var ret = implementation.Value;
+                IPDFSaveAndOpen ret = implementation.Value;
                 if (ret == null)
                 {
                     throw NotImplementedInReferenceAssembly();

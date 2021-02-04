@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms;
 using BaseLicense = Kit.License.License;
 namespace Kit.Droid.Services
 {
@@ -13,7 +14,7 @@ namespace Kit.Droid.Services
 
         protected override async void OpenRegisterForm()
         {
-            var page = Xamarin.Forms.Application.Current.MainPage;
+            Page page = Xamarin.Forms.Application.Current.MainPage;
 
             Forms.Pages.DeviceRegister login = new Forms.Pages.DeviceRegister(page.Background, this,new CustomMessageBoxService());
             await page.Navigation.PushModalAsync(login, true);

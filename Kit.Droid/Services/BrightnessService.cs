@@ -11,8 +11,8 @@ namespace Kit.Droid.Services
     {
         public void SetBrightness(float brightness)
         {
-            var window = CrossCurrentActivity.Current.Activity.Window;
-            var attributesWindow = new WindowManagerLayoutParams();
+            Window? window = CrossCurrentActivity.Current.Activity.Window;
+            WindowManagerLayoutParams attributesWindow = new WindowManagerLayoutParams();
 
             attributesWindow.CopyFrom(window.Attributes);
             attributesWindow.ScreenBrightness = brightness;
@@ -21,8 +21,8 @@ namespace Kit.Droid.Services
         }
         public float GetBrightness()
         {
-            var window = CrossCurrentActivity.Current.Activity.Window;
-            var attributesWindow = new WindowManagerLayoutParams();
+            Window? window = CrossCurrentActivity.Current.Activity.Window;
+            WindowManagerLayoutParams attributesWindow = new WindowManagerLayoutParams();
 
             attributesWindow.CopyFrom(window.Attributes);
             return attributesWindow.ScreenBrightness;

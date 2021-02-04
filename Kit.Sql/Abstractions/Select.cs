@@ -28,7 +28,7 @@ namespace Kit.Sql.Abstractions
         }
         public IReader ExecuteQuery(string query, params SqlParameter[] parameters)
         {
-            if (this.SQLH is SQLHLite lite)
+            if (this.SQLH is SqLite lite)
             {
                 foreach (SqlParameter parameter in parameters)
                 {
@@ -37,7 +37,7 @@ namespace Kit.Sql.Abstractions
                 }
                 return lite.Read(query);
             }
-            else if (this.SQLH is SQLH sql)
+            else if (this.SQLH is SqlServer sql)
             {
                 return sql.Read(query, CommandType.Text, false, parameters);
             }
@@ -71,7 +71,7 @@ namespace Kit.Sql.Abstractions
             if (this.Parameters.Any())
             {
                 builder.Append(" WHERE");
-                foreach (var pair in this.Parameters)
+                foreach (KeyValuePair<string, object> pair in this.Parameters)
                 {
                     builder.Append(" ")
                         .Append(pair.Key)
@@ -96,7 +96,7 @@ namespace Kit.Sql.Abstractions
             if (this.Parameters.Any())
             {
                 builder.Append(" WHERE");
-                foreach (var pair in this.Parameters)
+                foreach (KeyValuePair<string, object> pair in this.Parameters)
                 {
                     builder.Append(" ")
                         .Append(pair.Key)
@@ -125,14 +125,14 @@ namespace Kit.Sql.Abstractions
         }
         public IReader ExecuteReader()
         {
-            if (this.SQLH is SQLH sql)
+            if (this.SQLH is SqlServer sql)
             {
                 IEnumerable<SqlParameter> parameters =
                     this.Parameters.Select(x => new SqlParameter(x.Key, x.Value)).ToArray();
 
                 return sql.Read(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
             }
-            else if (this.SQLH is SQLHLite sqlite)
+            else if (this.SQLH is SqLite sqlite)
             {
                 return sqlite.Read(BuildLiteQuery());
             }

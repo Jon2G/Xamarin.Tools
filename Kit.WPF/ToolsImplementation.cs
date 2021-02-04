@@ -32,7 +32,7 @@ namespace Kit.WPF
         public override AbstractTools SetDebugging(bool Debugging)
         {
             this.Debugging = Debugging;
-            SQLHelper.Instance?.SetDebugging(Debugging);
+            Sqlh.Instance?.SetDebugging(Debugging);
             return this;
         }
         public override void CriticalAlert(object sender, EventArgs e)

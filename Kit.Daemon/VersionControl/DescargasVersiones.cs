@@ -10,11 +10,11 @@ namespace Kit.Daemon.VersionControl
     [Preserve(AllMembers = true)]
     public class DescargasVersiones : IVersionControlTable
     {
-        public DescargasVersiones(SQLH SQLH) : base(SQLH, 5) { }
+        public DescargasVersiones(SqlServer SQLH) : base(SQLH, 5) { }
         public override string TableName => "DESCARGAS_VERSIONES";
 
 
-        protected override void CreateTable(SQLH SQLH)
+        protected override void CreateTable(SqlServer SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DESCARGAS_VERSIONES
@@ -26,7 +26,7 @@ namespace Kit.Daemon.VersionControl
             SQLH.EXEC($"DELETE FROM DESCARGAS_VERSIONES WHERE ID_DISPOSITIVO = '{Kit.Daemon.Daemon.DeviceId}'");
         }
 
-        protected override void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SqLite SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DESCARGAS_VERSIONES

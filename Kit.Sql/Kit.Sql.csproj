@@ -10,8 +10,11 @@
     <RootNamespace>Kit.Sql</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
+    <UserSecretsId>226e0b93-2e0e-46ad-a710-2e87ba2b3216</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Realm" Version="10.0.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.0-beta" />
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.4" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.4" />

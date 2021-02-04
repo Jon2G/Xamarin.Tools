@@ -22,7 +22,7 @@ namespace Kit.NetCore.Controls
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
         #endregion

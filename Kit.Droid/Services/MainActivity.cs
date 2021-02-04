@@ -42,7 +42,7 @@ namespace Kit.Droid.Services
                     byte[] bits = null;
                     try
                     {
-                        using (var memoryStream = new MemoryStream())
+                        using (MemoryStream memoryStream = new MemoryStream())
                         {
                             stream.CopyTo(memoryStream);
                             bits = memoryStream.ToArray();

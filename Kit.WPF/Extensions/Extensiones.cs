@@ -18,8 +18,8 @@ namespace Kit.WPF.Extensions
         public static BitmapImage BytesToBitmap(this byte[] imageData)
         {
             if (imageData == null || imageData.Length == 0) return null;
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageData))
+            BitmapImage image = new BitmapImage();
+            using (MemoryStream mem = new MemoryStream(imageData))
             {
                 mem.Position = 0;
                 image.BeginInit();
@@ -36,13 +36,13 @@ namespace Kit.WPF.Extensions
         {
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             byte[] bytes = null;
-            var bitmapSource = imageSource as BitmapSource;
+            BitmapSource bitmapSource = imageSource as BitmapSource;
 
             if (bitmapSource != null)
             {
                 encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
 
-                using (var stream = new MemoryStream())
+                using (MemoryStream stream = new MemoryStream())
                 {
                     encoder.Save(stream);
                     bytes = stream.ToArray();
@@ -72,7 +72,7 @@ namespace Kit.WPF.Extensions
         public static extern bool DeleteObject([In] IntPtr hObject);
         public static ImageSource ImageSourceFromBitmap(this Bitmap bmp)
         {
-            var handle = bmp.GetHbitmap();
+            IntPtr handle = bmp.GetHbitmap();
             try
             {
                 return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());

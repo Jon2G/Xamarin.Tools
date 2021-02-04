@@ -12,13 +12,13 @@ namespace Kit.Daemon
     {
         public readonly BaseSQLHelper Local;
         public readonly BaseSQLHelper Remote;
-        public readonly string DbVersion;
+        public readonly ulong DbVersion;
 
         /// <summary>
         /// Maximo que puede creceer el tiempo de descanso en segundos
         /// </summary>
         public int MaxSleep { get; private set; }
-        internal DaemonConfig(string DbVersion, BaseSQLHelper Local, BaseSQLHelper Remote, int MaxSleep = 30)
+        internal DaemonConfig(ulong DbVersion, BaseSQLHelper Local, BaseSQLHelper Remote, int MaxSleep = 30)
         {
             this.DbVersion = DbVersion;
             this.Local = Local;
@@ -45,25 +45,25 @@ namespace Kit.Daemon
             this.MaxSleep = MaxSleep;
         }
 
-        public SQLHLite GetSqlLiteConnection()
+        public SqLite GetSqlLiteConnection()
         {
-            if (Local is SQLHLite sql)
+            if (Local is SqLite sql)
             {
                 return sql;
             }
-            if (Remote is SQLHLite sql1)
+            if (Remote is SqLite sql1)
             {
                 return sql1;
             }
             return null;
         }
-        internal SQLH GetSqlServerConnection()
+        internal SqlServer GetSqlServerConnection()
         {
-            if (Local is SQLH sql)
+            if (Local is SqlServer sql)
             {
                 return sql;
             }
-            if (Remote is SQLH sql1)
+            if (Remote is SqlServer sql1)
             {
                 return sql1;
             }

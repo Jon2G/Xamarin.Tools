@@ -15,7 +15,7 @@ namespace Kit.Extensions
         }
         public static async Task<byte[]> GetByteArray(StreamImageSource streamImageSource)
         {
-            var stream = await streamImageSource.Stream.Invoke(System.Threading.CancellationToken.None);
+            Stream stream = await streamImageSource.Stream.Invoke(System.Threading.CancellationToken.None);
             return stream.GetByteArray();
         }
         public static byte[] ImageToByte(this ImageSource ImageSource)

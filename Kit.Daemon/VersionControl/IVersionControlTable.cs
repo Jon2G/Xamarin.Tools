@@ -18,17 +18,17 @@ namespace Kit.Daemon.VersionControl
         {
             switch (SQLH)
             {
-                case SQLH sqlserver:
+                case SqlServer sqlserver:
                     CreateTable(sqlserver);
                     SaveVersion();
                     break;
-                case SQLHLite sqlite:
+                case SqLite sqlite:
                     CreateTable(sqlite);
                     break;
             }
         }
-        protected abstract void CreateTable(SQLH SQLH);
-        protected abstract void CreateTable(SQLHLite SQLH);
+        protected abstract void CreateTable(SqlServer SQLH);
+        protected abstract void CreateTable(SqLite SQLH);
 
         public IVersionControlTable(BaseSQLHelper SQLH, int Priority)
         {
@@ -39,7 +39,7 @@ namespace Kit.Daemon.VersionControl
         {
             DaemonVersionTable.SaveVersion(SQLH, TableName);
         }
-        public virtual string GetVersion()
+        public virtual ulong GetVersion()
         {
             return DaemonVersionTable.GetVersion(SQLH, TableName);
         }

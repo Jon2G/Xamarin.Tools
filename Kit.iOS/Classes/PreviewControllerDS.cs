@@ -85,9 +85,9 @@ namespace Kit.iOS.Classes
         {
             get
             {
-                var documents = NSBundle.MainBundle.BundlePath;
-                var lib = Path.Combine(documents, _filePath);
-                var url = NSUrl.FromFilename(lib);
+                string documents = NSBundle.MainBundle.BundlePath;
+                string lib = Path.Combine(documents, _filePath);
+                NSUrl url = NSUrl.FromFilename(lib);
                 return url;
             }
         }

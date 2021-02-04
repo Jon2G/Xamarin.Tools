@@ -6,6 +6,7 @@ using Java.Lang;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Java.IO;
 using Kit.Enums;
 using Kit.Services;
 using static Kit.Services.PDFToHtml;
@@ -40,9 +41,9 @@ namespace Kit.Droid.Services.HtmlToPDF
         {
             try
             {
-                var file = new Java.IO.File(PDFToHtml.FilePath);
-                var fileDescriptor = ParcelFileDescriptor.Open(file, ParcelFileMode.ReadWrite);
-                var writeResultCallback = new PdfWriteResultCallback(PDFToHtml);
+                File file = new Java.IO.File(PDFToHtml.FilePath);
+                ParcelFileDescriptor? fileDescriptor = ParcelFileDescriptor.Open(file, ParcelFileMode.ReadWrite);
+                PdfWriteResultCallback writeResultCallback = new PdfWriteResultCallback(PDFToHtml);
                 Adapter.OnWrite(new PageRange[] { PageRange.AllPages }, fileDescriptor, new CancellationSignal(), writeResultCallback);
             }
             catch

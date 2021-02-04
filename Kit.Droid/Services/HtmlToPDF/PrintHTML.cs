@@ -76,11 +76,11 @@ namespace Kit.Droid.Services.HtmlToPDF
                 //
                 //
                 PrintAttributes.Builder builder = new PrintAttributes.Builder();
-                var mediaSize = new PrintAttributes.MediaSize("TICKET", "TICKET", 2834, 118110);
+                PrintAttributes.MediaSize mediaSize = new PrintAttributes.MediaSize("TICKET", "TICKET", 2834, 118110);
                 builder.SetMediaSize(mediaSize);
                 //2834 (thousandths of an inch) => 72 mm
                 //118110 (thousandths of an inch) => 3000 mm
-                var job = printManager.Print("Tickets Job", pda, builder.Build());
+                PrintJob job = printManager.Print("Tickets Job", pda, builder.Build());
                 //    job.Wait((long)TimeSpan.FromSeconds(30).TotalMilliseconds);
                 //
 

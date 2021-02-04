@@ -22,7 +22,7 @@ namespace Kit.Sql.SQLiteNetExtensions
         // TODO : Add params into method :
         //, params object[] ps)
         {
-            var command = sqliteConn.CreateCommand(cmdText);
+            SQLiteCommand command = sqliteConn.CreateCommand(cmdText);
 
             if (sqliteConn.Trace)
             {
@@ -34,7 +34,7 @@ namespace Kit.Sql.SQLiteNetExtensions
 
         private static sqlite3_stmt Prepare(SQLiteConnection connection, string commandText)
         {
-            var stmt = SQLite3.Prepare2(connection.Handle, commandText);
+            sqlite3_stmt stmt = SQLite3.Prepare2(connection.Handle, commandText);
             return stmt;
         }
 
@@ -78,7 +78,7 @@ namespace Kit.Sql.SQLiteNetExtensions
                     }
                     else
                     {
-                        var text = SQLite3.ColumnString(stmt, index);
+                        string text = SQLite3.ColumnString(stmt, index);
                         DateTime resultDate;
                         if (!DateTime.TryParseExact(text, DateTimeExactStoreFormat, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out resultDate))
                         {
@@ -139,7 +139,7 @@ namespace Kit.Sql.SQLiteNetExtensions
                 }
                 else if (clrType == typeof(Guid))
                 {
-                    var text = SQLite3.ColumnString(stmt, index);
+                    string text = SQLite3.ColumnString(stmt, index);
                     return new Guid(text);
                 }
                 else
@@ -151,26 +151,26 @@ namespace Kit.Sql.SQLiteNetExtensions
 
         private static IEnumerable<ReaderItem> ExecuteReader(this SQLiteCommand sqliteCommand, SQLiteConnection connection)
         {
-            var stmt = Prepare(connection, sqliteCommand.CommandText);
+            sqlite3_stmt stmt = Prepare(connection, sqliteCommand.CommandText);
             try
             {
                 // We need to manage columns dynamically in order to create columns 
-                var cols = new ColumnLite[SQLite3.ColumnCount(stmt)];
+                ColumnLite[] cols = new ColumnLite[SQLite3.ColumnCount(stmt)];
 
 
                 while (SQLite3.Step(stmt) == SQLite3.Result.Row)
                 {
-                    var obj = new ReaderItem();
-                    for (var i = 0; i < cols.Length; i++)
+                    ReaderItem obj = new ReaderItem();
+                    for (int i = 0; i < cols.Length; i++)
                     {
                         if (cols[i] == null)
                         {
                             // We try to create column mapping if it's not already created : 
-                            var name = SQLite3.ColumnName16(stmt, i);
+                            string name = SQLite3.ColumnName16(stmt, i);
                             cols[i] = new ColumnLite(name, SQLite3.ColumnType(stmt, i).ToType());
                         }
-                        var colType = SQLite3.ColumnType(stmt, i);
-                        var val = ReadCol(connection, stmt, i, colType, cols[i].ColumnType);
+                        SQLite3.ColType colType = SQLite3.ColumnType(stmt, i);
+                        object val = ReadCol(connection, stmt, i, colType, cols[i].ColumnType);
                         obj[cols[i].Name] = val;
                     }
                     yield return obj;
@@ -190,7 +190,7 @@ namespace Kit.Sql.SQLiteNetExtensions
         private static Type ToType(this SQLite3.ColType colType)
         {
             // Prepare evolution where column can be nullable 
-            var nullable = false;
+            bool nullable = false;
 
             switch (colType)
             {

@@ -59,7 +59,7 @@ namespace Kit.Daemon.Abstractions
                 if (pendiente.Accion == AccionDemonio.DELETE)
                 {
                     IQuery query = ConsultaTabla(pendiente, pendiente.Accion, direccion);
-                    return query.Execute() != SQLH.Error;
+                    return query.Execute() != SqlServer.Error;
                 }
                 else
                 {
@@ -108,7 +108,7 @@ namespace Kit.Daemon.Abstractions
                 object NewPk = OldPk;
                 if (ShouldReserveNewId)
                 {
-                    if (Destination is SQLH)
+                    if (Destination is SqlServer)
                     {
                         object NewValue = ReserveNewId(Destination);
                         if (NewValue != null)
@@ -119,12 +119,12 @@ namespace Kit.Daemon.Abstractions
                 }
                 if (ForeignKeys.Any())
                 {
-                    foreach (var Fkey in ForeignKeys)
+                    foreach (KeyValuePair<string, string> Fkey in ForeignKeys)
                     {
                         if (Daemon.Current.DaemonConfig.GetSqlLiteConnection()
-                            .EXEC($"UPDATE {Fkey.Key} SET {Fkey.Value}=? WHERE {Fkey.Value}=?;", NewPk, OldPk) == SQLH.Error ||
+                            .EXEC($"UPDATE {Fkey.Key} SET {Fkey.Value}=? WHERE {Fkey.Value}=?;", NewPk, OldPk) == SqlServer.Error ||
                             Daemon.Current.DaemonConfig.GetSqlLiteConnection()
-                            .EXEC($"UPDATE {pendiente.Tabla} SET {this.PrimaryKey}=? WHERE {this.PrimaryKey}=?;", NewPk, OldPk) == SQLH.Error
+                            .EXEC($"UPDATE {pendiente.Tabla} SET {this.PrimaryKey}=? WHERE {this.PrimaryKey}=?;", NewPk, OldPk) == SqlServer.Error
                            //Update.BulidFrom(Daemon.Current.DaemonConfig.Local, Fkey.Key)
                            //.AddField(Fkey.Value, NewPk)
                            //.Where(Fkey.Value, OldPk)
@@ -161,7 +161,7 @@ namespace Kit.Daemon.Abstractions
         }
         private object ReserveNewId(BaseSQLHelper sql)
         {
-            if (sql is SQLH SQLH)
+            if (sql is SqlServer SQLH)
             {
                 return sql.Single<object>($"INSERT INTO {Name} DEFAULT VALUES SELECT SCOPE_IDENTITY();");
             }
@@ -248,19 +248,19 @@ namespace Kit.Daemon.Abstractions
         {
             switch (sql)
             {
-                case SQLHLite lite:
+                case SqLite lite:
                     RemoveFromVersionControl(TableName, lite);
                     break;
-                case SQLH server:
+                case SqlServer server:
                     RemoveFromVersionControl(TableName, server);
                     break;
             }
         }
-        private static void RemoveFromVersionControl(string TableName, SQLHLite sql)
+        private static void RemoveFromVersionControl(string TableName, SqLite sql)
         {
 
         }
-        private static void RemoveFromVersionControl(string TableName, SQLH sql)
+        private static void RemoveFromVersionControl(string TableName, SqlServer sql)
         {
             try
             {

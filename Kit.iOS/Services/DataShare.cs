@@ -26,10 +26,10 @@ namespace Kit.iOS.Services
         }
         public void ShowFile(string AttachmentName, byte[] AttachmentBytes)
         {
-            var FileName = AttachmentName;
+            string FileName = AttachmentName;
             string dirPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            var filename = Path.Combine(dirPath, FileName);
+            string filename = Path.Combine(dirPath, FileName);
             FileInfo fi = new FileInfo(filename);
 
             if (!NSFileManager.DefaultManager.FileExists(filename))
@@ -52,7 +52,7 @@ namespace Kit.iOS.Services
         }
         private UINavigationController FindNavigationController()
         {
-            foreach (var window in UIApplication.SharedApplication.Windows)
+            foreach (UIWindow window in UIApplication.SharedApplication.Windows)
             {
                 if (window.RootViewController.NavigationController != null)
                     return window.RootViewController.NavigationController;
@@ -68,7 +68,7 @@ namespace Kit.iOS.Services
         }
         private UINavigationController CheckSubs(UIViewController[] controllers)
         {
-            foreach (var controller in controllers)
+            foreach (UIViewController controller in controllers)
             {
                 if (controller.NavigationController != null)
                     return controller.NavigationController;
@@ -178,7 +178,7 @@ namespace Kit.iOS.Services
                 return;
             }
             
-            var PreviewController = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(filePath));
+            UIDocumentInteractionController PreviewController = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(filePath));
             PreviewController.Delegate = new UIDocumentInteractionControllerDelegateClass(UIApplication.SharedApplication.KeyWindow.RootViewController);
             Device.BeginInvokeOnMainThread(() =>
             {
@@ -249,8 +249,8 @@ namespace Kit.iOS.Services
                 items[i + 1] = NSUrl.FromFilename(archivos[i]);
             }
 
-            var activityController = new UIActivityViewController(items, null);
-            var vc = GetVisibleViewController();
+            UIActivityViewController activityController = new UIActivityViewController(items, null);
+            UIViewController vc = GetVisibleViewController();
 
             NSString[] excludedActivityTypes = null;
 
@@ -269,7 +269,7 @@ namespace Kit.iOS.Services
 
         UIViewController GetVisibleViewController()
         {
-            var rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+            UIViewController? rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
             if (rootController.PresentedViewController == null)
                 return rootController;

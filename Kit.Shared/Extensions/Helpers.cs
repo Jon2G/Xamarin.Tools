@@ -48,8 +48,8 @@ namespace Kit.Extensions
         {
             string dec;
 
-            var entero = Convert.ToInt64(Math.Truncate(Numero));
-            var decimales = Convert.ToInt32(Math.Round((Numero - entero) * 100, 2));
+            long entero = Convert.ToInt64(Math.Truncate(Numero));
+            int decimales = Convert.ToInt32(Math.Round((Numero - entero) * 100, 2));
             if (decimales > 0)
             {
                 //dec = " PESOS CON " + decimales.ToString() + "/100";
@@ -61,7 +61,7 @@ namespace Kit.Extensions
                 //dec = " PESOS CON " + decimales.ToString() + "/100";
                 dec = $" {strMoneda} {decimales:0,0} /100";
             }
-            var res = NumeroALetras(Convert.ToDouble(entero)) + dec;
+            string res = NumeroALetras(Convert.ToDouble(entero)) + dec;
             return $"{res} {Leyenda}";
         }
 
@@ -272,7 +272,7 @@ namespace Kit.Extensions
         public static IEnumerable<T> GetRange<T>(this IEnumerable<T> input, int start, int end)
         {
             int i = 0;
-            foreach (var item in input)
+            foreach (T item in input)
             {
                 if (i < start) continue;
                 if (i > end) break;

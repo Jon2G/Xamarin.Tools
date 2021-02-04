@@ -17,7 +17,7 @@ using Kit.Sql.Reflection;
 using System.Text.RegularExpressions;
 namespace Kit.Sql.Helpers
 {
-    public class SQLHLite : BaseSQLHelper
+    public class SqLite : BaseSQLHelper
     {
         private Type AssemblyType;
         private string ScriptResourceName;
@@ -26,29 +26,29 @@ namespace Kit.Sql.Helpers
         public event EventHandler OnCreateDB;
         //private FileInfo file;
         public readonly string RutaDb;
-        public readonly string DBVersion;
-        public SQLHLite(string DBVersion, string DBName)
+        public readonly ulong DBVersion;
+        public SqLite(ulong DBVersion, string DBName)
         {
-            if (SQLHelper.Instance is null)
+            if (Sqlh.Instance is null)
             {
                 throw new Exception("Please call SQLHelper.Init before using it");
             }
 
-            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
+            FileInfo db = new FileInfo($"{Sqlh.Instance.LibraryPath}/{DBName}");
             RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
 
-        public SQLHLite SetDbScriptResource<T>(string ScriptResourceName)
+        public SqLite SetDbScriptResource<T>(string ScriptResourceName)
         {
             AssemblyType = typeof(T);
             this.ScriptResourceName = ScriptResourceName;
             return this;
         }
 
-        public SQLHLite(FileInfo file)
+        public SqLite(FileInfo file)
         {
-            if (SQLHelper.Instance is null)
+            if (Sqlh.Instance is null)
             {
                 throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
             }
@@ -60,7 +60,7 @@ namespace Kit.Sql.Helpers
         /// Comprueba que la base de datos exista y que sea la versión mas reciente
         /// de lo contrario crea una nueva base de datos
         /// </summary>
-        public SQLHLite RevisarBaseDatos()
+        public SqLite RevisarBaseDatos()
         {
             FileInfo db = new FileInfo(RutaDb);
 
@@ -68,7 +68,7 @@ namespace Kit.Sql.Helpers
             {
                 Crear(Conecction());
             }
-            string dbVersion = GetDbVersion();
+            ulong dbVersion = GetDbVersion();
             if (dbVersion != DBVersion)
             {
                 db.Delete();
@@ -104,12 +104,12 @@ CADENA_CON TEXT NOT NULL);");
         }
 
 
-        public string GetDbVersion()
+        public ulong GetDbVersion()
         {
-            string dbVersion = null;
+            ulong dbVersion = 0;
             try
             {
-                dbVersion = Single<string>("SELECT VERSION FROM DB_VERSION");
+                dbVersion = Single<ulong>("SELECT VERSION FROM DB_VERSION");
             }
             catch (Exception ex)
             {
@@ -404,9 +404,9 @@ CADENA_CON TEXT NOT NULL);");
                         string batch = sqlBatch.ToString();
                         //if (IsBalanced(batch))
                         //{
-                            if (!string.IsNullOrEmpty(batch))
-                                EXEC(batch);
-                            sqlBatch.Clear();
+                        if (!string.IsNullOrEmpty(batch))
+                            EXEC(batch);
+                        sqlBatch.Clear();
                         //}
                     }
                     if (!line.StartsWith("--"))

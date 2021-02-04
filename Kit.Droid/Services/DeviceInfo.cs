@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using Android.Content;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using static Android.Provider.Settings;
@@ -39,7 +40,7 @@ namespace Kit.Droid.Services
                 string id = null;
                 try
                 {
-                    var context = Android.App.Application.Context;
+                    Context context = Android.App.Application.Context;
                     id = Secure.GetString(context.ContentResolver, Secure.AndroidId);
                 }
                 catch (Exception ex)

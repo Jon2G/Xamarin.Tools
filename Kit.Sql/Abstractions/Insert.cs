@@ -35,7 +35,7 @@ namespace Kit.Sql.Abstractions
                 .Append(" (")
                 .Append(string.Join(",", this.Parameters.Select(x => x.Key)))
                 .Append(") VALUES");
-            foreach (var pair in this.Parameters)
+            foreach (KeyValuePair<string, object> pair in this.Parameters)
             {
                 builder.Append(" @").Append(pair.Key);
             }
@@ -60,14 +60,14 @@ namespace Kit.Sql.Abstractions
 
         public override int Execute()
         {
-            if (this.SQLH is SQLH sql)
+            if (this.SQLH is SqlServer sql)
             {
                 IEnumerable<SqlParameter> parameters =
                     this.Parameters.Select(x => new SqlParameter(x.Key, x.Value));
 
                 return sql.EXEC(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
             }
-            else if (this.SQLH is SQLHLite sqlite)
+            else if (this.SQLH is SqLite sqlite)
             {
                 IEnumerable<object> parameters = this.Parameters.Select(x => x.Value);
 

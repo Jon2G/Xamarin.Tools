@@ -31,14 +31,14 @@ namespace Kit.Daemon.Abstractions
             {
                 BaseSQLHelper connection =Daemon.Current.DaemonConfig[SyncTarget.InvertDirection()];
 
-                if (connection is SQLH SQLH)
+                if (connection is SqlServer SQLH)
                 {
                     SQLH.EXEC("INSERT INTO DESCARGAS_VERSIONES(ID_DESCARGA,ID_DISPOSITIVO) VALUES(@ID_DESCARGA,@ID_DISPOSITIVO)"
                         , System.Data.CommandType.Text, false,
                         new SqlParameter("ID_DESCARGA", Id),
                         new SqlParameter("ID_DISPOSITIVO", Daemon.DeviceId));
                 }
-                else if (connection is SQLHLite SQLHLite)
+                else if (connection is SqLite SQLHLite)
                 {
                     SQLHLite.EXEC($"DELETE FROM VERSION_CONTROL WHERE ID=?", Id);
                 }

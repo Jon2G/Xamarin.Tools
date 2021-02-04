@@ -45,7 +45,7 @@ namespace Kit.iOS
             else if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
                 // Ask the user for permission to get notifications on iOS 8.0+
-                var settings = UIUserNotificationSettings.GetSettingsForTypes(
+                UIUserNotificationSettings settings = UIUserNotificationSettings.GetSettingsForTypes(
                         UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
                         new NSSet());
 

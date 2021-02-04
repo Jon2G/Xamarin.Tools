@@ -21,7 +21,7 @@ namespace Kit.Services
         {
             get
             {
-                var ret = implementation.Value;
+                IPhotoPickerService ret = implementation.Value;
                 if (ret == null)
                 {
                     throw NotImplementedInReferenceAssembly();

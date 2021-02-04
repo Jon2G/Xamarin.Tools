@@ -14,10 +14,10 @@ namespace Kit.iOS.Services
         public async Task<byte[]> Capture()
         {
             await Task.Yield();
-            var capture = UIScreen.MainScreen.Capture();
+            UIImage capture = UIScreen.MainScreen.Capture();
             using (NSData data = capture.AsPNG())
             {
-                var bytes = new byte[data.Length];
+                byte[] bytes = new byte[data.Length];
                 Marshal.Copy(data.Bytes, bytes, 0, Convert.ToInt32(data.Length));
                 return bytes;
             }

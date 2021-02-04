@@ -19,7 +19,7 @@ namespace Kit.Sql.Reflection
         }
         public ReflectionCaller(string AssemblyName)
         {
-            string Library = SQLHelper.Instance.LibraryPath;
+            string Library = Sqlh.Instance.LibraryPath;
             Dll = SearchAssembly(AssemblyName);
             if (Dll is null)
             {

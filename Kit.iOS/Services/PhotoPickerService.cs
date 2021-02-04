@@ -39,7 +39,7 @@ namespace Kit.iOS.Services
                 byte[] bits = null;
                 try
                 {
-                    using (var memoryStream = new MemoryStream())
+                    using (MemoryStream memoryStream = new MemoryStream())
                     {
                         stream.CopyTo(memoryStream);
                         bits = memoryStream.ToArray();
@@ -86,7 +86,7 @@ namespace Kit.iOS.Services
 
             // Present UIImagePickerController;
             UIWindow window = UIApplication.SharedApplication.KeyWindow;
-            var viewController = window.RootViewController;
+            UIViewController? viewController = window.RootViewController;
             viewController.PresentModalViewController(imagePicker, true);
 
             // Return Task object

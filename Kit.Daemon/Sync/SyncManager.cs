@@ -193,11 +193,11 @@ namespace Kit.Daemon.Sync
         {
             BaseSQLHelper sql = Daemon.Current.DaemonConfig[dirreccion]; //.Destination
             string query = null;
-            if (sql is SQLHLite)
+            if (sql is SqLite)
             {
                 query = BuildSqliteSelectQuery();
             }
-            else if (sql is SQLH)
+            else if (sql is SqlServer)
             {
                 query = BuildSqlServerQuery();
             }

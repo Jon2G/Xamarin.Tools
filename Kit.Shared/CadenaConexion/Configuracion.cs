@@ -43,7 +43,7 @@ namespace Kit.CadenaConexion
             this.IdentificadorDispositivo = DeviceId;
             this.CadenaCon = CadenaCon;
         }
-        public static Configuracion ObtenerConfiguracion(SQLHLite SQLHLite, string DeviceId)
+        public static Configuracion ObtenerConfiguracion(SqLite SQLHLite, string DeviceId)
         {
             try
             {
@@ -77,13 +77,13 @@ namespace Kit.CadenaConexion
             }
             return new Configuracion(string.Empty, DeviceId);
         }
-        public static bool IsUserDefined(SQLHLite SQLHLite)
+        public static bool IsUserDefined(SqLite SQLHLite)
         {
             string pin = SQLHLite.Single<string>("SELECT DEFINED_USER_PIN FROM CONFIGURACION");
             return (!string.IsNullOrEmpty(pin));
         }
 
-        public Exception ProbarConexion(SQLH SQLH)
+        public Exception ProbarConexion(SqlServer SQLH)
         {
             Exception resultado = null;
             // UserDialogs.Instance.ShowLoading("Intentando conectar...", MaskType.Black);
@@ -95,7 +95,7 @@ namespace Kit.CadenaConexion
         {
             return new Configuracion(string.Empty, string.Empty);
         }
-        public void Salvar(SQLHLite SQLHLite, SQLH SQLH)
+        public void Salvar(SqLite SQLHLite, SqlServer SQLH)
         {
             try
             {

@@ -72,13 +72,13 @@ namespace Kit.NetCore.Controls
             get
             {
                 byte[] bytes = null;
-                var bitmapSource = Source as BitmapSource;
-                var encoder = new PngBitmapEncoder();
+                BitmapSource bitmapSource = Source as BitmapSource;
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
                 if (bitmapSource != null)
                 {
                     encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
 
-                    using (var stream = new MemoryStream())
+                    using (MemoryStream stream = new MemoryStream())
                     {
                         encoder.Save(stream);
                         bytes = stream.ToArray();

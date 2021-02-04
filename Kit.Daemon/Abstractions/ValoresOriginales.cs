@@ -26,17 +26,17 @@ namespace Kit.Daemon.Abstractions
         }
         public void Agregar(object Valor, int i)
         {
-            if (SQLHelper.IsNull(Valor))
+            if (Sqlh.IsNull(Valor))
             {
                 Valor = null;
             }
             switch (Valor)
             {
                 case TimeSpan time:
-                    Valor = SQLHelper.FormatTime(time);
+                    Valor = Sqlh.FormatTime(time);
                     break;
                 case DateTime date:
-                    Valor = SQLHelper.FormatTime(date);
+                    Valor = Sqlh.FormatTime(date);
                     break;
             }
             //switch (Valor)
