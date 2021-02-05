@@ -269,7 +269,7 @@ namespace Kit.iOS.Services
 
         UIViewController GetVisibleViewController()
         {
-            UIViewController? rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+            var rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
             if (rootController.PresentedViewController == null)
                 return rootController;

@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
-    public class PhotoPickerService : IPhotoPickerService
+    public class PhotoPickerService : Kit.Services.Interfaces.IPhotoPickerService
     {
         TaskCompletionSource<Tuple<byte[], ImageSource>> taskCompletionSource;
         UIImagePickerController imagePicker;
@@ -86,7 +86,7 @@ namespace Kit.iOS.Services
 
             // Present UIImagePickerController;
             UIWindow window = UIApplication.SharedApplication.KeyWindow;
-            UIViewController? viewController = window.RootViewController;
+            var viewController = window.RootViewController;
             viewController.PresentModalViewController(imagePicker, true);
 
             // Return Task object
