@@ -94,7 +94,7 @@ namespace Kit.WPF.Controls
             string file = MySource;
             // this is asynchronous and won't block UI
             // first generate rough preview
-            if (Kit.Tools.Instance.IsInDesingMode)
+            if (Kit.AbstractTools.IsInDesingMode)
             {
                 if (!File.Exists(file))
                 {
@@ -125,7 +125,7 @@ namespace Kit.WPF.Controls
             {
                 try
                 {
-                    if (Kit.Tools.Instance.IsInDesingMode)
+                    if (AbstractTools.IsInDesingMode)
                     {
                         return null;
                     }

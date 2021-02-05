@@ -101,7 +101,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
             try
             {
 
-                if (ToolsImplementation.UWPInstance.IsInDesingMode)
+                if (AbstractTools.IsInDesingMode)
                 {
                     return;
                 }

@@ -14,27 +14,32 @@ namespace Kit
         public bool Debugging { get; protected set; }
         public string DeviceId { get; protected set; }
         private string _LibraryPath;
+
         public string LibraryPath
         {
             get => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
+
         protected AbstractTools()
         {
 
         }
+
         public static AbstractTools Instance => Tools.Instance;
 
-        public virtual ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public virtual ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs",
+            bool AlertAfterCritical = false)
         {
             this.DeviceId = DeviceInfo.DeviceId;
             if (AlertAfterCritical)
             {
-                Log.Init(LogDirectory,CriticalAlert);
+                Log.Init(LogDirectory, CriticalAlert);
             }
             else
             {
                 Log.Init(LogDirectory);
             }
+
             return this;
         }
 
@@ -44,28 +49,30 @@ namespace Kit
             Sqlh.Instance?.SetDebugging(Debugging);
             return this;
         }
+
         public virtual void CriticalAlert(object sender, EventArgs e)
         {
             CustomMessageBox.ShowOK(sender.ToString(), "Alerta", "Entiendo");
         }
+
         public AbstractTools SetLibraryPath(string LibraryPath)
         {
             _LibraryPath = LibraryPath;
             return this;
         }
-        private bool? _IsInDesingMode;
-        public bool IsInDesingMode
+
+        private static readonly Lazy<bool> _IsInDesingMode =
+            new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        public static bool IsInDesingMode
         {
             get
             {
-                if (_IsInDesingMode is null)
-                {
-                    _IsInDesingMode = Designing();
-                }
-                return (bool)_IsInDesingMode;
+                bool ret = _IsInDesingMode.Value;
+                return ret;
             }
         }
-        private bool Designing()
+
+        private static bool IsDesigning()
         {
 
             //if (Device.RuntimePlatform == Device.UWP)
