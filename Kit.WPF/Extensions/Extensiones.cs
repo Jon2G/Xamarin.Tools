@@ -68,6 +68,10 @@ namespace Kit.WPF.Extensions
         public static extern bool DeleteObject([In] IntPtr hObject);
         public static ImageSource ImageSourceFromBitmap(this Bitmap bmp)
         {
+            if(bmp is null)
+            {
+                return null;
+            }
             IntPtr handle = bmp.GetHbitmap();
             try
             {

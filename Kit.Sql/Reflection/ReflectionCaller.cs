@@ -38,6 +38,10 @@ namespace Kit.Sql.Reflection
             }
             return null;
         }
+        public ReflectionCaller GetAssembly<T>()
+        {
+            return GetAssembly(typeof(T));
+        }
         public ReflectionCaller GetAssembly(Type type)
         {
             Type = type;

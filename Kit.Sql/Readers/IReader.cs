@@ -10,5 +10,6 @@ namespace Kit.Sql
         public object this[int index] { get; }
         public object this[string columna] { get; }
         public int FieldCount { get; }
+        public T Get<T>(int index) where T : IConvertible;
     }
 }
