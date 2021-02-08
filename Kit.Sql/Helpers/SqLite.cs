@@ -220,7 +220,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result = Parse<T>(reader[0]);
+                        result =Sqlh.Parse<T>(reader[0]);
                     }
                 }
             }
@@ -230,7 +230,7 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public T Single<T>(SqlConnection con, string sql)
+        public T Single<T>(SqlConnection con, string sql) where T : IConvertible
         {
             T result = default;
             try
@@ -239,7 +239,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result = Parse<T>(reader[0]);
+                        result = Sqlh.Parse<T>(reader[0]);
                     }
                 }
             }
@@ -281,20 +281,22 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public List<T> Lista<T>(string sql)
+        public List<T> Lista<T>(string sql) where T : IConvertible
         {
             List<T> result = new List<T>();
             using (IReader reader = Read(sql))
             {
                 while (reader.Read())
                 {
-                    result.Add(Parse<T>(reader[0]));
+                    result.Add(Sqlh.Parse<T>(reader[0]));
                 }
             }
             return result;
         }
         //ListaTupla
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, params object[] parameters)
+            where T : IConvertible
+            where Q : IConvertible
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
 
@@ -302,7 +304,7 @@ CADENA_CON TEXT NOT NULL);");
             {
                 while (reader.Read())
                 {
-                    result.Add(new Tuple<T, Q>(Parse<T>(reader[0]), Parse<Q>(reader[1])));
+                    result.Add(new Tuple<T, Q>(Sqlh.Parse<T>(reader[0]), Sqlh.Parse<Q>(reader[1])));
                 }
             }
 

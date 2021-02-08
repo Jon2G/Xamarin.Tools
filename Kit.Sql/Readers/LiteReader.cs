@@ -8,6 +8,8 @@ using SqlDataReader = Kit.Sql.SQLiteNetExtensions.ReaderItem;
 using System.Linq;
 using System.Diagnostics;
 using Kit.Sql.SQLiteNetExtensions;
+using Kit.Sql.Helpers;
+
 namespace Kit.Sql.Readers
 {
     public class LiteReader : IReader
@@ -100,6 +102,11 @@ namespace Kit.Sql.Readers
             // No cambie este código. Coloque el código de limpieza en el método "Dispose(bool disposing)".
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public T Get<T>(int index) where T : IConvertible
+        {
+            return Sqlh.Parse<T>(this[index]);
         }
     }
 }

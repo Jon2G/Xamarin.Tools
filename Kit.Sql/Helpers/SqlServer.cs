@@ -116,13 +116,13 @@ namespace Kit.Sql.Helpers
         }
         public override T Single<T>(string sql)
         {
-            return Single<T>(sql);
+            return Single<T>(sql,false,CommandType.Text);
         }
-        public T Single<T>(string sql, params SqlParameter[] parameters)
+        public T Single<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
         {
             return Single<T>(sql, false, CommandType.Text, parameters);
         }
-        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text)
+        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text) where T : IConvertible
         {
             T result = default;
             using (IReader reader = Read(sql, type, Reportar))
@@ -131,7 +131,7 @@ namespace Kit.Sql.Helpers
                 {
                     if (reader[0] != DBNull.Value)
                     {
-                        result = Parse<T>(reader[0]);
+                        result = Sqlh.Parse<T>(reader[0]);
                     }
                 }
             }
@@ -162,7 +162,7 @@ namespace Kit.Sql.Helpers
             return false;
         }
 
-        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text, params SqlParameter[] parametros)
+        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text, params SqlParameter[] parametros) where T : IConvertible
         {
             T result = default;
             try
@@ -171,7 +171,7 @@ namespace Kit.Sql.Helpers
                 {
                     if (reader.Read())
                     {
-                        result = Parse<T>(reader[0]);
+                        result = Sqlh.Parse<T>(reader[0]);
                     }
                 }
                 if (Reportar)
@@ -188,14 +188,14 @@ namespace Kit.Sql.Helpers
             return result;
         }
         [Obsolete("No se deberia utilizar mas procedimientos alamcenados debido a su dificil versionamiento", false)]
-        public T Single<T>(string sql, bool Reportar = true, params SqlParameter[] parametros)
+        public T Single<T>(string sql, bool Reportar = true, params SqlParameter[] parametros) where T : IConvertible
         {
             T result = default;
             using (IReader reader = Read(sql, CommandType.StoredProcedure, false, parametros))
             {
                 if (reader.Read())
                 {
-                    result = Parse<T>(reader[0]);
+                    result = Sqlh.Parse<T>(reader[0]);
                 }
             }
             return result;
@@ -294,7 +294,7 @@ namespace Kit.Sql.Helpers
             }
             return Rows;
         }
-        public List<T> Lista<T>(string sql, CommandType type = CommandType.Text, bool Reportar = true, int index = 0, params SqlParameter[] parameters)
+        public List<T> Lista<T>(string sql, CommandType type = CommandType.Text, bool Reportar = true, int index = 0, params SqlParameter[] parameters) where T : IConvertible
         {
             List<T> result = new List<T>();
             try
@@ -309,7 +309,7 @@ namespace Kit.Sql.Helpers
                         {
                             while (reader.Read())
                             {
-                                result.Add(Parse<T>(reader[index]));
+                                result.Add(Sqlh.Parse<T>(reader[index]));
                             }
                         }
                         if (Reportar)
@@ -324,15 +324,17 @@ namespace Kit.Sql.Helpers
             }
             return result;
         }
-        public List<T> Lista<T>(string sql, bool Reportar = true, int indice = 0, params SqlParameter[] parameters)
+        public List<T> Lista<T>(string sql, bool Reportar = true, int indice = 0, params SqlParameter[] parameters) where T : IConvertible
         {
             return Lista<T>(sql, CommandType.Text, Reportar, indice, parameters);
         }
-        public List<T> Lista<T>(string sql)
+        public List<T> Lista<T>(string sql) where T : IConvertible
         {
             return Lista<T>(sql, CommandType.Text, false, 0);
         }
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.Text, params SqlParameter[] parameters)
+            where T : IConvertible
+            where Q : IConvertible
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
             using (SqlConnection con = Con())
@@ -344,7 +346,7 @@ namespace Kit.Sql.Helpers
                     using SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        result.Add(new Tuple<T, Q>(Parse<T>(reader[0]),Parse<Q>(reader[1])));
+                        result.Add(new Tuple<T, Q>(Sqlh.Parse<T>(reader[0]), Sqlh.Parse<Q>(reader[1])));
                     }
                 }
                 con.Close();
@@ -352,8 +354,10 @@ namespace Kit.Sql.Helpers
             return result;
         }
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, params SqlParameter[] parameters)
+            where T : IConvertible
+            where Q : IConvertible
         {
-            return ListaTupla<T,Q>(sql, CommandType.Text, parameters);
+            return ListaTupla<T, Q>(sql, CommandType.Text, parameters);
         }
         public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, bool Reportar = true, params SqlParameter[] parameters)
         {

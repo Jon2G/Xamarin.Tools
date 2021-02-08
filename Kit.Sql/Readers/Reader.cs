@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kit.Sql.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -78,6 +79,12 @@ namespace Kit.Sql.Readers
         {
             return async ? await _Reader?.ReadAsync() : Read();
         }
+
+        public T Get<T>(int index) where T : IConvertible
+        {
+            return Sqlh.Parse<T>(this[index]);
+        }
+
         public object this[int index] => _Reader[index];
         public object this[string columna] => _Reader[columna];
     }

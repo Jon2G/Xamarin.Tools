@@ -107,6 +107,27 @@ namespace Kit.Sql.Helpers
             return IsNull(value) ? ifnull : value;
         }
 
+        public static T Parse<T>(object obj) where  T: IConvertible
+        {
+            var type = typeof(T);
+            try
+            {
+
+                if (type.IsEnum)
+                {
+                    return (T)Enum.Parse(typeof(T), obj.ToString(), true);
+                }
+
+                return (T)Convert.ChangeType(obj, typeof(T));
+            }
+            catch (Exception ex)
+            {
+                Log.LogMe(ex, $"Al convertir un dato desde Parse<T> el tipo de dato: {type.Name}=>{obj}");
+            }
+
+            return default(T);
+        }
+
 
 
     }
