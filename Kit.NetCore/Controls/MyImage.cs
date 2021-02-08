@@ -94,7 +94,7 @@ namespace Kit.NetCore.Controls
             string file = MySource;
             // this is asynchronous and won't block UI
             // first generate rough preview
-            if (Tools.Instance.IsInDesingMode)
+            if (AbstractTools.IsInDesingMode)
             {
                 if (!File.Exists(file))
                 {
@@ -125,7 +125,7 @@ namespace Kit.NetCore.Controls
             {
                 try
                 {
-                    if (Tools.Instance.IsInDesingMode)
+                    if (AbstractTools.IsInDesingMode)
                     {
                         return null;
                     }
