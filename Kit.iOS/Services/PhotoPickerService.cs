@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
-    public class PhotoPickerService : IPhotoPickerService
+    public class PhotoPickerService : Kit.Services.Interfaces.IPhotoPickerService
     {
         TaskCompletionSource<Tuple<byte[], ImageSource>> taskCompletionSource;
         UIImagePickerController imagePicker;
@@ -39,7 +39,7 @@ namespace Kit.iOS.Services
                 byte[] bits = null;
                 try
                 {
-                    using (var memoryStream = new MemoryStream())
+                    using (MemoryStream memoryStream = new MemoryStream())
                     {
                         stream.CopyTo(memoryStream);
                         bits = memoryStream.ToArray();

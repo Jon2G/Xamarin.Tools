@@ -58,13 +58,13 @@ namespace Kit.Droid.Services.HtmlToPDF
             {
                 if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
                 {
-                    var builder = new PrintAttributes.Builder();
+                    PrintAttributes.Builder builder = new PrintAttributes.Builder();
                     builder.SetMediaSize(PrintAttributes.MediaSize.IsoA4);
                     builder.SetResolution(new PrintAttributes.Resolution("pdf", "pdf", (int)pDFToHtml.PageDPI, (int)pDFToHtml.PageDPI));
                     builder.SetMinMargins(PrintAttributes.Margins.NoMargins);
-                    var attributes = builder.Build();
-                    var adapter = webView.CreatePrintDocumentAdapter(pDFToHtml.FileName);
-                    var layoutResultCallback = new PdfLayoutResultCallback();
+                    PrintAttributes attributes = builder.Build();
+                    PrintDocumentAdapter? adapter = webView.CreatePrintDocumentAdapter(pDFToHtml.FileName);
+                    PdfLayoutResultCallback layoutResultCallback = new PdfLayoutResultCallback();
                     layoutResultCallback.Adapter = adapter;
                     layoutResultCallback.PDFToHtml = pDFToHtml;
                     adapter.OnLayout(null, attributes, null, layoutResultCallback, null);

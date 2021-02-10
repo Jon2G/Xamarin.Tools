@@ -18,13 +18,13 @@ namespace Kit.Forms.Controls.NotificationBar
             set
             {
                 _Imagen = value;
-                OnPropertyChanged();
+                Raise(()=>Imagen);
             }
         }
 
         public string Color { get; private set; }
         private string _Texto;
-        public string Texto { get => _Texto; set { _Texto = value; OnPropertyChanged(); } }
+        public string Texto { get => _Texto; set { _Texto = value;Raise(()=>Texto); } }
         public ICommand Command { get; private set; }
         public event EventHandler OnTapped;
         public Notificacion(string Icono, string Color, string Texto)

@@ -88,7 +88,7 @@ namespace Kit.Forms.Controls.NotificationBar
 
         private void ToogleMenu(object sender, EventArgs e)
         {
-            if (Application.Current.MainPage is MasterDetailPage master)
+            if (Application.Current.MainPage is FlyoutPage master)
             {
                 master.IsPresented = !master.IsPresented;
             }

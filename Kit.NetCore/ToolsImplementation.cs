@@ -14,9 +14,10 @@ namespace Kit.NetCore
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
+            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
             Debugging = Debugger.IsAttached;
             if (AlertAfterCritical)
             {
@@ -32,7 +33,7 @@ namespace Kit.NetCore
         public override AbstractTools SetDebugging(bool Debugging)
         {
             this.Debugging = Debugging;
-            SQLHelper.Instance?.SetDebugging(Debugging);
+            Sqlh.Instance?.SetDebugging(Debugging);
             return this;
         }
         public override void CriticalAlert(object sender, EventArgs e)

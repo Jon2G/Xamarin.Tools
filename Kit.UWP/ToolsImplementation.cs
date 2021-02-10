@@ -8,29 +8,19 @@ using System.Windows;
 using Kit.Services;
 using Kit.Enums;
 using Xamarin.Forms;
-
+using Kit.Services.Interfaces;
 
 namespace Kit.UWP
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.CustomMessageBoxService();
+            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
             Debugging = Debugger.IsAttached;
-            if (AlertAfterCritical)
-            {
-                Log.Init(LogDirectory, CriticalAlert);
-            }
-            else
-            {
-                Log.Init(LogDirectory);
-            }
-            return this;
+            return this; 
         }
-
-
-
         public override AbstractTools SetDebugging(bool Debugging)
         {
             this.Debugging = true;

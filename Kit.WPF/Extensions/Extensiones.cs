@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -18,8 +14,8 @@ namespace Kit.WPF.Extensions
         public static BitmapImage BytesToBitmap(this byte[] imageData)
         {
             if (imageData == null || imageData.Length == 0) return null;
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageData))
+            BitmapImage image = new BitmapImage();
+            using (MemoryStream mem = new MemoryStream(imageData))
             {
                 mem.Position = 0;
                 image.BeginInit();
@@ -36,13 +32,13 @@ namespace Kit.WPF.Extensions
         {
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             byte[] bytes = null;
-            var bitmapSource = imageSource as BitmapSource;
+            BitmapSource bitmapSource = imageSource as BitmapSource;
 
             if (bitmapSource != null)
             {
                 encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
 
-                using (var stream = new MemoryStream())
+                using (MemoryStream stream = new MemoryStream())
                 {
                     encoder.Save(stream);
                     bytes = stream.ToArray();
@@ -51,7 +47,7 @@ namespace Kit.WPF.Extensions
 
             return bytes;
         }
-        public static System.Windows.Media.ImageSource ByteToImage(this byte[] imageData)
+        public static BitmapImage ByteToImage(this byte[] imageData)
         {
             if (imageData is null)
             {
@@ -63,16 +59,20 @@ namespace Kit.WPF.Extensions
             biImg.StreamSource = ms;
             biImg.EndInit();
 
-            System.Windows.Media.ImageSource imgSrc = biImg as System.Windows.Media.ImageSource;
+            //System.Windows.Media.ImageSource imgSrc = biImg as System.Windows.Media.ImageSource;
 
-            return imgSrc;
+            return biImg;
         }
         [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteObject([In] IntPtr hObject);
         public static ImageSource ImageSourceFromBitmap(this Bitmap bmp)
         {
-            var handle = bmp.GetHbitmap();
+            if(bmp is null)
+            {
+                return null;
+            }
+            IntPtr handle = bmp.GetHbitmap();
             try
             {
                 return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());

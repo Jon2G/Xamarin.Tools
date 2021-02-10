@@ -21,7 +21,7 @@ namespace Kit.Services
         {
             get
             {
-                var ret = implementation.Value;
+                IScreenshot ret = implementation.Value;
                 if (ret == null)
                 {
 #if NETCOREAPP

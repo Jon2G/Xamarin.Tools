@@ -63,13 +63,13 @@ namespace Kit.iOS.Services
             try
             {
 
-                var printInfo = UIPrintInfo.PrintInfo;
+                UIPrintInfo printInfo = UIPrintInfo.PrintInfo;
 
                 printInfo.OutputType = UIPrintInfoOutputType.General;
                 printInfo.JobName = "TICKET";
 
 
-                var printer = UIPrintInteractionController.SharedPrintController;
+                UIPrintInteractionController printer = UIPrintInteractionController.SharedPrintController;
 
                 printInfo.OutputType = UIPrintInfoOutputType.General;
 

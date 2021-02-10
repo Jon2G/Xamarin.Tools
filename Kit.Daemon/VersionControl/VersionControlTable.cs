@@ -19,7 +19,7 @@ namespace Kit.Daemon.VersionControl
 
         public override string TableName => "VERSION_CONTROL";
 
-        protected override void CreateTable(SQLH SQLH)
+        protected override void CreateTable(SqlServer SQLH)
         {
             SQLH.EXEC(@"CREATE TABLE VERSION_CONTROL
                     (
@@ -34,7 +34,7 @@ namespace Kit.Daemon.VersionControl
             }
         }
 
-        protected override void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SqLite SQLH)
         {
             SQLH.EXEC(@"CREATE TABLE VERSION_CONTROL
                     (
@@ -52,7 +52,7 @@ namespace Kit.Daemon.VersionControl
                 {
                     return;
                 }
-                Trigger.CheckTrigger((SQLH)SQLH, table, Daemon.Current.DaemonConfig.DbVersion);
+                Trigger.CheckTrigger((SqlServer)SQLH, table, Daemon.Current.DaemonConfig.DbVersion);
             }
         }
     }

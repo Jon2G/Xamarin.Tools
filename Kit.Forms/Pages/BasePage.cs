@@ -43,7 +43,7 @@ namespace Kit.Forms.Pages
 
         protected override void OnSizeAllocated(double width, double height)
         {
-            var oldWidth = _width;
+            double oldWidth = _width;
             const double sizenotallocated = -1;
 
             base.OnSizeAllocated(width, height);

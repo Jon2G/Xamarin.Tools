@@ -15,13 +15,13 @@ namespace Kit.Daemon.VersionControl
     public class DaemonVersionTable : IVersionControlTable
     {
         public const string Name = "DAEMON_VERSION";
-        public DaemonVersionTable(SQLH SQLH) : base(SQLH, 1)
+        public DaemonVersionTable(SqlServer SQLH) : base(SQLH, 1)
         {
 
         }
         public override string TableName => Name;
 
-        protected override void CreateTable(SQLH SQLH)
+        protected override void CreateTable(SqlServer SQLH)
         {
             if (SQLH.TableExists("DESCARGAS_VERSIONES"))
                 SQLH.EXEC("DROP TABLE DESCARGAS_VERSIONES");
@@ -45,16 +45,16 @@ namespace Kit.Daemon.VersionControl
         {
             SQLH.EXEC($"INSERT INTO DAEMON_VERSION (TABLA,VERSION) VALUES('{tableName}','{Daemon.Current.DaemonConfig.DbVersion}');");
         }
-        public static string GetVersion(BaseSQLHelper SQLH, string tableName)
+        public static ulong GetVersion(BaseSQLHelper SQLH, string tableName)
         {
             if (!SQLH.TableExists(Name))
             {
-                return string.Empty;
+                return 0;
             }
-            return SQLH.Single<string>($"SELECT VERSION FROM DAEMON_VERSION WHERE TABLA='{tableName}'");
+            return SQLH.Single<ulong>($"SELECT VERSION FROM DAEMON_VERSION WHERE TABLA='{tableName}'");
         }
 
-        protected override void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SqLite SQLH)
         {
             //Just for sqlserver
             return;

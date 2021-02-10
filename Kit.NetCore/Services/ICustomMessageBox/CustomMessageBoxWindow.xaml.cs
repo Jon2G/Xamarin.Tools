@@ -107,7 +107,7 @@ namespace Kit.NetCore.Services.ICustomMessageBox
             try
             {
 
-                if (ToolsImplementation.Instance.IsInDesingMode)
+                if (ToolsImplementation.IsInDesingMode)
                 {
                     return;
                 }

@@ -24,7 +24,7 @@ namespace Kit.WPF.Prims
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
         #region PerfomanceHelpers
@@ -32,24 +32,24 @@ namespace Kit.WPF.Prims
         {
             if (this.PropertyChanged != null)
             {
-                var body = propertyExpression.Body as MemberExpression;
+                MemberExpression body = propertyExpression.Body as MemberExpression;
                 if (body == null)
                     throw new ArgumentException("'propertyExpression' should be a member expression");
 
-                var expression = body.Expression as ConstantExpression;
+                ConstantExpression expression = body.Expression as ConstantExpression;
                 if (expression == null)
                     throw new ArgumentException("'propertyExpression' body should be a constant expression");
 
                 object target = Expression.Lambda(expression).Compile().DynamicInvoke();
 
-                var e = new PropertyChangedEventArgs(body.Member.Name);
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(body.Member.Name);
                 PropertyChanged(target, e);
             }
         }
 
         public void Raise<T>(params Expression<Func<T>>[] propertyExpressions)
         {
-            foreach (var propertyExpression in propertyExpressions)
+            foreach (Expression<Func<T>> propertyExpression in propertyExpressions)
             {
                 Raise<T>(propertyExpression);
             }
@@ -65,7 +65,7 @@ namespace Kit.WPF.Prims
         protected void Push<T>(Dictionary<string, object> parameters)
         {
             NavigationParameters parames = new NavigationParameters();
-            foreach (var value in parameters)
+            foreach (KeyValuePair<string, object> value in parameters)
             {
                 parames.Add(value.Key, value.Value);
             }

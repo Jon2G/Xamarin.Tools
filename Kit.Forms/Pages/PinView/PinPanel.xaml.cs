@@ -204,7 +204,7 @@ namespace Kit.Forms.Controls.Pages.PinView
         #region Methods
         private static void OnPinChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var PinPanel = (bindable as PinPanel);
+            PinPanel PinPanel = (bindable as PinPanel);
             PinPanel.RenderPin(newValue?.ToString() ?? string.Empty);
             PinPanel?.PinChanged?.Invoke(PinPanel, new PinChangedEventArg(PinPanel, (string)newValue));
             PinPanel?.TrySubmit();

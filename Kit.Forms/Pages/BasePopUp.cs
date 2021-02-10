@@ -26,7 +26,7 @@ namespace Kit.Forms.Controls.Pages
         }
         public virtual async Task<BasePopUp> Mostrar()
         {
-            var scaleAnimation = new ScaleAnimation
+            ScaleAnimation scaleAnimation = new ScaleAnimation
             {
                 PositionIn = MoveAnimationOptions.Right,
                 PositionOut = MoveAnimationOptions.Left

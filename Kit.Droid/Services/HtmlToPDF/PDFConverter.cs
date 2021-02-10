@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Android.Webkit;
 using Kit.Enums;
 using Kit.Services;
 using Kit.Services.Interfaces;
@@ -16,7 +17,7 @@ namespace Kit.Droid.Services.HtmlToPDF
         {
             try
             {
-                var webpage = new Android.Webkit.WebView(Android.App.Application.Context);
+                WebView webpage = new Android.Webkit.WebView(Android.App.Application.Context);
                 webpage.Settings.JavaScriptEnabled = true;
 
 #pragma warning disable CS0618 // Type or member is obsolete

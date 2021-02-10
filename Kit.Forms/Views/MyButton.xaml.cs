@@ -15,7 +15,7 @@ namespace Kit.Forms.Controls.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MyButton : ContentView
     {
-        public static new readonly BindableProperty MarginProperty = BindableProperty.Create(
+        public new static readonly BindableProperty MarginProperty = BindableProperty.Create(
             propertyName: nameof(Margin), returnType: typeof(Thickness), declaringType: typeof(MyButton), defaultValue: new Thickness(0));
         public new Thickness Margin
         {
@@ -86,7 +86,7 @@ namespace Kit.Forms.Controls.Views
             }
         }
 
-        public static new readonly BindableProperty PaddingProperty = BindableProperty.Create(
+        public new static readonly BindableProperty PaddingProperty = BindableProperty.Create(
             propertyName: nameof(Padding), returnType: typeof(Thickness), declaringType: typeof(MyButton), defaultValue: new Thickness(0));
         public new Thickness Padding
         {
@@ -98,7 +98,7 @@ namespace Kit.Forms.Controls.Views
             }
         }
 
-        public static new readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(
+        public new static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(
             propertyName: nameof(BackgroundColor), returnType: typeof(Color), declaringType: typeof(MyButton), defaultValue: Color.White);
         public new Color BackgroundColor
         {

@@ -11,18 +11,18 @@ namespace DaemonTest
 {
     public static class AppData
     {
-        public static SQLH SQLH
+        public static SqlServer SQLH
         {
             get
             {
-                return (Daemon.Current.DaemonConfig.Local as SQLH);
+                return (Daemon.Current.DaemonConfig.Local as SqlServer);
             }
         }
-        public static SQLHLite SQLHLite
+        public static SqLite SQLHLite
         {
             get
             {
-                return (Daemon.Current.DaemonConfig.Remote as SQLHLite);
+                return (Daemon.Current.DaemonConfig.Remote as SqLite);
             }
         }
     }

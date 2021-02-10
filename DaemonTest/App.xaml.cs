@@ -8,6 +8,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using Kit;
+using Kit.Sql.Helpers;
+using OpenTK;
+using Realms;
 
 namespace DaemonTest
 {
@@ -27,12 +31,34 @@ namespace DaemonTest
         {
 
         }
+        public class Persona : RealmObject, MongoRealm.IPrimaryKeyId
+        {
+            [PrimaryKey]
+            public long Id { get; set; }
+            [Required]
+            public string Nombre { get; set; }
+        }
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             AllocConsole();
             Console.WriteLine("test");
-            Start();
+            Kit.WPF.Tools.Init();
+            Sqlh.Init(Tools.Instance.LibraryPath, Tools.Instance.Debugging);
+            MongoRealm realm = new MongoRealm("Invis", Init.Version, true);
+            Persona p = new Persona()
+            {
+                Nombre = "Juan"
+            };
+            realm.Add(p);
+
+            var juon = realm.Instance.All<Persona>().ToList();
+
+            var frost = realm.Detach(juon[0]);
+            frost.Nombre = "Killer frost";
+            realm.Update(frost);
+
+            //Start();
         }
         static async void Start()
         {

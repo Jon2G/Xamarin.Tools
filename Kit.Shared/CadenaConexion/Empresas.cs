@@ -9,15 +9,15 @@ namespace Kit.CadenaConexion
 {
     public class Empresas
     {
-        private readonly SQLHLite SQLHLite;
-        public Empresas(SQLHLite SQLHLite)
+        private readonly SqLite SQLHLite;
+        public Empresas(SqLite SQLHLite)
         {
             this.SQLHLite = SQLHLite;
         }
         public List<string> ListarEmpresas()
         {
             List<string> empresas = new List<string>();
-            using (var reader = SQLHLite.Read("SELECT Nombre FROM configuracion"))
+            using (IReader reader = SQLHLite.Read("SELECT Nombre FROM configuracion"))
             {
                 while (reader.Read())
                 {

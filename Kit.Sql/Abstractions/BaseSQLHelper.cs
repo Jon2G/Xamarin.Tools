@@ -43,7 +43,7 @@ namespace Kit.Sql.Interfaces
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public abstract T Single<T>(string sql);
+        public abstract T Single<T>(string sql) where T : IConvertible;
         /// <summary>
         /// Retorna un objeto IReader resultado de la consulta proporcionada
         /// </summary>
@@ -54,5 +54,6 @@ namespace Kit.Sql.Interfaces
         {
 
         }
+
     }
 }

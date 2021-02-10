@@ -17,7 +17,7 @@ using Kit.Sql.Reflection;
 using System.Text.RegularExpressions;
 namespace Kit.Sql.Helpers
 {
-    public class SQLHLite : BaseSQLHelper
+    public class SqLite : BaseSQLHelper
     {
         private Type AssemblyType;
         private string ScriptResourceName;
@@ -26,29 +26,29 @@ namespace Kit.Sql.Helpers
         public event EventHandler OnCreateDB;
         //private FileInfo file;
         public readonly string RutaDb;
-        public readonly string DBVersion;
-        public SQLHLite(string DBVersion, string DBName)
+        public readonly ulong DBVersion;
+        public SqLite(ulong DBVersion, string DBName)
         {
-            if (SQLHelper.Instance is null)
+            if (Sqlh.Instance is null)
             {
                 throw new Exception("Please call SQLHelper.Init before using it");
             }
 
-            FileInfo db = new FileInfo($"{SQLHelper.Instance.LibraryPath}/{DBName}");
+            FileInfo db = new FileInfo($"{Sqlh.Instance.LibraryPath}/{DBName}");
             RutaDb = db.FullName;
             this.DBVersion = DBVersion;
         }
 
-        public SQLHLite SetDbScriptResource<T>(string ScriptResourceName)
+        public SqLite SetDbScriptResource<T>(string ScriptResourceName)
         {
             AssemblyType = typeof(T);
             this.ScriptResourceName = ScriptResourceName;
             return this;
         }
 
-        public SQLHLite(FileInfo file)
+        public SqLite(FileInfo file)
         {
-            if (SQLHelper.Instance is null)
+            if (Sqlh.Instance is null)
             {
                 throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
             }
@@ -60,7 +60,7 @@ namespace Kit.Sql.Helpers
         /// Comprueba que la base de datos exista y que sea la versión mas reciente
         /// de lo contrario crea una nueva base de datos
         /// </summary>
-        public SQLHLite RevisarBaseDatos()
+        public SqLite RevisarBaseDatos()
         {
             FileInfo db = new FileInfo(RutaDb);
 
@@ -68,7 +68,7 @@ namespace Kit.Sql.Helpers
             {
                 Crear(Conecction());
             }
-            string dbVersion = GetDbVersion();
+            ulong dbVersion = GetDbVersion();
             if (dbVersion != DBVersion)
             {
                 db.Delete();
@@ -104,12 +104,12 @@ CADENA_CON TEXT NOT NULL);");
         }
 
 
-        public string GetDbVersion()
+        public ulong GetDbVersion()
         {
-            string dbVersion = null;
+            ulong dbVersion = 0;
             try
             {
-                dbVersion = Single<string>("SELECT VERSION FROM DB_VERSION");
+                dbVersion = Single<ulong>("SELECT VERSION FROM DB_VERSION");
             }
             catch (Exception ex)
             {
@@ -220,10 +220,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result =
-                            typeof(T).IsEnum ?
-                                (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
-                                (T)Convert.ChangeType(reader[0], typeof(T));
+                        result =Sqlh.Parse<T>(reader[0]);
                     }
                 }
             }
@@ -233,7 +230,7 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public T Single<T>(SqlConnection con, string sql)
+        public T Single<T>(SqlConnection con, string sql) where T : IConvertible
         {
             T result = default;
             try
@@ -242,10 +239,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result =
-                            typeof(T).IsEnum ?
-                                (T)Enum.Parse(typeof(T), reader[0].ToString(), true) :
-                                (T)Convert.ChangeType(reader[0], typeof(T));
+                        result = Sqlh.Parse<T>(reader[0]);
                     }
                 }
             }
@@ -287,20 +281,22 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public List<T> Lista<T>(string sql)
+        public List<T> Lista<T>(string sql) where T : IConvertible
         {
             List<T> result = new List<T>();
             using (IReader reader = Read(sql))
             {
                 while (reader.Read())
                 {
-                    result.Add((T)Convert.ChangeType(reader[0], typeof(T)));
+                    result.Add(Sqlh.Parse<T>(reader[0]));
                 }
             }
             return result;
         }
         //ListaTupla
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, params object[] parameters)
+            where T : IConvertible
+            where Q : IConvertible
         {
             List<Tuple<T, Q>> result = new List<Tuple<T, Q>>();
 
@@ -308,9 +304,7 @@ CADENA_CON TEXT NOT NULL);");
             {
                 while (reader.Read())
                 {
-                    result.Add(new Tuple<T, Q>
-                        ((T)Convert.ChangeType(reader[0], typeof(T)),
-                        (Q)Convert.ChangeType(reader[1], typeof(Q))));
+                    result.Add(new Tuple<T, Q>(Sqlh.Parse<T>(reader[0]), Sqlh.Parse<Q>(reader[1])));
                 }
             }
 
@@ -404,9 +398,9 @@ CADENA_CON TEXT NOT NULL);");
                         string batch = sqlBatch.ToString();
                         //if (IsBalanced(batch))
                         //{
-                            if (!string.IsNullOrEmpty(batch))
-                                EXEC(batch);
-                            sqlBatch.Clear();
+                        if (!string.IsNullOrEmpty(batch))
+                            EXEC(batch);
+                        sqlBatch.Clear();
                         //}
                     }
                     if (!line.StartsWith("--"))

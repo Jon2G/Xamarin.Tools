@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kit.Daemon.Abstractions;
+using Kit.Daemon.Devices;
 using Kit.Daemon.VersionControl;
 using Kit.Enums;
 using Kit.Services.Interfaces;
@@ -19,6 +20,7 @@ using Kit.Daemon.Sync;
 using Kit.Model;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Helpers;
+using Kit.Sql.Reflection;
 
 namespace Kit.Daemon
 {
@@ -34,7 +36,7 @@ namespace Kit.Daemon
         public Schema Schema { get; private set; }
         public event EventHandler OnConnectionStateChanged;
         public event Func<bool> OnInicializate;
-        public static string DeviceId { get; private set; }
+
         private static bool _OffLine;
         public static bool OffLine
         {
@@ -49,7 +51,7 @@ namespace Kit.Daemon
                 }
             }
         }
-        public static readonly Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
         public static Daemon Current
         {
             get
@@ -82,8 +84,8 @@ namespace Kit.Daemon
             private set
             {
                 _FactorDeDescanso = value;
-                Raise(()=>FactorDeDescanso);
-                Raise(()=>Inactive);
+                Raise(() => FactorDeDescanso);
+                Raise(() => Inactive);
             }
         }
         public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);
@@ -121,12 +123,8 @@ namespace Kit.Daemon
             this.SyncManager = new SyncManager();
             this.Schema = new Schema();
         }
-        public static Daemon Init(IDeviceInfo DeviceInfo)
-        {
-            Daemon.DeviceId = DeviceInfo.DeviceId;
-            return Current;
-        }
-        public Daemon Configure(BaseSQLHelper Local, BaseSQLHelper Remote, string DbVersion, int MaxSleep = 30)
+
+        public Daemon Configure(BaseSQLHelper Local, BaseSQLHelper Remote, ulong DbVersion, int MaxSleep = 30)
         {
             Current.DaemonConfig = new DaemonConfig(DbVersion, Local, Remote, MaxSleep);
             Current.DaemonConfig.Local.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
@@ -172,9 +170,9 @@ namespace Kit.Daemon
         /// <summary>
         /// Comprueba que las tablas de versión coincidan con la versión de este servicio, las crea ó renueva según sea el caso
         /// </summary>
-        public Daemon SetUp(SQLH Connection)
+        public Daemon SetUp(SqlServer Connection)
         {
-            using (var reflex = new Kit.Sql.Reflection.ReflectionCaller())
+            using (ReflectionCaller reflex = new Kit.Sql.Reflection.ReflectionCaller())
             {
                 foreach (IVersionControlTable table in reflex.GetInheritedClasses<IVersionControlTable>(Connection).OrderBy(x => x.Priority))
                 {
@@ -244,20 +242,11 @@ namespace Kit.Daemon
                 {
                     return;
                 }
-                SQLH SQLH = DaemonConfig.GetSqlServerConnection();
-                ///SQL SERVER
-                if (!SQLH.Exists("SELECT ID_DISPOSITIVO FROM DISPOSITVOS_TABLETS WHERE ID_DISPOSITIVO=@ID_DISPOSITIVO"
-                    , false, new SqlParameter("ID_DISPOSITIVO", DeviceId)))
+                SqlServer SQLH = DaemonConfig.GetSqlServerConnection();
+                if (!Device.Current.EnsureDeviceIsRegistred(SQLH))
                 {
-                    SQLH.EXEC("INSERT INTO DISPOSITVOS_TABLETS(ID_DISPOSITIVO,ULTIMA_CONEXION) VALUES (@ID_DISPOSITIVO,GETDATE())"
-                        , CommandType.Text, false, new SqlParameter("ID_DISPOSITIVO", DeviceId));
+                    return;
                 }
-                else
-                {
-                    SQLH.EXEC("UPDATE DISPOSITVOS_TABLETS SET ULTIMA_CONEXION=GETDATE() WHERE ID_DISPOSITIVO=@ID_DISPOSITIVO"
-                        , CommandType.Text, false, new SqlParameter("ID_DISPOSITIVO", DeviceId));
-                }
-
                 foreach (Table table in Schema.DownloadTables)
                 {
                     if (IsSleepRequested || OffLine)
@@ -269,7 +258,7 @@ namespace Kit.Daemon
                 }
 
 
-                SQLHLite SQLHLite = DaemonConfig.GetSqlLiteConnection();
+                SqLite SQLHLite = DaemonConfig.GetSqlLiteConnection();
                 IVersionControlTable controlTable = new VersionControlTable(SQLHLite);
                 if (!SQLHLite.TableExists(controlTable.TableName))
                 {
@@ -395,7 +384,7 @@ namespace Kit.Daemon
         }
         public bool IsTableSynced(int id)
         {
-            if (DaemonConfig.Local is SQLHLite SQLHLite)
+            if (DaemonConfig.Local is SqLite SQLHLite)
             {
                 bool synced = !SQLHLite.Exists($"SELECT ID FROM VERSION_CONTROL WHERE LLAVE={id} AND TABLA='R_MESAS'");
                 if (synced)
@@ -436,7 +425,7 @@ namespace Kit.Daemon
         /// <param name="TableName"></param>
         /// <param name="PrimaryKeyValue"></param>
         /// <param name="Accion"></param>
-        public void SqliteSync(SQLHLite con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
+        public void SqliteSync(SqLite con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
         {
             char CharAccion;
             switch (Accion)

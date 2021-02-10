@@ -18,7 +18,7 @@ namespace DaemonTest
 {
     public class Init
     {
-        public const string Version = "3.2.8";
+        public const ulong Version = 328;
         public Configuracion Configuracion { get; protected set; }
         public ConnectionState ConnectionState { get; protected set; }
 
@@ -30,17 +30,17 @@ namespace DaemonTest
         {
             this.ConnectionState = ConnectionState.Unknown;
         }
-        public static SQLHLite SetDbPath()
+        public static SqLite SetDbPath()
         {
-            SQLHelper.Init(Tools.Instance.LibraryPath, Tools.Instance.Debugging);
-            SQLHLite lite = new SQLHLite(Version, "Invis.db");
+            Sqlh.Init(Tools.Instance.LibraryPath, Tools.Instance.Debugging);
+            SqLite lite = new SqLite(Version, "Invis.db");
             //Acr.UserDialogs.UserDialogs.Instance.Alert($"Database path set to \n{lite.RutaDb}");
             return lite;
         }
         public async virtual Task<Init> Initializate()
         {
             await Task.Yield();
-            SQLHLite SQLHLite = SetDbPath();
+            SqLite SQLHLite = SetDbPath();
             //Check db file access
             FileInfo fileInfo = new FileInfo(SQLHLite.RutaDb);
             if (fileInfo.Exists)
@@ -58,11 +58,11 @@ namespace DaemonTest
             ConfigureConnectionString(SQLHLite);
             return this;
         }
-        protected virtual void ConfigureConnectionString(SQLHLite SQLHLite)
+        protected virtual void ConfigureConnectionString(SqLite SQLHLite)
         {
             this.Configuracion = Configuracion.ObtenerConfiguracion(SQLHLite, DeviceInfo.Current.DeviceId);
             this.Configuracion = Configuracion.BuildFrom("ACUVALLE", "12345678", "1433", "192.168.0.21\\SQLEXPRESS", "sa", DeviceInfo.Current.DeviceId);
-            SQLH SQLH = new SQLH(this.Configuracion.CadenaCon);
+            SqlServer SQLH = new SqlServer(this.Configuracion.CadenaCon);
             this.Configuracion.Salvar(SQLHLite, SQLH);
 
 
@@ -98,7 +98,7 @@ namespace DaemonTest
 
         }
 
-        protected ConnectionState TestConnectionString(SQLH SQLH)
+        protected ConnectionState TestConnectionString(SqlServer SQLH)
         {
             if (string.IsNullOrEmpty(SQLH.ConnectionString))
             {

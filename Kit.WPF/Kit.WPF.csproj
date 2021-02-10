@@ -37,6 +37,12 @@
     <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Imgs\002-usb-1.png" />
+    <None Remove="Imgs\003-wire.png" />
+    <None Remove="Imgs\error.png" />
+    <None Remove="Imgs\save.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="DeviceId" Version="5.2.0" />
     <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
@@ -90,7 +96,11 @@
     <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Imgs\002-usb-1.png" />
+    <Resource Include="Imgs\003-wire.png" />
+    <Resource Include="Imgs\error.png" />
     <Resource Include="Imgs\logo.png" />
+    <Resource Include="Imgs\save.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">

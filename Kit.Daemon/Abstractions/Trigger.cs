@@ -9,12 +9,12 @@ namespace Kit.Daemon.Abstractions
 {
     public class Trigger
     {
-        public static void CheckTrigger(SQLH SQLH, Table Table, string DbVersion)
+        public static void CheckTrigger(SqlServer SQLH, Table Table, ulong DbVersion)
         {
             try
             {
                 string TriggerName = $"{Table.Name}_TRIGGER";
-                string version = SQLH.Single<string>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
+                ulong version = SQLH.Single<ulong>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
                      , false, System.Data.CommandType.Text, new SqlParameter("NAME", TriggerName));
 
                 if (version != DbVersion)

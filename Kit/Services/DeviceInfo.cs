@@ -21,7 +21,7 @@ namespace Kit.Services
         {
             get
             {
-                var ret = implementation.Value;
+                IDeviceInfo ret = implementation.Value;
                 if (ret == null)
                 {
 #if NETCOREAPP

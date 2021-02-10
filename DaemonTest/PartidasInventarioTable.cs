@@ -18,7 +18,7 @@ namespace DaemonTest
         }
         public override string TableName => "PARTIDAS_INVENTARIO_MOVIL";
 
-        protected override void CreateTable(SQLH SQLH)
+        protected override void CreateTable(SqlServer SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE PARTIDAS_INVENTARIO_MOVIL
@@ -30,7 +30,7 @@ namespace DaemonTest
                     )", System.Data.CommandType.Text, false);
         }
 
-        protected override void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SqLite SQLH)
         {
             return;
         }

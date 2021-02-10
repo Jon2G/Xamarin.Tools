@@ -10,25 +10,19 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Log= Kit.Sql.Log;
+using Kit.Services.Interfaces;
+
 namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.CustomMessageBoxService();
+            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
             Debugging = Debugger.IsAttached;
-            if (AlertAfterCritical)
-            {
-                Log.Init(LogDirectory, CriticalAlert);
-            }
-            else
-            {
-                Log.Init(LogDirectory);
-            }
             return this;
         }
-
 
 
         public override AbstractTools SetDebugging(bool Debugging)

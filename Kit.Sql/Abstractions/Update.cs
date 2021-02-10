@@ -39,7 +39,7 @@ namespace Kit.Sql.Abstractions
                 .Append("UPDATE ")
                 .Append(TableName)
                 .Append(" SET ");
-            foreach (var pair in this.Parameters)
+            foreach (KeyValuePair<string, object> pair in this.Parameters)
             {
                 builder
                     .Append(pair.Key)
@@ -55,7 +55,7 @@ namespace Kit.Sql.Abstractions
             if (this.WhereParameters.Any())
             {
                 builder.Append(" WHERE");
-                foreach (var pair in this.WhereParameters)
+                foreach (KeyValuePair<string, object> pair in this.WhereParameters)
                 {
                     builder.Append(" ")
                         .Append(pair.Key)
@@ -94,7 +94,7 @@ namespace Kit.Sql.Abstractions
                     .Append("UPDATE ")
                     .Append(TableName)
                     .Append(" SET ");
-                foreach (var field in this.Parameters)
+                foreach (KeyValuePair<string, object> field in this.Parameters)
                 {
                     builder.Append(field.Key).Append("=?,");
                 }
@@ -107,7 +107,7 @@ namespace Kit.Sql.Abstractions
                 {
                     builder.Append(" WHERE ");
                 }
-                foreach (var field in this.Parameters)
+                foreach (KeyValuePair<string, object> field in this.Parameters)
                 {
                     builder.Append(field.Key).Append("=? AND ");
                 }
@@ -128,11 +128,11 @@ namespace Kit.Sql.Abstractions
 
         public override int Execute()
         {
-            if (this.SQLH is SQLH sql)
+            if (this.SQLH is SqlServer sql)
             {
                 List<SqlParameter> parameters =
                     this.Parameters.Select(x => new SqlParameter(x.Key, x.Value)).ToList();
-                foreach (var where in this.WhereParameters)
+                foreach (KeyValuePair<string, object> where in this.WhereParameters)
                 {
                     if (!parameters.Any(x => x.ParameterName == where.Key))
                     {
@@ -141,7 +141,7 @@ namespace Kit.Sql.Abstractions
                 }
                 return sql.EXEC(BuildQuery(), System.Data.CommandType.Text, false, parameters.ToArray());
             }
-            else if (this.SQLH is SQLHLite sqlite)
+            else if (this.SQLH is SqLite sqlite)
             {
                 List<object> parameters = this.Parameters.Select(x => x.Value).ToList();
 

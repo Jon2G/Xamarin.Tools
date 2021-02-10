@@ -45,7 +45,7 @@ namespace Kit.Services.Interfaces
                 && CrossMedia.Current.IsCameraAvailable
                 && CrossMedia.Current.IsTakePhotoSupported)
             {
-                var options = new StoreCameraMediaOptions
+                StoreCameraMediaOptions options = new StoreCameraMediaOptions
                 {
                     DefaultCamera = CameraDevice.Front, // Doesn't always work on Android, depends on Device
                     AllowCropping = true, // UWP & iOS only,
@@ -56,7 +56,7 @@ namespace Kit.Services.Interfaces
                     SaveToAlbum = true
                 };
 
-                var file = await CrossMedia.Current.TakePhotoAsync(options);
+                MediaFile file = await CrossMedia.Current.TakePhotoAsync(options);
                 return file;
             }
 
@@ -75,7 +75,7 @@ namespace Kit.Services.Interfaces
             if (CrossMedia.Current.IsPickPhotoSupported)
             {
                 this.IsOpen = true;
-                var file = await CrossMedia.Current.PickPhotoAsync();
+                MediaFile file = await CrossMedia.Current.PickPhotoAsync();
                 this.IsOpen = false;
                 return file;
             }
@@ -111,8 +111,8 @@ namespace Kit.Services.Interfaces
                 && storageOK == PermissionStatus.Granted
                 && CrossMedia.Current.IsTakeVideoSupported)
             {
-                var options = new StoreVideoOptions { SaveToAlbum = true };
-                var file = await CrossMedia.Current.TakeVideoAsync(options);
+                StoreVideoOptions options = new StoreVideoOptions { SaveToAlbum = true };
+                MediaFile file = await CrossMedia.Current.TakeVideoAsync(options);
                 return file;
             }
 
@@ -126,7 +126,7 @@ namespace Kit.Services.Interfaces
             }
             if (CrossMedia.Current.IsPickVideoSupported)
             {
-                var file = await CrossMedia.Current.PickVideoAsync();
+                MediaFile file = await CrossMedia.Current.PickVideoAsync();
                 return file;
             }
 

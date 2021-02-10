@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -23,7 +18,7 @@ namespace Kit.WPF.Forms.Extensions
 
         static void ue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            var ue = e.OriginalSource as FrameworkElement;
+            FrameworkElement ue = e.OriginalSource as FrameworkElement;
 
             if (e.Key == Key.Enter)
             {
@@ -50,7 +45,7 @@ namespace Kit.WPF.Forms.Extensions
 
         private static void ue_Unloaded(object sender, RoutedEventArgs e)
         {
-            var ue = sender as FrameworkElement;
+            FrameworkElement ue = sender as FrameworkElement;
             if (ue == null) return;
 
             ue.Unloaded -= ue_Unloaded;
@@ -68,7 +63,7 @@ namespace Kit.WPF.Forms.Extensions
         }
         private static void Atach(DependencyObject d, bool NewValue)
         {
-            var ue = d as FrameworkElement;
+            FrameworkElement ue = d as FrameworkElement;
             if (ue == null) return;
 
             if (NewValue)

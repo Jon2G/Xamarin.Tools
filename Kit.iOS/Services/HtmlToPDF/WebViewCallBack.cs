@@ -34,8 +34,8 @@ namespace Kit.iOS.Services.HtmlToPDF
                 CGRect printableRect = new CGRect(padding, padding, pageSize.Width - (padding * 2), pageSize.Height - (padding * 2));
                 CGRect paperRect = new CGRect(0, 0, PDFToHtml.PageWidth, PDFToHtml.PageHeight);
 
-                var nSString = new NSString("PaperRect");
-                var printableRectstring = new NSString("PrintableRect");
+                NSString nSString = new NSString("PaperRect");
+                NSString printableRectstring = new NSString("PrintableRect");
 
                 renderer.SetValueForKey(NSValue.FromObject(paperRect), nSString);
                 renderer.SetValueForKey(NSValue.FromObject(printableRect), printableRectstring);

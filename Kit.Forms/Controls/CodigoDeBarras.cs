@@ -48,7 +48,7 @@ namespace Kit.Forms.Controls
 
         private void OnButtomCommand()
         {
-            var options = new MobileBarcodeScanningOptions();
+            MobileBarcodeScanningOptions options = new MobileBarcodeScanningOptions();
             options.PossibleFormats = this.BarcodeFormats;
             ZXingScannerPage page = new ZXingScannerPage(options) { Title = "Leector de codigos de barras" };
             ToolbarItem closeItem = new ToolbarItem { Text = "Cerrar" };

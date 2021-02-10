@@ -46,9 +46,9 @@ namespace Kit.Forms.Pages
         public Lector Leector { get; set; }
         public event EventHandler Confirmado;
         private Configuracion Configuracion;
-        private readonly SQLHLite DBConection;
+        private readonly SqLite DBConection;
         private readonly Services.Interfaces.IDeviceInfo DeviceInfo;
-        public SQLH NewDBConection { get; private set; }
+        public SqlServer NewDBConection { get; private set; }
         public bool ShouldSetUpDaemon { get; set; }
         public static bool IsActive()
         {
@@ -59,24 +59,24 @@ namespace Kit.Forms.Pages
             }
             return false;
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLHLite DBConection)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SqLite DBConection)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
             this.DBConection = DBConection;
             this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
-            this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
+            this.NewDBConection = new SqlServer(this.Configuracion.CadenaCon);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLHLite DBConection, Exception ex)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SqLite DBConection, Exception ex)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
             this.DBConection = DBConection;
             this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
-            this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
+            this.NewDBConection = new SqlServer(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLHLite DBConection, Configuracion Configuracion)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SqLite DBConection, Configuracion Configuracion)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -84,7 +84,7 @@ namespace Kit.Forms.Pages
             {
                 this.DBConection = DBConection;
                 this.Configuracion = Configuracion;
-                this.NewDBConection = new SQLH(this.Configuracion.CadenaCon);
+                this.NewDBConection = new SqlServer(this.Configuracion.CadenaCon);
                 this.TxtCadenaCon.Text = this.Configuracion.CadenaCon;
             }
             catch (Exception ex)
@@ -257,7 +257,7 @@ namespace Kit.Forms.Pages
                 leector.CodigoEntrante -= Leector_CodigoEntrante;
                 if (!string.IsNullOrEmpty(leector.CodigoBarras))
                 {
-                    var configuracion_qr = Configuracion.DeSerialize(leector.CodigoBarras);
+                    Configuracion configuracion_qr = Configuracion.DeSerialize(leector.CodigoBarras);
                     if(configuracion_qr != null)
                     {
                         this.Configuracion = configuracion_qr;

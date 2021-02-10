@@ -21,7 +21,7 @@ namespace Kit.Services
         {
             get
             {
-                var ret = implementation.Value;
+                IPDFConverter ret = implementation.Value;
                 if (ret == null)
                 {
                     throw NotImplementedInReferenceAssembly();

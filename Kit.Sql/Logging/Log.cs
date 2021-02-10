@@ -78,7 +78,7 @@ namespace Kit.Sql
         }
         public static void DebugMe(string text)
         {
-            if (SQLHelper.Instance?.Debugging ?? false)
+            if (Sqlh.Instance?.Debugging ?? false)
             {
                 LogMe(text);
             }
@@ -89,7 +89,7 @@ namespace Kit.Sql
             {
                 string mensaje = string.Concat("\r", Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "---->", error);
-                if (SQLHelper.Instance.Debugging)
+                if (Sqlh.Instance.Debugging)
                 {
                     Debug.WriteLine(mensaje);
                     return;
@@ -111,7 +111,7 @@ namespace Kit.Sql
             {
                 string mensaje = string.Concat(Environment.NewLine,
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error.Message);
-                if (SQLHelper.Instance.Debugging)
+                if (Sqlh.Instance.Debugging)
                 {
                     LogMe(mensaje);
                     return;
@@ -157,7 +157,7 @@ namespace Kit.Sql
                     StackFrame frame = MainStackFrame(error);
                     LogMe("STACK FRAME\n L:" + frame?.GetFileLineNumber() ?? -1 + (" Frame:" + frame ?? "Desconocido") + "\n");
                 }
-                if (SQLHelper.Instance.Debugging)
+                if (Sqlh.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -183,7 +183,7 @@ namespace Kit.Sql
                 {
                     Log.OnConecctionLost?.Invoke(error, EventArgs.Empty);
                 }
-                if (SQLHelper.Instance.Debugging)
+                if (Sqlh.Instance.Debugging)
                 {
                     Log.LogMe(mensaje);
                     return;
@@ -202,7 +202,7 @@ namespace Kit.Sql
             {
                 string mensaje = string.Concat(Environment.NewLine, "[WARNING]",
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", error);
-                if (SQLHelper.Instance.Debugging)
+                if (Sqlh.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -264,7 +264,7 @@ namespace Kit.Sql
         }
         private static void EliminarDisposedLogs()
         {
-            DirectoryInfo dir = new DirectoryInfo($"{SQLHelper.Instance.Debugging}\\DisposedLogs");
+            DirectoryInfo dir = new DirectoryInfo($"{Sqlh.Instance.Debugging}\\DisposedLogs");
             if (dir.Exists)
             {
                 try
@@ -283,7 +283,7 @@ namespace Kit.Sql
             {
                 string mensaje = string.Concat(Environment.NewLine, "--",
                     DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString() + "----> ", Environment.NewLine, query);
-                if (SQLHelper.Instance.Debugging)
+                if (Sqlh.Instance.Debugging)
                 {
                     Console.Write(mensaje);
                     return;
@@ -297,13 +297,13 @@ namespace Kit.Sql
         #region Errores
         public static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs unobservedTaskExceptionEventArgs)
         {
-            var newExc = new Exception("TaskSchedulerOnUnobservedTaskException", unobservedTaskExceptionEventArgs.Exception);
+            Exception newExc = new Exception("TaskSchedulerOnUnobservedTaskException", unobservedTaskExceptionEventArgs.Exception);
             LogUnhandledException(newExc);
         }
 
         public static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
-            var newExc = new Exception("CurrentDomainOnUnhandledException", unhandledExceptionEventArgs.ExceptionObject as Exception);
+            Exception newExc = new Exception("CurrentDomainOnUnhandledException", unhandledExceptionEventArgs.ExceptionObject as Exception);
             LogUnhandledException(newExc);
         }
 
@@ -313,7 +313,7 @@ namespace Kit.Sql
             {
                 //var libraryPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal); // iOS: Environment.SpecialFolder.Resources
                 //var errorFilePath = Path.Combine(libraryPath, Log);
-                var errorMessage = $"-->[{DateTime.Now}]Error: ►►{exception.ToString()}◄◄";
+                string errorMessage = $"-->[{DateTime.Now}]Error: ►►{exception.ToString()}◄◄";
                 Console.WriteLine(errorMessage);
                 File.WriteAllText(Log.CriticalLogPath, errorMessage);
             }

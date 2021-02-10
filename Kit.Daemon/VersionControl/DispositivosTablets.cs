@@ -1,6 +1,8 @@
 ﻿using Kit.Sql;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 using Kit.Sql.Linker;
 using Kit.Sql.Helpers;
@@ -10,10 +12,10 @@ namespace Kit.Daemon.VersionControl
     [Preserve(AllMembers = true)]
     public class DispositivosTablets : IVersionControlTable
     {
-        public DispositivosTablets(SQLH SQLH) :base(SQLH,4) { }
+        public DispositivosTablets(SqlServer SQLH) :base(SQLH,4) { }
         public override string TableName => "DISPOSITVOS_TABLETS";
 
-        protected override void CreateTable(SQLH SQLH)
+        protected override void CreateTable(SqlServer SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DISPOSITVOS_TABLETS
@@ -27,7 +29,7 @@ namespace Kit.Daemon.VersionControl
                             )");
         }
 
-        protected override void CreateTable(SQLHLite SQLH)
+        protected override void CreateTable(SqLite SQLH)
         {
             SQLH.EXEC(
                 @"CREATE TABLE DISPOSITVOS_TABLETS
@@ -40,5 +42,7 @@ namespace Kit.Daemon.VersionControl
                             GEO_ID TEXT
                             )");
         }
+
+
     }
 }

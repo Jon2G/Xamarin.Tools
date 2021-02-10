@@ -6,6 +6,8 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using Kit.Services.Interfaces;
+using ZXing.Mobile;
+using Bitmap = Android.Graphics.Bitmap;
 
 namespace Kit.Droid.Services
 {
@@ -15,7 +17,7 @@ namespace Kit.Droid.Services
         {
             try
             {
-                var barcodeWriter = new ZXing.Mobile.BarcodeWriter
+                BarcodeWriter barcodeWriter = new ZXing.Mobile.BarcodeWriter
                 {
                     Format = ZXing.BarcodeFormat.QR_CODE,
                     Options = new ZXing.Common.EncodingOptions
@@ -27,8 +29,8 @@ namespace Kit.Droid.Services
                 };
 
                 barcodeWriter.Renderer = new ZXing.Mobile.BitmapRenderer();
-                var bitmap = barcodeWriter.Write(Value);
-                var stream = new MemoryStream();
+                Bitmap bitmap = barcodeWriter.Write(Value);
+                MemoryStream stream = new MemoryStream();
                 bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);  // this is the diff between iOS and Android
                 stream.Position = 0;
                 return stream;

@@ -16,14 +16,110 @@ namespace Kit.CadenaConexion
 {
     public class Configuracion : ModelBase
     {
-        public string CadenaCon { get; set; }
+        private string _cadenaCon;
+        private string _nombreDb;
+        private string _servidor;
+        private string _puerto;
+        private string _usuario;
+        private string _password;
+        private string _empresa;
+
+        public string CadenaCon
+        {
+            get => _cadenaCon;
+            set
+            {
+                _cadenaCon = value;
+                Raise(() => CadenaCon);
+            }
+        }
+
         public string IdentificadorDispositivo { get; set; }
-        public string NombreDB { get; set; }
-        public string Servidor { get; set; }
-        public string Puerto { get; set; }
-        public string Usuario { get; set; }
-        public string Password { get; set; }
-        public string Empresa { get; set; }
+
+        public string NombreDB
+        {
+            get => _nombreDb;
+            set
+            {
+                if (String.CompareOrdinal(_nombreDb, value) != 0)
+                {
+                    _nombreDb = value;
+                    RefreshConnectionString();
+                    Raise(() => NombreDB);
+                }
+            }
+        }
+
+        public string Servidor
+        {
+            get => _servidor;
+            set
+            {
+                if (String.CompareOrdinal(_servidor, value) != 0)
+                {
+                    _servidor = value;
+                    RefreshConnectionString();
+                    Raise(() => Servidor);
+                }
+            }
+        }
+
+        public string Puerto
+        {
+            get => _puerto;
+            set
+            {
+                if (String.CompareOrdinal(_puerto, value) != 0)
+                {
+                    _puerto = value;
+                    RefreshConnectionString();
+                    Raise(() => Puerto);
+                }
+            }
+        }
+
+        public string Usuario
+        {
+            get => _usuario;
+            set
+            {
+                if (String.CompareOrdinal(_usuario, value) != 0)
+                {
+                    _usuario = value;
+                    RefreshConnectionString();
+                    Raise(() => Usuario);
+                }
+            }
+        }
+
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                if (String.CompareOrdinal(_password, value) != 0)
+                {
+                    _password = value;
+                    RefreshConnectionString();
+                    Raise(() => Password);
+                }
+            }
+        }
+
+        public string Empresa
+        {
+            get => _empresa;
+            set
+            {
+                if (String.CompareOrdinal(_empresa, value) != 0)
+                {
+                    _empresa = value;
+                    RefreshConnectionString();
+                    Raise(() => Empresa);
+                }
+            }
+        }
+
         /// <summary>
         /// WARNING  SOLO PARA REFLEXIÓN XML
         /// </summary>
@@ -43,7 +139,7 @@ namespace Kit.CadenaConexion
             this.IdentificadorDispositivo = DeviceId;
             this.CadenaCon = CadenaCon;
         }
-        public static Configuracion ObtenerConfiguracion(SQLHLite SQLHLite, string DeviceId)
+        public static Configuracion ObtenerConfiguracion(SqLite SQLHLite, string DeviceId)
         {
             try
             {
@@ -77,13 +173,13 @@ namespace Kit.CadenaConexion
             }
             return new Configuracion(string.Empty, DeviceId);
         }
-        public static bool IsUserDefined(SQLHLite SQLHLite)
+        public static bool IsUserDefined(SqLite SQLHLite)
         {
             string pin = SQLHLite.Single<string>("SELECT DEFINED_USER_PIN FROM CONFIGURACION");
             return (!string.IsNullOrEmpty(pin));
         }
 
-        public Exception ProbarConexion(SQLH SQLH)
+        public Exception ProbarConexion(SqlServer SQLH)
         {
             Exception resultado = null;
             // UserDialogs.Instance.ShowLoading("Intentando conectar...", MaskType.Black);
@@ -95,7 +191,7 @@ namespace Kit.CadenaConexion
         {
             return new Configuracion(string.Empty, string.Empty);
         }
-        public void Salvar(SQLHLite SQLHLite, SQLH SQLH)
+        public void Salvar(SqLite SQLHLite, SqlServer SQLH)
         {
             try
             {
@@ -135,10 +231,8 @@ namespace Kit.CadenaConexion
         {
             return BuildFrom(configuracion.NombreDB, configuracion.Password, configuracion.Puerto, configuracion.Servidor, configuracion.Usuario, configuracion.IdentificadorDispositivo);
         }
-        public static Configuracion BuildFrom(
-            string NombreDB = "", string Password = "",
-            string Puerto = "", string Servidor = "",
-            string Usuario = "", string DeviceId = "")
+
+        public void RefreshConnectionString()
         {
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Data Source=TCP:")
@@ -163,7 +257,16 @@ namespace Kit.CadenaConexion
                 Replace('\n', ' ').
                 Replace('\r', ' ').ToString().
                 Split(';');
-            return new Configuracion(string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim(), DeviceId)
+
+            this.CadenaCon = string.Join(";"+Environment.NewLine, args);
+
+        }
+        public static Configuracion BuildFrom(
+            string NombreDB = "", string Password = "",
+            string Puerto = "", string Servidor = "",
+            string Usuario = "", string DeviceId = "")
+        {
+            return new Configuracion(string.Empty, DeviceId)
             {
                 NombreDB = NombreDB,
                 Password = Password,

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UIKit;
+using ZXing.Mobile;
 
 namespace Kit.iOS.Services
 {
@@ -13,7 +15,7 @@ namespace Kit.iOS.Services
         {
             try
             {
-                var barcodeWriter = new ZXing.Mobile.BarcodeWriter
+                BarcodeWriter barcodeWriter = new ZXing.Mobile.BarcodeWriter
                 {
                     Format = ZXing.BarcodeFormat.QR_CODE,
                     Options = new ZXing.Common.EncodingOptions
@@ -25,7 +27,7 @@ namespace Kit.iOS.Services
                 };
 
                 barcodeWriter.Renderer = new ZXing.Mobile.BitmapRenderer();
-                var bitmap = barcodeWriter.Write(Value);
+                UIImage bitmap = barcodeWriter.Write(Value);
                 MemoryStream stream = (MemoryStream)bitmap.AsPNG().AsStream();
                 return stream;
             }

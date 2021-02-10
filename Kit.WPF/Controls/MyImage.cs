@@ -72,13 +72,13 @@ namespace Kit.WPF.Controls
             get
             {
                 byte[] bytes = null;
-                var bitmapSource = Source as BitmapSource;
-                var encoder = new PngBitmapEncoder();
+                BitmapSource bitmapSource = Source as BitmapSource;
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
                 if (bitmapSource != null)
                 {
                     encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
 
-                    using (var stream = new MemoryStream())
+                    using (MemoryStream stream = new MemoryStream())
                     {
                         encoder.Save(stream);
                         bytes = stream.ToArray();
@@ -94,7 +94,7 @@ namespace Kit.WPF.Controls
             string file = MySource;
             // this is asynchronous and won't block UI
             // first generate rough preview
-            if (Kit.Tools.Instance.IsInDesingMode)
+            if (Kit.AbstractTools.IsInDesingMode)
             {
                 if (!File.Exists(file))
                 {
@@ -125,7 +125,7 @@ namespace Kit.WPF.Controls
             {
                 try
                 {
-                    if (Kit.Tools.Instance.IsInDesingMode)
+                    if (AbstractTools.IsInDesingMode)
                     {
                         return null;
                     }
