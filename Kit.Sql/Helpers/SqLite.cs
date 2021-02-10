@@ -254,6 +254,19 @@ CADENA_CON TEXT NOT NULL);");
         {
             return EXEC(sql);
         }
+        public int InsertAndRecoverPK(string sql, params object[] parametros)
+        {
+            int Id = 1;
+            using(var con = Conecction())
+            {
+                if (EXEC(con,sql, parametros) != BaseSQLHelper.Error)
+                {
+                    Id = LastScopeIdentity(con);
+                }
+                con.Close();
+            }
+            return Id;
+        }
         public int EXEC(string sql, params object[] parametros)
         {
             Log.DebugMe(sql);
