@@ -5,7 +5,7 @@ using Kit.Enums;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using Kit.Sql;
 using Kit.WPF;
-using Kit.WPF.Utilities;
+using Kit.Extensions;
 
 namespace Kit.WPF.Services.ICustomMessageBox
 {

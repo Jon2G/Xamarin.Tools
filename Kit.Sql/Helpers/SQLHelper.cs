@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Kit.Sql.Helpers
 {
-    public class Sqlh
+    public class SQLHelper
     {
         public bool Debugging { get; protected set; }
         private string _LibraryPath;
@@ -15,7 +15,7 @@ namespace Kit.Sql.Helpers
             set => _LibraryPath = value;
         }
 
-        public Sqlh(string LibraryPath, bool Debugging)
+        public SQLHelper(string LibraryPath, bool Debugging)
         {
             this.LibraryPath = LibraryPath;
             this.Debugging = Debugging;
@@ -27,18 +27,18 @@ namespace Kit.Sql.Helpers
         }
 
 
-        public static Sqlh Init(string LibraryPath, bool Debugging)
+        public static SQLHelper Init(string LibraryPath, bool Debugging)
         {
-            Set(new Sqlh(LibraryPath, Debugging));
+            Set(new SQLHelper(LibraryPath, Debugging));
             return Instance;
         }
 
-        private static void Set(Sqlh Instance)
+        private static void Set(SQLHelper Instance)
         {
             _Instance = Instance;
         }
-        private static Sqlh _Instance;
-        public static Sqlh Instance => _Instance;
+        private static SQLHelper _Instance;
+        public static SQLHelper Instance => _Instance;
 
 
         public static string FormatTime(TimeSpan TimeSpan)
@@ -63,6 +63,10 @@ namespace Kit.Sql.Helpers
             return value;
         }
 
+        public static bool ToBool(object valor)
+        {
+            return ToBool(valor, false);
+        }
         public static bool ToBool(object valor, bool _default = false)
         {
             if (IsNull(valor))
@@ -72,7 +76,7 @@ namespace Kit.Sql.Helpers
             switch (valor)
             {
                 case short:
-                case int:
+                case Int32:
                     return Convert.ToInt32(valor) == 1;
                 case bool boleano:
                     return boleano;
@@ -89,7 +93,7 @@ namespace Kit.Sql.Helpers
             switch (valor)
             {
                 case short:
-                case int:
+                case Int32:
                     return Convert.ToInt32(valor) == 1;
                 case bool boleano:
                     return boleano;
@@ -105,27 +109,6 @@ namespace Kit.Sql.Helpers
         public static object IfNull(object value, object ifnull)
         {
             return IsNull(value) ? ifnull : value;
-        }
-
-        public static T Parse<T>(object obj) where  T: IConvertible
-        {
-            var type = typeof(T);
-            try
-            {
-
-                if (type.IsEnum)
-                {
-                    return (T)Enum.Parse(typeof(T), obj.ToString(), true);
-                }
-
-                return (T)Convert.ChangeType(obj, typeof(T));
-            }
-            catch (Exception ex)
-            {
-                Log.LogMe(ex, $"Al convertir un dato desde Parse<T> el tipo de dato: {type.Name}=>{obj}");
-            }
-
-            return default(T);
         }
 
 

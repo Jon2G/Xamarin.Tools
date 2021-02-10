@@ -27,6 +27,11 @@ namespace Kit.Sql.Readers
 
         public override int RecordsAffected => 0;
 
+        public T Get<T>(int index) where T : IConvertible
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool GetBoolean(int ordinal)
         {
             throw new NotImplementedException();

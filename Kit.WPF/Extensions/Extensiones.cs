@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -51,7 +47,7 @@ namespace Kit.WPF.Extensions
 
             return bytes;
         }
-        public static System.Windows.Media.ImageSource ByteToImage(this byte[] imageData)
+        public static BitmapImage ByteToImage(this byte[] imageData)
         {
             if (imageData is null)
             {
@@ -63,9 +59,9 @@ namespace Kit.WPF.Extensions
             biImg.StreamSource = ms;
             biImg.EndInit();
 
-            System.Windows.Media.ImageSource imgSrc = biImg as System.Windows.Media.ImageSource;
+            //System.Windows.Media.ImageSource imgSrc = biImg as System.Windows.Media.ImageSource;
 
-            return imgSrc;
+            return biImg;
         }
         [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
         [return: MarshalAs(UnmanagedType.Bool)]
