@@ -98,7 +98,7 @@ namespace Kit.Sql.Reflection
         public Stream GetResource(string ResourceName)
         {
             string fullname = Dll.GetManifestResourceNames().FirstOrDefault(x => x.EndsWith(ResourceName));
-            if (string.IsNullOrEmpty(ResourceName))
+            if (string.IsNullOrEmpty(fullname))
             {
                 return null;
             }

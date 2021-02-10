@@ -15,7 +15,7 @@ namespace Kit.Sql
     {
         public static event EventHandler OnConecctionLost;
         public static string LogDirectory { get; private set; }
-        public static string LogPath { get; private set; }
+        public static string LogPath { get;  set; }
         public static string BackgroundLogPath { get; private set; }
         public static string DBLogPath { get; private set; }
         public static string CriticalLogPath { get; private set; }
