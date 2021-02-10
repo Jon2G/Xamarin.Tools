@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Kit.WPF.Utilities
+namespace Kit.Extensions
 {
     public static class ClickHelper
     {
