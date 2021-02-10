@@ -63,6 +63,10 @@ namespace Kit.Sql.Helpers
             return value;
         }
 
+        public static bool ToBool(object valor)
+        {
+            return ToBool(valor, false);
+        }
         public static bool ToBool(object valor, bool _default = false)
         {
             if (IsNull(valor))

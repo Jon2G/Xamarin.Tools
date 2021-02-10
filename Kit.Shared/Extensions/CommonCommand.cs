@@ -45,12 +45,18 @@ namespace Kit.Extensions
 
         public void Execute(object parameter)
         {
-            ExecuteAction.Invoke(parameter);
+            if (CanBeExecuted)
+                ExecuteAction.Invoke(parameter);
         }
 
         bool ICommand.CanExecute(object parameter)
         {
             return this.CanExecute;
+        }
+
+        protected virtual bool CanBeExecuted
+        {
+            get => true;
         }
     }
 }
