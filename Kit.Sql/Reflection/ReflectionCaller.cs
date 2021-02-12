@@ -139,11 +139,20 @@ namespace Kit.Sql.Reflection
             Dll = null;
         }
 
-        public List<T> GetInheritedClasses<T>(params object[] constructorArgs) where T : IComparable<T>
+
+        public List<T> GetInheritedClasses<T>(bool SearchInAllAssemblies = false, params object[] constructorArgs) where T : IComparable<T>
         {
             List<T> objects = new List<T>();
-            foreach (Type type in
-                AppDomain.CurrentDomain.GetAssemblies()
+            Assembly[] assemblies;
+            if (SearchInAllAssemblies)
+            {
+                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            }
+            else
+            {
+                assemblies = new Assembly[] { this.Dll };
+            }
+            foreach (Type type in assemblies
                        .SelectMany(assembly => assembly.GetTypes())
                 .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
             {
@@ -152,11 +161,22 @@ namespace Kit.Sql.Reflection
             objects.Sort();
             return objects;
         }
-        public List<Type> GetStaticInheritedClasses<T>(params object[] constructorArgs) 
+
+
+        public List<Type> GetStaticInheritedTypes<T>(bool SearchInAllAssemblies = false, params object[] constructorArgs)
         {
+            Assembly[] assemblies;
+            if (SearchInAllAssemblies)
+            {
+                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            }
+            else
+            {
+                assemblies = new Assembly[] { this.Dll };
+            }
+
             List<Type> objects = new List<Type>();
-            foreach (Type type in
-                AppDomain.CurrentDomain.GetAssemblies()
+            foreach (Type type in assemblies
                        .SelectMany(assembly => assembly.GetTypes())
                 .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
             {
