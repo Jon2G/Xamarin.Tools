@@ -36,7 +36,7 @@ namespace Kit.Droid.Services
             }
             catch (Exception ex)
             {
-             Kit.Sql.Log.LogMe(ex);
+             Log.Logger.Error(ex,"");
             }
             return false;
         }

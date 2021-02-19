@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using Kit.Droid.Services;
 using Kit.Services.Interfaces;
+using Xamarin.Forms;
 using ZXing.Mobile;
 using Bitmap = Android.Graphics.Bitmap;
-
+[assembly: Dependency(typeof(QRCode))]
 namespace Kit.Droid.Services
 {
     public class QRCode : IQRCode
@@ -37,7 +39,7 @@ namespace Kit.Droid.Services
             }
             catch (Exception e)
             {
-                Log.LogMe(e, "Al generar un código QR");
+                Log.Logger.Error(e, "Al generar un código QR");
                 return null;
             }
 

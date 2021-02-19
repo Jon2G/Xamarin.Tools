@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,8 @@ using Kit.Forms.Controls;
 using ZXing;
 using Kit.Daemon;
 using Kit.Sql.Helpers;
+using SQLServer;
+using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 
 namespace Kit.Forms.Pages
 {
@@ -46,9 +50,9 @@ namespace Kit.Forms.Pages
         public Lector Leector { get; set; }
         public event EventHandler Confirmado;
         private Configuracion Configuracion;
-        private readonly SqLite DBConection;
+        private readonly Kit.Sql.Sqlite.SQLiteConnection DBConection;
         private readonly Services.Interfaces.IDeviceInfo DeviceInfo;
-        public SqlServer NewDBConection { get; private set; }
+        public SQLServerConnection NewDBConection { get; private set; }
         public bool ShouldSetUpDaemon { get; set; }
         public static bool IsActive()
         {
@@ -59,24 +63,24 @@ namespace Kit.Forms.Pages
             }
             return false;
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SqLite DBConection)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLiteConnection DBConection)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
             this.DBConection = DBConection;
             this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
-            this.NewDBConection = new SqlServer(this.Configuracion.CadenaCon);
+            this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SqLite DBConection, Exception ex)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Exception ex)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
             this.DBConection = DBConection;
             this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
-            this.NewDBConection = new SqlServer(this.Configuracion.CadenaCon);
+            this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SqLite DBConection, Configuracion Configuracion)
+        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -84,12 +88,12 @@ namespace Kit.Forms.Pages
             {
                 this.DBConection = DBConection;
                 this.Configuracion = Configuracion;
-                this.NewDBConection = new SqlServer(this.Configuracion.CadenaCon);
+                this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
                 this.TxtCadenaCon.Text = this.Configuracion.CadenaCon;
             }
             catch (Exception ex)
             {
-                Kit.Sql.Log.LogMe(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
+               Log.Logger.Error(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
             }
         }
         private void BasePage_Appearing(object sender, EventArgs e)
@@ -137,7 +141,7 @@ namespace Kit.Forms.Pages
                 Exception ex;
                 //using (Acr.UserDialogs.UserDialogs.Instance.Loading("Intentando conectar..."))
                 //{
-                ex = this.NewDBConection.PruebaConexion(Test);
+                ex = this.NewDBConection.TestConnection(Test);
                 //}
                 ToogleStatus(ex);
                 if (ex != null)
@@ -151,11 +155,11 @@ namespace Kit.Forms.Pages
                     this.Configuracion.CadenaCon = TxtCadenaCon.Text;
                     this.Configuracion.Salvar(this.DBConection, this.NewDBConection);
 
-                    this.NewDBConection.ChangeConnectionString(this.Configuracion.CadenaCon);
+                    this.NewDBConection.ConnectionString = new SqlConnectionStringBuilder(this.Configuracion.CadenaCon);
 
                     if (this.ShouldSetUpDaemon)
                     {
-                        Daemon.Daemon.Current.SetUp(NewDBConection);
+                        //Daemon.Daemon.Current.SetUp(NewDBConection);
                     }
 
                     if (this.Navigation.ModalStack.Count > 0)
@@ -168,7 +172,7 @@ namespace Kit.Forms.Pages
             }
             catch (Exception exx)
             {
-                Kit.Sql.Log.LogMe(exx, "Al intentar cambiar la cadena de conexión desde CadenaCon.cs GuardarAsync");
+                Log.Logger.Error(exx, "Al intentar cambiar la cadena de conexión desde CadenaCon.cs GuardarAsync");
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(exx.Message, "Alerta");
             }
         }
@@ -197,7 +201,8 @@ namespace Kit.Forms.Pages
         private async Task<bool> ProbarConexionAsync(string Test, bool MostrarMensajesStatus = true)
         {
             await Task.Yield();
-            Exception ex = this.NewDBConection.PruebaConexion(Test);
+
+            Exception ex = this.NewDBConection.TestConnection(Test);
             if (ex != null)
             {
                 if (MostrarMensajesStatus)
@@ -232,13 +237,29 @@ namespace Kit.Forms.Pages
         {
             using (Acr.UserDialogs.UserDialogs.Instance.Loading("Espere un momento..."))
             {
-                if (DBConection.EliminarDB())
+                if (EliminarDB(DBConection.DatabasePath))
                 {
-                    DBConection.RevisarBaseDatos();
-                    Kit.Sql.Log.LogMe("Se elimino la base de datos");
+                    Log.Logger.Warning("Se elimino la base de datos");
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Se elimino la base de datos local", "Atención", "Ok");
                     Guardar(sender, e);
                 }
+            }
+        }
+        public bool EliminarDB(string RutaDb)
+        {
+            try
+            {
+                FileInfo file = new FileInfo(RutaDb);
+                if (file.Exists)
+                {
+                    File.Delete(RutaDb);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Al eliminar la base de datos de sqlite");
+                return false;
             }
         }
         private void Importar_Touched(object sender, EventArgs e)
@@ -258,7 +279,7 @@ namespace Kit.Forms.Pages
                 if (!string.IsNullOrEmpty(leector.CodigoBarras))
                 {
                     Configuracion configuracion_qr = Configuracion.DeSerialize(leector.CodigoBarras);
-                    if(configuracion_qr != null)
+                    if (configuracion_qr != null)
                     {
                         this.Configuracion = configuracion_qr;
                         this.CargarCadena();

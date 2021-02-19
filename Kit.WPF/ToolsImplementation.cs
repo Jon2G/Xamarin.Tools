@@ -14,11 +14,10 @@ namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
-            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
-            Debugging = Debugger.IsAttached;
+            base.Init(DeviceInfo, AlertAfterCritical);
             return this;
         }
 
@@ -53,14 +52,14 @@ namespace Kit.WPF
                 catch (Exception ex)
                 {
                     // ignored
-                    Log.LogMe(ex, "Ventana padre");
+                    Log.Logger.Error(ex, "Ventana padre");
                 }
 
                 return a.IsActive ? a : null;
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al determinar la ventana padre");
+                Log.Logger.Error(ex, "Al determinar la ventana padre");
                 return null;
             }
         }

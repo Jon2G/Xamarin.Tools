@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Kit.iOS.Services;
 using UIKit;
+using Xamarin.Forms;
 using ZXing.Mobile;
-
+[assembly: Dependency(typeof(QRCode))]
 namespace Kit.iOS.Services
 {
     public class QRCode : IQRCode
@@ -33,7 +35,7 @@ namespace Kit.iOS.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al generar un código QR");
+                Log.Logger.Error(ex, "Al generar un código QR");
                 return null;
             }
 

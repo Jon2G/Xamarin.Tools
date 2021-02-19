@@ -17,7 +17,6 @@ namespace Kit.NetCore
 
 
             Instance = new ToolsImplementation();
-            Instance.SetDebugging(Debugger.IsAttached);
 
 
             return Instance;

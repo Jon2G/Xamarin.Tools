@@ -87,7 +87,7 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex.Message);
+                Log.Logger.Error(ex.Message);
             }
             return this;
         }
@@ -111,7 +111,7 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex.Message);
+                Log.Logger.Error(ex.Message);
             }
             return this;
         }
@@ -158,7 +158,7 @@ namespace Kit.WPF.Reportes
                     }
                     catch (Exception ex)
                     {
-                        Log.LogMe(ex, $"Eliminando el reporte:{file.FullName}");
+                        Log.Logger.Error(ex, $"Eliminando el reporte:{file.FullName}");
                         alternativo += i.ToString();
                         i++;
                     }
@@ -171,7 +171,7 @@ namespace Kit.WPF.Reportes
                         }
                         catch (Exception ex)
                         {
-                            Log.LogMe(ex, $"Eliminando reportes anteriores:{file.FullName}");
+                            Log.Logger.Error(ex, $"Eliminando reportes anteriores:{file.FullName}");
                         }
                     }
                 }
@@ -183,7 +183,7 @@ namespace Kit.WPF.Reportes
                 }
                 catch (Exception ex)
                 {
-                    Log.LogMe(ex, "Al crear un reporte:" + nombre);
+                    Log.Logger.Error(ex, "Al crear un reporte:" + nombre);
                 }
                 if (!EspacioDeTrabajo)
                 {
@@ -194,7 +194,7 @@ namespace Kit.WPF.Reportes
                     }
                     catch (Exception ex)
                     {
-                        Log.LogMe(ex);
+                        Log.Logger.Error(ex,"?");
                     }
                 }
 
@@ -202,7 +202,7 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al guardar el reporte:" + nombre);
+                Log.Logger.Error(ex, "Al guardar el reporte:" + nombre);
                 return null;
             }
         }
@@ -249,7 +249,7 @@ namespace Kit.WPF.Reportes
                     }
                     catch (Exception ex)
                     {
-                        Log.LogMe(ex, $"Eliminando el reporte:{file.FullName}");
+                        Log.Logger.Error(ex, $"Eliminando el reporte:{file.FullName}");
                         alternativo += i.ToString();
                         i++;
                     }
@@ -262,7 +262,7 @@ namespace Kit.WPF.Reportes
                         }
                         catch (Exception ex)
                         {
-                            Log.LogMe(ex, $"Eliminando reportes anteriores:{file.FullName}");
+                            Log.Logger.Error(ex, $"Eliminando reportes anteriores:{file.FullName}");
                         }
                     }
                 }
@@ -274,7 +274,7 @@ namespace Kit.WPF.Reportes
                 }
                 catch (Exception ex)
                 {
-                    Log.LogMe(ex, "Al crear un reporte:" + nombre);
+                    Log.Logger.Error(ex, "Al crear un reporte:" + nombre);
                 }
                 if (!EspacioDeTrabajo)
                 {
@@ -285,7 +285,7 @@ namespace Kit.WPF.Reportes
                     }
                     catch (Exception ex)
                     {
-                        Log.LogMe(ex);
+                        Log.Logger.Error(ex,"?");
                     }
                 }
 
@@ -293,7 +293,7 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al guardar el reporte:" + nombre);
+                Log.Logger.Error(ex, "Al guardar el reporte:" + nombre);
                 return null;
             }
         }
@@ -337,7 +337,7 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al imprimir un mrt");
+                Log.Logger.Error(ex, "Al imprimir un mrt");
             }
             if (IniciarAlFinalizar)
             {
@@ -347,7 +347,7 @@ namespace Kit.WPF.Reportes
                 }
                 catch (Exception ex)
                 {
-                    Log.LogMe(ex, $"Al mostrar un ticket de venta=>'{nombre}'");
+                    Log.Logger.Error(ex, $"Al mostrar un ticket de venta=>'{nombre}'");
                 }
             }
 
@@ -378,7 +378,7 @@ namespace Kit.WPF.Reportes
             this.StiReport = new Stimulsoft.Report.StiReport();
             if (!archivo_mrt.EndsWith(".mrt"))
             {
-                if (Kit.Tools.Instance.Debugging)
+                if (Debugger.IsAttached)
                 {
                     throw new ArgumentException($"Reporte sin extension");
                 }
@@ -441,7 +441,7 @@ namespace Kit.WPF.Reportes
             FileInfo file = new FileInfo(ruta);
             if (file.Extension != ".mrt")
             {
-                Log.DebugMe("WARNING no se establecio la extensión al crear un nuevo reporte");
+                Log.Logger.Error("WARNING no se establecio la extensión al crear un nuevo reporte");
                 ruta += ".mrt";
             }
             StiReport report = new StiReport();

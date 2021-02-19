@@ -4,9 +4,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Kit.Enums;
+using Kit.NetCore.Services.ICustomMessageBox;
 using Kit.Sql;
+using Xamarin.Forms;
+using Application = System.Windows.Application;
 using Interface = Kit.Services.Interfaces.ICustomMessageBox;
-
+[assembly: Dependency(typeof(CustomMessageBoxService))]
 namespace Kit.NetCore.Services.ICustomMessageBox
 {
     public class CustomMessageBoxService : Interface
@@ -114,7 +117,7 @@ namespace Kit.NetCore.Services.ICustomMessageBox
                 }
                 catch (System.ComponentModel.Win32Exception ex)
                 {
-                    Log.LogMe(ex, "Al mostar un mensaje personalizado");
+                    Log.Logger.Error(ex, "Al mostar un mensaje personalizado");
                 }
             });
             return CustomMessageBoxResult.OK;

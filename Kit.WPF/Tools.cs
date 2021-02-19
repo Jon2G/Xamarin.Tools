@@ -25,7 +25,6 @@ namespace Kit.WPF
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Kit.Tools.Set(new ToolsImplementation().SetLibraryPath(Environment.CurrentDirectory));
-            Kit.Tools.Instance.SetDebugging(Debugger.IsAttached);
 
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 

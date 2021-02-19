@@ -22,6 +22,7 @@
     <Company>Jouna77</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <Import Project="..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets" Condition="Exists('..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -43,7 +44,10 @@
     <None Remove="Imgs\save.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Costura.Fody" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="DeviceId" Version="5.2.0" />
     <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
     <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
@@ -92,8 +96,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj" />
-    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
+    <ProjectReference Include="..\Kit\Kit.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Imgs\002-usb-1.png" />

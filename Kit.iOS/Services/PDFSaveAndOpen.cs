@@ -6,7 +6,9 @@ using UIKit;
 using QuickLook;
 using Kit.Services.Interfaces;
 using Kit.iOS.Classes;
+using Kit.iOS.Services;
 
+[assembly: Dependency(typeof(PDFSaveAndOpen))]
 namespace Kit.iOS.Services
 {
     public class PDFSaveAndOpen: IPDFSaveAndOpen

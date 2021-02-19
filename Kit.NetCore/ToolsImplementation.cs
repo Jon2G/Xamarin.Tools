@@ -14,28 +14,15 @@ namespace Kit.NetCore
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
-            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
-            Debugging = Debugger.IsAttached;
-            if (AlertAfterCritical)
-            {
-                Log.Init(LogDirectory, CriticalAlert);
-            }
-            else
-            {
-                Log.Init(LogDirectory);
-            }
+            base.Init(DeviceInfo,  AlertAfterCritical);
+            Log.AlertAfterCritical = AlertAfterCritical;
+
             return this;
         }
 
-        public override AbstractTools SetDebugging(bool Debugging)
-        {
-            this.Debugging = Debugging;
-            Sqlh.Instance?.SetDebugging(Debugging);
-            return this;
-        }
         public override void CriticalAlert(object sender, EventArgs e)
         {
             //DependencyService.Get<ICustomMessageBox>()
@@ -63,14 +50,14 @@ namespace Kit.NetCore
                 catch (Exception ex)
                 {
                     // ignored
-                    Log.LogMe(ex, "Ventana padre");
+                    Log.Logger.Error(ex, "Ventana padre");
                 }
 
                 return a.IsActive ? a : null;
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al determinar la ventana padre");
+                Log.Logger.Error(ex, "Al determinar la ventana padre");
                 return null;
             }
         }

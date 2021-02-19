@@ -32,7 +32,7 @@ namespace Kit.iOS.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al guardar el archivo html");
+                Log.Logger.Error(ex, "Al guardar el archivo html");
                 return false;
             }
             return false;
@@ -83,7 +83,7 @@ namespace Kit.iOS.Services
                 {
                     if (!completed && err != null)
                     {
-                        Log.LogMe($"Al imprimir ticket pdf:\n{err}");
+                        Log.Logger.Error($"Al imprimir ticket pdf:\n{err}");
                     }
                 });
 
@@ -109,7 +109,7 @@ namespace Kit.iOS.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al imprimir un ticket pdf");
+                Log.Logger.Error(ex, "Al imprimir un ticket pdf");
                 return false;
             }
         }

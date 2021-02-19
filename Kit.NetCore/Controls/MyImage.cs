@@ -140,7 +140,7 @@ namespace Kit.NetCore.Controls
                 }
                 catch (Exception ex)
                 {
-                    Log.LogMe(ex, "Al cargar una imagen de MyImage");
+                    Log.Logger.Error(ex, "Al cargar una imagen de MyImage");
                     return new BitmapImage();
                 }
             });
@@ -153,7 +153,7 @@ namespace Kit.NetCore.Controls
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "En MyImage cambio");
+                Log.Logger.Error(ex, "En MyImage cambio");
             }
         }
         #endregion

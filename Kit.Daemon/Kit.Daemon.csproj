@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release;Gorilla</Configurations>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj" />
-    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
+    <ProjectReference Include="..\Kit\Kit.csproj" />
   </ItemGroup>
 
 </Project>

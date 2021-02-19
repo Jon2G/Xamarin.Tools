@@ -102,7 +102,7 @@ namespace Kit.WPF.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex);
+                Log.Logger.Error(ex, "Unlocking folder", path);
                 return false;
             }
 

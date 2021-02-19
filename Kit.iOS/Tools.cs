@@ -30,7 +30,6 @@ namespace Kit.iOS
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
             Set(new ToolsImplementation());
-            Instance.SetDebugging(Debugger.IsAttached);
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             TouchEffect.iOS.TouchEffectPreserver.Preserve();
             TouchEffect.iOS.PlatformTouchEff.Preserve();

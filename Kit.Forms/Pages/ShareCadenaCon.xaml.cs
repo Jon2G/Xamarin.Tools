@@ -17,12 +17,12 @@ namespace Kit.Forms.Pages
         public string Code { get; set; }
         public float Brightness { get; set; }
         public IBrightnessService BrightnessService { get; set; }
-        public ShareCadenaCon(string Title,string Code, IBrightnessService BrightnessService)
+        public ShareCadenaCon(string Title,string Code)
         {
             this.Code = Code;
             InitializeComponent();
             this.TxtTitle.Text = Title;
-            this.BrightnessService = BrightnessService;
+            this.BrightnessService =DependencyService.Get<IBrightnessService>();
         }
         protected override void OnAppearing()
         {
