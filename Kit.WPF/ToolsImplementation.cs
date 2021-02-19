@@ -9,15 +9,39 @@ using System.Windows;
 using Kit.Services;
 using Application = System.Windows.Application;
 using Kit.Sql.Helpers;
+using Serilog;
 
 namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo, bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo)
         {
             this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
-            base.Init(DeviceInfo, AlertAfterCritical);
+            base.Init(DeviceInfo);
+
+            Log.Init().SetLogger((new LoggerConfiguration()
+                // Set default log level limit to Debug
+                .MinimumLevel.Debug()
+                // Enrich each log entry with memory usage and thread ID
+                // .Enrich.WithMemoryUsage()
+                //.Enrich.WithThreadId()
+                // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
+                .WriteTo.Console()
+                // Create a custom logger in order to set another limit,
+                // particularly, any logs from Information level will also be written into a rolling file
+                .WriteTo.Logger(config =>
+                config
+                        .MinimumLevel.Information()
+                        .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
+                )
+                // And create another logger so that logs at Fatal level will immediately send email
+                .WriteTo.Logger(config =>
+                    config
+                        .MinimumLevel.Fatal()
+                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
+                )).CreateLogger(), CriticalAlert);
+
             return this;
         }
 
@@ -28,7 +52,7 @@ namespace Kit.WPF
         #region UWP Especific
         public static ToolsImplementation UWPInstance
         {
-            get =>Kit.Tools.Instance as ToolsImplementation;
+            get => Kit.Tools.Instance as ToolsImplementation;
         }
 
         public Window VentanaPadre()

@@ -13,12 +13,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Kit.CadenaConexion;
+using Kit.Daemon.Devices;
 using Kit.Enums;
 using Kit.Sql;
 using Kit.Sql.Helpers;
+using Kit.Sql.Sqlite;
 using Kit.WPF.Services;
 using Kit.WPF.Services.ICustomMessageBox;
-using SQLite;
 using SQLServer;
 
 namespace Kit.WPF.Pages
@@ -47,18 +48,20 @@ namespace Kit.WPF.Pages
         private void ChangeDataContext(Configuracion Configuration)
         {
             this.Configuration = Configuration;
+            this.Configuration.IdentificadorDispositivo = Device.Current.DeviceId;
             this.DataContext = this.Configuration;
         }
 
-        public SetUpConnectionString(SQLServerConnection SqlServer, SQLiteConnection SqLite = null)
+        public SetUpConnectionString(SQLServerConnection SqlServer, SQLiteConnection SqLite = null, Exception ex = null)
         {
+            ChangeDataContext(new Configuracion());
             this.SqlServer = SqlServer;
             this.SqLite = SqLite;
             DeviceId = new Kit.WPF.Services.DeviceInfo().DeviceId;
             if (SqLite != null)
                 Empresas = new Empresas(SqLite);
             InitializeComponent();
-            TxtStatus.Text = "La cadena de conexion es correcta";
+            TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
 
         //private void CadenaCon_OnLoaded(object sender, RoutedEventArgs e)
@@ -92,7 +95,7 @@ namespace Kit.WPF.Pages
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex,"Al  guardar la cadena de conexión");
+                Log.Logger.Error(ex, "Al  guardar la cadena de conexión");
             }
         }
 

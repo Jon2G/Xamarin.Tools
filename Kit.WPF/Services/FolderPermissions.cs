@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Security.AccessControl;
 using System.Diagnostics;
 using System.Security.Principal;
-using Log = Kit.Sql.Log;
 using Kit.Services.Interfaces;
 
 namespace Kit.WPF.Services

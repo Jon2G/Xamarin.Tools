@@ -63,6 +63,7 @@ namespace Kit
         {
             Current._Logger = Logger;
             Current.OnAlertCritical = CriticalAction;
+
             if (Current.OnAlertCritical != null)
             {
                 AlertCriticalUnhandled();
@@ -101,12 +102,16 @@ namespace Kit
             FileInfo file = new FileInfo(Current.CriticalLoggerPath);
             if (file.Exists)
             {
-                string criticalDescription = File.ReadAllText(file.FullName);
-                if (!string.IsNullOrEmpty(criticalDescription))
+                using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var sr = new StreamReader(fs, Encoding.Default))
                 {
-                    Log.Logger.Error(criticalDescription);
-                    Current.OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
-                    file.Delete();
+                    string criticalDescription = sr.ReadToEnd();
+                    if (!string.IsNullOrEmpty(criticalDescription))
+                    {
+                        Log.Logger.Error(criticalDescription);
+                        Current.OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
+                        file.Delete();
+                    }
                 }
             }
         }
