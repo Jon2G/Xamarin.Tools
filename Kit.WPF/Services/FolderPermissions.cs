@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Security.AccessControl;
 using System.Diagnostics;
 using System.Security.Principal;
-using Log = Kit.Sql.Log;
 using Kit.Services.Interfaces;
 
 namespace Kit.WPF.Services
@@ -102,7 +101,7 @@ namespace Kit.WPF.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex);
+                Log.Logger.Error(ex, "Unlocking folder", path);
                 return false;
             }
 

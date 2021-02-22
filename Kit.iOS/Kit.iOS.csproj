@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -29,6 +30,7 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -67,18 +69,14 @@
       <Project>{1224b0d0-4675-4cb5-9691-ebac1056a1e3}</Project>
       <Name>Kit.Forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj">
+    <ProjectReference Include="..\Kit\Kit.csproj">
       <Project>{3727A404-D8BA-40D8-9380-BE9C3CD2A889}</Project>
-      <Name>Kit.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj">
-      <Project>{094e8cbd-1194-4397-bc30-d972e3814aeb}</Project>
-      <Name>Kit.Sql</Name>
+      <Name>Kit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.1.0.470</Version>
+      <Version>7.1.0.475</Version>
     </PackageReference>
     <PackageReference Include="DeviceId">
       <Version>5.2.0</Version>
@@ -91,18 +89,18 @@
       <Version>2.0.0.10</Version>
     </PackageReference>
     <PackageReference Include="TouchView">
-      <Version>4.1.99</Version>
+      <Version>4.1.100</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
-      <Version>1.6.0</Version>
+      <Version>1.6.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.FFImageLoading.Transformations">
       <Version>2.4.11.982</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.1874</Version>
+      <Version>5.0.0.2012</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.1874" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Plugin.FilePicker">
       <Version>2.1.41</Version>
     </PackageReference>

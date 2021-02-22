@@ -7,7 +7,10 @@ using System.Text;
 using UIKit;
 using WebKit;
 using Kit.Enums;
+using Kit.iOS.Services.HtmlToPDF;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(PDFConverter))]
 namespace Kit.iOS.Services.HtmlToPDF
 {
     public class PDFConverter : IPDFConverter

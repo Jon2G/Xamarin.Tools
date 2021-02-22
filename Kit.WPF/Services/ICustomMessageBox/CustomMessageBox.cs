@@ -114,7 +114,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
                 }
                 catch (System.ComponentModel.Win32Exception ex)
                 {
-                    Log.LogMe(ex, "Al mostar un mensaje personalizado");
+                    Log.Logger.Error(ex, "Al mostar un mensaje personalizado");
                 }
             });
             return CustomMessageBoxResult.OK;

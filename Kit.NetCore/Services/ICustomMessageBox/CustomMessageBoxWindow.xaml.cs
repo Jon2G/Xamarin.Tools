@@ -135,7 +135,7 @@ namespace Kit.NetCore.Services.ICustomMessageBox
             {
                 MessageBox.Show(ex.Message);
 
-                Log.LogMe(ex, "Al mostrar un mensaje personalizadp desde VentanaModal();", true);
+                Log.Logger.Error(ex, "Al mostrar un mensaje personalizadp desde VentanaModal();", true);
             }
         }
         private void DisplayButtons(CustomMessageBoxButton button)

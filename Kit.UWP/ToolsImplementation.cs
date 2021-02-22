@@ -14,18 +14,13 @@ namespace Kit.UWP
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo, string LogDirectory = "Logs", bool AlertAfterCritical = false)
+        public override ITools Init(IDeviceInfo DeviceInfo, bool AlertAfterCritical = false)
         {
             this.CustomMessageBox = new Services.CustomMessageBoxService();
-            base.Init(DeviceInfo, LogDirectory, AlertAfterCritical);
-            Debugging = Debugger.IsAttached;
+            base.Init(DeviceInfo, AlertAfterCritical);
             return this; 
         }
-        public override AbstractTools SetDebugging(bool Debugging)
-        {
-            this.Debugging = true;
-            return this;
-        }
+
         //public override void CriticalAlert(object sender, EventArgs e)
         //{
         //    CustomMessageBox.Current

@@ -3,12 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Android.Webkit;
+using Kit.Droid.Services.HtmlToPDF;
 using Kit.Enums;
 using Kit.Services;
 using Kit.Services.Interfaces;
 using static Kit.Services.PDFToHtml;
 using Kit.Sql;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(PDFConverter))]
 namespace Kit.Droid.Services.HtmlToPDF
 {
     public class PDFConverter : IPDFConverter
@@ -17,7 +20,7 @@ namespace Kit.Droid.Services.HtmlToPDF
         {
             try
             {
-                WebView webpage = new Android.Webkit.WebView(Android.App.Application.Context);
+                var webpage = new Android.Webkit.WebView(Android.App.Application.Context);
                 webpage.Settings.JavaScriptEnabled = true;
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -31,7 +34,7 @@ namespace Kit.Droid.Services.HtmlToPDF
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "ConvertHTMLtoPDF");
+                Log.Logger.Error(ex, "ConvertHTMLtoPDF");
                 _PDFToHtml.Status = PDFEnum.Failed;
             }
         }

@@ -89,7 +89,7 @@ namespace Kit.iOS.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, $"Al compartir el archivo:'{absolutePath}'");
+                Log.Logger.Error(ex, $"Al compartir el archivo:'{absolutePath}'");
             }
         }
 

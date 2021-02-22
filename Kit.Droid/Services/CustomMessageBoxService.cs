@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using Kit.Services.Interfaces;
 using System.Threading.Tasks;
+using Kit.Droid.Services;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(CustomMessageBoxService))]
 namespace Kit.Droid.Services
 {
     public class CustomMessageBoxService : ICustomMessageBox

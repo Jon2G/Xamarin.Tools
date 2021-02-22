@@ -4,7 +4,10 @@ using Plugin.CurrentActivity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Droid.Services;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(BrightnessService))]
 namespace Kit.Droid.Services
 {
     public class BrightnessService : IBrightnessService

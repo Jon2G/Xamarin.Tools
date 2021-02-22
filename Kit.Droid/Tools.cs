@@ -13,7 +13,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Application = Android.App.Application;
 using Kit.Droid.Services;
-using Log= Kit.Sql.Log;
+using Serilog;
+
 namespace Kit.Droid
 {
     public class Tools : Kit.Tools
@@ -34,12 +35,13 @@ namespace Kit.Droid
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
             Set(new ToolsImplementation());
-            Instance.SetDebugging(Debugger.IsAttached);
             (Instance as ToolsImplementation).MainActivity = activity;
             CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
             CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
+
+
             return Instance;
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)

@@ -6,6 +6,7 @@
     <Version>1.1.2.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,14 +33,13 @@
   <ItemGroup>
     <PackageReference Include="AutoCompleteTextBox" Version="1.1.1" />
     <PackageReference Include="DeviceId" Version="5.2.0" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.1" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Kit.Shared\Kit.Shared.csproj" />
-    <ProjectReference Include="..\Kit.Sql\Kit.Sql.csproj" />
+    <ProjectReference Include="..\Kit\Kit.csproj" />
   </ItemGroup>
 
 

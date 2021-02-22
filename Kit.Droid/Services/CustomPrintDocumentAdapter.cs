@@ -56,12 +56,12 @@ namespace Kit.Droid.Services
             catch (FileNotFoundException ex)
             {
                 //Catch exception
-                Log.LogMe(ex);
+                Log.Logger.Error(ex,"?");
             }
             catch (Exception e)
             {
                 //Catch exception
-                Log.LogMe(e);
+                Log.Logger.Error(e,"?");
             }
             finally
             {

@@ -31,7 +31,7 @@ namespace Kit.iOS.Services
                 }
                 catch (Exception ex)
                 {
-                    Log.LogMe(ex, "Trying to get the MacAdress");
+                    Log.Logger.Error(ex, "Trying to get the MacAdress");
                     return "Unavaible";
                 }
             }

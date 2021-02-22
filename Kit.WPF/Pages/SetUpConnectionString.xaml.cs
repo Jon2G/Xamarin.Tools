@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Kit.CadenaConexion;
+using Kit.Daemon.Devices;
 using Kit.Enums;
 using Kit.Sql;
 using Kit.Sql.Helpers;
+using Kit.Sql.Sqlite;
 using Kit.WPF.Services;
 using Kit.WPF.Services.ICustomMessageBox;
+using SQLServer;
 
 namespace Kit.WPF.Pages
 {
@@ -27,11 +31,11 @@ namespace Kit.WPF.Pages
     {
         private readonly Empresas Empresas;
         private readonly string DeviceId;
-        private SqlServer SqlServer;
-        private readonly SqLite SqLite;
+        private SQLServerConnection SqlServer;
+        private readonly SQLiteConnection SqLite;
         public Configuracion Configuration { get; set; }
 
-        public SetUpConnectionString(Exception ex, Configuracion Configuration, Sql.Helpers.SqLite SqLite = null)
+        public SetUpConnectionString(Exception ex, Configuracion Configuration, SQLiteConnection SqLite = null)
         {
             ChangeDataContext(Configuration);
             this.SqLite = SqLite;
@@ -44,18 +48,20 @@ namespace Kit.WPF.Pages
         private void ChangeDataContext(Configuracion Configuration)
         {
             this.Configuration = Configuration;
+            this.Configuration.IdentificadorDispositivo = Device.Current.DeviceId;
             this.DataContext = this.Configuration;
         }
 
-        public SetUpConnectionString(SqlServer SqlServer, Sql.Helpers.SqLite SqLite = null)
+        public SetUpConnectionString(SQLServerConnection SqlServer, SQLiteConnection SqLite = null, Exception ex = null)
         {
+            ChangeDataContext(new Configuracion());
             this.SqlServer = SqlServer;
             this.SqLite = SqLite;
             DeviceId = new Kit.WPF.Services.DeviceInfo().DeviceId;
             if (SqLite != null)
                 Empresas = new Empresas(SqLite);
             InitializeComponent();
-            TxtStatus.Text = "La cadena de conexion es correcta";
+            TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
 
         //private void CadenaCon_OnLoaded(object sender, RoutedEventArgs e)
@@ -69,9 +75,9 @@ namespace Kit.WPF.Pages
         {
             try
             {
-                SqlServer = new SqlServer(this.Configuration.CadenaCon);
-                SqlServer.ChangeConnectionString(this.Configuration.CadenaCon);
-                if (SqlServer.PruebaConexion(this.Configuration.CadenaCon) is Exception ex)
+                SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);
+                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Configuration.CadenaCon);
+                if (SqlServer.TestConnection(this.Configuration.CadenaCon) is Exception ex)
                 {
                     if (CustomMessageBox.ShowYesNo(
                             "La conexión actual no es valida\n" + ex.Message + "\n¿Desea guardarla de todas formas?",
@@ -80,7 +86,7 @@ namespace Kit.WPF.Pages
                         return;
                     }
                 }
-                SqlServer.ChangeConnectionString(this.Configuration.CadenaCon);
+                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Configuration.CadenaCon);
                 if (this.SqLite != null)
                 {
                     this.Configuration.Salvar(SqLite, SqlServer);
@@ -89,7 +95,7 @@ namespace Kit.WPF.Pages
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex);
+                Log.Logger.Error(ex, "Al  guardar la cadena de conexión");
             }
         }
 
@@ -102,9 +108,8 @@ namespace Kit.WPF.Pages
 
         private void ProbarConexion(object sender, RoutedEventArgs e)
         {
-            SqlServer = new SqlServer(this.Configuration.CadenaCon);
-            SqlServer.ChangeConnectionString(this.Configuration.CadenaCon);
-            if (SqlServer.PruebaConexion() is Exception ex)
+            SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);
+            if (SqlServer.TestConnection() is Exception ex)
             {
                 CustomMessageBox.Show("La cadena de conexión no es valida." + Environment.NewLine + ex.Message, "La cadena de conexión no es valida.", CustomMessageBoxButton.OK, CustomMessageBoxImage.Error);
                 TxtStatus.Text = ex.Message;

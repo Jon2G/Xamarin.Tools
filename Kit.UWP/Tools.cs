@@ -23,7 +23,6 @@ namespace Kit.UWP
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Kit.Tools.Set(new ToolsImplementation());
-            Kit.Tools.Instance.SetDebugging(Debugger.IsAttached);
             Kit.Tools.Instance.SetLibraryPath(LibraryPath);
 
 
@@ -39,7 +38,6 @@ namespace Kit.UWP
             // DependencyService.Register<Screenshot>();
             //DependencyService.Register<CustomMessageBoxService>();
             #endregion
-            Kit.Tools.Instance.SetDebugging(Debugger.IsAttached);
             return Kit.Tools.Instance;
         }
 

@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using Kit.Services.Interfaces;
 using System.Threading.Tasks;
+using Kit.UWP.Services;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(CustomMessageBoxService))]
 namespace Kit.UWP.Services
 {
     public class CustomMessageBoxService : ICustomMessageBox

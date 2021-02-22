@@ -49,7 +49,7 @@ namespace Kit.UWP.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al guardar el archivo html");
+                Log.Logger.Error(ex, "Al guardar el archivo html");
                 return false;
             }
             return false;
@@ -76,7 +76,7 @@ namespace Kit.UWP.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al convertir un ticket html a pdf");
+                Log.Logger.Error(ex, "Al convertir un ticket html a pdf");
             }
             return false;
         }
@@ -92,7 +92,7 @@ namespace Kit.UWP.Services
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al imprimir un pdf");
+                Log.Logger.Error(ex, "Al imprimir un pdf");
             }
             return false;
         }

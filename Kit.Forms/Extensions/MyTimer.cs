@@ -12,8 +12,8 @@ namespace Kit.Forms.Extensions
         private readonly Action callback;
 
         private CancellationTokenSource cancellation;
-        private TimeSpan timeSpan;
-        private Action<object> confirm;
+        //private TimeSpan timeSpan;
+        //private Action<object> confirm;
 
         public MyTimer(TimeSpan timespan, Action callback)
         {

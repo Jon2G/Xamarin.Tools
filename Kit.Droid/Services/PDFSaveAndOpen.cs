@@ -9,10 +9,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Android.App;
+using Kit.Droid.Services;
 using Xamarin.Forms;
 using Plugin.CurrentActivity;
 using Kit.Services.Interfaces;
-
+[assembly: Dependency(typeof(PDFSaveAndOpen))]
 namespace Kit.Droid.Services
 {
     public class PDFSaveAndOpen : IPDFSaveAndOpen

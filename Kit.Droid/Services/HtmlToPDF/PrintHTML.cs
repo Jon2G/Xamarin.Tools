@@ -41,7 +41,7 @@ namespace Kit.Droid.Services.HtmlToPDF
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al guardar el archivo html");
+                Log.Logger.Error(ex, "Al guardar el archivo html");
                 return false;
             }
             return false;
@@ -93,7 +93,7 @@ namespace Kit.Droid.Services.HtmlToPDF
             }
             catch (Exception ex)
             {
-                Log.LogMe(ex, "Al imprimir un ticket pdf");
+                Log.Logger.Error(ex, "Al imprimir un ticket pdf");
                 return false;
             }
         }
