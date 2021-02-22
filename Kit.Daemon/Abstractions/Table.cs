@@ -163,7 +163,8 @@ namespace Kit.Daemon.Abstractions
         {
             if (sql is SqlServer SQLH)
             {
-                return sql.Single<object>($"INSERT INTO {Name} DEFAULT VALUES SELECT SCOPE_IDENTITY();");
+
+                return sql.Single($"INSERT INTO {Name} DEFAULT VALUES SELECT SCOPE_IDENTITY();");
             }
             return null;
         }

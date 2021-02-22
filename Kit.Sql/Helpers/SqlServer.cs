@@ -116,11 +116,26 @@ namespace Kit.Sql.Helpers
         }
         public override T Single<T>(string sql)
         {
-            return Single<T>(sql,false,CommandType.Text);
+            return Single<T>(sql, false, CommandType.Text);
         }
         public T Single<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
         {
             return Single<T>(sql, false, CommandType.Text, parameters);
+        }
+        public override object Single(string sql)
+        {
+            object result = default;
+            using (IReader reader = Read(sql, CommandType.Text, false))
+            {
+                if (reader.Read())
+                {
+                    if (reader[0] != DBNull.Value)
+                    {
+                        result = reader[0];
+                    }
+                }
+            }
+            return result;
         }
         public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text) where T : IConvertible
         {
@@ -136,30 +151,6 @@ namespace Kit.Sql.Helpers
                 }
             }
             return result;
-        }
-
-
-        public static bool IsInjection(string value)
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                if (value.Contains('\''))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public static bool IsInjection(params string[] values)
-        {
-            foreach (string value in values)
-            {
-                if (IsInjection(value))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text, params SqlParameter[] parametros) where T : IConvertible
@@ -187,7 +178,7 @@ namespace Kit.Sql.Helpers
             }
             return result;
         }
-        [Obsolete("No se deberia utilizar mas procedimientos alamcenados debido a su dificil versionamiento", false)]
+        [Obsolete("No se deberia utilizar mas procedimientos almacenados debido a su dificil versionamiento", false)]
         public T Single<T>(string sql, bool Reportar = true, params SqlParameter[] parametros) where T : IConvertible
         {
             T result = default;
@@ -199,6 +190,28 @@ namespace Kit.Sql.Helpers
                 }
             }
             return result;
+        }
+        public static bool IsInjection(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value.Contains('\''))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool IsInjection(params string[] values)
+        {
+            foreach (string value in values)
+            {
+                if (IsInjection(value))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         public override int EXEC(string sql)
         {

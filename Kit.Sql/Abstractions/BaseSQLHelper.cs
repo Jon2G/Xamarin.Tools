@@ -35,6 +35,7 @@ namespace Kit.Sql.Interfaces
         public abstract bool TableExists(string TableName);
         /// <summary>
         /// Ejecuta una consulta sin parametros ni argumentos en la conexión actual
+        /// devuelve el número de filas afectadas tras ejecutar la consulta
         /// </summary>
         /// <param name="sql"></param>
         public abstract int EXEC(string sql);
@@ -44,6 +45,12 @@ namespace Kit.Sql.Interfaces
         /// <param name="sql"></param>
         /// <returns></returns>
         public abstract T Single<T>(string sql) where T : IConvertible;
+        /// <summary>
+        /// Regresa el primer elemento leido en la primer columna
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public abstract object Single(string sql);
         /// <summary>
         /// Retorna un objeto IReader resultado de la consulta proporcionada
         /// </summary>

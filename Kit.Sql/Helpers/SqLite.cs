@@ -220,7 +220,7 @@ CADENA_CON TEXT NOT NULL);");
                 {
                     if (reader.Read())
                     {
-                        result =Sqlh.Parse<T>(reader[0]);
+                        result = Sqlh.Parse<T>(reader[0]);
                     }
                 }
             }
@@ -230,18 +230,36 @@ CADENA_CON TEXT NOT NULL);");
             }
             return result;
         }
-        public T Single<T>(SqlConnection con, string sql) where T : IConvertible
+        public object Single(string sql, SqlConnection con = null)
         {
-            T result = default;
+            con = con ?? Conecction();
+            object result = default;
             try
             {
                 using (IReader reader = Read(sql, con))
                 {
                     if (reader.Read())
                     {
-                        result = Sqlh.Parse<T>(reader[0]);
+                        result = reader[0];
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.LogMe(e, "Al ejecutar un single en SQLHLite");
+            }
+            return result;
+        }
+        public override object Single(string sql)
+        {
+            return Single(sql, Conecction());
+        }
+        public T Single<T>(SqlConnection con, string sql) where T : IConvertible
+        {
+            T result = default;
+            try
+            {
+                result = Sqlh.Parse<T>(Single(sql, con));
             }
             catch (Exception e)
             {
@@ -257,9 +275,9 @@ CADENA_CON TEXT NOT NULL);");
         public int InsertAndRecoverPK(string sql, params object[] parametros)
         {
             int Id = 1;
-            using(var con = Conecction())
+            using (var con = Conecction())
             {
-                if (EXEC(con,sql, parametros) != BaseSQLHelper.Error)
+                if (EXEC(con, sql, parametros) != BaseSQLHelper.Error)
                 {
                     Id = LastScopeIdentity(con);
                 }
@@ -267,6 +285,11 @@ CADENA_CON TEXT NOT NULL);");
             }
             return Id;
         }
+        /// <summary>
+        /// Ejecuta una consulta con argumentos en la conexión actual
+        /// devuelve el número de filas afectadas tras ejecutar la consulta
+        /// </summary>
+        /// <param name="sql"></param>
         public int EXEC(string sql, params object[] parametros)
         {
             Log.DebugMe(sql);

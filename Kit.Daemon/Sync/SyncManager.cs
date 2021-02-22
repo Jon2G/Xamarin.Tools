@@ -179,7 +179,7 @@ namespace Kit.Daemon.Sync
                 {
                     if (Debugger.IsAttached)
                     {
-                        Debugger.Break();
+                        //Debugger.Break();
                     }
                     Log.LogMeDemonio(ex, "Al sincronizar");
                 }
