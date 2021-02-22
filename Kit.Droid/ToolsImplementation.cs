@@ -12,12 +12,14 @@ using Kit.Services;
 using Kit.Droid.Services;
 using Kit.Services.Interfaces;
 using Serilog;
+using Android.Telephony;
 
 namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
     {
         public MainActivity MainActivity { get; internal set; }
+        public static Kit.Droid.ToolsImplementation Instance => Tools.Instance as Kit.Droid.ToolsImplementation;
         public override ITools Init(IDeviceInfo DeviceInfo)
         {
             this.CustomMessageBox = new Services.CustomMessageBoxService();

@@ -181,7 +181,7 @@ namespace Kit.CadenaConexion
             try
             {
                 SQLH.ConnectionString = (new SqlConnectionStringBuilder(this.CadenaCon));
-                SQLHLite.Insert(this, "OR REPLACE");
+                SQLHLite.InsertOrReplace(this);
 
                 if (SQLH.TableExists("COMANDERAS_MOVILES"))
                 {

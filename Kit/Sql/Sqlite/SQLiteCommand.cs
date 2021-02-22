@@ -65,7 +65,7 @@ namespace Kit.Sql.Sqlite
             return ExecuteDeferredQuery<T>(_conn.GetMapping(typeof(T))).ToList();
         }
 
-        public override List<T> ExecuteQuery<T>(TableMapping map)
+        public override List<T> ExecuteQuery<T>(Kit.Sql.Base.TableMapping map)
         {
             return ExecuteDeferredQuery<T>(map).ToList();
         }
@@ -85,7 +85,7 @@ namespace Kit.Sql.Sqlite
             // Can be overridden.
         }
 
-        public override IEnumerable<T> ExecuteDeferredQuery<T>(TableMapping map)
+        public override IEnumerable<T> ExecuteDeferredQuery<T>(Kit.Sql.Base.TableMapping map)
         {
             if (_conn.IsClosed)
                 _conn.RenewConnection();

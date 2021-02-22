@@ -56,6 +56,12 @@ namespace Kit.Sql.Sqlite
             DatabasePath = file.FullName;
         }
 
+        public override string MappingSuffix => "_sqlite";
+        protected override Base.TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
+        {
+            return new Kit.Sql.Sqlite.TableMapping(type, createFlags);
+        }
+
         /// <summary>
         /// Comprueba que la base de datos exista y que sea la versión mas reciente
         /// de lo contrario crea una nueva base de datos
@@ -73,6 +79,7 @@ namespace Kit.Sql.Sqlite
                 return CheckTables();
             }
             CreateTable<ChangesHistory>();
+            CreateTable<SyncHistory>();
             CreateTable<Configuracion>();
             foreach (Type table in Tables)
             {
@@ -596,7 +603,7 @@ namespace Kit.Sql.Sqlite
             }
             connectionString.PostKeyAction?.Invoke(this);
         }
-        
+
         public override void RenewConnection()
         {
 #if NETFX_CORE
@@ -739,7 +746,7 @@ namespace Kit.Sql.Sqlite
         /// </summary>
         public int DropTable<T>()
         {
-            return DropTable(GetMapping(typeof(T)));
+            return DropTable((Kit.Sql.Sqlite.TableMapping)GetMapping(typeof(T)));
         }
 
         /// <summary>
@@ -754,19 +761,7 @@ namespace Kit.Sql.Sqlite
             return Execute(query);
         }
 
-        /// <summary>
-        /// Executes a "create table if not exists" on the database. It also
-        /// creates any specified indexes on the columns of the table. It uses
-        /// a schema automatically generated from the specified type. You can
-        /// later access this schema by calling GetMapping.
-        /// </summary>
-        /// <returns>
-        /// Whether the table was created or migrated.
-        /// </returns>
-        public CreateTableResult CreateTable<T>(CreateFlags createFlags = CreateFlags.None)
-        {
-            return CreateTable(typeof(T), createFlags);
-        }
+
 
         /// <summary>
         /// Executes a "create table if not exists" on the database. It also
@@ -779,14 +774,13 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// Whether the table was created or migrated.
         /// </returns>
-        public CreateTableResult CreateTable(Type ty, CreateFlags createFlags = CreateFlags.None)
+        public override CreateTableResult CreateTable(Kit.Sql.Base.TableMapping map, CreateFlags createFlags = CreateFlags.None)
         {
-            var map = GetMapping(ty, createFlags);
 
             // Present a nice error if no columns specified
             if (map.Columns.Length == 0)
             {
-                throw new Exception(string.Format("Cannot create a table without columns (does '{0}' have public properties?)", ty.FullName));
+                throw new Exception(string.Format("Cannot create a table without columns (does '{0}' have public properties?)", map.MappedType.FullName));
             }
 
             // Check if the table exists
@@ -820,7 +814,7 @@ namespace Kit.Sql.Sqlite
             else
             {
                 result = CreateTableResult.Migrated;
-                MigrateTable(map, existingCols);
+                MigrateTable((Kit.Sql.Sqlite.TableMapping)map, existingCols);
             }
 
             var indexes = new Dictionary<string, IndexInfo>();
@@ -1120,7 +1114,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// A <see cref="SQLiteCommand"/>
         /// </returns>
-        public override CommandBase  CreateCommand(string cmdText, params object[] ps)
+        public override CommandBase CreateCommand(string cmdText, params object[] ps)
         {
             if (!_open)
                 throw SQLiteException.New(SQLite3.Result.Error, "Cannot create commands from unopened database");
@@ -1385,7 +1379,7 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public override TableQuery<T> Table<T>()
         {
-            return new TableQuery<T>(this);
+            return new SQLiteTableQuery<T>(this);
         }
 
         /// <summary>
@@ -1454,7 +1448,7 @@ namespace Kit.Sql.Sqlite
         /// The object with the given primary key or null
         /// if the object is not found.
         /// </returns>
-        public override T Find<T>(object pk) 
+        public override T Find<T>(object pk)
         {
             var map = GetMapping(typeof(T));
             return Query<T>(map.GetByPrimaryKeySql, pk).FirstOrDefault();
@@ -2084,7 +2078,7 @@ namespace Kit.Sql.Sqlite
                 vals[i] = cols[i].GetValue(obj);
             }
 
-            var insertCmd = GetInsertCommand(map, extra);
+            var insertCmd = GetInsertCommand((Kit.Sql.Sqlite.TableMapping)map, extra);
             int count;
 
             lock (insertCmd)
@@ -2112,7 +2106,7 @@ namespace Kit.Sql.Sqlite
                 }
             }
             if (count > 0)
-                OnTableChanged(map, NotifyTableChangedAction.Insert);
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Insert);
 
             return count;
         }
@@ -2267,7 +2261,7 @@ namespace Kit.Sql.Sqlite
             {
                 map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
                     $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
-                OnTableChanged(map, NotifyTableChangedAction.Update);
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Update);
             }
 
             return rowsAffected;
@@ -2332,7 +2326,7 @@ namespace Kit.Sql.Sqlite
 
             var count = Execute(q, pk.GetValue(objectToDelete));
             if (count > 0)
-                OnTableChanged(map, NotifyTableChangedAction.Delete);
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Delete);
             return count;
         }
 
@@ -2350,7 +2344,7 @@ namespace Kit.Sql.Sqlite
         /// </typeparam>
         public int Delete<T>(object primaryKey)
         {
-            return Delete(primaryKey, GetMapping(typeof(T)));
+            return Delete(primaryKey, (Kit.Sql.Sqlite.TableMapping)GetMapping(typeof(T)));
         }
 
         /// <summary>
@@ -2395,7 +2389,7 @@ namespace Kit.Sql.Sqlite
         public int DeleteAll<T>()
         {
             var map = GetMapping(typeof(T));
-            return DeleteAll(map);
+            return DeleteAll((Kit.Sql.Sqlite.TableMapping)map);
         }
 
         /// <summary>

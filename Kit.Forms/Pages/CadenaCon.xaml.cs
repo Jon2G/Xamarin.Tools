@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -14,8 +15,12 @@ using Kit.CadenaConexion;
 using Kit.Forms.Controls;
 using ZXing;
 using Kit.Daemon;
+using Kit.Forms.Services;
+using Kit.Services.Interfaces;
 using Kit.Sql.Helpers;
 using SQLServer;
+using Xamarin.Essentials;
+using ZXing.Net.Mobile.Forms;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 
 namespace Kit.Forms.Pages
@@ -51,7 +56,7 @@ namespace Kit.Forms.Pages
         public event EventHandler Confirmado;
         private Configuracion Configuracion;
         private readonly Kit.Sql.Sqlite.SQLiteConnection DBConection;
-        private readonly Services.Interfaces.IDeviceInfo DeviceInfo;
+        private readonly IDeviceInfo DeviceInfo;
         public SQLServerConnection NewDBConection { get; private set; }
         public bool ShouldSetUpDaemon { get; set; }
         public static bool IsActive()
@@ -63,7 +68,7 @@ namespace Kit.Forms.Pages
             }
             return false;
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLiteConnection DBConection)
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -71,7 +76,7 @@ namespace Kit.Forms.Pages
             this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
             this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Exception ex)
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Exception ex)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -80,7 +85,7 @@ namespace Kit.Forms.Pages
             this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
             ToogleStatus(ex);
         }
-        public CadenaCon(Services.Interfaces.IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion)
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion)
         {
             this.DeviceInfo = DeviceInfo;
             InitializeComponent();
@@ -93,7 +98,7 @@ namespace Kit.Forms.Pages
             }
             catch (Exception ex)
             {
-               Log.Logger.Error(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
+                Log.Logger.Error(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
             }
         }
         private void BasePage_Appearing(object sender, EventArgs e)
@@ -159,7 +164,7 @@ namespace Kit.Forms.Pages
 
                     if (this.ShouldSetUpDaemon)
                     {
-                        //Daemon.Daemon.Current.SetUp(NewDBConection);
+                        Daemon.Daemon.Current.SetUp(NewDBConection);
                     }
 
                     if (this.Navigation.ModalStack.Count > 0)
@@ -262,7 +267,41 @@ namespace Kit.Forms.Pages
                 return false;
             }
         }
-        private void Importar_Touched(object sender, EventArgs e)
+        private async void Importar_Touched(object sender, EventArgs e)
+        {
+            ActionSheetConfig config = new ActionSheetConfig()
+            {
+                Title = "Importar cadena de conexión",
+                Cancel = new ActionSheetOption("Cancelar"),
+                Options = new List<ActionSheetOption>()
+                {
+                    new ActionSheetOption( "Usar camara",FromCamera),
+                    new ActionSheetOption("Seleccionar desde la galería",FromGallery)
+                },
+                UseBottomSheet = true
+            };
+            UserDialogs.Instance.ActionSheet(config);
+        }
+
+        private async void FromGallery()
+        {
+            FileResult qr = await MediaPicker.PickPhotoAsync(new MediaPickerOptions()
+            {
+                Title = "Importar cadena de conexión"
+            });
+            if (qr is null)
+            {
+                return;
+            }
+            BarcodeDecoding reader = new BarcodeDecoding();
+            Result result = await reader.Decode(qr, BarcodeFormat.QR_CODE
+                , new[]
+                {
+                    new KeyValuePair<DecodeHintType, object>(DecodeHintType.TRY_HARDER,null)
+                });
+            Deserialize(result?.Text);
+        }
+        private void FromCamera()
         {
             if (this.Leector is null)
             {
@@ -271,23 +310,29 @@ namespace Kit.Forms.Pages
             }
             this.Leector.Abrir();
         }
+
         private void Leector_CodigoEntrante(object sender, EventArgs e)
         {
             if (sender is Lector leector)
             {
                 leector.CodigoEntrante -= Leector_CodigoEntrante;
-                if (!string.IsNullOrEmpty(leector.CodigoBarras))
+                Deserialize(leector.CodigoBarras);
+            }
+        }
+
+        private void Deserialize(string json)
+        {
+            if (!string.IsNullOrEmpty(json))
+            {
+                Configuracion configuracion_qr = Configuracion.DeSerialize(json);
+                if (configuracion_qr != null)
                 {
-                    Configuracion configuracion_qr = Configuracion.DeSerialize(leector.CodigoBarras);
-                    if (configuracion_qr != null)
-                    {
-                        this.Configuracion = configuracion_qr;
-                        this.CargarCadena();
-                    }
-                    else
-                    {
-                        Acr.UserDialogs.UserDialogs.Instance.Alert("Formato Qr incorrecto", "Incorrecto", "Ok");
-                    }
+                    this.Configuracion = configuracion_qr;
+                    this.CargarCadena();
+                }
+                else
+                {
+                    Acr.UserDialogs.UserDialogs.Instance.Alert("Formato Qr incorrecto", "Incorrecto", "Ok");
                 }
             }
         }

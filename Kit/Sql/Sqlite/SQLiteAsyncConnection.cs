@@ -181,7 +181,7 @@ namespace Kit.Sql.Sqlite
 		/// Returns the mappings from types to tables that the connection
 		/// currently understands.
 		/// </summary>
-		public IEnumerable<TableMapping> TableMappings => GetConnection ().TableMappings;
+		public IEnumerable<Kit.Sql.Base.TableMapping> TableMappings => GetConnection ().TableMappings;
 
 		/// <summary>
 		/// Closes all connections to all async databases.
@@ -887,7 +887,7 @@ namespace Kit.Sql.Sqlite
 		/// The mapping represents the schema of the columns of the database and contains 
 		/// methods to set and get properties of objects.
 		/// </returns>
-		public Task<TableMapping> GetMappingAsync (Type type, CreateFlags createFlags = CreateFlags.None)
+		public Task<Kit.Sql.Base.TableMapping> GetMappingAsync (Type type, CreateFlags createFlags = CreateFlags.None)
 		{
 			return ReadAsync (conn => conn.GetMapping (type, createFlags));
 		}
@@ -902,7 +902,7 @@ namespace Kit.Sql.Sqlite
 		/// The mapping represents the schema of the columns of the database and contains 
 		/// methods to set and get properties of objects.
 		/// </returns>
-		public Task<TableMapping> GetMappingAsync<T> (CreateFlags createFlags = CreateFlags.None)
+		public Task<Kit.Sql.Base.TableMapping> GetMappingAsync<T> (CreateFlags createFlags = CreateFlags.None)
 			where T : new()
 		{
 			return ReadAsync (conn => conn.GetMapping<T> (createFlags));

@@ -215,19 +215,19 @@ namespace Kit.Daemon.Sync
         private string BuildSqliteSelectQuery()
         {
             Schema schema = Daemon.Current.Schema;
-            if (Daemon.Current.Schema.HasUploadTables)
-            {
-                StringBuilder builder = new StringBuilder().Append("SELECT ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL ORDER BY(CASE ");
-                foreach (Table table in schema.UploadTables)
-                {
-                    builder.Append(" WHEN TABLA = '")
-                                        .Append(table.Name)
-                                        .Append("' THEN ").Append(table.Priority);
-                }
-                builder.Append(" ELSE ").Append(schema.UploadTables.Last().Priority + 1)
-                    .Append(" END),ID").Append(PackageSize <= 0 ? ";" : $" LIMIT {PackageSize};");
-                return builder.ToString();
-            }
+            //if (Daemon.Current.Schema.HasUploadTables)
+            //{
+            //    StringBuilder builder = new StringBuilder().Append("SELECT ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL ORDER BY(CASE ");
+            //    foreach (Table table in schema.UploadTables)
+            //    {
+            //        builder.Append(" WHEN TABLA = '")
+            //                            .Append(table.Name)
+            //                            .Append("' THEN ").Append(table.Priority);
+            //    }
+            //    builder.Append(" ELSE ").Append(schema.UploadTables.Last().Priority + 1)
+            //        .Append(" END),ID").Append(PackageSize <= 0 ? ";" : $" LIMIT {PackageSize};");
+            //    return builder.ToString();
+            //}
             return null;
         }
         private string BuildSqlServerQuery()

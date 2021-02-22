@@ -19,7 +19,10 @@ using Kit.Sql.Enums;
 using Kit.Sql.Helpers;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Readers;
+using Kit.Sql.SqlServer;
 using Kit.Sql.Sync;
+using static Kit.Sql.Base.BaseTableQuery;
+using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace SQLServer
 {
@@ -29,6 +32,12 @@ namespace SQLServer
     [Preserve(AllMembers = true)]
     public class SQLServerConnection : SqlBase, IDisposable
     {
+        public override string MappingSuffix => "_sqlserver";
+        protected override TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
+        {
+            return new Kit.Sql.SqlServer.TableMapping(type, createFlags);
+        }
+
         #region SQLH
 
         public string GetDbName()
@@ -205,9 +214,9 @@ namespace SQLServer
         }
         public int EXEC(string sql, params SqlParameter[] parametros)
         {
-            return EXEC(sql, CommandType.Text, false, parametros);
+            return EXEC(sql, CommandType.Text, parametros);
         }
-        public int EXEC(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parametros)
+        public int EXEC(string sql, CommandType commandType = CommandType.Text, params SqlParameter[] parametros)
         {
             LastException = null;
             int Rows = Error;
@@ -235,8 +244,8 @@ namespace SQLServer
                         }
                     }
                     cmd.Parameters.AddRange(parametros);
-                    if (Reportar)
-                        ReportaTransaccion(cmd);
+
+                    ReportaTransaccion(cmd);
                     Rows = cmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -251,7 +260,7 @@ namespace SQLServer
             }
             return Rows;
         }
-        public int EXEC(SqlConnection connection, string procedimiento, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parametros)
+        public int EXEC(SqlConnection connection, string procedimiento, CommandType commandType = CommandType.Text, params SqlParameter[] parametros)
         {
             int Rows = -1;
 
@@ -292,9 +301,7 @@ namespace SQLServer
                     Log.AlertOnDBConnectionError(LastException);
                     Rows = Error;
                 }
-
-                if (Reportar)
-                    ReportaTransaccion(cmd);
+                ReportaTransaccion(cmd);
                 con.Close();
 
             }
@@ -449,7 +456,7 @@ namespace SQLServer
                     if (line.ToUpperInvariant().Trim() == "GO")
                     {
                         if (!string.IsNullOrEmpty(Batch))
-                            EXEC(Batch, CommandType.Text, Reportar);
+                            EXEC(Batch, CommandType.Text);
                         Batch = string.Empty;
                     }
                     else
@@ -519,10 +526,6 @@ namespace SQLServer
         {
             string sql = GetCommandText(cmd);
             Log.Logger.Debug(sql);
-            //if (Settings.Depurando)
-            //{
-            //    Debugger.Break();
-            //}
         }
         private string GetCommandText(SqlCommand sqc)
         {
@@ -1043,6 +1046,7 @@ namespace SQLServer
         }
 
 
+
         public override bool TableExists(string tablename)
         {
             return Exists($"(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @Tablename)",
@@ -1198,14 +1202,13 @@ namespace SQLServer
         /// <returns>
         /// Whether the table was created or migrated.
         /// </returns>
-        public CreateTableResult CreateTable(Type ty, CreateFlags createFlags = CreateFlags.None)
+        public override CreateTableResult CreateTable(TableMapping map, CreateFlags createFlags = CreateFlags.None)
         {
-            var map = GetMapping(ty, createFlags);
 
             // Present a nice error if no columns specified
             if (map.Columns.Length == 0)
             {
-                throw new Exception(string.Format("Cannot create a table without columns (does '{0}' have public properties?)", ty.FullName));
+                throw new Exception(string.Format("Cannot create a table without columns (does '{0}' have public properties?)", map.MappedType.FullName));
             }
 
             // Check if the table exists
@@ -1504,6 +1507,8 @@ WHERE
         /// <seealso cref="SQLiteCommand.OnInstanceCreated"/>
         protected virtual SQLServerCommand NewCommand(string CommandText, params SqlParameter[] parameters)
         {
+            if(this.IsClosed)
+                this.RenewConnection();
             return new SQLServerCommand(this, CommandText, parameters);
         }
 
@@ -1522,7 +1527,16 @@ WHERE
         /// </returns>
         public override CommandBase CreateCommand(string cmdText, params object[] ps)
         {
-            return CreateCommand(cmdText, (SqlParameter[])ps);
+            SqlParameter[] parameters = new SqlParameter[ps.Length];
+            if (ps.Length > 0)
+            {
+                for (int i = 0; i < ps.Length; i++)
+                {
+                    Condition condition = (Condition)(ps[i]);
+                    parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
+                }
+            }
+            return CreateCommand(cmdText, parameters);
         }
 
         public SQLServerCommand CreateCommand(string cmdText, params SqlParameter[] ps)
@@ -1778,7 +1792,7 @@ WHERE
         /// </returns>
         public override TableQuery<T> Table<T>()
         {
-            return new TableQuery<T>(this);
+            return new SQLServerTableQuery<T>(this);
         }
 
         /// <summary>
@@ -1847,7 +1861,7 @@ WHERE
         /// The object with the given primary key or null
         /// if the object is not found.
         /// </returns>
-        public override T Find<T>(object pk) 
+        public override T Find<T>(object pk)
         {
             var map = GetMapping(typeof(T));
             return Query<T>(map.GetByPrimaryKeySql, new SqlParameter(map.PK.Name, pk)).FirstOrDefault();

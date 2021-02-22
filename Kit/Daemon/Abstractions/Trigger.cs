@@ -3,35 +3,37 @@ using Kit.Sql.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
+using Kit.Sql.Base;
 using SQLServer;
 
 namespace Kit.Daemon.Abstractions
 {
     public class Trigger
     {
-        public static void CheckTrigger(SQLServerConnection SQLH, Table Table, int DbVersion)
+        public static void CheckTrigger(SQLServerConnection Connection, TableMapping Table, int DbVersion)
         {
             try
             {
-                string TriggerName = $"{Table.Name}_TRIGGER";
-                int version = SQLH.Single<int>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
+                string TriggerName = $"{Table.TableName}_TRIGGER";
+                int version = Connection.Single<int>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
                      , false, System.Data.CommandType.Text, new SqlParameter("NAME", TriggerName));
 
                 if (version != DbVersion)
                 {
-                    if (SQLH.TriggerExists(TriggerName))
+                    if (Connection.TriggerExists(TriggerName))
                     {
-                        SQLH.EXEC($"DROP TRIGGER {TriggerName}", System.Data.CommandType.Text, false);
+                        Connection.EXEC($"DROP TRIGGER {TriggerName}", System.Data.CommandType.Text);
                     }
 
                     //REMOVE OLD TRIGGERS
-                    if (SQLH.TriggerExists($"{Table.Name}_Tablet"))
+                    if (Connection.TriggerExists($"{Table.TableName}_Tablet"))
                     {
-                        SQLH.EXEC($"DROP TRIGGER {Table.Name}_Tablet");
+                        Connection.EXEC($"DROP TRIGGER {Table.TableName}_Tablet");
                     }
 
-                    SQLH.EXEC($@"CREATE TRIGGER dbo.{TriggerName} ON dbo.{Table.Name} AFTER INSERT,DELETE,UPDATE AS 
+                    Connection.EXEC($@"CREATE TRIGGER dbo.{TriggerName} ON dbo.{Table.TableName} AFTER INSERT,DELETE,UPDATE AS 
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
@@ -56,35 +58,35 @@ BEGIN
    DELETE V
    FROM VERSION_CONTROL V
    INNER JOIN inserted I
-   ON I.{Table.PrimaryKey}=V.LLAVE
+   ON I.{Table.PK.Name}=V.LLAVE
    WHERE 
    (V.ACCION='U' OR V.ACCION='I')  AND
-   V.TABLA='{Table.Name}'  AND
-   V.CAMPO='{Table.PrimaryKey}'
+   V.TABLA='{Table.TableName}'  AND
+   V.CAMPO='{Table.PK.Name}'
    INSERT INTO VERSION_CONTROL(ACCION,LLAVE,CAMPO,TABLA) 
-   SELECT @action,{Table.PrimaryKey},'{Table.PrimaryKey.ToUpper()}','{Table.Name.ToUpper()}'
+   SELECT @action,{Table.PK.Name},'{Table.PK.Name.ToUpper()}','{Table.TableName.ToUpper()}'
    FROM inserted
 END ELSE
 BEGIN
    DELETE V
    FROM VERSION_CONTROL V
    INNER JOIN deleted D
-   ON D.{Table.PrimaryKey}=V.LLAVE
+   ON D.{Table.PK.Name}=V.LLAVE
    WHERE 
-   V.TABLA='{Table.Name}' AND
-   V.CAMPO='{Table.PrimaryKey}'
+   V.TABLA='{Table.TableName}' AND
+   V.CAMPO='{Table.PK.Name}'
    INSERT INTO VERSION_CONTROL(ACCION,LLAVE,CAMPO,TABLA) 
-   SELECT @action,{Table.PrimaryKey},'{Table.PrimaryKey.ToUpper()}','{Table.Name.ToUpper()}'
+   SELECT @action,{Table.PK.Name},'{Table.PK.Name.ToUpper()}','{Table.TableName.ToUpper()}'
    FROM deleted
 END
-END", System.Data.CommandType.Text, false);
+END", System.Data.CommandType.Text);
 
-                    SQLH.EXEC($"UPDATE {Table.Name} SET {Table.Fields[Table.Fields.Length - 1]}={Table.Fields[Table.Fields.Length - 1]}", System.Data.CommandType.Text, false);
+                   Connection.EXEC($"UPDATE {Table.TableName} SET {Table.Columns.Last().Name}={Table.Columns.Last().Name}", System.Data.CommandType.Text);
 
-                    SQLH.EXEC($"DELETE FROM TRIGGERS_INFO WHERE NAME=@NAME", System.Data.CommandType.Text, false
+                    Connection.EXEC($"DELETE FROM TRIGGERS_INFO WHERE NAME=@NAME", System.Data.CommandType.Text
                         , new SqlParameter("NAME", TriggerName));
 
-                    SQLH.EXEC($"INSERT INTO TRIGGERS_INFO (NAME,VERSION) VALUES(@NAME,@VERSION)", System.Data.CommandType.Text, false
+                    Connection.EXEC($"INSERT INTO TRIGGERS_INFO (NAME,VERSION) VALUES(@NAME,@VERSION)", System.Data.CommandType.Text
                         , new SqlParameter("NAME", TriggerName)
                         , new SqlParameter("VERSION", DbVersion)
                         );
@@ -94,7 +96,7 @@ END", System.Data.CommandType.Text, false);
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, $"Al revisar el trigger de {Table.Name}");
+                Log.Logger.Error(ex, $"Al revisar el trigger de {Table.TableName}");
             }
         }
     }
