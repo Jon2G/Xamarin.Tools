@@ -44,7 +44,7 @@ namespace SQLServer
             using (var con = Connection.Connection)
             {
                 con.Open();
-                using (var cmd = new SqlCommand(this.CommandText + " select SCOPE_IDENTITY();", con))
+                using (var cmd = new SqlCommand(this.CommandText + "; select SCOPE_IDENTITY();", con))
                 {
                     if (source?.Any() ?? false)
                     {

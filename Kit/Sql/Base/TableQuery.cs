@@ -4,29 +4,30 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Kit.Sql.Sqlite;
+using Kit.Sql.SqlServer;
 
 namespace Kit.Sql.Base
 {
-    public class TableQuery<T> : BaseTableQuery, IEnumerable<T>
+    public abstract class TableQuery<T> : BaseTableQuery, IEnumerable<T>
     {
         public SqlBase Connection { get; private set; }
 
         public TableMapping Table { get; private set; }
 
-        Expression _where;
-        List<Ordering> _orderBys;
-        int? _limit;
-        int? _offset;
+        protected Expression _where;
+        protected List<Ordering> _orderBys;
+        protected int? _limit;
+        protected int? _offset;
 
-        BaseTableQuery _joinInner;
-        Expression _joinInnerKeySelector;
-        BaseTableQuery _joinOuter;
-        Expression _joinOuterKeySelector;
-        Expression _joinSelector;
+        protected BaseTableQuery _joinInner;
+        protected Expression _joinInnerKeySelector;
+        protected BaseTableQuery _joinOuter;
+        protected Expression _joinOuterKeySelector;
+        protected Expression _joinSelector;
 
-        Expression _selector;
+        protected Expression _selector;
 
-        TableQuery(SqlBase conn, TableMapping table)
+        protected TableQuery(SqlBase conn, TableMapping table)
         {
             Connection = conn;
             Table = table;
@@ -38,25 +39,7 @@ namespace Kit.Sql.Base
             Table = Connection.GetMapping(typeof(T));
         }
 
-        public TableQuery<U> Clone<U>()
-        {
-            var q = new TableQuery<U>(Connection, Table);
-            q._where = _where;
-            q._deferred = _deferred;
-            if (_orderBys != null)
-            {
-                q._orderBys = new List<Ordering>(_orderBys);
-            }
-            q._limit = _limit;
-            q._offset = _offset;
-            q._joinInner = _joinInner;
-            q._joinInnerKeySelector = _joinInnerKeySelector;
-            q._joinOuter = _joinOuter;
-            q._joinOuterKeySelector = _joinOuterKeySelector;
-            q._joinSelector = _joinSelector;
-            q._selector = _selector;
-            return q;
-        }
+        public abstract TableQuery<U> Clone<U>();
 
         /// <summary>
         /// Filters the query based on a predicate.
@@ -104,12 +87,14 @@ namespace Kit.Sql.Base
                 pred = pred != null ? Expression.AndAlso(pred, lambda.Body) : lambda.Body;
             }
 
-            var args = new List<object>();
+            List<object> args = new List<object>();
+            List<Condition> conditions = new List<Condition>();
             var cmdText = "delete from \"" + Table.TableName + "\"";
-            var w = CompileExpr(pred, args);
+            var w = CompileExpr(pred, args, conditions);
             cmdText += " where " + w.CommandText;
 
-            var command = Connection.CreateCommand(cmdText, args.ToArray());
+            object[] conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+            var command = Connection.CreateCommand(cmdText, conditions_array);
 
             int result = command.ExecuteNonQuery();
             return result;
@@ -143,7 +128,7 @@ namespace Kit.Sql.Base
             return Skip(index).Take(1).First();
         }
 
-        bool _deferred;
+        protected bool _deferred;
         public TableQuery<T> Deferred()
         {
             var q = Clone<T>();
@@ -266,53 +251,18 @@ namespace Kit.Sql.Base
         //	return q;
         //}
 
-        private CommandBase GenerateCommand(string selectionList)
-        {
-            if (_joinInner != null && _joinOuter != null)
-            {
-                throw new NotSupportedException("Joins are not supported.");
-            }
-            else
-            {
-                var cmdText = "select " + selectionList + " from \"" + Table.TableName + "\"";
-                var args = new List<object>();
-                if (_where != null)
-                {
-                    var w = CompileExpr(_where, args);
-                    cmdText += " where " + w.CommandText;
-                }
-                if ((_orderBys != null) && (_orderBys.Count > 0))
-                {
-                    var t = string.Join(", ", _orderBys.Select(o => "\"" + o.ColumnName + "\"" + (o.Ascending ? "" : " desc")).ToArray());
-                    cmdText += " order by " + t;
-                }
-                if (_limit.HasValue)
-                {
-                    cmdText += " limit " + _limit.Value;
-                }
-                if (_offset.HasValue)
-                {
-                    if (!_limit.HasValue)
-                    {
-                        cmdText += " limit -1 ";
-                    }
-                    cmdText += " offset " + _offset.Value;
-                }
-                if (Connection.IsClosed)
-                    Connection.RenewConnection();
+        protected abstract CommandBase GenerateCommand(string selectionList);
 
-                return Connection.CreateCommand(cmdText, args.ToArray());
-            }
-        }
 
-        class CompileResult
+        protected class CompileResult
         {
             public string CommandText { get; set; }
 
             public object Value { get; set; }
+            public Condition CurrentCondition { get; set; }
         }
 
-        private CompileResult CompileExpr(Expression expr, List<object> queryArgs)
+        protected CompileResult CompileExpr(Expression expr, List<object> queryArgs, List<Condition> conditions)
         {
             if (expr == null)
             {
@@ -333,8 +283,17 @@ namespace Kit.Sql.Base
                 }
 
 
-                var leftr = CompileExpr(bin.Left, queryArgs);
-                var rightr = CompileExpr(bin.Right, queryArgs);
+                var leftr = CompileExpr(bin.Left, queryArgs, conditions);
+                var rightr = CompileExpr(bin.Right, queryArgs, conditions);
+
+                if (leftr.CurrentCondition != null && !leftr.CurrentCondition.IsComplete)
+                {
+                    Condition joinedCondition = new Condition(leftr.CurrentCondition, rightr.CurrentCondition);
+                    conditions.Add(joinedCondition);
+                    conditions.Remove(rightr.CurrentCondition);
+                    conditions.Remove(leftr.CurrentCondition);
+                }
+
 
                 //If either side is a parameter and is null, then handle the other side specially (for "is null"/"is not null")
                 string text;
@@ -343,13 +302,23 @@ namespace Kit.Sql.Base
                 else if (rightr.CommandText == "?" && rightr.Value == null)
                     text = CompileNullBinaryExpression(bin, leftr);
                 else
+                {
+                    if (rightr.CommandText == "?" && this is SQLServerTableQuery<T>)
+                    {
+                        rightr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                    }
                     text = "(" + leftr.CommandText + " " + GetSqlName(bin) + " " + rightr.CommandText + ")";
+                }
+
+
+                leftr.CurrentCondition = null;
+                rightr.CurrentCondition = null;
                 return new CompileResult { CommandText = text };
             }
             else if (expr.NodeType == ExpressionType.Not)
             {
                 var operandExpr = ((UnaryExpression)expr).Operand;
-                var opr = CompileExpr(operandExpr, queryArgs);
+                var opr = CompileExpr(operandExpr, queryArgs, conditions);
                 object val = opr.Value;
                 if (val is bool)
                     val = !((bool)val);
@@ -364,11 +333,11 @@ namespace Kit.Sql.Base
 
                 var call = (MethodCallExpression)expr;
                 var args = new CompileResult[call.Arguments.Count];
-                var obj = call.Object != null ? CompileExpr(call.Object, queryArgs) : null;
+                var obj = call.Object != null ? CompileExpr(call.Object, queryArgs, conditions) : null;
 
                 for (var i = 0; i < args.Length; i++)
                 {
-                    args[i] = CompileExpr(call.Arguments[i], queryArgs);
+                    args[i] = CompileExpr(call.Arguments[i], queryArgs, conditions);
                 }
 
                 var sqlCall = "";
@@ -462,17 +431,20 @@ namespace Kit.Sql.Base
             {
                 var c = (ConstantExpression)expr;
                 queryArgs.Add(c.Value);
+                var condition = new Condition(c.Value);
+                conditions.Add(condition);
                 return new CompileResult
                 {
                     CommandText = "?",
-                    Value = c.Value
+                    Value = c.Value,
+                    CurrentCondition = condition
                 };
             }
             else if (expr.NodeType == ExpressionType.Convert)
             {
                 var u = (UnaryExpression)expr;
                 var ty = u.Type;
-                var valr = CompileExpr(u.Operand, queryArgs);
+                var valr = CompileExpr(u.Operand, queryArgs, conditions);
                 return new CompileResult
                 {
                     CommandText = valr.CommandText,
@@ -500,21 +472,27 @@ namespace Kit.Sql.Base
                     // Need to translate it if that column name is mapped
                     //
                     var columnName = Table.FindColumnWithPropertyName(mem.Member.Name).Name;
-                    return new CompileResult { CommandText = "\"" + columnName + "\"" };
+                    return new CompileResult
+                    {
+                        CommandText = "\"" + columnName + "\"",
+                        CurrentCondition = new Condition(columnName)
+                    };
                 }
                 else
                 {
                     object obj = null;
                     if (mem.Expression != null)
                     {
-                        var r = CompileExpr(mem.Expression, queryArgs);
+                        var r = CompileExpr(mem.Expression, queryArgs, conditions);
                         if (r.Value == null)
                         {
                             throw new NotSupportedException("Member access failed to compile expression");
                         }
                         if (r.CommandText == "?")
                         {
-                            queryArgs.RemoveAt(queryArgs.Count - 1);
+                            int remove_index = queryArgs.Count - 1;
+                            queryArgs.RemoveAt(remove_index);
+                            conditions.RemoveAt(remove_index);
                         }
                         obj = r.Value;
                     }
@@ -563,11 +541,14 @@ namespace Kit.Sql.Base
                     }
                     else
                     {
+                        var con = new Condition(val);
                         queryArgs.Add(val);
+                        conditions.Add(con);
                         return new CompileResult
                         {
                             CommandText = "?",
-                            Value = val
+                            Value = val,
+                            CurrentCondition = con
                         };
                     }
                 }
@@ -575,7 +556,8 @@ namespace Kit.Sql.Base
             throw new NotSupportedException("Cannot compile: " + expr.NodeType.ToString());
         }
 
-        static object ConvertTo(object obj, Type t)
+
+        protected static object ConvertTo(object obj, Type t)
         {
             Type nut = Nullable.GetUnderlyingType(t);
 
@@ -596,7 +578,7 @@ namespace Kit.Sql.Base
         /// </summary>
         /// <param name="expression">The expression to compile</param>
         /// <param name="parameter">The non-null parameter</param>
-        private string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter)
+        protected string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter)
         {
             if (expression.NodeType == ExpressionType.Equal)
                 return "(" + parameter.CommandText + " is ?)";
@@ -611,7 +593,7 @@ namespace Kit.Sql.Base
                 throw new NotSupportedException("Cannot compile Null-BinaryExpression with type " + expression.NodeType.ToString());
         }
 
-        string GetSqlName(Expression expr)
+        protected string GetSqlName(Expression expr)
         {
             var n = expr.NodeType;
             if (n == ExpressionType.GreaterThan)

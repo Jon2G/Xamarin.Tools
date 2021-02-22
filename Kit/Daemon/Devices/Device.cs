@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using Kit.Services.Interfaces;
 using Kit.Sql.Attributes;
 using Kit.Sql.Helpers;
+using Kit.Sql.Tables;
 using SQLServer;
 
 namespace Kit.Daemon.Devices
@@ -30,26 +32,40 @@ namespace Kit.Daemon.Devices
             Current = new Device(IDeviceInfo);
         }
 
+        private void EnsureTableExists(SQLServerConnection SQLH)
+        {
+            if (!SQLH.TableExists<SyncDevicesInfo>())
+            {
+                SQLH.CreateTable<SyncDevicesInfo>();
+            }
+        }
         private bool IsDeviceRegistered(SQLServerConnection SQLH)
         {
-            bool registered = SQLH.Exists("SELECT ID_DISPOSITIVO FROM DISPOSITVOS_TABLETS WHERE ID_DISPOSITIVO=@ID_DISPOSITIVO"
-                , new SqlParameter("ID_DISPOSITIVO", DeviceId));
+            EnsureTableExists(SQLH);
+            bool registered = SQLH.Table<SyncDevicesInfo>().Any(x => x.DeviceId == DeviceId);
             this.RegisterStatus = registered ? DeviceRegisterStatus.Registered : DeviceRegisterStatus.NotRegistered;
             return registered;
         }
 
         public bool EnsureDeviceIsRegistred(SQLServerConnection SQLH)
         {
+            SyncDevicesInfo deviceInfo;
             //SQL SERVER
             if (!IsDeviceRegistered(SQLH))
             {
-                SQLH.Exists("INSERT INTO DISPOSITVOS_TABLETS(ID_DISPOSITIVO,ULTIMA_CONEXION) VALUES (@ID_DISPOSITIVO,GETDATE())"
-                    , new SqlParameter("ID_DISPOSITIVO", DeviceId));
+                deviceInfo = new SyncDevicesInfo()
+                {
+                    DeviceId = DeviceId,
+                    LastTimeSeen = DateTime.Now,
+                    Name = IDeviceInfo.DeviceName
+                };
+                SQLH.Insert(deviceInfo);
             }
             else
             {
-                SQLH.Exists("UPDATE DISPOSITVOS_TABLETS SET ULTIMA_CONEXION=GETDATE() WHERE ID_DISPOSITIVO=@ID_DISPOSITIVO"
-                    , new SqlParameter("ID_DISPOSITIVO", DeviceId));
+                deviceInfo= SQLH.Table<SyncDevicesInfo>().FirstOrDefault(x => x.DeviceId == DeviceId);
+                deviceInfo.LastTimeSeen=DateTime.Now;
+                SQLH.Update(deviceInfo);
             }
             return IsDeviceRegistered(SQLH);
         }

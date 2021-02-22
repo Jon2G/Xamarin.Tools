@@ -19,6 +19,9 @@ using Xamarin.Forms;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
+[assembly: UsesPermission("android.permission.READ_PHONE_STATE")]
+[assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
+[assembly: UsesPermission("android.permission.BLUETOOTH")]
 
 namespace Kit.Droid.Services
 {

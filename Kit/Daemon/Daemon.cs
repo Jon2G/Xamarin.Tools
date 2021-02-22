@@ -19,11 +19,15 @@ using Kit.Daemon.VersionControl;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
+using Kit.Sql.Enums;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Helpers;
 using Kit.Sql.Reflection;
 using Kit.Sql.Sqlite;
 using SQLServer;
+using Kit.Sql.Sync;
+using Kit.Sql.Tables;
+using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace Kit.Daemon
 {
@@ -134,7 +138,7 @@ namespace Kit.Daemon
             Current.DaemonConfig.Remote.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
             return this;
         }
-        public Daemon SetSchema(params Table[] tables)
+        public Daemon SetSchema(params Type[] tables)
         {
             this.Schema = new Schema(tables);
             this.SyncManager.ReGenerateSyncQueries();
@@ -175,18 +179,22 @@ namespace Kit.Daemon
         /// </summary>
         public Daemon SetUp(SQLServerConnection Connection)
         {
-            using (ReflectionCaller reflex = new Kit.Sql.Reflection.ReflectionCaller())
+            var versionTable = Connection.Table<SyncVersions>();
+            foreach (var type in new[] {
+                typeof(SyncVersions), typeof(SyncDevicesInfo)
+                , typeof(ChangesHistory), typeof(SyncHistory)})
             {
-                foreach (IVersionControlTable table in reflex.GetInheritedClasses<IVersionControlTable>(true, Connection).OrderBy(x => x.Priority))
+                TableMapping table = Connection.GetMapping(type);
+                CreateTableResult result = CreateTableResult.None;
+                SyncVersions version = SyncVersions.GetVersion(Connection, table);
+                if (version.Version != DaemonConfig.DbVersion)
                 {
-                    if (table.GetVersion() != DaemonConfig.DbVersion)
-                    {
-                        table.DropTable();
-                        if (!Connection.TableExists(table.TableName))
-                        {
-                            table.CreateTable();
-                        }
-                    }
+                    result = Connection.CreateTable(table);
+                }
+                if (result != CreateTableResult.None)
+                {
+                    version.Version = DaemonConfig.DbVersion;
+                    Connection.Update(version);
                 }
             }
             return this;
@@ -246,29 +254,27 @@ namespace Kit.Daemon
                     return;
                 }
                 SQLServerConnection SQLH = DaemonConfig.GetSqlServerConnection();
+                SQLH.CreateTable<SyncDevicesInfo>();
+                SQLH.CreateTable<ChangesHistory>();
+                SQLH.CreateTable<SyncHistory>();
+
                 if (!Device.Current.EnsureDeviceIsRegistred(SQLH))
                 {
                     return;
                 }
-                foreach (Table table in Schema.DownloadTables)
-                {
-                    if (IsSleepRequested || OffLine)
-                    {
-                        Start();
-                        return;
-                    }
-                    Trigger.CheckTrigger(SQLH, table, DaemonConfig.DbVersion);
-                }
+
+                Schema.CheckTriggers(SQLH);
 
 
-                SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
-                IVersionControlTable controlTable = new VersionControlTable(SQLHLite);
-                if (!SQLHLite.TableExists(controlTable.TableName))
-                {
-                    controlTable.CreateTable();
-                }
 
-                SetUp(DaemonConfig.GetSqlServerConnection());
+                //SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
+                //SQLHLite.CreateTable<SyncHistory>();
+                //IVersionControlTable controlTable = new VersionControlTable(SQLHLite);
+                //if (!SQLHLite.TableExists(controlTable.TableName))
+                //{
+                //    controlTable.CreateTable();
+                //}
+                SetUp(SQLH);
                 if (OnInicializate != null)
                 {
                     if (!OnInicializate.Invoke())
@@ -422,41 +428,41 @@ namespace Kit.Daemon
             catch { }
             return false;
         }
-        /// <summary>
-        /// Le indica a la base de datos de sqlite que existe un nuevo registro que debe ser sincronizado
-        /// </summary>
-        /// <param name="con"></param>
-        /// <param name="TableName"></param>
-        /// <param name="PrimaryKeyValue"></param>
-        /// <param name="Accion"></param>
-        public void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
-        {
-            char CharAccion;
-            switch (Accion)
-            {
-                case AccionDemonio.INSERT:
-                    CharAccion = 'I';
-                    break;
-                case AccionDemonio.UPDATE:
-                    CharAccion = 'U';
-                    break;
-                case AccionDemonio.DELETE:
-                    CharAccion = 'D';
-                    break;
-                default:
-                    throw new ArgumentException("Invalid Acction", nameof(Accion));
-            }
-            if (Accion == AccionDemonio.DELETE)
-            {
-                con.EXEC($"DELETE FROM VERSION_CONTROL WHERE TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
-            }
-            else
-            {
-                con.EXEC("DELETE FROM VERSION_CONTROL WHERE (ACCION='U' OR ACCION='I') AND TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
-            }
-            con.EXEC("INSERT INTO VERSION_CONTROL(ACCION,LLAVE,TABLA) VALUES(?,?,?)", CharAccion.ToString(), PrimaryKeyValue, TableName);
+        ///// <summary>
+        ///// Le indica a la base de datos de sqlite que existe un nuevo registro que debe ser sincronizado
+        ///// </summary>
+        ///// <param name="con"></param>
+        ///// <param name="TableName"></param>
+        ///// <param name="PrimaryKeyValue"></param>
+        ///// <param name="Accion"></param>
+        //public void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
+        //{
+        //    char CharAccion;
+        //    switch (Accion)
+        //    {
+        //        case AccionDemonio.INSERT:
+        //            CharAccion = 'I';
+        //            break;
+        //        case AccionDemonio.UPDATE:
+        //            CharAccion = 'U';
+        //            break;
+        //        case AccionDemonio.DELETE:
+        //            CharAccion = 'D';
+        //            break;
+        //        default:
+        //            throw new ArgumentException("Invalid Acction", nameof(Accion));
+        //    }
+        //    if (Accion == AccionDemonio.DELETE)
+        //    {
+        //        con.EXEC($"DELETE FROM VERSION_CONTROL WHERE TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
+        //    }
+        //    else
+        //    {
+        //        con.EXEC("DELETE FROM VERSION_CONTROL WHERE (ACCION='U' OR ACCION='I') AND TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
+        //    }
+        //    con.EXEC("INSERT INTO VERSION_CONTROL(ACCION,LLAVE,TABLA) VALUES(?,?,?)", CharAccion.ToString(), PrimaryKeyValue, TableName);
 
-        }
+        //}
     }
 
 }

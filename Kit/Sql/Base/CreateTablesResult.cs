@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using Kit.Sql.Enums;
 
-namespace SQLServer
+namespace Kit.Sql.Base
 {
     public class CreateTablesResult
     {
         public Dictionary<Type, CreateTableResult> Results { get; private set; }
 
-        public CreateTablesResult()
+        public CreateTablesResult ()
         {
-            Results = new Dictionary<Type, CreateTableResult>();
+            Results = new Dictionary<Type, CreateTableResult> ();
         }
     }
 }

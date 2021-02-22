@@ -7,7 +7,7 @@ namespace Kit.Sql.Exceptions
 {
     public class NotNullConstraintViolationException : SQLiteException
     {
-        public IEnumerable<TableMapping.Column> Columns { get; protected set; }
+        public IEnumerable<Kit.Sql.Sqlite.TableMapping.Column> Columns { get; protected set; }
 
         protected NotNullConstraintViolationException(SQLite3.Result r, string message)
             : this(r, message, null, null)
@@ -15,7 +15,7 @@ namespace Kit.Sql.Exceptions
 
         }
 
-        protected NotNullConstraintViolationException(SQLite3.Result r, string message, TableMapping mapping, object obj)
+        protected NotNullConstraintViolationException(SQLite3.Result r, string message, Kit.Sql.Base.TableMapping mapping, object obj)
             : base(r, message)
         {
             if (mapping != null && obj != null)
@@ -31,12 +31,12 @@ namespace Kit.Sql.Exceptions
             return new NotNullConstraintViolationException(r, message);
         }
 
-        public static NotNullConstraintViolationException New(SQLite3.Result r, string message, TableMapping mapping, object obj)
+        public static NotNullConstraintViolationException New(SQLite3.Result r, string message, Kit.Sql.Base.TableMapping mapping, object obj)
         {
             return new NotNullConstraintViolationException(r, message, mapping, obj);
         }
 
-        public static NotNullConstraintViolationException New(SQLiteException exception, TableMapping mapping, object obj)
+        public static NotNullConstraintViolationException New(SQLiteException exception, Kit.Sql.Base.TableMapping mapping, object obj)
         {
             return new NotNullConstraintViolationException(exception.Result, exception.Message, mapping, obj);
         }
