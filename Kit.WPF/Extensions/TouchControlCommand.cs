@@ -1,6 +1,7 @@
 ﻿using System;
+using Kit.Extensions;
 
-namespace Kit.Extensions
+namespace Kit.WPF.Extensions
 {
     public class TouchControlCommand : CommonCommand
     {

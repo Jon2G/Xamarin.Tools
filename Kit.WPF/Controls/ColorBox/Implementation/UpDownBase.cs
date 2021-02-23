@@ -20,8 +20,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Kit.WPF.Controls.ColorBox.Utils;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     [TemplatePart(Name = PART_TextBox , Type = typeof(TextBox))]
     [TemplatePart(Name = PART_Spinner , Type = typeof(Spinner))]

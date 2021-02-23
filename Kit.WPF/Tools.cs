@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.WPF.Services;
-using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using Kit.Sql;
 using Kit.WPF.Services;
 using Kit.WPF.Services.ICustomMessageBox;

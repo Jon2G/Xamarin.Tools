@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Windows;
 using Kit.Enums;
-using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using Kit.Sql;
 using Kit.WPF;
 using Kit.Extensions;
+using Kit.WPF.Extensions;
 
 namespace Kit.WPF.Services.ICustomMessageBox
 {

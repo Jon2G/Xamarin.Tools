@@ -17,8 +17,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Kit.WPF.Controls.ColorBox.Utils;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     [TemplatePart(Name = PART_CurrentColor, Type = typeof(TextBox))]
     public class ColorBox : Control

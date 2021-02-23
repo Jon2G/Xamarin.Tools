@@ -10,14 +10,13 @@
 ***********************************************************************************/
 
 using System;
-using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Collections.ObjectModel;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     class GradientStopAdder : Button
     {

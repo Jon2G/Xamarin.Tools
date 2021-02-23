@@ -15,11 +15,8 @@
   ***********************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Utils
 {
     internal delegate void InputValidationErrorEventHandler(object sender, InputValidationErrorEventArgs e);
 

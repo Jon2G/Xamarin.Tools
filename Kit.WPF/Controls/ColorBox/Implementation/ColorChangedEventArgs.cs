@@ -9,11 +9,10 @@
 
 ***********************************************************************************/
 
-using System;
-using System.Windows.Media;
 using System.Windows;
+using System.Windows.Media;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     public class ColorChangedEventArgs : RoutedEventArgs
     {

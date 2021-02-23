@@ -11,7 +11,8 @@
     
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:ColorBox">
+                    xmlns:local="clr-namespace:Kit.WPF.Controls.ColorBox.Implementation"
+                    xmlns:utils="clr-namespace:Kit.WPF.Controls.ColorBox.Utils">
 
     <Geometry x:Key="SkewIcon">M456.021,227.816L545.590,227.816L456.021,362.171L366.452,362.171L456.021,227.816</Geometry>
     <Geometry x:Key="TranslateIcon">M384,289.828L384,363L457.171,363M384,363L457.171,289.828M480,267L480,310.011L435.711,267L480,267</Geometry>
@@ -129,7 +130,7 @@
                                  AcceptsReturn="False"
                                  Padding="{TemplateBinding Padding}"
                                  TabIndex="{TemplateBinding TabIndex}"
-                                 local:TextBoxBehavior.SelectAllTextOnFocus="True"/>
+                                 utils:TextBoxBehavior.SelectAllTextOnFocus="True"/>
                     </local:Spinner>
                 </ControlTemplate>
             </Setter.Value>
@@ -358,7 +359,7 @@
 
                                 <TextBox x:Name="PART_CurrentColor"
                                                      Text="{Binding Color, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                     local:TextBoxBehavior.SelectAllTextOnFocus="True"
+                                                     utils:TextBoxBehavior.SelectAllTextOnFocus="True"
                                                      Grid.Column="2" MinWidth="100" >
                                     <TextBox.Style>
                                         <Style TargetType="TextBox">

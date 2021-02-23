@@ -9,12 +9,12 @@
 
 ***********************************************************************************/
 
-using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Kit.WPF.Controls.ColorBox.Utils;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     class SaturationBrightnessSelector : BaseSelector
     {

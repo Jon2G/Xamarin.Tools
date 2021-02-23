@@ -17,9 +17,8 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     internal class Spinner : ContentControl
     {

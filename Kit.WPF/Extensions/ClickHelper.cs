@@ -1,10 +1,6 @@
-﻿using Kit.Sql;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
-namespace Kit.Extensions
+namespace Kit.WPF.Extensions
 {
     public static class ClickHelper
     {

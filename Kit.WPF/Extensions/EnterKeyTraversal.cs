@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Kit.WPF.Forms.Extensions
+namespace Kit.WPF.Extensions
 {
     public class EnterKeyTraversal
     {

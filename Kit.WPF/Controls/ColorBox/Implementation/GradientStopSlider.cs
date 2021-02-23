@@ -9,13 +9,12 @@
 
 ***********************************************************************************/
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     class GradientStopSlider : Slider
     {

@@ -14,9 +14,7 @@
 
   ***********************************************************************************/
 
-using System;
-
-namespace ColorBox
+namespace Kit.WPF.Controls.ColorBox.Implementation
 {    
     internal enum SpinDirection
     {
