@@ -47,22 +47,7 @@ namespace Kit.WPF.Extensions
 
             return bytes;
         }
-        public static BitmapImage ByteToImage(this byte[] imageData)
-        {
-            if (imageData is null)
-            {
-                return null;
-            }
-            System.Windows.Media.Imaging.BitmapImage biImg = new System.Windows.Media.Imaging.BitmapImage();
-            MemoryStream ms = new MemoryStream(imageData);
-            biImg.BeginInit();
-            biImg.StreamSource = ms;
-            biImg.EndInit();
 
-            //System.Windows.Media.ImageSource imgSrc = biImg as System.Windows.Media.ImageSource;
-
-            return biImg;
-        }
         public static Bitmap BitmapImage2Bitmap(this BitmapImage bitmapImage)
         {
             // BitmapImage bitmapImage = new BitmapImage(new Uri("../Images/test.png", UriKind.Relative));

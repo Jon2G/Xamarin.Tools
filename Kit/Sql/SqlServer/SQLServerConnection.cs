@@ -33,6 +33,7 @@ namespace SQLServer
     public class SQLServerConnection : SqlBase, IDisposable
     {
         public override string MappingSuffix => "_sqlserver";
+
         protected override TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
         {
             return new Kit.Sql.SqlServer.TableMapping(type, createFlags);
@@ -47,8 +48,7 @@ namespace SQLServer
 
         public bool TriggerExists(string TriggerName)
         {
-            return Exists($"SELECT * FROM sys.objects WHERE [name] = N'{TriggerName}' AND [type] = 'TR'"
-                , false);
+            return Exists($"SELECT * FROM sys.objects WHERE [name] = N'{TriggerName}' AND [type] = 'TR'");
         }
 
         public List<Tuple<string, Type>> GetColumnsName(string consulta, params SqlParameter[] Parametros)
@@ -70,19 +70,24 @@ namespace SQLServer
                     listacolumnas.Add(new Tuple<string, Type>(col.ColumnName, col.DataType));
                 }
             }
+
             return listacolumnas;
         }
+
         public string TipoDato(string Tabla, string Campo)
         {
-            return Single<string>(@"SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLA AND COLUMN_NAME = @CAMPO", false, CommandType.Text
+            return Single<string>(
+                @"SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLA AND COLUMN_NAME = @CAMPO"
                 , new SqlParameter("TABLA", Tabla)
                 , new SqlParameter("CAMPO", Campo)
-                );
+            );
         }
+
         public void ChangeConnectionString(string CadenaCon)
         {
             this.ConnectionString = new SqlConnectionStringBuilder(CadenaCon);
         }
+
         public SQLServerConnection Con()
         {
             return new SQLServerConnection(ConnectionString);
@@ -102,14 +107,15 @@ namespace SQLServer
                     if (Reportar)
                         ReportaTransaccion(cmd);
                 }
+
                 con.Close();
             }
         }
 
-        public override object Single(string sql)
+        public object Single(string sql, params SqlParameter[] parameters)
         {
             object result = default;
-            using (IReader reader = Read(sql, CommandType.Text, false))
+            using (IReader reader = Read(sql, CommandType.Text, parameters))
             {
                 if (reader.Read())
                 {
@@ -119,32 +125,41 @@ namespace SQLServer
                     }
                 }
             }
+
             return result;
         }
 
         public override T Single<T>(string sql)
         {
-            return Single<T>(sql, false, CommandType.Text);
+            return Single<T>(sql);
         }
+
+        public override object Single(string sql)
+        {
+            return Single(sql, null);
+        }
+
         public T Single<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
         {
-            return Single<T>(sql, false, CommandType.Text, parameters);
+            return Single<T>(sql, parameters);
         }
-        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text) where T : IConvertible
-        {
-            T result = default;
-            using (IReader reader = Read(sql, type, Reportar))
-            {
-                if (reader.Read())
-                {
-                    if (reader[0] != DBNull.Value)
-                    {
-                        result = Sqlh.Parse<T>(reader[0]);
-                    }
-                }
-            }
-            return result;
-        }
+
+        //public T Single<T>(string sql) where T : IConvertible
+        //{
+        //    T result = default;
+        //    using (IReader reader = Read(sql))
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            if (reader[0] != DBNull.Value)
+        //            {
+        //                result = Sqlh.Parse<T>(reader[0]);
+        //            }
+        //        }
+        //    }
+
+        //    return result;
+        //}
 
 
         public static bool IsInjection(string value)
@@ -156,8 +171,10 @@ namespace SQLServer
                     return true;
                 }
             }
+
             return false;
         }
+
         public static bool IsInjection(params string[] values)
         {
             foreach (string value in values)
@@ -167,55 +184,63 @@ namespace SQLServer
                     return true;
                 }
             }
+
             return false;
         }
 
-        public T Single<T>(string sql, bool Reportar = true, CommandType type = CommandType.Text, params SqlParameter[] parametros) where T : IConvertible
-        {
-            T result = default;
-            try
-            {
-                using (IReader reader = Read(sql, type, false, parametros))
-                {
-                    if (reader.Read())
-                    {
-                        result = Sqlh.Parse<T>(reader[0]);
-                    }
-                }
-                if (Reportar)
-                {
-                    Log.Logger.Error(sql);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error(ex, "Consulta fallida");
-                Log.Logger.Error(sql);
-                Log.AlertOnDBConnectionError(ex);
-            }
-            return result;
-        }
-        [Obsolete("No se deberia utilizar mas procedimientos alamcenados debido a su dificil versionamiento", false)]
-        public T Single<T>(string sql, bool Reportar = true, params SqlParameter[] parametros) where T : IConvertible
-        {
-            T result = default;
-            using (IReader reader = Read(sql, CommandType.StoredProcedure, false, parametros))
-            {
-                if (reader.Read())
-                {
-                    result = Sqlh.Parse<T>(reader[0]);
-                }
-            }
-            return result;
-        }
+        //public T Single<T>(string sql,
+        //    params SqlParameter[] parametros) where T : IConvertible
+        //{
+        //    T result = default;
+        //    try
+        //    {
+        //        using (IReader reader = Read(sql, parametros))
+        //        {
+        //            if (reader.Read())
+        //            {
+        //                result = Sqlh.Parse<T>(reader[0]);
+        //            }
+        //        }
+
+
+        //        Log.Logger.Debug(sql);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Logger.Error(ex, "Consulta fallida");
+        //        Log.Logger.Error(sql);
+        //        Log.AlertOnDBConnectionError(ex);
+        //    }
+
+        //    return result;
+        //}
+
+        // [Obsolete("No se deberia utilizar mas procedimientos alamcenados debido a su dificil versionamiento", false)]
+        //public T Single<T>(string sql, params SqlParameter[] parametros) where T : IConvertible
+        //{
+        //    T result = default;
+        //    using (IReader reader = Read(sql, parametros))
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            result = Sqlh.Parse<T>(reader[0]);
+        //        }
+        //    }
+
+        //    return result;
+        //}
+
         public override int EXEC(string sql)
         {
             return EXEC(sql);
         }
+
         public int EXEC(string sql, params SqlParameter[] parametros)
         {
             return EXEC(sql, CommandType.Text, parametros);
         }
+
         public int EXEC(string sql, CommandType commandType = CommandType.Text, params SqlParameter[] parametros)
         {
             LastException = null;
@@ -239,10 +264,12 @@ namespace SQLServer
                             {
                                 t.Value = DBNull.Value;
                             }
+
                             if (!parametros.Any(x => x.Value is null))
                                 break;
                         }
                     }
+
                     cmd.Parameters.AddRange(parametros);
 
                     ReportaTransaccion(cmd);
@@ -258,9 +285,12 @@ namespace SQLServer
                     con.Close();
                 }
             }
+
             return Rows;
         }
-        public int EXEC(SqlConnection connection, string procedimiento, CommandType commandType = CommandType.Text, params SqlParameter[] parametros)
+
+        public int EXEC(SqlConnection connection, string procedimiento, CommandType commandType = CommandType.Text,
+            params SqlParameter[] parametros)
         {
             int Rows = -1;
 
@@ -280,10 +310,12 @@ namespace SQLServer
                         {
                             t.Value = DBNull.Value;
                         }
+
                         if (!parametros.Any(x => x.Value is null))
                             break;
                     }
                 }
+
                 cmd.Parameters.AddRange(parametros);
                 try
                 {
@@ -297,17 +329,22 @@ namespace SQLServer
                     {
                         throw;
                     }
+
                     LastException = ex;
                     Log.AlertOnDBConnectionError(LastException);
                     Rows = Error;
                 }
+
                 ReportaTransaccion(cmd);
                 con.Close();
 
             }
+
             return Rows;
         }
-        public List<T> Lista<T>(string sql, CommandType type = CommandType.Text, bool Reportar = true, int index = 0, params SqlParameter[] parameters) where T : IConvertible
+
+        public List<T> Lista<T>(string sql, CommandType type = CommandType.Text, int index = 0,
+            params SqlParameter[] parameters) where T : IConvertible
         {
             List<T> result = new List<T>();
             try
@@ -327,9 +364,10 @@ namespace SQLServer
                                 result.Add(Sqlh.Parse<T>(reader[index]));
                             }
                         }
-                        if (Reportar)
-                            ReportaTransaccion(cmd);
+
+                        ReportaTransaccion(cmd);
                     }
+
                     con.Close();
                 }
             }
@@ -337,15 +375,23 @@ namespace SQLServer
             {
                 Log.AlertOnDBConnectionError(ex);
             }
+
             return result;
         }
-        public List<T> Lista<T>(string sql, bool Reportar = true, int indice = 0, params SqlParameter[] parameters) where T : IConvertible
+
+        public List<T> Lista<T>(string sql, int indice = 0, params SqlParameter[] parameters) where T : IConvertible
         {
-            return Lista<T>(sql, CommandType.Text, Reportar, indice, parameters);
+            return Lista<T>(sql, CommandType.Text, indice, parameters);
         }
+
+        public List<T> Lista<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
+        {
+            return Lista<T>(sql, CommandType.Text, 0, parameters);
+        }
+
         public List<T> Lista<T>(string sql) where T : IConvertible
         {
-            return Lista<T>(sql, CommandType.Text, false, 0);
+            return Lista<T>(sql, CommandType.Text, 0);
         }
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.Text, params SqlParameter[] parameters)
             where T : IConvertible
@@ -364,6 +410,28 @@ namespace SQLServer
                     while (reader.Read())
                     {
                         result.Add(new Tuple<T, Q>(Sqlh.Parse<T>(reader[0]), Sqlh.Parse<Q>(reader[1])));
+                    }
+                }
+                con.Close();
+            }
+            return result;
+        }
+
+        public List<Tuple<object, object>> ListaTupla(string sql, params SqlParameter[] parameters)
+        {
+            List<Tuple<object, object>> result = new List<Tuple<object, object>>();
+            if (IsClosed)
+                RenewConnection();
+            using (SqlConnection con = Connection)
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = CommandType.Text })
+                {
+                    cmd.Parameters.AddRange(parameters);
+                    using SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(new Tuple<object, object>((reader[0]), (reader[1])));
                     }
                 }
                 con.Close();
@@ -415,9 +483,9 @@ namespace SQLServer
         }
         public IReader Read(string sql, params SqlParameter[] parameters)
         {
-            return Read(sql, CommandType.Text, false, parameters);
+            return Read(sql, CommandType.Text, parameters);
         }
-        public IReader Read(string sql, CommandType commandType = CommandType.Text, bool Reportar = false, params SqlParameter[] parameters)
+        public IReader Read(string sql, CommandType commandType = CommandType.Text, params SqlParameter[] parameters)
         {
             try
             {
@@ -429,8 +497,7 @@ namespace SQLServer
                     cmd.Parameters.AddRange(parameters);
                 }
                 cmd.Connection.Open();
-                if (Reportar)
-                    ReportaTransaccion(cmd);
+                ReportaTransaccion(cmd);
                 return new Reader(cmd);
             }
             catch (Exception ex)
@@ -498,10 +565,10 @@ namespace SQLServer
         {
             return AsyncLeector(sql, CommandType.Text, false, parameters);
         }
-        public bool Exists(string sql, bool Reportar = false, params SqlParameter[] parametros)
+        public bool Exists(string sql, params SqlParameter[] parametros)
         {
             bool result = false;
-            using (IReader reader = Read(sql, CommandType.Text, Reportar, parametros))
+            using (IReader reader = Read(sql, CommandType.Text, parametros))
             {
                 if (reader != null)
                 {
@@ -513,13 +580,13 @@ namespace SQLServer
 
         public bool ExisteCampo(string Tabla, string Campo)
         {
-            return Exists($@"SELECT 1 FROM sys.columns WHERE name = N'{Campo}' AND Object_ID = Object_ID(N'{Tabla}')", false);
+            return Exists($@"SELECT 1 FROM sys.columns WHERE name = N'{Campo}' AND Object_ID = Object_ID(N'{Tabla}')");
         }
 
 
         public bool TieneIdentidad(string Tabla)
         {
-            return Exists("SELECT * from syscolumns where id = Object_ID(@TABLE_NAME) and colstat & 1 = 1", false,
+            return Exists("SELECT * from syscolumns where id = Object_ID(@TABLE_NAME) and colstat & 1 = 1",
                 new SqlParameter("TABLE_NAME", Tabla));
         }
         public void ReportaTransaccion(SqlCommand cmd)
@@ -1147,18 +1214,18 @@ namespace SQLServer
         }
 
 
-        public bool Exists(string sql, params SqlParameter[] parameters)
-        {
-            bool result = false;
-            using (var reader = Read(sql, parameters))
-            {
-                if (reader != null)
-                {
-                    result = reader.Read();
-                }
-            }
-            return result;
-        }
+        //public bool Exists(string sql, params SqlParameter[] parameters)
+        //{
+        //    bool result = false;
+        //    using (var reader = Read(sql, parameters))
+        //    {
+        //        if (reader != null)
+        //        {
+        //            result = reader.Read();
+        //        }
+        //    }
+        //    return result;
+        //}
         //private SqlDataReader Read(string sql, params SqlParameter[] parameters)
         //{
         //    try
@@ -1507,7 +1574,7 @@ WHERE
         /// <seealso cref="SQLiteCommand.OnInstanceCreated"/>
         protected virtual SQLServerCommand NewCommand(string CommandText, params SqlParameter[] parameters)
         {
-            if(this.IsClosed)
+            if (this.IsClosed)
                 this.RenewConnection();
             return new SQLServerCommand(this, CommandText, parameters);
         }

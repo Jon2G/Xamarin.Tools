@@ -15,11 +15,10 @@ namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo)
+        public override AbstractTools Init(IDeviceInfo DeviceInfo, ICustomMessageBox CustomMessageBox)
         {
-            this.CustomMessageBox = new Services.ICustomMessageBox.CustomMessageBoxService();
-            base.Init(DeviceInfo);
-
+            base.Init(DeviceInfo, new Services.ICustomMessageBox.CustomMessageBoxService());
+ 
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()

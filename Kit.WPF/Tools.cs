@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using Plugin.Xamarin.Tools.WPF.Services;
 using Plugin.Xamarin.Tools.WPF.Services.ICustomMessageBox;
 using Kit.Sql;
+using Kit.WPF.Services;
+using Kit.WPF.Services.ICustomMessageBox;
 
 namespace Kit.WPF
 {
@@ -24,7 +27,7 @@ namespace Kit.WPF
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Kit.Tools.Set(new ToolsImplementation().SetLibraryPath(Environment.CurrentDirectory));
-            Kit.Tools.Instance.Init(new Kit.WPF.Services.DeviceInfo());
+            Kit.Tools.Instance.Init(new Kit.WPF.Services.DeviceInfo(), new CustomMessageBoxService());
 
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
 

@@ -18,7 +18,7 @@ namespace Kit.Daemon.Abstractions
             {
                 string TriggerName = $"{Table.TableName}_TRIGGER";
                 int version = Connection.Single<int>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
-                     , false, System.Data.CommandType.Text, new SqlParameter("NAME", TriggerName));
+                     , new SqlParameter("NAME", TriggerName));
 
                 if (version != DbVersion)
                 {

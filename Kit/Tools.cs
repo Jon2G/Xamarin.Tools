@@ -27,5 +27,6 @@ namespace Kit
             set => currentInstance = value;
         }
 
+        public static bool Debugging => Debugger.IsAttached;
     }
 }

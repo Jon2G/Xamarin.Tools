@@ -41,7 +41,7 @@ namespace Kit.WPF.Services
             //}
             //catch (Exception ex)
             //{
-            //    SQLHelper.Log.LogMe(ex, "Al guardar el archivo html");
+            //    SQLHelper.Log.Logger.Error(ex, "Al guardar el archivo html");
             //    return false;
             //}
             return false;
@@ -79,7 +79,7 @@ namespace Kit.WPF.Services
         //    }
         //    catch (Exception ex)
         //    {
-        //        SQLHelper.Log.LogMe(ex, "Al convertir un ticket html a pdf");
+        //        SQLHelper.Log.Logger.Error(ex, "Al convertir un ticket html a pdf");
         //    }
         //    return false;
         //}
@@ -129,7 +129,7 @@ namespace Kit.WPF.Services
         //    }
         //    catch (Exception ex)
         //    {
-        //        SQLHelper.Log.LogMe(ex, "Al imprimir un pdf");
+        //        SQLHelper.Log.Logger.Error(ex, "Al imprimir un pdf");
         //    }
         //    return false;
         //}

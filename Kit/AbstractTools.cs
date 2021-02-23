@@ -9,9 +9,9 @@ using Serilog;
 
 namespace Kit
 {
-    public class AbstractTools : ITools
+    public class AbstractTools 
     {
-        public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox;
+        public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox { get; private set; }
         private string _LibraryPath;
 
         public string LibraryPath => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -23,12 +23,11 @@ namespace Kit
 
         public static AbstractTools Instance => Tools.Instance;
 
-        public virtual ITools Init(IDeviceInfo DeviceInfo)
+        public virtual AbstractTools Init(IDeviceInfo DeviceInfo,
+            ICustomMessageBox CustomMessageBox)
         {
+            this.CustomMessageBox = CustomMessageBox;
             Device.Init(DeviceInfo);
-
-           
-
             return this;
         }
 

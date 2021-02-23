@@ -139,7 +139,7 @@ namespace Kit.Services
                 //}
                 //catch (Exception ex)
                 //{
-                //    SQLHelper.Log.LogMe(ex, "ERROR");
+                //    SQLHelper.Log.Logger.Error(ex, "ERROR");
                 //    await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Pdf no generado");
                 //}
             }

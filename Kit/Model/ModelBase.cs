@@ -13,7 +13,7 @@ namespace Kit
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-        [Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
+        //[Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));

@@ -52,7 +52,7 @@ namespace Kit.Droid.Services
             //            }
             //            catch (Exception ex)
             //            {
-            //                Log.LogMe(ex, "Al obtener la imagen despues de ser abierta");
+            //                Log.Logger.Error(ex, "Al obtener la imagen despues de ser abierta");
             //            }
             //        }
             //        else
