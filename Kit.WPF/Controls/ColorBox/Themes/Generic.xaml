@@ -1,18 +1,14 @@
 ﻿<!--*****************   NCore Softwares Pvt. Ltd., India   **************************
-
    ColorBox
-
    Copyright (C) 2013 NCore Softwares Pvt. Ltd.
-
    This program is provided to you under the terms of the Microsoft Public
    License (Ms-PL) as published at http://colorbox.codeplex.com/license
-
 *********************************************************************************** -->
-    
+
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Kit.WPF.Controls.ColorBox.Implementation"
-                    xmlns:utils="clr-namespace:Kit.WPF.Controls.ColorBox.Utils">
+                    xmlns:localUtils="clr-namespace:Kit.WPF.Controls.ColorBox.Utils">
 
     <Geometry x:Key="SkewIcon">M456.021,227.816L545.590,227.816L456.021,362.171L366.452,362.171L456.021,227.816</Geometry>
     <Geometry x:Key="TranslateIcon">M384,289.828L384,363L457.171,363M384,363L457.171,289.828M480,267L480,310.011L435.711,267L480,267</Geometry>
@@ -41,7 +37,7 @@
             </Grid>
         </VisualBrush.Visual>
     </VisualBrush>
-    
+
     <Style TargetType="Path" x:Key="IconStyle">
         <Setter Property="Height" Value="16"/>
         <Setter Property="Width" Value="16"/>
@@ -55,8 +51,8 @@
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Minimum" Value="0"/>
         <Setter Property="Maximum" Value="1"/>
-    </Style>    
-                         
+    </Style>
+
     <!-- Gradient Stop Thumb Style -->
     <Style x:Key="SliderThumbStyle" TargetType="Thumb">
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -96,7 +92,7 @@
     </Style>
 
 
-    
+
     <!-- ******* DoubleUpDown ******* -->
 
     <Style x:Key="NumericUpDown" TargetType="{x:Type local:UpDownBase}">
@@ -130,7 +126,7 @@
                                  AcceptsReturn="False"
                                  Padding="{TemplateBinding Padding}"
                                  TabIndex="{TemplateBinding TabIndex}"
-                                 utils:TextBoxBehavior.SelectAllTextOnFocus="True"/>
+                                 localUtils:TextBoxBehavior.SelectAllTextOnFocus="True"/>
                     </local:Spinner>
                 </ControlTemplate>
             </Setter.Value>
@@ -164,9 +160,9 @@
         </Setter>
     </Style>
 
-         
+
     <!-- ******* ColorBox ******* -->
-    <Style TargetType="{x:Type local:ColorBox}">     
+    <Style TargetType="{x:Type local:ColorBox}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Background" Value="#E7E8E8" />
@@ -174,7 +170,7 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:ColorBox}">                                                       
+                <ControlTemplate TargetType="{x:Type local:ColorBox}">
                     <Border x:Name="PART_Root"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -191,7 +187,7 @@
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </StackPanel.Resources>
-                           
+
                             <ListBox x:Name="listAvailableBrushType"                                                
                                                  HorizontalContentAlignment="Center"
                                                  SelectedItem="{Binding BrushType, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
@@ -264,7 +260,7 @@
                                 </ListBox.ItemContainerStyle>
 
                             </ListBox>
-                          
+
                             <ScrollViewer Margin="0,5,0,5" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" >
                                 <ScrollViewer.Style>
                                     <Style TargetType="ScrollViewer">
@@ -331,7 +327,7 @@
                                     </Path>
                                 </Grid>
                             </ScrollViewer>
-                          
+
                             <Grid Height="20">
 
                                 <!-- Hide when brush type is None -->
@@ -359,7 +355,7 @@
 
                                 <TextBox x:Name="PART_CurrentColor"
                                                      Text="{Binding Color, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                     utils:TextBoxBehavior.SelectAllTextOnFocus="True"
+                                                     localUtils:TextBoxBehavior.SelectAllTextOnFocus="True"
                                                      Grid.Column="2" MinWidth="100" >
                                     <TextBox.Style>
                                         <Style TargetType="TextBox">
@@ -379,7 +375,7 @@
                                 </TextBox>
 
                             </Grid>
-                           
+
                             <Grid Margin="0,5,0,0" Focusable="False">
 
                                 <Grid.Style>
@@ -524,7 +520,7 @@
                                 </Button>
 
                             </Grid>
-                           
+
                             <StackPanel Margin="0,5,0,0">
                                 <StackPanel.Style>
                                     <Style TargetType="StackPanel">
@@ -558,7 +554,6 @@
                                                                               HorizontalAlignment="Center"
                                                                               RenderTransformOrigin=".5,.5"/>
                                                         </Border>
-
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsChecked" Value="True">
                                                                 <Setter TargetName="Icon" Property="RenderTransform">
@@ -629,18 +624,14 @@
                                                 <local:DoubleUpDown Value="{Binding StartX, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                 <local:DoubleUpDown Value="{Binding StartY, RelativeSource={RelativeSource TemplatedParent}}"/>
                                             </UniformGrid>
-
                                             <UniformGrid Rows="1">
                                                 <local:DoubleUpDown Value="{Binding EndX, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                 <local:DoubleUpDown Value="{Binding EndY, RelativeSource={RelativeSource TemplatedParent}}"/>
                                             </UniformGrid>
-
                                             <ComboBox Margin="2" ItemsSource="{Binding MappingModeTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding MappingMode, RelativeSource={RelativeSource TemplatedParent}}"/>
-
                                             <ComboBox Margin="2" ItemsSource="{Binding SpreadMethodTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding SpreadMethod, RelativeSource={RelativeSource TemplatedParent}}"/>
-
                                             <Slider Style="{StaticResource OpacitySliderStyle}"/>
                                         </UniformGrid>-->
                                     </DockPanel>
@@ -673,24 +664,18 @@
                                                 <local:DoubleUpDown Value="{Binding GradientOriginX, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                 <local:DoubleUpDown Value="{Binding GradientOriginY, RelativeSource={RelativeSource TemplatedParent}}"/>
                                             </UniformGrid>
-
                                             <UniformGrid Rows="1">
                                                 <local:DoubleUpDown Value="{Binding CenterX, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                 <local:DoubleUpDown Value="{Binding CenterY, RelativeSource={RelativeSource TemplatedParent}}"/>
                                             </UniformGrid>
-
                                             <local:DoubleUpDown Value="{Binding RadiusX, RelativeSource={RelativeSource TemplatedParent}}"/>
-
                                             <local:DoubleUpDown Value="{Binding RadiusY, RelativeSource={RelativeSource TemplatedParent}}"/>
-
                                             <ComboBox Margin="2"
                                                                   ItemsSource="{Binding MappingModeTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding MappingMode, RelativeSource={RelativeSource TemplatedParent}}"/>
-
                                             <ComboBox Margin="2" 
                                                                   ItemsSource="{Binding SpreadMethodTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding SpreadMethod, RelativeSource={RelativeSource TemplatedParent}}"/>
-
                                             <Slider Style="{StaticResource OpacitySliderStyle}"/>
                                         </UniformGrid>-->
                                     </DockPanel>
