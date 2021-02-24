@@ -35,13 +35,11 @@ namespace Kit.Droid
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
             Set(new ToolsImplementation());
-            (Instance as ToolsImplementation).MainActivity = activity;
+            (Instance as ToolsImplementation).Init(activity);
             CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
             CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
-
-
             return Instance;
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)

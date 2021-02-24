@@ -88,9 +88,9 @@ namespace SQLServer
             this.ConnectionString = new SqlConnectionStringBuilder(CadenaCon);
         }
 
-        public SQLServerConnection Con()
+        public SqlConnection Con()
         {
-            return new SQLServerConnection(ConnectionString);
+            return new SqlConnection(ConnectionString.ConnectionString);
         }
 
         public void Querry(string sql, CommandType type = CommandType.StoredProcedure, bool Reportar = true)
@@ -249,7 +249,7 @@ namespace SQLServer
             if (this.IsClosed)
                 RenewConnection();
 
-            using (var con = Con().Connection)
+            using (var con = Con())
             {
                 try
                 {
@@ -489,16 +489,18 @@ namespace SQLServer
         {
             try
             {
-                if (IsClosed)
-                    RenewConnection();
-                SqlCommand cmd = new SqlCommand(sql, this.Connection) { CommandType = commandType };
-                if (parameters != null)
-                {
-                    cmd.Parameters.AddRange(parameters);
-                }
-                cmd.Connection.Open();
-                ReportaTransaccion(cmd);
-                return new Reader(cmd);
+                
+                    //con.Open();
+                    SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
+                    if (cmd.Connection.State != ConnectionState.Open)
+                        cmd.Connection.Open();
+                    ReportaTransaccion(cmd);
+                    return new Reader(cmd);
+                
             }
             catch (Exception ex)
             {

@@ -13,18 +13,25 @@ using Kit.Droid.Services;
 using Kit.Services.Interfaces;
 using Serilog;
 using Android.Telephony;
+using Kit.Forms.Services;
+using DeviceInfo = Kit.Droid.Services.DeviceInfo;
 
 namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
     {
-        public MainActivity MainActivity { get; internal set; }
+        public override RuntimePlatform RuntimePlatform => RuntimePlatform.Android;
+        public MainActivity MainActivity { get; private set; }
         public static Kit.Droid.ToolsImplementation Instance => Tools.Instance as Kit.Droid.ToolsImplementation;
-        public override ITools Init(IDeviceInfo DeviceInfo)
-        {
-            this.CustomMessageBox = new Services.CustomMessageBoxService();
-            base.Init(DeviceInfo);
 
+        public void Init(MainActivity MainActivity)
+        {
+            this.MainActivity = MainActivity;
+            Init();
+        }
+        public override void Init()
+        {
+            Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()
@@ -36,7 +43,7 @@ namespace Kit.Droid
                 // Create a custom logger in order to set another limit,
                 // particularly, any logs from Information level will also be written into a rolling file
                 .WriteTo.Logger(config =>
-                config
+                    config
                         .MinimumLevel.Information()
                         .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
                 )
@@ -46,8 +53,6 @@ namespace Kit.Droid
                         .MinimumLevel.Fatal()
                         .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
                 )).CreateLogger(), CriticalAlert);
-
-            return this;
         }
 
         public override void CriticalAlert(object sender, EventArgs e)

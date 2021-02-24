@@ -18,18 +18,14 @@ namespace Kit.WPF
         /// <summary>
         /// Initialize android user dialogs
         /// </summary>
-        public static AbstractTools Init()
+        public static AbstractTools Init(string LibraryPath=null)
         {
-
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
-
-            Kit.Tools.Set(new ToolsImplementation().SetLibraryPath(Environment.CurrentDirectory));
-            Kit.Tools.Instance.Init(new Kit.WPF.Services.DeviceInfo(), new CustomMessageBoxService());
-
+            Kit.Tools.Set(new ToolsImplementation().SetLibraryPath(LibraryPath??Environment.CurrentDirectory));
+            (Kit.Tools.Instance as ToolsImplementation).Init();
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
-
-
+            Kit.Tools.Instance.Init();
             return Kit.Tools.Instance;
         }
         public static new ToolsImplementation Instance
