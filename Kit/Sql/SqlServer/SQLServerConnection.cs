@@ -141,7 +141,7 @@ namespace SQLServer
 
         public T Single<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
         {
-            return Single<T>(sql, parameters);
+            return Sqlh.Parse<T>(Single(sql, parameters));
         }
 
         //public T Single<T>(string sql) where T : IConvertible
