@@ -30,7 +30,11 @@ namespace Kit.Sql.Base
         /// </summary>
         public abstract bool IsClosed { get; }
         public abstract string MappingSuffix { get; }
-        protected SqlBase() { }
+
+        protected SqlBase()
+        {
+
+        }
         public SqlBase(string ConnectionString)
         {
             this.ConnectionString = ConnectionString;

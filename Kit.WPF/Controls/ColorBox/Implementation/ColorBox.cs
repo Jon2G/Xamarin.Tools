@@ -22,7 +22,7 @@ using Kit.WPF.Controls.ColorBox.Utils;
 namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     [TemplatePart(Name = PART_CurrentColor, Type = typeof(TextBox))]
-    public class ColorBox : Control
+    public class ColorBox : UserControl
     {
         internal const string PART_CurrentColor = "PART_CurrentColor";
 
@@ -37,6 +37,11 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         {
             get;
             private set;
+        }
+
+        public ColorBox():base()
+        {
+            
         }
         public bool SoloColoresSolidos { get; set; }
         public void CargarGradiente(Brush brush)
@@ -631,7 +636,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
 
         #region Color Specific Properties
 
-        private double Hue
+        public double Hue
         {
             get => (double)GetValue(HueProperty);
             set => SetValue(HueProperty, value);
@@ -656,7 +661,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         }
 
 
-        private double Brightness
+        public double Brightness
         {
             get => (double)GetValue(BrightnessProperty);
             set => SetValue(BrightnessProperty, value);
@@ -681,7 +686,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         }
 
 
-        private double Saturation
+        public double Saturation
         {
             get => (double)GetValue(SaturationProperty);
             set => SetValue(SaturationProperty, value);
@@ -706,7 +711,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         }
 
 
-        private double Alpha
+        public double Alpha
         {
             get => (double)GetValue(AlphaProperty);
             set => SetValue(AlphaProperty, value);

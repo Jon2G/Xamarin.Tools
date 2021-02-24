@@ -6,19 +6,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using Kit.Enums;
 using Kit.Services;
 using Application = System.Windows.Application;
 using Kit.Sql.Helpers;
+using Kit.WPF.Services;
+using Kit.WPF.Services.ICustomMessageBox;
 using Serilog;
 
 namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override AbstractTools Init(IDeviceInfo DeviceInfo, ICustomMessageBox CustomMessageBox)
+        public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
+        public override void Init()
         {
-            base.Init(DeviceInfo, new Services.ICustomMessageBox.CustomMessageBoxService());
- 
+            Init(new Kit.WPF.Services.DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()
@@ -40,14 +43,15 @@ namespace Kit.WPF
                         .MinimumLevel.Fatal()
                         .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
                 )).CreateLogger(), CriticalAlert);
-
-            return this;
         }
 
         public override void CriticalAlert(object sender, EventArgs e)
         {
             MessageBox.Show(sender.ToString(), "Alerta", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+
+
         #region UWP Especific
         public static ToolsImplementation UWPInstance
         {

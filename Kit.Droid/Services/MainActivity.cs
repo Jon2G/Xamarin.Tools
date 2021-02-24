@@ -78,7 +78,7 @@ namespace Kit.Droid.Services
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Rg.Plugins.Popup.Popup.Init(this);
-            Kit.Droid.Tools.Init(this, savedInstanceState).Init(new Kit.Droid.Services.DeviceInfo());
+            Kit.Droid.Tools.Init(this, savedInstanceState);
             Instance = this; //ImagePicker
         }
 

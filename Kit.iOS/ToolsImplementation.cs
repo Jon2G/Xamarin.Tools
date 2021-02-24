@@ -5,23 +5,48 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Kit;
+using Kit.Forms.Services;
+using Kit.iOS.Services;
 using Kit.Services;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Log= Kit.Sql.Log;
 using Kit.Services.Interfaces;
+using Serilog;
+using DeviceInfo = Kit.iOS.Services.DeviceInfo;
+using Kit.Enums;
 
 namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo, bool AlertAfterCritical = false)
+        public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
+        public override void Init()
         {
-            this.CustomMessageBox = new Services.CustomMessageBoxService();
-            base.Init(DeviceInfo,  AlertAfterCritical);
-            return this;
+            Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke());
+            Log.Init().SetLogger((new LoggerConfiguration()
+                // Set default log level limit to Debug
+                .MinimumLevel.Debug()
+                // Enrich each log entry with memory usage and thread ID
+                // .Enrich.WithMemoryUsage()
+                //.Enrich.WithThreadId()
+                // Write entries to ios log (Nuget package Serilog.Sinks.Xamarin)
+                .WriteTo.NSLog()
+                // Create a custom logger in order to set another limit,
+                // particularly, any logs from Information level will also be written into a rolling file
+                .WriteTo.Logger(config =>
+                    config
+                        .MinimumLevel.Information()
+                        .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
+                )
+                // And create another logger so that logs at Fatal level will immediately send email
+                .WriteTo.Logger(config =>
+                    config
+                        .MinimumLevel.Fatal()
+                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
+                )).CreateLogger(), CriticalAlert);
         }
+
 
 
         public override void CriticalAlert(object sender, EventArgs e)

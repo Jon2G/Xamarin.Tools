@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Forms.Services;
 using Xamarin.Forms;
 using BaseLicense = Kit.License.License;
 namespace Kit.Droid.Services

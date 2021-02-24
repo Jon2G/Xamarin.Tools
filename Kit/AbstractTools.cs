@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Kit.Daemon.Devices;
+using Kit.Enums;
 using Kit.Services.Interfaces;
 using Serilog;
 
 
 namespace Kit
 {
-    public class AbstractTools 
+    public abstract class AbstractTools
     {
         public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox { get; private set; }
+        public Kit.Services.Interfaces.ISynchronizeInvoke SynchronizeInvoke { get; private set; }
+
         private string _LibraryPath;
 
         public string LibraryPath => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -23,9 +26,12 @@ namespace Kit
 
         public static AbstractTools Instance => Tools.Instance;
 
-        public virtual AbstractTools Init(IDeviceInfo DeviceInfo,
-            ICustomMessageBox CustomMessageBox)
+
+        public abstract void Init();
+        protected AbstractTools Init(IDeviceInfo DeviceInfo,
+                ICustomMessageBox CustomMessageBox, ISynchronizeInvoke SynchronizeInvoke)
         {
+            this.SynchronizeInvoke = SynchronizeInvoke;
             this.CustomMessageBox = CustomMessageBox;
             Device.Init(DeviceInfo);
             return this;
@@ -53,6 +59,8 @@ namespace Kit
                 return ret;
             }
         }
+
+        public abstract RuntimePlatform RuntimePlatform { get; }
 
         private static bool IsDesigning()
         {
