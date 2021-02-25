@@ -14,6 +14,7 @@ namespace Kit
     {
         public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox { get; private set; }
         public Kit.Services.Interfaces.ISynchronizeInvoke SynchronizeInvoke { get; private set; }
+        public Kit.Services.Interfaces.IScreenManager ScreenManager { get; private set; }
 
         private string _LibraryPath;
 
@@ -29,10 +30,11 @@ namespace Kit
 
         public abstract void Init();
         protected AbstractTools Init(IDeviceInfo DeviceInfo,
-                ICustomMessageBox CustomMessageBox, ISynchronizeInvoke SynchronizeInvoke)
+                ICustomMessageBox CustomMessageBox, ISynchronizeInvoke SynchronizeInvoke,IScreenManager ScreenManager)
         {
             this.SynchronizeInvoke = SynchronizeInvoke;
             this.CustomMessageBox = CustomMessageBox;
+            this.ScreenManager = ScreenManager;
             Device.Init(DeviceInfo);
             return this;
         }

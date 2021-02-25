@@ -21,7 +21,7 @@ namespace Kit.WPF
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public override void Init()
         {
-            Init(new Kit.WPF.Services.DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke());
+            Init(new Kit.WPF.Services.DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(),new ScreenManagerService());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()

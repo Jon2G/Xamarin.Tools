@@ -133,9 +133,9 @@ namespace Kit.Forms.Pages
             await Navigation.PopToRootAsync(true);
 
         }
-        public void SetScreenMode(IScreenManager ScreenManager, ScreenMode Screen)
+        public void SetScreenMode(ScreenMode Screen)
         {
-            ScreenManager.SetScreenMode(Screen);
+            Kit.Tools.Instance.ScreenManager.SetScreenMode(Screen);
         }
     }
 }
