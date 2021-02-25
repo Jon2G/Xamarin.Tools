@@ -39,12 +39,12 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
             private set;
         }
 
-        public ColorBox():base()
+        public ColorBox() : base()
         {
-            
+
         }
         public bool SoloColoresSolidos { get; set; }
-        public void CargarGradiente(Brush brush)
+        public void CargarGradiente(System.Windows.Media.Brush brush)
         {
             if (brush != null)
             {
@@ -512,13 +512,13 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
             }
         }
 
-        public Brush Brush
+        public System.Windows.Media.Brush Brush
         {
-            get => (Brush)GetValue(BrushProperty);
+            get => (System.Windows.Media.Brush)GetValue(BrushProperty);
             set => SetValue(BrushProperty, value);
         }
         public static readonly DependencyProperty BrushProperty =
-            DependencyProperty.Register("Brush", typeof(Brush), typeof(ColorBox)
+            DependencyProperty.Register("Brush", typeof(System.Windows.Media.Brush), typeof(ColorBox)
             , new FrameworkPropertyMetadata(null, new PropertyChangedCallback(BrushChanged)));
 
         private static void BrushChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
@@ -536,7 +536,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
                 else
                 {
 
-                    if (!(args.NewValue is Brush brush))
+                    if (!(args.NewValue is System.Windows.Media.Brush brush))
                     {
                         c.BrushType = BrushTypes.None;
                     }
