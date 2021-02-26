@@ -37,7 +37,7 @@ namespace Kit.Forms.Pages
             set
             {
                 SetValue(LogoProperty, value);
-                OnPropertyChanged();
+                Raise(()=>LogoProperty);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Kit.Forms.Pages
             set
             {
                 SetValue(IsLogoVisibleProperty, value);
-                OnPropertyChanged();
+                Raise(()=>IsLogoVisible);
             }
         }
         public Lector Leector { get; set; }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Kit.Forms.Services;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using BaseLicense = Kit.License.License;
-namespace Kit.Droid.Services
+
+namespace Kit.Forms.Services
 {
     public class License : BaseLicense
     {
-        public License(string AppName) : base(new CustomMessageBoxService(),new DeviceInfo(),AppName)
+        public License(string AppName) : base(AppName)
         {
 
         }

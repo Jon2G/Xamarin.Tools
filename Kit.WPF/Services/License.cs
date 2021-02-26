@@ -7,7 +7,7 @@ namespace Kit.WPF.Services
 {
     public class License : BaseLicense
     {
-        public License(string AppName) : base(new ICustomMessageBox.CustomMessageBoxService(), new DeviceInfo(), AppName)
+        public License(string AppName) : base( AppName)
         {
 
         }

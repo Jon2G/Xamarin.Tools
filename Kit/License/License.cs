@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Kit.Daemon.Devices;
 using Kit.Enums;
 using Kit.Services.Interfaces;
 using Kit.Sql;
@@ -16,16 +17,13 @@ namespace Kit.License
         private readonly WebService WebService;
         private readonly string AppName;
         private string AppKey;
-        private readonly IDeviceInfo DeviceInfo;
-        private readonly ICustomMessageBox CustomMessageBox;
+
         public string Reason { get; private set; }
         protected abstract void OpenRegisterForm();
 
-        protected License(ICustomMessageBox CustomMessageBox, IDeviceInfo DeviceInfo, string AppName)
+        protected License(string AppName)
         {
             this.Reason = "Desconocido...";
-            this.CustomMessageBox = CustomMessageBox;
-            this.DeviceInfo = DeviceInfo;
             this.AppName = AppName;
             AppKeys = new Dictionary<string, string>() {
                 { "InventarioFisico","INVIS001"},
@@ -34,7 +32,7 @@ namespace Kit.License
                 { "Alta y Modificación de Artículos","ALTA2020"}
 
             };
-            WebService = new WebService(DeviceInfo.DeviceId);
+            WebService = new WebService(Device.Current.DeviceId);
         }
 
         private string GetDeviceBrand()
@@ -42,7 +40,7 @@ namespace Kit.License
             string brand = "GENERIC";
             try
             {
-                brand = DeviceInfo.Manufacturer;
+                brand = Device.Current.IDeviceInfo.Manufacturer;
                 if (brand.ToLower() == "unknown")
                 {
                     brand = "GENERIC";
@@ -59,7 +57,7 @@ namespace Kit.License
             string DeviceName = "GENERIC";
             try
             {
-                DeviceName = DeviceInfo.DeviceName;
+                DeviceName = Device.Current.IDeviceInfo.DeviceName;
             }
             catch (Exception ex)
             {
@@ -72,7 +70,7 @@ namespace Kit.License
             string Model = "GENERIC";
             try
             {
-                Model = DeviceInfo.Model;
+                Model = Device.Current.IDeviceInfo.Model;
             }
             catch (Exception ex)
             {
@@ -85,7 +83,7 @@ namespace Kit.License
             string brand = "GENERIC";
             try
             {
-                return DeviceInfo.Platform.ToString();
+                return Device.Current.IDeviceInfo.Platform.ToString();
             }
             catch (Exception ex)
             {
@@ -113,16 +111,16 @@ namespace Kit.License
                     break;
                 case ProjectActivationState.Expired:
                     this.Reason = "La licencia para usar esta aplicación ha expirado";
-                   await this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                   await Tools.Instance.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.Denied:
                     Log.Logger.Information("Acces denied");
                     this.Reason = "Este dispositivo no cuenta con la licencia para usar esta aplicación";
-                    await this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                    await Tools.Instance.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.LoginRequired:
                     this.Reason = "Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación";
-                    await this.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                    await Tools.Instance.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     OpenRegisterForm();
                     //     BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
                     //   await page.Navigation.PushModalAsync(login, true);
@@ -130,7 +128,7 @@ namespace Kit.License
                     break;
                 case ProjectActivationState.ConnectionFailed:
                     this.Reason = "Revise su conexión a internet";
-                    await this.CustomMessageBox.Show(this.Reason, "Atención");
+                    await Tools.Instance.CustomMessageBox.Show(this.Reason, "Atención");
                     break;
             }
             return Autorized;
@@ -146,23 +144,23 @@ namespace Kit.License
             {
                 case "NO_DEVICES_LEFT":
 
-                    await this.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
+                    await Tools.Instance.CustomMessageBox.Show("No le quedan mas dispositivos para este proyecto", "Atención");
 
                     break;
                 case "PROJECT_NOT_ENROLLED":
 
-                    await this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
+                    await Tools.Instance.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
 
                     break;
                 case "SUCCES":
                     int left = await GetDevicesLeft(AppKey, userName);
                     if (left != -1)
                     {
-                        await this.CustomMessageBox.Show($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
+                        await Tools.Instance.CustomMessageBox.Show($"Registro exitoso, le quedan: {left} dispositivos", "Atención");
                     }
                     else
                     {
-                        await this.CustomMessageBox.Show($"Registro exitoso", "Atención");
+                        await Tools.Instance.CustomMessageBox.Show($"Registro exitoso", "Atención");
                     }
                     return true;
             }
@@ -175,13 +173,13 @@ namespace Kit.License
             {
                 case "ERROR":
                 case "INVALID_REQUEST":
-                    await this.CustomMessageBox.Show("Revise su conexión a internet", "Atención");
+                    await Tools.Instance.CustomMessageBox.Show("Revise su conexión a internet", "Atención");
                     return -1;
                 case "CUSTOMER_NOT_FOUND":
-                    await this.CustomMessageBox.Show("Registro invalido", "Atención");
+                    await Tools.Instance.CustomMessageBox.Show("Registro invalido", "Atención");
                     return -1;
                 case "PROJECT_NOT_FOUND":
-                    await this.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
+                    await Tools.Instance.CustomMessageBox.Show("No esta contratado este servicio", "Atención");
                     return -1;
             }
             if (int.TryParse(response, out int left))

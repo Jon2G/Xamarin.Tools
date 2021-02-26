@@ -8,7 +8,8 @@ using Kit.Controls.CrossBrush;
 
 namespace Kit.WPF.Controls.Brush
 {
-    public class Brush : CrossBrush<System.Windows.Media.Brush, Kit.WPF.Controls.Brush.Color>
+    public class Brush :
+        CrossBrush<System.Windows.Media.Brush, Kit.WPF.Controls.Brush.Color>
     {
         public Brush(string ResourceName) : base(ResourceName)
         {

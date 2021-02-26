@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Kit.Controls.CrossBrush;
+using Kit.Extensions;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.Brush
@@ -21,7 +22,8 @@ namespace Kit.Forms.Controls.Brush
                         ((SolidColorBrush)native).Color =
                             (Xamarin.Forms.Color)this.Stops.First().Color.ToNativeColor();
                     }
-                    break;
+
+                    return native;
                 case BrushType.Radial:
                     native = new RadialGradientBrush()
                     {
@@ -34,17 +36,62 @@ namespace Kit.Forms.Controls.Brush
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            if (native is GradientBrush g)
+            {
+                CopyStops(g,this.Stops);
+            }
             return native;
+        }
+
+
+        private void CopyStops(GradientBrush native, GradientStopCollection<Color> stops)
+        {
+            foreach (var stop in stops)
+            {
+                var Color = (Xamarin.Forms.Color)stop.Color.ToNativeColor();
+                native.GradientStops.Add(new GradientStop(Color, stop.Offset));
+            }
         }
 
         public override void Apply()
         {
-            throw new NotImplementedException();
+            Application.Current.Resources[ResourceKey] = this.ToNaviteBrush();
         }
 
         public override void LoadFromResource()
         {
-            throw new NotImplementedException();
+            this.Stops.Clear();
+            if (Application.Current.Resources[ResourceKey] is SolidColorBrush s)
+            {
+                var c = s.Color;
+                string color = $"#{c.R:X2}{c.G:X2}{c.B:X2}";
+                this.Stops.Add(new GradientStop<Color>(new Color().From(color), 0));
+                this.BrushType = BrushType.Solid;
+            }
+            if (Application.Current.Resources[ResourceKey] is GradientBrush g)
+            {
+                foreach (var stop in g.GradientStops)
+                {
+                    var c = stop.Color;
+                    string color = stop.Color.ToHex();
+                    this.Stops.Add(new GradientStop<Color>(new Color().From(color), (float)stop.Offset));
+                }
+
+                switch (g)
+                {
+                    case LinearGradientBrush:
+                        this.BrushType = BrushType.Linear;
+                        break;
+                    case RadialGradientBrush r:
+                        this.RadiusX = r.Radius;
+                        this.RadiusY = r.Radius;
+                        this.BrushType = BrushType.Radial;
+                        break;
+                }
+
+            }
+            return;
         }
     }
 }

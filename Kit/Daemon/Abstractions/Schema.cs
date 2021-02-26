@@ -44,7 +44,11 @@ namespace Kit.Daemon.Abstractions
                         .Select(x => (SyncMode)InflateAttribute(x))
                         .FirstOrDefault();
 #endif
-
+                if (directionAttribute is null)
+                {
+                    Log.Logger.Warning("SyncDirection is not defined");
+                    directionAttribute = new SyncMode(SyncDirection.Download);
+                }
                 switch (directionAttribute.Direction)
                 {
                     case SyncDirection.TwoWay:
@@ -124,7 +128,7 @@ namespace Kit.Daemon.Abstractions
                 //    Start();
                 //    return;
                 //}
-                Trigger.CheckTrigger(Connection, table.Value,Daemon.Current.DaemonConfig.DbVersion);
+                Trigger.CheckTrigger(Connection, table.Value, Daemon.Current.DaemonConfig.DbVersion);
             }
 
             return true;

@@ -1,21 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePopUp  xmlns:pages="clr-namespace:Kit.Forms.Controls.Pages"
                   xmlns="http://xamarin.com/schemas/2014/forms" CloseWhenBackgroundIsClicked="True"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms" xmlns:qrcode="clr-namespace:ZXing.QrCode;assembly=zxing.portable"
-             x:Class="Kit.Forms.Pages.ShareCadenaCon" x:Name="Me" BackgroundColor="#51FFFFFF">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+                  xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+                  xmlns:qrcode="clr-namespace:ZXing.QrCode;assembly=zxing.portable"
+                  x:Class="Kit.Forms.Pages.ShareCadenaCon" x:Name="Me" BackgroundColor="#51FFFFFF">
     <ContentPage.Content>
         <Frame Margin="10" CornerRadius="5" BackgroundColor="WhiteSmoke" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-            <StackLayout Padding="10" VerticalOptions="Center" 
+            <StackLayout Padding="0" VerticalOptions="Center" 
                 HorizontalOptions="CenterAndExpand">
-                <Label Text="Cadena de conexión" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <Label x:Name="TxtTitle" Text="" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <forms:ZXingBarcodeImageView HeightRequest="350" WidthRequest="350" BarcodeFormat="QR_CODE" BarcodeValue="{Binding Code,Source={Reference Me}}">
+                <Label Text="Cadena de conexión " FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <forms:ZXingBarcodeImageView HeightRequest="350" WidthRequest="700" BarcodeFormat="QR_CODE" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                             BarcodeValue="{Binding Code,Source={Reference Me}}">
                     <forms:ZXingBarcodeImageView.BarcodeOptions>
                         <qrcode:QrCodeEncodingOptions Height="700" Width="700"/>
                     </forms:ZXingBarcodeImageView.BarcodeOptions>
                 </forms:ZXingBarcodeImageView>
-
-
+                <Label x:Name="TxtTitle" Text="" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
             </StackLayout>
         </Frame>
     </ContentPage.Content>
