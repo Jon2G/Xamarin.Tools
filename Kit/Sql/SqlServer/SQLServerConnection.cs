@@ -93,24 +93,24 @@ namespace SQLServer
             return new SqlConnection(ConnectionString.ConnectionString);
         }
 
-        public void Querry(string sql, CommandType type = CommandType.StoredProcedure, bool Reportar = true)
-        {
-            if (this.IsClosed)
-                RenewConnection();
+        //public void Querry(string sql, CommandType type = CommandType.StoredProcedure, bool Reportar = true)
+        //{
+        //    if (this.IsClosed)
+        //        RenewConnection();
 
-            using (var con = this.Connection)
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
-                {
-                    cmd.ExecuteNonQuery();
-                    if (Reportar)
-                        ReportaTransaccion(cmd);
-                }
+        //    using (var con = this.Connection)
+        //    {
+        //        con.Open();
+        //        using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
+        //        {
+        //            cmd.ExecuteNonQuery();
+        //            if (Reportar)
+        //                ReportaTransaccion(cmd);
+        //        }
 
-                con.Close();
-            }
-        }
+        //        con.Close();
+        //    }
+        //}
 
         public object Single(string sql, params SqlParameter[] parameters)
         {
@@ -927,7 +927,7 @@ namespace SQLServer
         }
         public void CrearCampo(string Tabla, string Campo, string TipoDato, bool Nulleable)
         {
-            Querry($"alter table [{Tabla}] add [{Campo}] {TipoDato} {(Nulleable ? "" : "NOT NULL")}", CommandType.Text, true);
+            Execute($"alter table [{Tabla}] add [{Campo}] {TipoDato} {(Nulleable ? "" : "NOT NULL")}");
         }
 
         #endregion

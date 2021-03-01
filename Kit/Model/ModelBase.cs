@@ -40,7 +40,14 @@ namespace Kit
                 object target = Expression.Lambda(expression).Compile().DynamicInvoke();
 
                 PropertyChangedEventArgs e = new PropertyChangedEventArgs(body.Member.Name);
-                PropertyChanged(target, e);
+                try
+                {
+                    PropertyChanged(target, e);
+                }catch(Exception ex)
+                {
+                    Log.Logger.Error(ex, "On RAISE");
+                }
+
             }
         }
 
