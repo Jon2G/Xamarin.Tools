@@ -21,10 +21,20 @@ namespace Kit.Daemon.VersionControl
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        [Unique,MaxLength(50)]
+        [Unique, MaxLength(50)]
         public string Name { get; set; }
         public int Version { get; set; }
         public SyncVersionObject Type { get; set; }
+
+        internal static SyncVersions GetVersion(SQLServerConnection connection, string ObjectName, SyncVersionObject trigger)
+        {
+            return connection.Table<SyncVersions>().FirstOrDefault(x => x.Name == ObjectName && x.Type == trigger) ?? new SyncVersions()
+            {
+                Name = ObjectName,
+                Type = trigger
+            };
+        }
+
         public SyncVersions() { }
 
         //protected override void CreateTable(SQLServerConnection SQLH)
@@ -60,6 +70,10 @@ namespace Kit.Daemon.VersionControl
             return SQLH.Table<SyncVersions>().FirstOrDefault(x => x.Name == table.TableName)
                    ?? Default(table.TableName);
         }
+        public static SyncVersions GetVersion(SqlBase SQLH, BaseTableQuery table)
+        {
+            return GetVersion(SQLH, table.Table);
+        }
 
         private static SyncVersions Default(string TableName)
         {
@@ -77,5 +91,10 @@ namespace Kit.Daemon.VersionControl
         //}
 
 
+        public void Save(SQLServerConnection Connection)
+        {
+            Connection.Table<SyncVersions>().Delete(x => x.Name == this.Name || x.Type == this.Type);
+            Connection.InsertOrReplace(this);
+        }
     }
 }

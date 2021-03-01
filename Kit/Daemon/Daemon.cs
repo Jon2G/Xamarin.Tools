@@ -99,8 +99,7 @@ namespace Kit.Daemon
         private bool IsInited;
         public Daemon SetPackageSize(int PackageSize = 25)
         {
-            this.SyncManager.PackageSize = PackageSize;
-            this.SyncManager.ReGenerateSyncQueries();
+            this.SyncManager.SetPackageSize(PackageSize);
             return this;
         }
         public SyncDirecction DireccionActual
@@ -136,12 +135,12 @@ namespace Kit.Daemon
             Current.DaemonConfig = new DaemonConfig(DbVersion, Local, Remote, MaxSleep);
             Current.DaemonConfig.Local.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
             Current.DaemonConfig.Remote.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
+            Log.Logger.Debug("Daemon has been configured");
             return this;
         }
         public Daemon SetSchema(params Type[] tables)
         {
             this.Schema = new Schema(tables);
-            this.SyncManager.ReGenerateSyncQueries();
             return Current;
         }
 
@@ -206,7 +205,7 @@ namespace Kit.Daemon
         /// </summary>
         public void Awake()
         {
-            Log.Logger.Information("DEMONIO DESPERTANDO");
+            Log.Logger.Information("Daemon [{0}]", "Awaking");
             IsSleepRequested = false;
             this.SyncManager.ToDo = true;
             FactorDeDescanso = 0;
@@ -244,19 +243,20 @@ namespace Kit.Daemon
         {
             try
             {
+                Log.Logger.Debug("Attemping to Initialize Daemon");
                 if (!TryToConnect())
                 {
                     OffLine = true;
+                    Log.Logger.Error("Attemping to Initialize Daemon - {0}", "FAILED");
                 }
 
                 if (OffLine)
                 {
                     return;
                 }
+
                 SQLServerConnection SQLH = DaemonConfig.GetSqlServerConnection();
-                SQLH.CreateTable<SyncDevicesInfo>();
-                SQLH.CreateTable<ChangesHistory>();
-                SQLH.CreateTable<SyncHistory>();
+                CheckSyncTables(SQLH);
 
                 if (!Device.Current.EnsureDeviceIsRegistred(SQLH))
                 {
@@ -292,6 +292,28 @@ namespace Kit.Daemon
             }
         }
 
+        private void CheckSyncTables(SQLServerConnection con)
+        {
+            foreach (BaseTableQuery table in
+                new BaseTableQuery[]{
+                    con.Table<SyncVersions>(),
+                    con.Table<SyncDevicesInfo>(),
+                    con.Table<ChangesHistory>(),
+                    con.Table<SyncHistory>()
+            })
+            {
+                SyncVersions version = SyncVersions.GetVersion(con, table);
+                if (version.Version != DaemonConfig.DbVersion)
+                {
+                    con.DropTable(table.Table);
+                    con.CreateTable(table.Table);
+                    version.Version = DaemonConfig.DbVersion;
+                    version.Save(con);
+                }
+            }
+
+        }
+
         private void Log_OnConecctionLost(object sender, EventArgs e)
         {
             Daemon.OffLine = true;
@@ -304,81 +326,82 @@ namespace Kit.Daemon
 
                 do
                 {
-                    lock (Locker)
+                    //lock (Locker)
+                    //{
+                    try
                     {
-                        try
+                        if (IsSleepRequested)
                         {
-                            if (IsSleepRequested)
+                            IsAwake = false;
+                            WaitHandle.WaitOne();
+                        }
+                        IsAwake = true;
+
+                        if (OffLine)
+                        {
+                            if (!TryToConnect())
                             {
-                                IsAwake = false;
-                                WaitHandle.WaitOne();
+                                OffLine = true;
+                                Log.Logger.Error("Daemon failed to connect");
+                                WaitHandle?.WaitOne(TimeSpan.FromSeconds(10));
                             }
+                            else
+                            {
+                                OffLine = false;
+                            }
+                            this.SyncManager.ToDo = true;
+                        }
+                        else
+                        {
+                            if (!IsInited)
+                            {
+                                Initialize();
+                                Start();
+                                return;
+                            }
+
+                            try
+                            {
+                                //Asumir que no hay pendientes
+                                this.SyncManager.ToDo = false;
+                                //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
+                                if (!this.SyncManager.Upload() && !IsSleepRequested)
+                                {
+                                    //actualizar los cambios pendientes en nuestra copia local (si es que hay)
+                                    this.SyncManager.Download();
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Logger.Error(ex, "Al leer datos");
+                            }
+                        }
+                        if (this.SyncManager.NothingToDo)
+                        {
+                            FactorDeDescanso++;
+                            //if (FactorDeDescanso > DaemonConfig.MaxSleep)
+                            //{
+                            //    FactorDeDescanso = DaemonConfig.MaxSleep;
+                            //}
+                            //Descansar :)
+                            Log.Logger.Information($"Rest :{FactorDeDescanso} mins.");
+                            IsAwake = false;
+                            WaitHandle?.WaitOne(TimeSpan.FromSeconds(FactorDeDescanso));
                             IsAwake = true;
-
-                            if (OffLine)
-                            {
-                                if (!TryToConnect())
-                                {
-                                    OffLine = true;
-                                    WaitHandle?.WaitOne(TimeSpan.FromSeconds(10));
-                                }
-                                else
-                                {
-                                    OffLine = false;
-                                }
-                                this.SyncManager.ToDo = true;
-                            }
-                            else
-                            {
-                                if (!IsInited)
-                                {
-                                    Initialize();
-                                    Start();
-                                    return;
-                                }
-
-                                try
-                                {
-                                    //Asumir que no hay pendientes
-                                    this.SyncManager.ToDo = false;
-                                    //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
-                                    if (!this.SyncManager.Upload() && !IsSleepRequested)
-                                    {
-                                        //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                        this.SyncManager.Download();
-                                    }
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Logger.Error(ex, "Al leer datos");
-                                }
-                            }
-                            if (this.SyncManager.NothingToDo)
-                            {
-                                FactorDeDescanso++;
-                                //if (FactorDeDescanso > DaemonConfig.MaxSleep)
-                                //{
-                                //    FactorDeDescanso = DaemonConfig.MaxSleep;
-                                //}
-                                //Descansar :)
-                                Log.Logger.Information($"Rest :{FactorDeDescanso} mins.");
-                                IsAwake = false;
-                                WaitHandle?.WaitOne(TimeSpan.FromSeconds(FactorDeDescanso));
-                                IsAwake = true;
-                            }
-                            else
-                            {
-                                //Trabajar!!
-                                FactorDeDescanso = 0;
-                            }
-
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Log.Logger.Error(ex, "En start");
+                            //Trabajar!!
+                            FactorDeDescanso = 0;
                         }
+
                     }
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex, "En start");
+                    }
+                    //}
                 } while (true);
 
             }
@@ -415,6 +438,7 @@ namespace Kit.Daemon
         {
             try
             {
+                Log.Logger.Debug("Daemon attemping to connect to sqlserver.");
                 var conection = DaemonConfig.GetSqlServerConnection().ConnectionString;
                 using (SqlConnection con = new SqlConnection(conection.ConnectionString))
                 {

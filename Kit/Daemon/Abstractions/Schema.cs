@@ -49,35 +49,50 @@ namespace Kit.Daemon.Abstractions
                     Log.Logger.Warning("SyncDirection is not defined");
                     directionAttribute = new SyncMode(SyncDirection.Download);
                 }
-                switch (directionAttribute.Direction)
-                {
-                    case SyncDirection.TwoWay:
-                        this.DownloadTables.Add(
-                            Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(type)
-                            , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                        this.UploadTables.Add(
-                            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(type)
-                            , Daemon.Current.DaemonConfig.Local.GetMapping(type));
-                        break;
-                    case SyncDirection.Download:
-                        this.DownloadTables.Add(
-                            Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(type)
-                            , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                        break;
-                    case SyncDirection.Upload:
-                        this.UploadTables.Add(
-                            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(type)
-                            , Daemon.Current.DaemonConfig.Local.GetMapping(type));
-                        break;
-                    case SyncDirection.NoSync:
-                        Log.Logger.Warning($"La tabla [{type.FullName}] esta definida en el schema pero se marco como no sincronizar");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                this.DownloadTables.Add(
+                    Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
+                    , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                this.DownloadTables.Add(
+                    Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                    , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+
+                this.UploadTables.Add(
+                    Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
+                    , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                this.UploadTables.Add(
+                    Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                    , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+
+                //switch (directionAttribute.Direction)
+                //{
+                //    case SyncDirection.TwoWay:
+                //        this.DownloadTables.Add(
+                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                //            , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                //        this.UploadTables.Add(
+                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                //            , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                //        break;
+                //    case SyncDirection.Download:
+                //        this.DownloadTables.Add(
+                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                //            , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                //        break;
+                //    case SyncDirection.Upload:
+                //        this.UploadTables.Add(
+                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                //            , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                //        break;
+                //    case SyncDirection.NoSync:
+                //        Log.Logger.Warning($"La tabla [{type.FullName}] esta definida en el schema pero se marco como no sincronizar");
+                //        break;
+                //    default:
+                //        throw new ArgumentOutOfRangeException();
+                //}
+                Log.Logger.Information("BUILDED SCHEMA [{0}] - [{1}]", type.FullName, directionAttribute.Direction);
             }
         }
-        public Table this[string TableName, SyncDirecction direcction]
+        public TableMapping this[string TableName, SyncDirecction direcction]
         {
             get
             {
@@ -86,20 +101,29 @@ namespace Kit.Daemon.Abstractions
                     return null;
                 }
 
-                Table table = null; //this.Tables.FirstOrDefault(x => string.Compare(x.Key, TableName, true) == 0);
-                if (table is null)
+                string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableName);
+                switch (direcction)
                 {
-                    if (this.DeniedTables is null)
-                    {
-                        this.DeniedTables = new HashSet<string>();
-                    }
-                    DeniedTables.Add(TableName);
+                    case SyncDirecction.Local:
+                        if (this.DownloadTables.ContainsKey(key))
+                            return this.DownloadTables[key];
+                        break;
+                    case SyncDirecction.Remote:
+                        if (this.DownloadTables.ContainsKey(key))
+                            return this.UploadTables[key];
+                        break;
                 }
-                if (!IsValidDirection(table.TableDirection, direcction))
+                if (this.DeniedTables is null)
                 {
-                    return null;
+                    this.DeniedTables = new HashSet<string>();
                 }
-                return table;
+                DeniedTables.Add(TableName);
+
+                //if (!IsValidDirection(table.TableDirection, direcction))
+                //{
+                //    return null;
+                //}
+                return null;
             }
         }
         private bool IsValidDirection(TableDirection TableDirection, SyncDirecction UseDirection)

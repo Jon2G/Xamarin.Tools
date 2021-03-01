@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Kit.Sql.Attributes;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 
@@ -12,7 +13,7 @@ namespace Kit.Sql.Base
     {
         public SqlBase Connection { get; private set; }
 
-        public TableMapping Table { get; private set; }
+
 
         protected Expression _where;
         protected List<Ordering> _orderBys;
@@ -37,6 +38,11 @@ namespace Kit.Sql.Base
         {
             Connection = conn;
             Table = Connection.GetMapping(typeof(T));
+            if (Table.SyncGuid is TableMapping.GuidColumn)
+            {
+                ((TableMapping.GuidColumn)Table.SyncGuid).SetValue(Guid.Empty, Table.SyncGuid);
+            }
+
         }
 
         public abstract TableQuery<U> Clone<U>();
@@ -289,7 +295,8 @@ namespace Kit.Sql.Base
                 if (leftr.CurrentCondition != null && !leftr.CurrentCondition.IsComplete)
                 {
                     Condition joinedCondition = new Condition(leftr.CurrentCondition, rightr.CurrentCondition);
-                    conditions.Add(joinedCondition);
+                    if (joinedCondition.IsComplete)
+                        conditions.Add(joinedCondition);
                     conditions.Remove(rightr.CurrentCondition);
                     conditions.Remove(leftr.CurrentCondition);
                 }
@@ -445,10 +452,28 @@ namespace Kit.Sql.Base
                 var u = (UnaryExpression)expr;
                 var ty = u.Type;
                 var valr = CompileExpr(u.Operand, queryArgs, conditions);
+
+                var truvalue = valr.Value != null ? ConvertTo(valr.Value, ty) : null;
+                if (truvalue is int enuTruvalue)
+                {
+                    if (u.Operand.Type.IsEnum)
+                    {
+                        if (u.Operand.Type.IsDefined(typeof(StoreAsTextAttribute), false))
+                        {
+                            string text_enum = Enum.GetName(u.Operand.Type, enuTruvalue);
+                            if (!string.IsNullOrEmpty(text_enum))
+                            {
+                                truvalue = text_enum;
+                            }
+                        }
+
+                    }
+                }
                 return new CompileResult
                 {
                     CommandText = valr.CommandText,
-                    Value = valr.Value != null ? ConvertTo(valr.Value, ty) : null
+                    Value = truvalue,
+                    CurrentCondition = new Condition(valr.CommandText.Replace("\"", String.Empty), truvalue)
                 };
             }
             else if (expr.NodeType == ExpressionType.MemberAccess)

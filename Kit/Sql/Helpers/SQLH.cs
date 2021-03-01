@@ -107,6 +107,15 @@ namespace Kit.Sql.Helpers
             return IsNull(value) ? ifnull : value;
         }
 
+        public static T Parse<T>(object obj,T ifnull) where T : IConvertible
+        {
+            if (IsNull(obj))
+            {
+                return ifnull;
+            }
+
+            return Parse<T>(obj);
+        }
         public static T Parse<T>(object obj) where  T: IConvertible
         {
             var type = typeof(T);

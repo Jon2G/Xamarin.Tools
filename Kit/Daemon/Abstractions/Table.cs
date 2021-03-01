@@ -10,6 +10,7 @@ using Kit.Sql.Base;
 using static Kit.Daemon.Helpers.Helper;
 using Kit.Sql.Helpers;
 using Kit.Sql.Interfaces;
+using Kit.Sql.Sync;
 using SQLServer;
 
 namespace Kit.Daemon.Abstractions
@@ -47,56 +48,56 @@ namespace Kit.Daemon.Abstractions
             this.CustomUploadAction = CustomUploadAction;
             return this;
         }
-        internal bool Execute(Pendientes pendiente, SyncDirecction direccion)
+        internal bool Execute(ChangesHistory pendiente, SyncDirecction direccion)
         {
-            if (string.IsNullOrEmpty(pendiente.LLave?.ToString()))
-            {
-                Log.Logger.Error("WARNING->{SOLICITUD DE ACTUALIZACION SIN LLAVE IGNORADA}");
-                return true;
-            }
-            try
-            {
-                SyncDirecction origen = direccion.InvertDirection();
-                if (pendiente.Accion == AccionDemonio.DELETE)
-                {
-                    IQuery query = ConsultaTabla(pendiente, pendiente.Accion, direccion);
-                    //return query.Execute() != SqlServer.Error;
-                }
-                else
-                {
-                    List<ValoresOriginales> valoresOriginales = ValoresRegistroOriginal(pendiente, origen);
+            //if (string.IsNullOrEmpty(pendiente.SyncGuid))
+            //{
+            //    Log.Logger.Error("WARNING->{SOLICITUD DE ACTUALIZACION SIN LLAVE IGNORADA}");
+            //    return true;
+            //}
+            //try
+            //{
+            //    SyncDirecction origen = direccion.InvertDirection();
+            //    if (pendiente.Action == AccionDemonio.DELETE)
+            //    {
+            //        IQuery query = ConsultaTabla(pendiente, pendiente.Accion, direccion);
+            //        //return query.Execute() != SqlServer.Error;
+            //    }
+            //    else
+            //    {
+            //        List<ValoresOriginales> valoresOriginales = ValoresRegistroOriginal(pendiente, origen);
 
 
-                    if (direccion == SyncDirecction.Local)
-                    {
-                        bool correcto = true;
-                        foreach (ValoresOriginales valores in valoresOriginales)
-                        {
-                            IQuery query = ConsultaTabla(pendiente, pendiente.Accion, direccion, valores.Valores);
-                            correcto = query.Execute() > 0;
-                            //si no dio error entoces esta ok 
-                        }
-                        if (correcto)
-                            pendiente.Sincronizado(direccion);
-                        return correcto;
-                    }
-                    else
-                    {
-                        //if (Upload(Daemon.Current.DaemonConfig[SyncDirecction.Remote], pendiente, valoresOriginales))
-                        //{
-                        //    //si no dio error entoces esta ok 
-                        //    pendiente.Sincronizado(direccion);
-                        //    return true;
-                        //}
-                    }
-                }
+            //        if (direccion == SyncDirecction.Local)
+            //        {
+            //            bool correcto = true;
+            //            foreach (ValoresOriginales valores in valoresOriginales)
+            //            {
+            //                IQuery query = ConsultaTabla(pendiente, pendiente.Accion, direccion, valores.Valores);
+            //                correcto = query.Execute() > 0;
+            //                //si no dio error entoces esta ok 
+            //            }
+            //            if (correcto)
+            //                pendiente.Sincronizado(direccion);
+            //            return correcto;
+            //        }
+            //        else
+            //        {
+            //            //if (Upload(Daemon.Current.DaemonConfig[SyncDirecction.Remote], pendiente, valoresOriginales))
+            //            //{
+            //            //    //si no dio error entoces esta ok 
+            //            //    pendiente.Sincronizado(direccion);
+            //            //    return true;
+            //            //}
+            //        }
+            //    }
 
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error(ex, $"Al insertar y sincronizar los datos de =>{pendiente.Tabla}->({pendiente.LLave},{pendiente.Accion},{direccion})");
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Logger.Error(ex, $"Al insertar y sincronizar los datos de =>{pendiente.Tabla}->({pendiente.LLave},{pendiente.Accion},{direccion})");
+            //    return false;
+            //}
             return false;
         }
         private bool Upload(SqlBase Destination, Pendientes pendiente, List<ValoresOriginales> valoresOriginales)

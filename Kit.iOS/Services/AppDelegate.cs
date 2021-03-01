@@ -19,7 +19,7 @@ namespace Kit.iOS.Services
             //global::Xamarin.Forms.FormsMaterial.Init();
 
             new TintTransformation();
-            Kit.iOS.Tools.Init().Init(new Kit.iOS.Services.DeviceInfo(), true);
+            Kit.iOS.Tools.Init();
             LoadApplication((Xamarin.Forms.Application)Activator.CreateInstance(typeof(T)));
             return base.FinishedLaunching(app, options);
         }

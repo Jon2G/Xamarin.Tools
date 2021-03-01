@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using Kit.Sql.Attributes;
+using Kit.Sql.Base;
 
 namespace Kit.Sql.Tables
 {
     public class SyncHistory
     {
-        [PrimaryKey,AutoIncrement]
-        public int Id { get; set; }
-        public int ChangeId { get; set; }
-        public int DevideId { get; set; }
+        [PrimaryKey]
+        public Guid ChangeId { get; set; }
+        [MaxLength(100)]
+        public string DeviceId { get; set; }
+
+        public void Save(SqlBase origin)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -52,7 +52,6 @@
     <Compile Include="Services\FolderPermissions.cs" />
     <Compile Include="Services\HtmlToPDF\PDFConverter.cs" />
     <Compile Include="Services\HtmlToPDF\WebViewCallBack.cs" />
-    <Compile Include="Services\License.cs" />
     <Compile Include="Services\PDFSaveAndOpen.cs" />
     <Compile Include="Services\PhotoPickerService.cs" />
     <Compile Include="Services\PrintHTML.cs" />

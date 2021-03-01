@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
+using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 
 namespace Kit.Sql.Sqlite
@@ -9,7 +12,10 @@ namespace Kit.Sql.Sqlite
     {
         public TableMapping(Type type, CreateFlags createFlags = CreateFlags.None) : base(type, createFlags)
         {
+
         }
+
+
 
         protected override string _GetByPrimaryKeySql()
         {

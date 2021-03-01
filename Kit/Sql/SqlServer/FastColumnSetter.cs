@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Base;
+using Kit.Sql.Helpers;
 
 namespace SQLServer
 {
@@ -42,7 +43,8 @@ namespace SQLServer
             {
                 fastSetter = CreateTypedSetterDelegate<T, string>(column, (reader, index) =>
                 {
-                    return Convert.ToString(reader[index]);
+                    return Sqlh.Parse<string>(reader[index]);
+                    //return Convert.ToString(reader[index]);
                 });
             }
             else if (clrType == typeof(Int32))
@@ -56,21 +58,21 @@ namespace SQLServer
             {
                 fastSetter = CreateNullableTypedSetterDelegate<T, bool>(column, (reader, index) =>
                 {
-                    return Convert.ToBoolean(reader[index]);
+                    return Sqlh.Parse<Boolean>(reader[index],false);
                 });
             }
             else if (clrType == typeof(double))
             {
                 fastSetter = CreateNullableTypedSetterDelegate<T, double>(column, (reader, index) =>
                 {
-                    return Convert.ToDouble(reader[index]);
+                    return Sqlh.Parse<double>(reader[index], 0);
                 });
             }
             else if (clrType == typeof(float))
             {
                 fastSetter = CreateNullableTypedSetterDelegate<T, float>(column, (reader, index) =>
                 {
-                    return (float)Convert.ToDouble(reader[index]);
+                    return Sqlh.Parse<float>(reader[index], 0);
                 });
             }
             else if (clrType == typeof(TimeSpan))

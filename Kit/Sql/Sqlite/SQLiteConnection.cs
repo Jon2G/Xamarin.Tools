@@ -76,7 +76,7 @@ namespace Kit.Sql.Sqlite
                 File.Delete(DatabasePath);
                 RenewConnection();
                 CreateSchema();
-                return CheckTables();
+                return CheckTables(Tables);
             }
             CreateTable<ChangesHistory>();
             CreateTable<SyncHistory>();
@@ -604,7 +604,9 @@ namespace Kit.Sql.Sqlite
             connectionString.PostKeyAction?.Invoke(this);
         }
 
-        public override void RenewConnection()
+
+
+        public override SqlBase RenewConnection()
         {
 #if NETFX_CORE
 			SQLite3.SetDirectory(/*temp directory type*/2, Windows.Storage.ApplicationData.Current.TemporaryFolder.Path);
@@ -629,6 +631,7 @@ namespace Kit.Sql.Sqlite
                 throw SQLiteException.New(r, String.Format("Could not open database file: {0} ({1})", DatabasePath, r));
             }
             _open = true;
+            return this;
         }
         /// <summary>
         /// Enables the write ahead logging. WAL is significantly faster in most scenarios
@@ -1955,13 +1958,13 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows modified.
         /// </returns>
-        public int InsertOrReplace(object obj)
+        public override int InsertOrReplace(object obj, bool shouldnotify = true)
         {
             if (obj == null)
             {
                 return 0;
             }
-            return Insert(obj, "OR REPLACE", Orm.GetType(obj));
+            return Insert(obj, "OR REPLACE", Orm.GetType(obj),shouldnotify);
         }
 
         /// <summary>
@@ -1978,32 +1981,11 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public int Insert(object obj, Type objType)
+        public int Insert(object obj, Type objType, bool shouldnotify = true)
         {
-            return Insert(obj, "", objType);
+            return Insert(obj, "", objType,shouldnotify);
         }
 
-        /// <summary>
-        /// Inserts the given object (and updates its
-        /// auto incremented primary key if it has one).
-        /// The return value is the number of rows added to the table.
-        /// If a UNIQUE constraint violation occurs with
-        /// some pre-existing object, this function deletes
-        /// the old object.
-        /// </summary>
-        /// <param name="obj">
-        /// The object to insert.
-        /// </param>
-        /// <param name="objType">
-        /// The type of object to insert.
-        /// </param>
-        /// <returns>
-        /// The number of rows modified.
-        /// </returns>
-        public int InsertOrReplace(object obj, Type objType)
-        {
-            return Insert(obj, "OR REPLACE", objType);
-        }
 
         /// <summary>
         /// Inserts the given object (and updates its
@@ -2020,7 +2002,7 @@ namespace Kit.Sql.Sqlite
         /// The number of rows added to the table.
         /// </returns>
 
-        public int Insert(object obj, string extra)
+        public override int Insert(object obj, string extra)
         {
             if (obj == null)
             {
@@ -2046,7 +2028,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public int Insert(object obj, string extra, Type objType)
+        public override int Insert(object obj, string extra, Type objType, bool shouldnotify=true)
         {
             if (obj == null || objType == null)
             {
@@ -2088,7 +2070,7 @@ namespace Kit.Sql.Sqlite
                 try
                 {
                     count = insertCmd.ExecuteNonQuery(vals);
-                    Log.Logger.Debug($"INSERTED ROWS: [{count}]");
+                    Log.Logger.Debug("INSERTED ROWS: [{0}]", count);
                 }
                 catch (SQLiteException ex)
                 {
@@ -2311,7 +2293,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows deleted.
         /// </returns>
-        public int Delete(object objectToDelete)
+        public override int Delete(object objectToDelete)
         {
             var map = GetMapping(Orm.GetType(objectToDelete));
             var pk = map.PK;

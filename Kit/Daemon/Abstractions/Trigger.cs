@@ -5,23 +5,28 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using Kit.Daemon.VersionControl;
 using Kit.Sql.Base;
+using Kit.Sql.Enums;
 using SQLServer;
 
 namespace Kit.Daemon.Abstractions
 {
-    public class Trigger
+    public static class Trigger
     {
         public static void CheckTrigger(SQLServerConnection Connection, TableMapping Table, int DbVersion)
         {
             try
             {
                 string TriggerName = $"{Table.TableName}_TRIGGER";
-                int version = Connection.Single<int>("select VERSION from TRIGGERS_INFO WHERE NAME=@NAME"
-                     , new SqlParameter("NAME", TriggerName));
 
-                if (version != DbVersion)
+                SyncVersions version =
+                    SyncVersions.GetVersion(Connection, TriggerName, SyncVersionObject.Trigger);
+
+
+                if (version.Version != DbVersion)
                 {
+                    Connection.CreateTable(Table);
                     if (Connection.TriggerExists(TriggerName))
                     {
                         Connection.EXEC($"DROP TRIGGER {TriggerName}", System.Data.CommandType.Text);
@@ -39,60 +44,41 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	-- Check if this is an INSERT, UPDATE or DELETE Action.
-    DECLARE @action as char(1);
-    SET @action = 'I'; -- Set Action to Insert by default.
+    DECLARE @action as char(10);
+    SET @action = '{NotifyTableChangedAction.Insert}'; -- Set Action to Insert by default.
     IF EXISTS(SELECT * FROM DELETED)
     BEGIN
         SET @action = 
             CASE
-                WHEN EXISTS(SELECT * FROM INSERTED) THEN 'U' -- Set Action to Updated.
-                ELSE 'D' -- Set Action to Deleted.       
+                WHEN EXISTS(SELECT * FROM INSERTED) THEN '{NotifyTableChangedAction.Update}' -- Set Action to Updated.
+                ELSE '{NotifyTableChangedAction.Delete}' -- Set Action to Deleted.       
             END
     END
     ELSE 
         IF NOT EXISTS(SELECT * FROM INSERTED) 
 		RETURN;
 
-IF @ACTION='I' OR @action='U'
+IF @ACTION='{NotifyTableChangedAction.Insert}' OR @action='{NotifyTableChangedAction.Update}'
 BEGIN
-   DELETE V
-   FROM VERSION_CONTROL V
-   INNER JOIN inserted I
-   ON I.{Table.PK.Name}=V.LLAVE
-   WHERE 
-   (V.ACCION='U' OR V.ACCION='I')  AND
-   V.TABLA='{Table.TableName}'  AND
-   V.CAMPO='{Table.PK.Name}'
-   INSERT INTO VERSION_CONTROL(ACCION,LLAVE,CAMPO,TABLA) 
-   SELECT @action,{Table.PK.Name},'{Table.PK.Name.ToUpper()}','{Table.TableName.ToUpper()}'
-   FROM inserted
+   DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted) 
+   AND (Action='{NotifyTableChangedAction.Update}' OR Action='{NotifyTableChangedAction.Insert}') 
+
+   INSERT INTO ChangesHistory(Action,SyncGuid,TableName) SELECT @action,SyncGuid,'{Table.TableName}' FROM inserted
 END ELSE
 BEGIN
-   DELETE V
-   FROM VERSION_CONTROL V
-   INNER JOIN deleted D
-   ON D.{Table.PK.Name}=V.LLAVE
-   WHERE 
-   V.TABLA='{Table.TableName}' AND
-   V.CAMPO='{Table.PK.Name}'
-   INSERT INTO VERSION_CONTROL(ACCION,LLAVE,CAMPO,TABLA) 
-   SELECT @action,{Table.PK.Name},'{Table.PK.Name.ToUpper()}','{Table.TableName.ToUpper()}'
-   FROM deleted
+   DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
+   INSERT INTO ChangesHistory(Action,SyncGuid,TableName) SELECT @action,SyncGuid,'{Table.TableName}' FROM deleted
 END
 END", System.Data.CommandType.Text);
 
-                   Connection.EXEC($"UPDATE {Table.TableName} SET {Table.Columns.Last().Name}={Table.Columns.Last().Name}", System.Data.CommandType.Text);
+                    var last = Table.Columns.LastOrDefault(x => !(x is TableMapping.GuidColumn));
+                    if (last != null)
+                        Connection.EXEC($"UPDATE {Table.TableName} SET {last.Name}={last.Name}", System.Data.CommandType.Text);
 
-                    Connection.EXEC($"DELETE FROM TRIGGERS_INFO WHERE NAME=@NAME", System.Data.CommandType.Text
-                        , new SqlParameter("NAME", TriggerName));
-
-                    Connection.EXEC($"INSERT INTO TRIGGERS_INFO (NAME,VERSION) VALUES(@NAME,@VERSION)", System.Data.CommandType.Text
-                        , new SqlParameter("NAME", TriggerName)
-                        , new SqlParameter("VERSION", DbVersion)
-                        );
+                    version.Version = DbVersion;
+                    version.Save(Connection);
 
                 }
-                //Table.IsTriggerChecked = true;
             }
             catch (Exception ex)
             {

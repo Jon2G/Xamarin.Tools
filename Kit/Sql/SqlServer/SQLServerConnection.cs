@@ -489,18 +489,18 @@ namespace SQLServer
         {
             try
             {
-                
-                    //con.Open();
-                    SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
-                    if (parameters != null)
-                    {
-                        cmd.Parameters.AddRange(parameters);
-                    }
-                    if (cmd.Connection.State != ConnectionState.Open)
-                        cmd.Connection.Open();
-                    ReportaTransaccion(cmd);
-                    return new Reader(cmd);
-                
+
+                //con.Open();
+                SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
+                if (parameters != null)
+                {
+                    cmd.Parameters.AddRange(parameters);
+                }
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
+                ReportaTransaccion(cmd);
+                return new Reader(cmd);
+
             }
             catch (Exception ex)
             {
@@ -594,7 +594,7 @@ namespace SQLServer
         public void ReportaTransaccion(SqlCommand cmd)
         {
             string sql = GetCommandText(cmd);
-            Log.Logger.Debug(sql);
+            Log.Logger.Debug("Executing:[{0}]", sql);
         }
         private string GetCommandText(SqlCommand sqc)
         {
@@ -1056,7 +1056,7 @@ namespace SQLServer
             Tracer = line => Debug.WriteLine(line);
             Connection = new SqlConnection(ConnectionString.ConnectionString);
         }
-        public override void RenewConnection()
+        public override SqlBase RenewConnection()
         {
             if (IsOpen)
             {
@@ -1064,6 +1064,7 @@ namespace SQLServer
             }
             Connection?.Dispose();
             Connection = new SqlConnection(ConnectionString.ConnectionString);
+            return this;
         }
         public void ChangeCatalog(string newcatalog)
         {
@@ -1565,7 +1566,7 @@ WHERE
 
             foreach (var p in toBeAdded)
             {
-                var addCol = "alter table \"" + map.TableName + "\" add column " + Orm.SqlDecl(p);
+                var addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p);
                 Execute(addCol);
             }
         }
@@ -1671,7 +1672,7 @@ WHERE
                 _sw.Reset();
                 _sw.Start();
             }
-
+            Log.Logger.Debug("Executing:[{0}]", cmd.CommandText);
             var r = cmd.ExecuteNonQuery();
 
             if (TimeExecution)
@@ -2449,55 +2450,15 @@ WHERE
         /// <returns>
         /// The number of rows modified.
         /// </returns>
-        public int InsertOrReplace(object obj)
+        public override int InsertOrReplace(object obj, bool shouldnotify = true)
         {
             if (obj == null)
             {
                 return 0;
             }
-            return Insert(obj, "OR REPLACE", Orm.GetType(obj));
+            return Insert(obj, "OR REPLACE", Orm.GetType(obj), shouldnotify);
         }
 
-        /// <summary>
-        /// Inserts the given object (and updates its
-        /// auto incremented primary key if it has one).
-        /// The return value is the number of rows added to the table.
-        /// </summary>
-        /// <param name="obj">
-        /// The object to insert.
-        /// </param>
-        /// <param name="objType">
-        /// The type of object to insert.
-        /// </param>
-        /// <returns>
-        /// The number of rows added to the table.
-        /// </returns>
-        public int Insert(object obj, Type objType)
-        {
-            return Insert(obj, "", objType);
-        }
-
-        /// <summary>
-        /// Inserts the given object (and updates its
-        /// auto incremented primary key if it has one).
-        /// The return value is the number of rows added to the table.
-        /// If a UNIQUE constraint violation occurs with
-        /// some pre-existing object, this function deletes
-        /// the old object.
-        /// </summary>
-        /// <param name="obj">
-        /// The object to insert.
-        /// </param>
-        /// <param name="objType">
-        /// The type of object to insert.
-        /// </param>
-        /// <returns>
-        /// The number of rows modified.
-        /// </returns>
-        public int InsertOrReplace(object obj, Type objType)
-        {
-            return Insert(obj, "OR REPLACE", objType);
-        }
 
         /// <summary>
         /// Inserts the given object (and updates its
@@ -2513,7 +2474,7 @@ WHERE
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public int Insert(object obj, string extra)
+        public override int Insert(object obj, string extra)
         {
             if (obj == null)
             {
@@ -2539,7 +2500,7 @@ WHERE
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public int Insert(object obj, string extra, Type objType)
+        public override int Insert(object obj, string extra, Type objType, bool shouldnotify = true)
         {
             if (obj == null || objType == null)
             {
@@ -2556,6 +2517,11 @@ WHERE
                 }
             }
 
+            //if (map.SyncGuid is TableMapping.GuidColumn SyncGuid && SyncGuid.GetValue() == Guid.Empty)
+            //{
+            //    SyncGuid.SetValue(null, null);
+            //}
+
             if (map.SyncGuid is TableMapping.GuidColumn SyncGuid)
             {
                 SyncGuid.SetValue(null, null);
@@ -2565,7 +2531,8 @@ WHERE
             var replacing = string.Compare(extra, "OR REPLACE", StringComparison.OrdinalIgnoreCase) == 0;
             if (replacing)
             {
-
+                Delete(obj);
+                extra = string.Empty;
             }
 
 
@@ -2574,6 +2541,10 @@ WHERE
             SqlParameter[] parameters = new SqlParameter[vals.Length];
             for (var i = 0; i < vals.Length; i++)
             {
+                if (cols[i] is TableMapping.GuidColumn)
+                {
+                    cols[i] = map.SyncGuid;
+                }
                 vals[i] = cols[i].GetValue(obj);
                 parameters[i] = new SqlParameter(cols[i].Name, vals[i]);
             }
@@ -2608,7 +2579,7 @@ WHERE
                     throw ex;
                 }
             }
-            if (count > 0)
+            if (shouldnotify && count > 0)
                 OnTableChanged(map, NotifyTableChangedAction.Insert);
 
             return count;
@@ -2828,7 +2799,7 @@ WHERE
         /// <returns>
         /// The number of rows deleted.
         /// </returns>
-        public int Delete(object objectToDelete)
+        public override int Delete(object objectToDelete)
         {
             var map = GetMapping(Orm.GetType(objectToDelete));
             var pk = map.PK;
@@ -2838,9 +2809,11 @@ WHERE
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = @{1}", map.TableName, pk.Name);
 
-            map.SyncGuid.SetValue(objectToDelete, ExecuteScalar<Guid>(
+            Guid deleted = ExecuteScalar<Guid>(
                 $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
-                new SqlParameter(map.PK.Name, map.PK.GetValue(objectToDelete))));
+                new SqlParameter(map.PK.Name, map.PK.GetValue(objectToDelete)));
+            if (deleted != Guid.Empty)
+                map.SyncGuid.SetValue(objectToDelete, deleted);
 
             var count = Execute(q, new SqlParameter(map.PK.Name, map.PK.GetValue(objectToDelete)));
             if (count > 0)
