@@ -56,6 +56,7 @@ namespace Kit.Sql.SqlServer
                 if (_where != null)
                 {
                     var w = CompileExpr(_where, args, conditions);
+                    conditions.RemoveAll(x => !x.IsComplete);
                     cmdText += " where " + w.CommandText;
                 }
                 if ((_orderBys != null) && (_orderBys.Count > 0))

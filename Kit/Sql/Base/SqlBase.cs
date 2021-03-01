@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
 using SQLServer;
@@ -30,7 +31,106 @@ namespace Kit.Sql.Base
         /// </summary>
         public abstract bool IsClosed { get; }
         public abstract string MappingSuffix { get; }
+        /// <summary>
+        /// Inserts the given object (and updates its
+        /// auto incremented primary key if it has one).
+        /// The return value is the number of rows added to the table.
+        /// If a UNIQUE constraint violation occurs with
+        /// some pre-existing object, this function deletes
+        /// the old object.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to insert.
+        /// </param>
+        /// <param name="objType">
+        /// The type of object to insert.
+        /// </param>
+        /// <returns>
+        /// The number of rows modified.
+        /// </returns>
+        public int InsertOrReplace(object obj, Type objType)
+        {
+            return Insert(obj, "OR REPLACE", objType);
+        }
+        /// <summary>
+        /// Inserts the given object (and updates its
+        /// auto incremented primary key if it has one).
+        /// The return value is the number of rows added to the table.
+        /// If a UNIQUE constraint violation occurs with
+        /// some pre-existing object, this function deletes
+        /// the old object.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to insert.
+        /// </param>
+        /// <returns>
+        /// The number of rows modified.
+        /// </returns>
+        public abstract int InsertOrReplace(object obj,bool shouldnotify=true);
+        /// <summary>
+        /// Inserts the given object (and updates its
+        /// auto incremented primary key if it has one).
+        /// The return value is the number of rows added to the table.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to insert.
+        /// </param>
+        /// <param name="objType">
+        /// The type of object to insert.
+        /// </param>
+        /// <returns>
+        /// The number of rows added to the table.
+        /// </returns>
+        public int Insert(object obj, Type objType)
+        {
+            return Insert(obj, "", objType);
+        }
 
+        /// <summary>
+        /// Inserts the given object (and updates its
+        /// auto incremented primary key if it has one).
+        /// The return value is the number of rows added to the table.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to insert.
+        /// </param>
+        /// <param name="extra">
+        /// Literal SQL code that gets placed into the command. INSERT {extra} INTO ...
+        /// </param>
+        /// <returns>
+        /// The number of rows added to the table.
+        /// </returns>
+
+        public abstract int Insert(object obj, string extra);
+        /// <summary>
+        /// Inserts the given object (and updates its
+        /// auto incremented primary key if it has one).
+        /// The return value is the number of rows added to the table.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to insert.
+        /// </param>
+        /// <param name="extra">
+        /// Literal SQL code that gets placed into the command. INSERT {extra} INTO ...
+        /// </param>
+        /// <param name="objType">
+        /// The type of object to insert.
+        /// </param>
+        /// <returns>
+        /// The number of rows added to the table.
+        /// </returns>
+        public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify=false);
+
+        /// <summary>
+        /// Deletes the given object from the database using its primary key.
+        /// </summary>
+        /// <param name="objectToDelete">
+        /// The object to delete. It must have a primary key designated using the PrimaryKeyAttribute.
+        /// </param>
+        /// <returns>
+        /// The number of rows deleted.
+        /// </returns>
+        public abstract int Delete(object objectToDelete);
         protected SqlBase()
         {
 
@@ -72,7 +172,7 @@ namespace Kit.Sql.Base
         public TableMapping GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
         {
             TableMapping map;
-            var key = GetTableMappingKey(type);
+            var key = GetTableMappingKey(TableMapping.GetTableName(type));
             lock (_mappings)
             {
                 if (_mappings.TryGetValue(key, out map))
@@ -92,9 +192,15 @@ namespace Kit.Sql.Base
             return map;
         }
 
-        public string GetTableMappingKey(Type type)
+        //public string GetTableMappingKey(Type type)
+        //{
+
+        //    return type.FullName + MappingSuffix;
+        //}
+        public string GetTableMappingKey(string TableName)
         {
-            return type.FullName + MappingSuffix;
+            StringBuilder sb = new StringBuilder(TableName).Append(MappingSuffix);
+            return sb.ToString();
         }
 
         /// <summary>
@@ -112,7 +218,8 @@ namespace Kit.Sql.Base
             return GetMapping(typeof(T), createFlags);
         }
         public abstract TableQuery<T> Table<T>() where T : new();
-        public abstract void RenewConnection();
+
+        public abstract SqlBase RenewConnection();
         public abstract CommandBase CreateCommand(string cmdText, params object[] ps);
         public abstract T Find<T>(object pk) where T : new();
         /// <summary>
@@ -131,7 +238,7 @@ namespace Kit.Sql.Base
 
         public abstract CreateTableResult CreateTable(TableMapping table, CreateFlags createFlags = CreateFlags.None);
 
-        public  CreateTableResult CreateTable(Type ty, CreateFlags createFlags = CreateFlags.None)
+        public CreateTableResult CreateTable(Type ty, CreateFlags createFlags = CreateFlags.None)
         {
             return CreateTable(GetMapping(ty, createFlags), createFlags);
         }

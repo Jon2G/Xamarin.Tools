@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
+using Kit;
 using SQLitePCL;
 
 namespace SQLServer
@@ -37,6 +38,9 @@ namespace SQLServer
                 Connection.Tracer?.Invoke("Executing: " + CommandText);
             }
 
+            CommandText = this.CommandText + "; select SCOPE_IDENTITY();";
+            Log.Logger.Debug("Executing:[{0}]", CommandText);
+
             if (Connection.IsClosed)
             {
                 Connection.RenewConnection();
@@ -44,7 +48,7 @@ namespace SQLServer
             using (var con = Connection.Connection)
             {
                 con.Open();
-                using (var cmd = new SqlCommand(this.CommandText + "; select SCOPE_IDENTITY();", con))
+                using (var cmd = new SqlCommand(this.CommandText, con))
                 {
                     if (source?.Any() ?? false)
                     {
@@ -55,6 +59,8 @@ namespace SQLServer
                     {
                         if (reader.Read())
                         {
+                            Log.Logger.Debug("Affected: {0}", reader.RecordsAffected);
+
                             return Convert.ToInt64(reader[0]);
                         }
                     }
@@ -91,7 +97,7 @@ namespace SQLServer
             {
                 Connection.Tracer?.Invoke("Executing: " + CommandText);
             }
-
+            Log.Logger.Debug("Executing:[{0}]",this.CommandText);
             if (Connection.IsClosed)
             {
                 Connection.RenewConnection();
@@ -106,7 +112,9 @@ namespace SQLServer
                     {
                         cmd.Parameters.AddRange(source);
                     }
-                    return cmd.ExecuteNonQuery();
+                    int RecordsAffected= cmd.ExecuteNonQuery();
+                    Log.Logger.Debug("Affected: {0}", RecordsAffected);
+                    return RecordsAffected;
                 }
             }
         }

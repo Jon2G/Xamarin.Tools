@@ -7,19 +7,26 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using Kit.Daemon.Devices;
+using Kit.Sql.Base;
+using Kit.Sql.Sqlite;
+using Kit.Sql.Sync;
+using SQLServer;
 using static Kit.Daemon.Helpers.Helper;
+using TableMapping = Kit.Sql.Base.TableMapping;
+using LinqKit;
 
 namespace Kit.Daemon.Sync
 {
     public class SyncManager : ModelBase
     {
-        private string DownloadQuery { get; set; }
-        private string UploadQuery { get; set; }
+
         public bool ToDo { get; set; }
         public bool NothingToDo { get => !ToDo; }
-        private readonly Queue<Pendientes> Pendings;
+        private Queue<ChangesHistory> Pendings;
         private int TotalPendientes;
         public float Progress
         {
@@ -45,9 +52,9 @@ namespace Kit.Daemon.Sync
                 Raise(() => this.Progress);
             }
         }
-        public int PackageSize { get; internal set; }
-        private Pendientes _CurrentPackage;
-        public Pendientes CurrentPackage
+        public int PackageSize { get; private set; }
+        private ChangesHistory _CurrentPackage;
+        public ChangesHistory CurrentPackage
         {
             get => _CurrentPackage;
             set
@@ -56,33 +63,87 @@ namespace Kit.Daemon.Sync
                 Raise(() => this.CurrentPackage);
             }
         }
+
+        private string DownloadQuery;
+        private string UploadQuery;
         public SyncManager()
         {
-            this.Pendings = new Queue<Pendientes>();
+            this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
             this.PackageSize = 25;
         }
+        public void SetPackageSize(int PackageSize)
+        {
+            this.PackageSize = PackageSize;
+            UploadQuery = null;
+            DownloadQuery = null;
+        }
         public bool Download()
         {
-            if (string.IsNullOrEmpty(this.DownloadQuery))
+            if (DownloadQuery is null)
             {
-                return false;
+                DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncDirecction.Remote]);
+                Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
             }
-            return GetPendings(SyncDirecction.Local, this.DownloadQuery);
-        }
-        public bool Upload()
-        {
-            if (string.IsNullOrEmpty(this.UploadQuery))
-            {
-                return false;
-            }
-            return GetPendings(SyncDirecction.Remote, this.UploadQuery);
+            return GetPendings(SyncDirecction.Local);
         }
 
-        private bool GetPendings(SyncDirecction SyncTarget, string query)
+        public bool Upload()
+        {
+            if (UploadQuery is null)
+            {
+                UploadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncDirecction.Local]);
+                Log.Logger.Information("Prepared {0} Upload Query - [{1}]", "DAEMON", UploadQuery);
+            }
+
+            return false; //return GetPendings(SyncDirecction.Remote);
+        }
+        private string PrepareQuery(SqlBase source)
+        {
+            switch (source)
+            {
+                case SQLServerConnection:
+                    return $"select top {this.PackageSize} SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid)";
+                case SQLiteConnection:
+                    return $"select SyncGuid,TableName,Action from ChangesHistory limit {this.PackageSize}";
+            }
+            return string.Empty;
+        }
+
+
+        private bool GetPendings(SyncDirecction SyncTarget)
         {
             try
             {
+                this.CurrentPackage = null;
+                string query = string.Empty;
+                switch (SyncTarget)
+                {
+                    case SyncDirecction.Local:
+                        query = DownloadQuery;
+                        break;
+                    case SyncDirecction.Remote:
+                        query = UploadQuery;
+                        break;
+                }
+                var source = SyncTarget.InvertDirection();
+                if (query != string.Empty)
+                {
+                    this.Pendings = new Queue<ChangesHistory>(Daemon.Current.DaemonConfig[source].RenewConnection()
+                        .CreateCommand(query)
+                        .ExecuteDeferredQuery<ChangesHistory>());
+                }
+                TotalPendientes = Pendings.Count;
+                ToDo = TotalPendientes > 0;
+                if (ToDo)
+                {
+                    ProcesarAcciones(SyncTarget);
+                    return true;
+                }
+
+                return false;
+
+
                 //using (IReader reader = Daemon.Current.DaemonConfig[SyncTarget.InvertDirection()].Read(query))
                 //{
                 //    if (reader is null)
@@ -145,6 +206,8 @@ namespace Kit.Daemon.Sync
         {
             Processed = 0;
             CurrentPackage = null;
+            SyncDirecction source = direccion.InvertDirection();
+            SqlBase source_con = Daemon.Current.DaemonConfig[source];
             while (Pendings.Any())
             {
                 if (Daemon.Current.IsSleepRequested)
@@ -155,24 +218,34 @@ namespace Kit.Daemon.Sync
                 try
                 {
                     this.CurrentPackage = Pendings.Dequeue();
-                    Table table = Daemon.Current.Schema[this.CurrentPackage.Tabla, direccion];
+                    TableMapping table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
                     if (table != null)
                     {
-                        if (!table.Execute(this.CurrentPackage, direccion))
+
+                        //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
+
+                        string selection_list = table.SelectionList;
+                        CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE SyncGuid=@SyncGuid",
+                         new BaseTableQuery.Condition("SyncGuid", CurrentPackage.SyncGuid));
+                        MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(TableMapping) });
+                        method = method.MakeGenericMethod(table.MappedType);
+                        IEnumerable<dynamic> result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table });
+
+                        dynamic read = result.FirstOrDefault();
+                        if (read != null)
                         {
-                            if (direccion == SyncDirecction.Local)//deben ir en un orden especifico
-                            {
-                                Processed = 0;
-                                return;
-                            }
+                            Daemon.Current.DaemonConfig[direccion].InsertOrReplace(read, false);
                         }
+
                     }
                     else
                     {
-                        Log.Logger.Error($"[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{this.CurrentPackage.Tabla}'");
-                       // Table.RemoveFromVersionControl(this.CurrentPackage.Tabla, Daemon.Current.DaemonConfig[direccion.InvertDirection()]);
+                        Log.Logger.Error("[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{0}'", this.CurrentPackage.TableName);
+                        // Table.RemoveFromVersionControl(this.CurrentPackage.Tabla, Daemon.Current.DaemonConfig[direccion.InvertDirection()]);
                     }
+                    CurrentPackage.MarkAsSynced(source_con);
                     Processed++;
+
                 }
                 catch (Exception ex)
                 {
@@ -180,56 +253,11 @@ namespace Kit.Daemon.Sync
                     {
                         //Debugger.Break();
                     }
-                    Log.Logger.Error(ex, "Al sincronizar");
+                    Log.Logger.Error(ex, "Al sincronizar - {0}", CurrentPackage);
                 }
             }
         }
-        internal void ReGenerateSyncQueries()
-        {
-            GenerateSyncQuery(SyncDirecction.Local);
-            GenerateSyncQuery(SyncDirecction.Remote);
-        }
-        public void GenerateSyncQuery(SyncDirecction dirreccion)
-        {
-            //BaseSQLHelper sql = Daemon.Current.DaemonConfig[dirreccion]; //.Destination
-            //string query = null;
-            //if (sql is SqLite)
-            //{
-            //    query = BuildSqliteSelectQuery();
-            //}
-            //else if (sql is SqlServer)
-            //{
-            //    query = BuildSqlServerQuery();
-            //}
 
-            //switch (dirreccion.InvertDirection())
-            //{
-            //    case SyncDirecction.Remote:
-            //        this.UploadQuery = query;
-            //        break;
-            //    case SyncDirecction.Local:
-            //        this.DownloadQuery = query;
-            //        break;
-            //}
-        }
-        private string BuildSqliteSelectQuery()
-        {
-            Schema schema = Daemon.Current.Schema;
-            //if (Daemon.Current.Schema.HasUploadTables)
-            //{
-            //    StringBuilder builder = new StringBuilder().Append("SELECT ID,ACCION,TABLA,LLAVE FROM VERSION_CONTROL ORDER BY(CASE ");
-            //    foreach (Table table in schema.UploadTables)
-            //    {
-            //        builder.Append(" WHEN TABLA = '")
-            //                            .Append(table.Name)
-            //                            .Append("' THEN ").Append(table.Priority);
-            //    }
-            //    builder.Append(" ELSE ").Append(schema.UploadTables.Last().Priority + 1)
-            //        .Append(" END),ID").Append(PackageSize <= 0 ? ";" : $" LIMIT {PackageSize};");
-            //    return builder.ToString();
-            //}
-            return null;
-        }
         private string BuildSqlServerQuery()
         {
             StringBuilder sb = new StringBuilder();
@@ -242,6 +270,7 @@ namespace Kit.Daemon.Sync
                 .Append(Device.Current.DeviceId).Append("') --ORDER BY TABLA DESC, LLAVE ASC;");
             return sb.ToString();
         }
+
 
     }
 }

@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LinqKit" Version="1.1.23" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
@@ -57,5 +58,10 @@
     <None Include="Sql\Base\Insert.cs" />
     <None Include="Sql\Base\Select.cs" />
     <None Include="Sql\Base\Update.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v1.0\Microsoft.CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Data.SQLite;
+using System.IO;
+using Kit;
+using Kit.Daemon;
 using Kit.Sql.Sync;
 using SQLServer;
 using SyncTest.Models;
@@ -9,23 +13,17 @@ namespace SyncTest
     {
         static void Main(string[] args)
         {
+            Kit.WPF.Tools.Init();
             using (SQLServerConnection con =
-                new SQLServerConnection("TestDb", "192.168.0.21\\SQLEXPRESS", "1433", "sa", "12345678"))
+                new SQLServerConnection("RABBIT_RESPALDO_REAL", "192.168.0.2\\SQLEXPRESS", "1433", "sa", "12345678"))
             {
-                con.CreateDatabase()
-                    .CreateTable<ChangesHistory>();
-
-
-                InsertTest insertTest = new InsertTest();
-                insertTest.Insert(con);
-
-                UpdateTest update = new UpdateTest();
-                update.Update(con);
-
-                DeleteTest delete = new DeleteTest();
-                delete.Delete(con);
-
-
+                using (Kit.Sql.Sqlite.SQLiteConnection lite = new Kit.Sql.Sqlite.SQLiteConnection(Path.Combine(Tools.Instance.LibraryPath, "TestDb.db"), 110))
+                {
+                    lite.CheckTables(typeof(Prods));
+                    Daemon.Current.Configure(lite, con, lite.DBVersion)
+                        .SetSchema(typeof(Prods));
+                    Daemon.Current.Awake();
+                }
             }
 
             Console.ReadKey();

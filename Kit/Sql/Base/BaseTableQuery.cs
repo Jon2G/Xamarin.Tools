@@ -1,7 +1,10 @@
+using Xamarin.Forms;
+
 namespace Kit.Sql.Base
 {
     public abstract class BaseTableQuery
     {
+        public TableMapping Table { get; protected set; }
         protected class Ordering
         {
             public string ColumnName { get; set; }
@@ -26,6 +29,20 @@ namespace Kit.Sql.Base
                 this.ColumnName = left.ColumnName;
                 this.Value = right.Value;
                 this.IsComplete = true;
+                if (string.IsNullOrEmpty(ColumnName))
+                {
+                    this.IsComplete = false;
+                }
+            }
+
+            public Condition(string columnName, object Value)
+            {
+                this.ColumnName = columnName;
+                this.Value = Value;
+                if (!string.IsNullOrEmpty(ColumnName)&&Value!=null)
+                {
+                    this.IsComplete = true;
+                }
             }
 
             public void SetValue(object Value)

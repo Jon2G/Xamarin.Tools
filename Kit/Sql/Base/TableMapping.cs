@@ -36,18 +36,14 @@ namespace Kit.Sql.Base
             MappedType = type;
             CreateFlags = createFlags;
 
-            var typeInfo = type.GetTypeInfo();
+            var typeInfo = GetTypeInfo(type);
 #if ENABLE_IL2CPP
 			var tableAttr = typeInfo.GetCustomAttribute<TableAttribute> ();
 #else
-            var tableAttr =
-                typeInfo.CustomAttributes
-                    .Where(x => x.AttributeType == typeof(TableAttribute))
-                    .Select(x => (TableAttribute)InflateAttribute(x))
-                    .FirstOrDefault();
+            var tableAttr = GetTableAttributes(typeInfo);
 #endif
+            TableName = GetTableName(tableAttr, type);
 
-            TableName = (tableAttr != null && !string.IsNullOrEmpty(tableAttr.Name)) ? tableAttr.Name : MappedType.Name;
             WithoutRowId = tableAttr != null ? tableAttr.WithoutRowId : false;
 
             var props = new List<PropertyInfo>();
@@ -115,6 +111,27 @@ namespace Kit.Sql.Base
             _insertOrReplaceColumns = Columns.ToArray();
         }
 
+        protected static TypeInfo GetTypeInfo(Type type)
+        {
+            return type.GetTypeInfo();
+
+        }
+        public static string GetTableName(Type type)
+        {
+            return GetTableName(GetTableAttributes(GetTypeInfo(type)), type);
+        }
+        protected static TableAttribute GetTableAttributes(TypeInfo typeInfo)
+        {
+            return typeInfo.CustomAttributes
+                .Where(x => x.AttributeType == typeof(TableAttribute))
+                .Select(x => (TableAttribute)InflateAttribute(x))
+                .FirstOrDefault();
+        }
+
+        protected static string GetTableName(TableAttribute tableAttr, Type MappedType)
+        {
+            return (tableAttr != null && !string.IsNullOrEmpty(tableAttr.Name)) ? tableAttr.Name : MappedType.Name;
+        }
         public bool HasAutoIncPK { get; private set; }
 
         public void SetAutoIncPK(object obj, long id)
@@ -138,6 +155,21 @@ namespace Kit.Sql.Base
             get
             {
                 return _insertOrReplaceColumns;
+            }
+        }
+
+        private string _SelectionList;
+
+        public string SelectionList
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_SelectionList))
+                {
+                    _SelectionList = string.Join(",", Columns.Select(c => c.Name.ToUpper()));
+                }
+
+                return _SelectionList;
             }
         }
 

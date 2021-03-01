@@ -283,7 +283,11 @@ namespace Kit.Sql.Sqlite
             }
             else
             {
-                if (value is Int32)
+                if (value is BaseTableQuery.Condition condition)
+                {
+                    BindParameter(stmt, index, condition.Value, storeDateTimeAsTicks, dateTimeStringFormat, storeTimeSpanAsTicks);
+                }
+                else if (value is Int32)
                 {
                     SQLite3.BindInt(stmt, index, (int)value);
                 }

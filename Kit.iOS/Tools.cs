@@ -13,7 +13,6 @@ using UserNotifications;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using FFImageLoading.Forms.Platform;
-using Log = Kit.Sql.Log;
 
 namespace Kit.iOS
 {

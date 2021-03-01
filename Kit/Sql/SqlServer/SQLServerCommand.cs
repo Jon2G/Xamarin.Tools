@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Kit;
 using Kit.Sql.Base;
 using SQLitePCL;
 
@@ -35,7 +36,7 @@ namespace SQLServer
             {
                 _conn.Tracer?.Invoke("Executing: " + this);
             }
-
+            Log.Logger.Debug("Executing:[{0}]",CommandText);
             if (_conn.IsClosed)
             {
                 _conn.RenewConnection();
@@ -49,7 +50,10 @@ namespace SQLServer
                     {
                         cmd.Parameters.AddRange(this.Parameters.ToArray());
                     }
-                    return cmd.ExecuteNonQuery();
+
+                    int affected = cmd.ExecuteNonQuery();
+                    Log.Logger.Debug("Affected: {0} rows",affected);
+                    return affected;
                 }
             }
         }
@@ -90,7 +94,7 @@ namespace SQLServer
             {
                 _conn.Tracer?.Invoke("Executing Query: " + this);
             }
-
+            Log.Logger.Debug("Executing:[{0}]",CommandText);
             if (_conn.IsClosed)
             {
                 _conn.RenewConnection();
