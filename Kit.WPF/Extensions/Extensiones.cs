@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -27,6 +28,52 @@ namespace Kit.WPF.Extensions
             }
             image.Freeze();
             return image;
+        }
+        public static BitmapImage RotateBitmap(this BitmapImage bmp, float angle)
+        {
+            return bmp.BitmapImage2Bitmap().RotateBitmap(angle).Bitmap2BitmapImage();
+        }
+        public static System.Drawing.Bitmap RotateBitmap(this System.Drawing.Bitmap bmp, float angle)
+        {
+            angle = angle % 360;
+            if (angle > 180) angle -= 360;
+            float sin = (float)Math.Abs(Math.Sin(angle *
+            Math.PI / 180.0)); // this function takes radians
+            float cos = (float)Math.Abs(Math.Cos(angle * Math.PI / 180.0)); // this one too
+            float newImgWidth = sin * bmp.Height + cos * bmp.Width;
+            float newImgHeight = sin * bmp.Width + cos * bmp.Height;
+            float originX = 0f;
+            float originY = 0f;
+            if (angle > 0)
+            {
+                if (angle <= 90)
+                    originX = sin * bmp.Height;
+                else
+                {
+                    originX = newImgWidth;
+                    originY = newImgHeight - sin * bmp.Width;
+                }
+            }
+            else
+            {
+                if (angle >= -90)
+                    originY = sin * bmp.Width;
+                else
+                {
+                    originX = newImgWidth - sin * bmp.Height;
+                    originY = newImgHeight;
+                }
+            }
+            System.Drawing.Bitmap newImg =
+            new System.Drawing.Bitmap((int)newImgWidth, (int)newImgHeight);
+            System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(newImg);
+            g.Clear(System.Drawing.Color.White);
+            g.TranslateTransform(originX, originY); // offset the origin to our calculated values
+            g.RotateTransform(angle); // set up rotate
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+            g.DrawImageUnscaled(bmp, 0, 0); // draw the image at 0, 0
+            g.Dispose();
+            return newImg;
         }
         public static byte[] ImageToBytes(this ImageSource imageSource)
         {
@@ -77,6 +124,24 @@ namespace Kit.WPF.Extensions
                 return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             }
             finally { DeleteObject(handle); }
+        }
+
+        public static BitmapImage Bitmap2BitmapImage(this Bitmap bitmap)
+        {
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                return bitmapImage;
+            }
         }
     }
 }
