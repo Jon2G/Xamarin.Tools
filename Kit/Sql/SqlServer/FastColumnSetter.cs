@@ -2,6 +2,9 @@
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
+using Kit;
+using Kit.Daemon.Sync;
+using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Helpers;
 
@@ -23,7 +26,7 @@ namespace SQLServer
         ///
         /// If no fast setter is available for the requested column (enums in particular cause headache), then this function returns null.
         /// </returns>
-        internal static Action<T, SqlDataReader, int> GetFastSetter<T>(SQLServerConnection conn, TableMapping.Column column)
+        internal static Action<T, SqlDataReader, int> GetFastSetter<T>(TableMapping.Column column)
         {
             Action<T, SqlDataReader, int> fastSetter = null;
             if (column.PropertyInfo is null)
@@ -58,7 +61,7 @@ namespace SQLServer
             {
                 fastSetter = CreateNullableTypedSetterDelegate<T, bool>(column, (reader, index) =>
                 {
-                    return Sqlh.Parse<Boolean>(reader[index],false);
+                    return Sqlh.Parse<Boolean>(reader[index], false);
                 });
             }
             else if (clrType == typeof(double))
@@ -173,10 +176,18 @@ namespace SQLServer
             }
             else if (clrType == typeof(Guid))
             {
-                fastSetter = CreateNullableTypedSetterDelegate<T, Guid>(column, (reader, index) =>
+                fastSetter = CreateTypedSetterDelegate<T, Guid>(column, (reader, index) =>
                 {
-                    var text = Convert.ToString(reader[index]);
-                    return new Guid(text);
+                    try
+                    {
+                        return (Guid)reader[index];
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex, "Al convertir {0} en Guid", reader[index]);
+                    }
+
+                    return Guid.NewGuid();
                 });
             }
             else if (clrType == typeof(Uri))
@@ -257,15 +268,52 @@ namespace SQLServer
         /// <returns>A strongly-typed delegate</returns>
         private static Action<ObjectType, SqlDataReader, int> CreateTypedSetterDelegate<ObjectType, ColumnMemberType>(TableMapping.Column column, Func<SqlDataReader, int, ColumnMemberType> getColumnValue)
         {
-            var setProperty = (Action<ObjectType, ColumnMemberType>)Delegate.CreateDelegate(
-                typeof(Action<ObjectType, ColumnMemberType>), null,
-                column.PropertyInfo.GetSetMethod());
+            Action<ObjectType, ColumnMemberType> setProperty = null;
+            try
+            {
+                if (column.Name == "SyncGuid")
+                {
+                    return (o, reader, i) =>
+                    {
+                        try
+                        {
+                            if (o is ISync isync)
+                            {
+                                isync.SyncGuid = (Guid)reader[i];
+                                return;
+                            }
+                            column.PropertyInfo.GetSetMethod(false).Invoke(o,
+                                    new object[] { reader[i] });
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Logger.Error(ex, "CreateTypedSetterDelegate");
+                        }
+                    };
+                }
+                //  var a = column.PropertyInfo.GetSetMethod(true);
+                setProperty = (Action<ObjectType, ColumnMemberType>)Delegate.CreateDelegate(
+               typeof(Action<ObjectType, ColumnMemberType>), null,
+               column.PropertyInfo.GetSetMethod());
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "CreateTypedSetterDelegate");
+            }
 
             return (o, reader, i) =>
             {
-                var colType = reader.GetFieldType(i);
-                if (colType != typeof(DBNull))
-                    setProperty.Invoke(o, getColumnValue.Invoke(reader, i));
+                try
+                {
+                    var colType = reader.GetFieldType(i);
+                    if (colType != typeof(DBNull))
+                        setProperty.Invoke(o, getColumnValue.Invoke(reader, i));
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex, "CreateTypedSetterDelegate");
+                }
             };
         }
     }

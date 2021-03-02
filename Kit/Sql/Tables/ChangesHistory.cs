@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -12,7 +13,7 @@ namespace Kit.Sql.Sync
     /// <summary>
     /// A table that keeps track of every change made on sqlite databate
     /// </summary>
-    public class ChangesHistory
+    public class ChangesHistory: ISync
     {        /// <summary>
         /// This guid identifies the row where the change is made
         /// </summary>
@@ -42,7 +43,7 @@ namespace Kit.Sql.Sync
             {
                 SyncHistory syncHistory = new SyncHistory
                 {
-                    DeviceId = Daemon.Devices.Device.Current.DeviceId, ChangeId = this.SyncGuid
+                    DeviceId = Daemon.Devices.Device.Current.DeviceId, SyncGuid = this.SyncGuid
                 };
                 origin.Delete(syncHistory);
                 origin.InsertOrReplace(syncHistory);
@@ -86,7 +87,7 @@ namespace Kit.Sql.Sync
                         break;
                 }
                 sb.Append(" ");
-                switch (this.TableName.ToUpper())
+                switch (this.TableName?.ToUpper())
                 {
                     case "LINEAS":
                         sb.Append("lineas");

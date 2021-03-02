@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using Kit.Daemon.Sync;
 using Kit.Daemon.VersionControl;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -71,9 +72,9 @@ BEGIN
 END
 END", System.Data.CommandType.Text);
 
-                    var last = Table.Columns.LastOrDefault(x => !(x is TableMapping.GuidColumn));
+                    var last = Table.Columns.LastOrDefault();
                     if (last != null)
-                        Connection.EXEC($"UPDATE {Table.TableName} SET {last.Name}={last.Name}", System.Data.CommandType.Text);
+                        Connection.EXEC($"UPDATE {Table.TableName} SET SyncGuid=ISNULL(SyncGuid,NEWID())");
 
                     version.Version = DbVersion;
                     version.Save(Connection);

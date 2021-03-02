@@ -10,7 +10,7 @@ using SQLitePCL;
 
 namespace SQLServer
 {
-    public partial class SQLServerCommand: CommandBase
+    public partial class SQLServerCommand : CommandBase
     {
         SQLServerConnection _conn;
         private List<Binding> _bindings;
@@ -36,7 +36,7 @@ namespace SQLServer
             {
                 _conn.Tracer?.Invoke("Executing: " + this);
             }
-            Log.Logger.Debug("Executing:[{0}]",CommandText);
+            Log.Logger.Debug("Executing:[{0}]", CommandText);
             if (_conn.IsClosed)
             {
                 _conn.RenewConnection();
@@ -52,7 +52,7 @@ namespace SQLServer
                     }
 
                     int affected = cmd.ExecuteNonQuery();
-                    Log.Logger.Debug("Affected: {0} rows",affected);
+                    Log.Logger.Debug("Affected: {0} rows", affected);
                     return affected;
                 }
             }
@@ -94,7 +94,7 @@ namespace SQLServer
             {
                 _conn.Tracer?.Invoke("Executing Query: " + this);
             }
-            Log.Logger.Debug("Executing:[{0}]",CommandText);
+            Log.Logger.Debug("Executing:[{0}]", CommandText);
             if (_conn.IsClosed)
             {
                 _conn.RenewConnection();
@@ -119,7 +119,7 @@ namespace SQLServer
                                 var name = reader.GetName(i);
                                 cols[i] = map.FindColumn(name);
                                 if (cols[i] != null)
-                                    fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(_conn, cols[i]);
+                                    fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(cols[i]);
                             }
 
                             do
@@ -468,7 +468,20 @@ namespace SQLServer
                     if (coltype == typeof(String))
                     {
                         var value = Convert.ToString(reader[index]);
-                        return Enum.Parse(clrType, value.ToString(), true);
+                        try
+                        {
+                            if (value == string.Empty)
+                            {
+                                return Enum.Parse(clrType, "0");
+                            }
+                            return Enum.Parse(clrType, value.ToString(), true);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Logger.Error(e, "Al intentar convertir [{0}] en [{1}]", value, clrType);
+                        }
+
+                        return null;
                     }
                     else
                         return Convert.ToInt32(reader[index]);

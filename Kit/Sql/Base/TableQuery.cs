@@ -38,11 +38,6 @@ namespace Kit.Sql.Base
         {
             Connection = conn;
             Table = Connection.GetMapping(typeof(T));
-            if (Table.SyncGuid is TableMapping.GuidColumn)
-            {
-                ((TableMapping.GuidColumn)Table.SyncGuid).SetValue(Guid.Empty, Table.SyncGuid);
-            }
-
         }
 
         public abstract TableQuery<U> Clone<U>();

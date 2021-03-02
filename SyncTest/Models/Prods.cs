@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 
 namespace SyncTest.Models
 {
+    [StoreAsText]
     public enum TipoProducto
     {
         Platillo,
@@ -14,7 +16,7 @@ namespace SyncTest.Models
         Promocion
     }
     [SyncMode(SyncDirection.Download)]
-    public class Prods
+    public class Prods:ISync
     {
         [PrimaryKey, MaxLength(30)]
         public string Articulo { get; set; }
@@ -31,7 +33,7 @@ namespace SyncTest.Models
         public bool ParaVenta { get; set; }
         public string PreparaEn { get; set; }
         [Column("TIPO_PRODUCTO")]
-        public TipoProducto TipoProducto { get; set; }
+        public string TipoProducto { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
         [Column("TIEMPO_PREPARACION")]
@@ -54,5 +56,6 @@ namespace SyncTest.Models
         public float Maximo { get; set; }
         public float Minimo { get; set; }
         public Prods() { }
+        public Guid SyncGuid { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using Kit.Daemon.Devices;
 using Kit.Sql.Base;
+using Kit.Sql.Exceptions;
 using Kit.Sql.Sqlite;
 using Kit.Sql.Sync;
 using SQLServer;
@@ -103,7 +104,13 @@ namespace Kit.Daemon.Sync
             switch (source)
             {
                 case SQLServerConnection:
-                    return $"select top {this.PackageSize} SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid)";
+                    string query = "SELECT ";
+                    if (PackageSize > 0)
+                    {
+                        query += $"TOP {this.PackageSize}";
+                    }
+                    query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid)";
+                    return query;
                 case SQLiteConnection:
                     return $"select SyncGuid,TableName,Action from ChangesHistory limit {this.PackageSize}";
             }
@@ -206,8 +213,10 @@ namespace Kit.Daemon.Sync
         {
             Processed = 0;
             CurrentPackage = null;
+            TableMapping table = null;
             SyncDirecction source = direccion.InvertDirection();
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
+            SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
             while (Pendings.Any())
             {
                 if (Daemon.Current.IsSleepRequested)
@@ -218,7 +227,7 @@ namespace Kit.Daemon.Sync
                 try
                 {
                     this.CurrentPackage = Pendings.Dequeue();
-                    TableMapping table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
+                    table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
                     if (table != null)
                     {
 
@@ -234,7 +243,7 @@ namespace Kit.Daemon.Sync
                         dynamic read = result.FirstOrDefault();
                         if (read != null)
                         {
-                            Daemon.Current.DaemonConfig[direccion].InsertOrReplace(read, false);
+                            target_con.InsertOrReplace(read, false);
                         }
 
                     }
@@ -249,6 +258,13 @@ namespace Kit.Daemon.Sync
                 }
                 catch (Exception ex)
                 {
+                    if (ex is SQLiteException)
+                    {
+                        if (ex.Message.Contains("no such table"))
+                        {
+                            target_con.CreateTable(table);
+                        }
+                    }
                     if (Debugger.IsAttached)
                     {
                         //Debugger.Break();

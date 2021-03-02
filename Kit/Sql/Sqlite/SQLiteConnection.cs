@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Kit.CadenaConexion;
+using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -1964,7 +1965,7 @@ namespace Kit.Sql.Sqlite
             {
                 return 0;
             }
-            return Insert(obj, "OR REPLACE", Orm.GetType(obj),shouldnotify);
+            return Insert(obj, "OR REPLACE", Orm.GetType(obj), shouldnotify);
         }
 
         /// <summary>
@@ -1983,7 +1984,7 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public int Insert(object obj, Type objType, bool shouldnotify = true)
         {
-            return Insert(obj, "", objType,shouldnotify);
+            return Insert(obj, "", objType, shouldnotify);
         }
 
 
@@ -2028,7 +2029,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public override int Insert(object obj, string extra, Type objType, bool shouldnotify=true)
+        public override int Insert(object obj, string extra, Type objType, bool shouldnotify = true)
         {
             if (obj == null || objType == null)
             {
@@ -2045,18 +2046,17 @@ namespace Kit.Sql.Sqlite
                 }
             }
 
-            if (map.SyncGuid is TableMapping.GuidColumn SyncGuid)
-            {
-                SyncGuid.SetValue(null, null);
-            }
-
-
             var replacing = string.Compare(extra, "OR REPLACE", StringComparison.OrdinalIgnoreCase) == 0;
 
             var cols = replacing ? map.InsertOrReplaceColumns : map.InsertColumns;
             var vals = new object[cols.Length];
             for (var i = 0; i < vals.Length; i++)
             {
+                if (cols[i].Name == "SyncGuid" && map.SyncDirection != SyncDirection.NoSync)
+                {
+                    vals[i] = (obj as ISync).SyncGuid;
+                    continue;
+                }
                 vals[i] = cols[i].GetValue(obj);
             }
 
@@ -2087,8 +2087,8 @@ namespace Kit.Sql.Sqlite
                     map.SetAutoIncPK(obj, id);
                 }
             }
-            if (count > 0)
-                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Insert);
+            if (shouldnotify && count > 0)
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Insert, obj);
 
             return count;
         }
@@ -2206,7 +2206,7 @@ namespace Kit.Sql.Sqlite
             }
 
             var cols = from p in map.Columns
-                       where p != pk && !(p is TableMapping.GuidColumn)
+                       where p != pk
                        select p;
             var vals = from c in cols
                        select c.GetValue(obj);
@@ -2241,9 +2241,9 @@ namespace Kit.Sql.Sqlite
 
             if (rowsAffected > 0)
             {
-                map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
-                    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
-                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Update);
+                //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
+                //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Update, obj);
             }
 
             return rowsAffected;
@@ -2303,12 +2303,9 @@ namespace Kit.Sql.Sqlite
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
 
-            map.SyncGuid.SetValue(objectToDelete, ExecuteScalar<Guid>(
-                $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(objectToDelete)));
-
             var count = Execute(q, pk.GetValue(objectToDelete));
             if (count > 0)
-                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Delete);
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Delete, objectToDelete);
             return count;
         }
 
@@ -2349,11 +2346,10 @@ namespace Kit.Sql.Sqlite
                 throw new NotSupportedException("Cannot delete " + map.TableName + ": it has no PK");
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
-            map.SyncGuid.SetValue(null, ExecuteScalar<Guid>(
-                $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", primaryKey));
+            var guid_key = ExecuteScalar<Guid>($"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", primaryKey);
             var count = Execute(q, primaryKey);
             if (count > 0)
-                OnTableChanged(map, NotifyTableChangedAction.Delete);
+                OnTableChanged(map, NotifyTableChangedAction.Delete, guid_key);
             return count;
         }
 
@@ -2391,7 +2387,7 @@ namespace Kit.Sql.Sqlite
             OnTableDeleteAll(map);
             var count = Execute(query);
             if (count > 0)
-                OnTableChanged(map, NotifyTableChangedAction.Delete);
+                OnTableChanged(map, NotifyTableChangedAction.Delete, null);
             return count;
         }
 
@@ -2499,16 +2495,31 @@ namespace Kit.Sql.Sqlite
             QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
                 .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
         }
-        void OnTableChanged(TableMapping table, NotifyTableChangedAction action)
+        void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
         {
-            if (table.TableName == nameof(ChangesHistory) || table.TableName == nameof(DatabaseVersion))
+            if (table.SyncDirection == SyncDirection.NoSync)
             {
                 return;
             }
 
+            if (obj is Guid guid)
+            {
+                UpdateVersionControl(new ChangesHistory(
+                    table.TableName
+                    , guid
+                    , action));
+            }
+
+            if (obj is null)
+            {
+                UpdateVersionControl(new ChangesHistory(
+                    table.TableName
+                    , Guid.Empty
+                    , action));
+            }
             UpdateVersionControl(new ChangesHistory(
                 table.TableName
-                , (Guid)table.SyncGuid.GetValue(null)
+                , (obj as ISync).SyncGuid
                 , action));
             var ev = TableChanged;
             if (ev != null)

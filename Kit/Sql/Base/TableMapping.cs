@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
@@ -11,6 +13,7 @@ namespace Kit.Sql.Base
 {
     public abstract class TableMapping
     {
+        public SyncDirection SyncDirection { get; private set; }
         public Type MappedType { get; private set; }
 
         public string TableName { get; private set; }
@@ -20,7 +23,7 @@ namespace Kit.Sql.Base
         public Column[] Columns { get; private set; }
 
         public Column PK { get; private set; }
-        public Column SyncGuid { get; private set; }
+
 
         public string GetByPrimaryKeySql { get; protected set; }
         protected abstract string _GetByPrimaryKeySql();
@@ -46,6 +49,15 @@ namespace Kit.Sql.Base
 
             WithoutRowId = tableAttr != null ? tableAttr.WithoutRowId : false;
 
+            SyncDirection = GetSyncModeAttribute(typeInfo)?.Direction ?? SyncDirection.NoSync;
+            if (SyncDirection != SyncDirection.NoSync)
+            {
+                if (!type.GetInterfaces().Contains(typeof(ISync)))
+                {
+                    throw new Exception($"{type} - Must implement ISync");
+                }
+            }
+
             var props = new List<PropertyInfo>();
             var baseType = type;
             var propNames = new HashSet<string>();
@@ -68,6 +80,8 @@ namespace Kit.Sql.Base
                 props.AddRange(newProps);
                 baseType = ti.BaseType;
             }
+
+
 
             var cols = new List<Column>();
             foreach (var p in props)
@@ -95,15 +109,15 @@ namespace Kit.Sql.Base
 
             GetByPrimaryKeySql = _GetByPrimaryKeySql();
 
-            if (cols.FirstOrDefault(x => x.Name == "SyncGuid") is Column syncguidcol)
-            {
-                this.SyncGuid = syncguidcol;
-            }
-            else
-            {
-                this.SyncGuid = new GuidColumn();
-                cols.Add(this.SyncGuid);
-            }
+            //if (cols.FirstOrDefault(x => x.Name == "SyncGuid") is Column syncguidcol)
+            //{
+            //    this.SyncGuid = syncguidcol;
+            //}
+            //else
+            //{
+            //    this.SyncGuid = new GuidColumn();
+            //    cols.Add(this.SyncGuid);
+            //}
 
             Columns = cols.ToArray();
 
@@ -125,6 +139,18 @@ namespace Kit.Sql.Base
             return typeInfo.CustomAttributes
                 .Where(x => x.AttributeType == typeof(TableAttribute))
                 .Select(x => (TableAttribute)InflateAttribute(x))
+                .FirstOrDefault();
+        }
+
+        protected static SyncMode GetSyncModeAttribute(object obj)
+        {
+            return GetSyncModeAttribute(obj.GetType().GetTypeInfo());
+        }
+        protected static SyncMode GetSyncModeAttribute(TypeInfo typeInfo)
+        {
+            return typeInfo.CustomAttributes
+                .Where(x => x.AttributeType == typeof(SyncMode))
+                .Select(x => (SyncMode)InflateAttribute(x))
                 .FirstOrDefault();
         }
 
@@ -268,48 +294,6 @@ namespace Kit.Sql.Base
             public virtual object GetValue(object obj)
             {
                 return _prop.GetValue(obj, null);
-            }
-        }
-
-        public class GuidColumn : Column
-        {
-            private Guid SyncGuid;
-            public GuidColumn() : base()
-            {
-                Name = "SyncGuid";
-                //If this type is Nullable<T> then Nullable.GetUnderlyingType returns the T, otherwise it returns null, so get the actual type instead
-                ColumnType = typeof(Guid);
-                Collation = "";
-                IsPK = false;
-                IsAutoGuid = true;
-                IsNullable = false;
-                MaxStringLength = null;
-                StoreAsText = ColumnType.CustomAttributes.Any(x => x.AttributeType == typeof(StoreAsTextAttribute));
-                Indices = new IndexedAttribute[] { new IndexedAttribute(Name, -1) { Unique = true } };
-
-            }
-
-            public void SetValue()
-            {
-                SyncGuid = Guid.NewGuid();
-            }
-            public override void SetValue(object obj, object val)
-            {
-                if (val is Guid guid)
-                {
-                    SyncGuid = guid;
-                    return;
-                }
-                SetValue();
-            }
-
-            public Guid GetValue()
-            {
-                return SyncGuid;
-            }
-            public override object GetValue(object obj)
-            {
-                return GetValue();
             }
         }
     }

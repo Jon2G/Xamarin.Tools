@@ -1566,7 +1566,14 @@ WHERE
 
             foreach (var p in toBeAdded)
             {
-                var addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p);
+                string addCol;
+                if (p.ColumnType == typeof(Guid))
+                {
+                    addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p) + " DEFAULT NEWID()";
+                    Execute(addCol); 
+                    continue;
+                }
+                addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p)+ " DEFAULT NULL";
                 Execute(addCol);
             }
         }
@@ -2506,8 +2513,13 @@ WHERE
             {
                 return 0;
             }
+            
 
             var map = GetMapping(objType);
+            if (map.SyncDirection != SyncDirection.NoSync)
+            {
+
+            }
 
             if (map.PK != null && map.PK.IsAutoGuid)
             {
@@ -2522,10 +2534,10 @@ WHERE
             //    SyncGuid.SetValue(null, null);
             //}
 
-            if (map.SyncGuid is TableMapping.GuidColumn SyncGuid)
-            {
-                SyncGuid.SetValue(null, null);
-            }
+            //if (map.SyncGuid is TableMapping.GuidColumn SyncGuid)
+            //{
+            //    SyncGuid.SetValue(null, null);
+            //}
 
 
             var replacing = string.Compare(extra, "OR REPLACE", StringComparison.OrdinalIgnoreCase) == 0;
@@ -2541,10 +2553,10 @@ WHERE
             SqlParameter[] parameters = new SqlParameter[vals.Length];
             for (var i = 0; i < vals.Length; i++)
             {
-                if (cols[i] is TableMapping.GuidColumn)
-                {
-                    cols[i] = map.SyncGuid;
-                }
+                //if (cols[i] is TableMapping.GuidColumn)
+                //{
+                //    cols[i] = map.SyncGuid;
+                //}
                 vals[i] = cols[i].GetValue(obj);
                 parameters[i] = new SqlParameter(cols[i].Name, vals[i]);
             }
@@ -2702,7 +2714,7 @@ WHERE
 
 
             var cols = (from p in map.Columns
-                        where p != pk && !(p is TableMapping.GuidColumn)
+                        where p != pk
                         select p);
             var vals = (from c in cols
                         select c.GetValue(obj));
@@ -2746,9 +2758,9 @@ WHERE
 
             if (rowsAffected > 0)
             {
-                map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
-                    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
-                    new SqlParameter(map.PK.Name, map.PK.GetValue(obj))));
+                //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
+                //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
+                //    new SqlParameter(map.PK.Name, map.PK.GetValue(obj))));
                 OnTableChanged(map, NotifyTableChangedAction.Update);
             }
 
@@ -2809,11 +2821,14 @@ WHERE
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = @{1}", map.TableName, pk.Name);
 
-            Guid deleted = ExecuteScalar<Guid>(
-                $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
-                new SqlParameter(map.PK.Name, map.PK.GetValue(objectToDelete)));
-            if (deleted != Guid.Empty)
-                map.SyncGuid.SetValue(objectToDelete, deleted);
+            if (map.SyncDirection != SyncDirection.NoSync)
+            {
+                Guid deleted = ExecuteScalar<Guid>(
+                    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
+                    new SqlParameter(map.PK.Name, map.PK.GetValue(objectToDelete)));
+            }
+            //if (deleted != Guid.Empty)
+            //    map.SyncGuid.SetValue(objectToDelete, deleted);
 
             var count = Execute(q, new SqlParameter(map.PK.Name, map.PK.GetValue(objectToDelete)));
             if (count > 0)
@@ -2859,9 +2874,9 @@ WHERE
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = @{1}", map.TableName, pk.Name);
 
-            map.SyncGuid.SetValue(null, ExecuteScalar<Guid>(
-                $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
-                new SqlParameter(map.PK.Name, primaryKey)));
+            //map.SyncGuid.SetValue(null, ExecuteScalar<Guid>(
+            //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
+            //    new SqlParameter(map.PK.Name, primaryKey)));
 
             var count = Execute(q, new SqlParameter(map.PK.Name, primaryKey));
             if (count > 0)
@@ -3003,15 +3018,15 @@ WHERE
         }
         void OnTableChanged(TableMapping table, NotifyTableChangedAction action)
         {
-            if (table.TableName == nameof(ChangesHistory))
+            if (table.SyncDirection == SyncDirection.NoSync)
             {
                 return;
             }
 
-            UpdateVersionControl(new ChangesHistory(
-                table.TableName
-                , (Guid)table.SyncGuid.GetValue(null)
-                , action));
+            //UpdateVersionControl(new ChangesHistory(
+            //    table.TableName
+            //    , (Guid)table.SyncGuid.GetValue(null)
+            //    , action));
             var ev = TableChanged;
             if (ev != null)
                 ev(this, new NotifyTableChangedEventArgs(table, action));

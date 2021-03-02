@@ -6,6 +6,9 @@ namespace Kit.Sql.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class SyncMode : Attribute
     {
+
+
+
         public SyncDirection Direction { get; private set; }
 
         public SyncMode()
@@ -15,7 +18,7 @@ namespace Kit.Sql.Attributes
 
         public SyncMode(int Direction)
         {
-            this.Direction = (SyncDirection) Direction;
+            this.Direction = (SyncDirection)Direction;
         }
         public SyncMode(SyncDirection Direction)
         {
