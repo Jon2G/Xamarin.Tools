@@ -16,10 +16,9 @@ namespace Kit.Forms.Controls.CrossImage
             image.Native = ImageSource.FromFile(fileInfo.FullName);
             return image;
         }
-
-        public override async Task<Kit.Controls.CrossImage.CrossImage> FromStream(Func<Stream> stream)
+        
+        public override Kit.Controls.CrossImage.CrossImage FromStream(Func<Stream> stream)
         {
-            await Task.Yield();
             Kit.Forms.Controls.CrossImage.CrossImage image = new Kit.Forms.Controls.CrossImage.CrossImage();
             image.Native = ImageSource.FromStream(stream);
             return image;

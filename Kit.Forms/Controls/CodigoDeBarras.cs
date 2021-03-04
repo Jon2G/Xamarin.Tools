@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Input;
@@ -8,6 +9,7 @@ using Xamarin.Forms;
 using ZXing;
 using ZXing.Mobile;
 using ZXing.Net.Mobile.Forms;
+
 
 namespace Kit.Forms.Controls
 {
@@ -50,6 +52,7 @@ namespace Kit.Forms.Controls
         {
             MobileBarcodeScanningOptions options = new MobileBarcodeScanningOptions();
             options.PossibleFormats = this.BarcodeFormats;
+
             ZXingScannerPage page = new ZXingScannerPage(options) { Title = "Leector de codigos de barras" };
             ToolbarItem closeItem = new ToolbarItem { Text = "Cerrar" };
             closeItem.Clicked += (sender, e) =>

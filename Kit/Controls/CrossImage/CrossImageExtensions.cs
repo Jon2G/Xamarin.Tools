@@ -9,13 +9,13 @@ namespace Kit.Controls.CrossImage
 {
    public abstract class CrossImageExtensions
     {
-        public abstract Task<CrossImage> FromStream(Func<Stream> stream);
+        public abstract CrossImage FromStream(Func<Stream> stream);
 
         public abstract CrossImage FromFile(FileInfo fileInfo);
 
-        public async Task<CrossImage> ByteToImage(byte[] imagen)
+        public CrossImage ByteToImage(byte[] imagen)
         {
-            return await FromStream(() => new MemoryStream(imagen));
+            return FromStream(() => new MemoryStream(imagen));
         }
     }
 }

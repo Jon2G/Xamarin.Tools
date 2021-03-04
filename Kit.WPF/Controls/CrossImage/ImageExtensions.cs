@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace Kit.WPF.Controls.CrossImage
@@ -16,19 +18,22 @@ namespace Kit.WPF.Controls.CrossImage
             image.Native = new BitmapImage(new Uri(fileInfo.FullName));
             return image;
         }
-        public override async Task<Kit.Controls.CrossImage.CrossImage> FromStream(Func<Stream> stream)
+
+        public override Kit.Controls.CrossImage.CrossImage FromStream(Func<Stream> stream)
         {
-            await Task.Yield();
             Kit.WPF.Controls.CrossImage.CrossImage image = new Kit.WPF.Controls.CrossImage.CrossImage();
-            using (Stream memoryStream = stream.Invoke())
+            //System.Windows.Controls.Image wimage = new System.Windows.Controls.Image();
+            using (MemoryStream mstream = (MemoryStream)stream.Invoke())
             {
-                var imageSource = new BitmapImage();
-                imageSource.BeginInit();
-                imageSource.StreamSource = memoryStream;
-                imageSource.EndInit();
-                // Assign the Source property of your image
-                image.Native = imageSource;
+                image.Native = BitmapFrame.Create(mstream,
+                                                  BitmapCreateOptions.None,
+                                                  BitmapCacheOption.OnLoad);
+
+                //wimage.Source = (BitmapFrame)image.Native;
             }
+            //Window w = new Window();
+            //w.Content = wimage;
+            //w.ShowDialog();
             return image;
         }
     }

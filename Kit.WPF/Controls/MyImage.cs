@@ -54,15 +54,25 @@ namespace Kit.WPF.Controls
                 UpdateImage();
             }
         }
-        private ImageSource _currentImage;
 
-        public ImageSource CurrentImage
+        public static readonly DependencyProperty CurrentImageProperty =
+            DependencyProperty.Register(
+                "CurrentImage", typeof(Kit.Controls.CrossImage.CrossImage), typeof(MyImage),
+                new FrameworkPropertyMetadata(
+                    null,
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    (o, e) => ((MyImage)o).CurrentImage = (Kit.Controls.CrossImage.CrossImage)e.NewValue));
+
+
+        private Kit.Controls.CrossImage.CrossImage _CurrentImage;
+
+        public Kit.Controls.CrossImage.CrossImage CurrentImage
         {
-            get { return _currentImage; }
+            get { return _CurrentImage; }
             set
             {
-                if (Equals(value, _currentImage)) return;
-                _currentImage = value;
+                if (Equals(value, _CurrentImage)) return;
+                _CurrentImage = value;
                 ImagenCambio();
             }
         }
@@ -105,7 +115,10 @@ namespace Kit.WPF.Controls
                 {
                     try
                     {
-                        CurrentImage = new BitmapImage(new Uri(file));
+                        CurrentImage = new Kit.WPF.Controls.CrossImage.CrossImage()
+                        {
+                            Native = new BitmapImage(new Uri(file))
+                        };
                     }
                     catch (Exception ex)
                     {
@@ -119,7 +132,7 @@ namespace Kit.WPF.Controls
             // then generate quality preview
             //this.CurrentImage = await Generate(file, 1920);
         }
-        public static Task<BitmapImage> Generate(string file, int scale)
+        public static Task<CrossImage.CrossImage> Generate(string file, int scale)
         {
             return Task.Run(() =>
             {
@@ -129,6 +142,7 @@ namespace Kit.WPF.Controls
                     {
                         return null;
                     }
+                    Controls.CrossImage.CrossImage cross = new Controls.CrossImage.CrossImage();
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
                     //image.CacheOption = BitmapCacheOption.Default;
@@ -136,12 +150,16 @@ namespace Kit.WPF.Controls
                     image.DecodePixelWidth = scale;
                     image.EndInit();
                     image.Freeze(); // important
-                    return image;
+                    cross.Native = image;
+                    return cross;
                 }
                 catch (Exception ex)
                 {
-                    Log.Logger.Error(ex, "Al cargar una imagen de MyImage");
-                    return new BitmapImage();
+                    Log.Logger.Error(ex, "Al cargar una imagen de MyImage ruta: {0}", file);
+                    return new CrossImage.CrossImage()
+                    {
+                        Native = new BitmapImage()
+                    };
                 }
             });
         }
@@ -149,7 +167,12 @@ namespace Kit.WPF.Controls
         {
             try
             {
-                Source = CurrentImage;
+                if (CurrentImage?.Native is null)
+                {
+                    Source = null;
+                    return;
+                }
+                Source = (BitmapSource)CurrentImage?.Native;
             }
             catch (Exception ex)
             {
@@ -157,30 +180,7 @@ namespace Kit.WPF.Controls
             }
         }
         #endregion
-        #region XSource
-        //public static readonly DependencyProperty XSourceProperty =
-        //    DependencyProperty.Register(
-        //        nameof(XSource), typeof(Xamarin.Forms.ImageSource), typeof(MyImage),
-        //        new FrameworkPropertyMetadata(null,
-        //    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-        //    (o, e) => ((MyImage)o).XSource = (Xamarin.Forms.ImageSource)e.NewValue));
-        //private Xamarin.Forms.ImageSource _XSource;
-        //public Xamarin.Forms.ImageSource XSource
-        //{
-        //    get => _XSource;
-        //    set
-        //    {
-        //        _XSource = value;
-        //        UpdateXImage();
-        //    }
 
-        //}
-        //private async void UpdateXImage()
-        //{
-        //    await Task.Yield();
-        //    Source = Extensiones.ByteToImage(XSource.ImageToByte());
-        //}
-        #endregion
         public MyImage() : base()
         {
 
@@ -188,7 +188,7 @@ namespace Kit.WPF.Controls
 
         ~MyImage()
         {
-            _currentImage = null;
+            _CurrentImage = null;
         }
     }
 }

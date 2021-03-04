@@ -13,6 +13,7 @@ using Kit.Droid.Services;
 using Kit.Services.Interfaces;
 using Serilog;
 using Android.Telephony;
+using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
 using DeviceInfo = Kit.Droid.Services.DeviceInfo;
 
@@ -31,7 +32,10 @@ namespace Kit.Droid
         }
         public override void Init()
         {
-            Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(),new ScreenManagerService(),new Kit.Forms.Controls.CrossImage.ImageExtensions());
+            Init(new DeviceInfo(), new CustomMessageBoxService(),
+                new SynchronizeInvoke(),new ScreenManagerService(),
+                new ImageExtensions(),new BarCodeBuilder());
+
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()
