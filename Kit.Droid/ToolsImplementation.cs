@@ -31,7 +31,7 @@ namespace Kit.Droid
         }
         public override void Init()
         {
-            Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(),new ScreenManagerService());
+            Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(),new ScreenManagerService(),new Kit.Forms.Controls.CrossImage.ImageExtensions());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()
