@@ -115,7 +115,9 @@
     <PackageReference Include="Xamarin.Plugin.FilePicker">
       <Version>2.1.41</Version>
     </PackageReference>
-    <PackageReference Include="ZXing.Net" Version="0.16.6" />
+    <PackageReference Include="ZXing.Net" Version="0.16.6">
+      <Aliases></Aliases>
+    </PackageReference>
     <PackageReference Include="ZXing.Net.Bindings.Android" Version="0.16.6" />
   </ItemGroup>
   <ItemGroup>

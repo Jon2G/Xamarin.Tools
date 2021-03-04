@@ -6,6 +6,7 @@ using ZXing;
 using ZXing.Android;
 using ZXing.Android.Rendering;
 using ZXing.Common;
+
 namespace Kit.Droid.Services
 {
     public class BarCodeBuilder :IBarCodeBuilder
@@ -40,5 +41,6 @@ namespace Kit.Droid.Services
             }
 
         }
+
     }
 }
