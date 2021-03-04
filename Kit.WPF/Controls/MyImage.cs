@@ -55,13 +55,13 @@ namespace Kit.WPF.Controls
             }
         }
 
-        public static readonly DependencyProperty ImageProperty =
+        public static readonly DependencyProperty CurrentImageProperty =
             DependencyProperty.Register(
-                "ImageProperty", typeof(CrossImage.CrossImage), typeof(MyImage),
+                "CurrentImage", typeof(Kit.Controls.CrossImage.CrossImage), typeof(MyImage),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    (o, e) => ((MyImage)o).CurrentImage = (CrossImage.CrossImage)e.NewValue));
+                    (o, e) => ((MyImage)o).CurrentImage = (Kit.Controls.CrossImage.CrossImage)e.NewValue));
 
 
         private Kit.Controls.CrossImage.CrossImage _CurrentImage;

@@ -1,4 +1,3 @@
-using Xamarin.Forms;
 
 namespace Kit.Sql.Base
 {

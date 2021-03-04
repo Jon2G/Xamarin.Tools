@@ -25,7 +25,8 @@ namespace Kit.WPF
                 new Kit.WPF.Services.DeviceInfo(), 
                 new CustomMessageBoxService(), 
                 new SynchronizeInvoke(), new ScreenManagerService(),
-                new Kit.WPF.Controls.CrossImage.ImageExtensions());
+                new Kit.WPF.Controls.CrossImage.ImageExtensions(),
+                new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()

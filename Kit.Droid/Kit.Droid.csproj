@@ -115,12 +115,8 @@
     <PackageReference Include="Xamarin.Plugin.FilePicker">
       <Version>2.1.41</Version>
     </PackageReference>
-    <PackageReference Include="ZXing.Net.Mobile">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="ZXing.Net.Mobile.Forms">
-      <Version>2.4.1</Version>
-    </PackageReference>
+    <PackageReference Include="ZXing.Net" Version="0.16.6" />
+    <PackageReference Include="ZXing.Net.Bindings.Android" Version="0.16.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kit.Forms\Kit.Forms.csproj">

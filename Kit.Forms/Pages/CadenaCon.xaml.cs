@@ -20,7 +20,6 @@ using Kit.Services.Interfaces;
 using Kit.Sql.Helpers;
 using SQLServer;
 using Xamarin.Essentials;
-using ZXing.Net.Mobile.Forms;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 
 namespace Kit.Forms.Pages

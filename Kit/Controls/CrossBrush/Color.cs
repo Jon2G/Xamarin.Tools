@@ -10,6 +10,8 @@ namespace Kit.Controls.CrossBrush
         public abstract double G { get; set; }
         public abstract double B { get; set; }
         public abstract double A { get; set; }
+        public static string Transparent => "#00FFFFFF";
+
 
         public Color() { }
         public Color(double R, double G, double B, double A)
@@ -29,7 +31,7 @@ namespace Kit.Controls.CrossBrush
         }
         public string ToHex()
         {
-            return $"#{(int) R:X2}{(int) G:X2}{(int) B:X2}";
+            return $"#{(int)R:X2}{(int)G:X2}{(int)B:X2}";
         }
     }
 }

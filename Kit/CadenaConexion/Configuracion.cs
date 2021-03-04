@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using SQLServer;
-using ZXing.Net.Mobile.Forms;
 using Kit.Sql.Sqlite;
 
 namespace Kit.CadenaConexion
