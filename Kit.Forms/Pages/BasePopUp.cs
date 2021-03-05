@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -13,7 +14,11 @@ namespace Kit.Forms.Controls.Pages
 {
     public class BasePopUp : PopupPage
     {
+        public ICommand ConfirmedCommand;
+        [Obsolete("Use ConfirmedCommand")]
         public event EventHandler Confirmado;
+        public ICommand ClosedCommad;
+        [Obsolete("Use ClosedCommad")]
         public event EventHandler OnClosed;
         protected void InvokeConfirmado(object sender, EventArgs e)
         {
@@ -35,11 +40,20 @@ namespace Kit.Forms.Controls.Pages
             await PopupNavigation.Instance.PushAsync(this, true);
             return this;
         }
+        public virtual async void Confirm(object obj = null, bool close = true)
+        {
+            ConfirmedCommand?.Execute(obj ?? this);
+            if (close)
+            {
+                await Close();
+            }
+        }
         public virtual async Task<BasePopUp> Close()
         {
             Closing();
             await PopupNavigation.Instance.RemovePageAsync(this, true);
             OnClosed?.Invoke(this, EventArgs.Empty);
+            ClosedCommad?.Execute(this);
             return this;
         }
         protected virtual void Closing() { }

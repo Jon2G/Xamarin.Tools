@@ -8,19 +8,23 @@ using Kit.iOS.Services;
 using UIKit;
 using Xamarin.Forms;
 using ZXing.Mobile;
-[assembly: Dependency(typeof(QRCode))]
+using ZXing;
+using ZXing.Common;
+
+[assembly: Dependency(typeof(Kit.iOS.Services.BarCodeBuilder))]
 namespace Kit.iOS.Services
 {
-    public class QRCode : IQRCode
+    public class BarCodeBuilder : IBarCodeBuilder
     {
-        public MemoryStream Generate(string Value, int Width = 350, int Height = 350, int Margin = 10)
+
+        public MemoryStream Generate(BarcodeFormat Formato, string Value, int Width = 350, int Height = 350, int Margin = 10, EncodingOptions Options = null)
         {
             try
             {
                 BarcodeWriter barcodeWriter = new ZXing.Mobile.BarcodeWriter
                 {
-                    Format = ZXing.BarcodeFormat.QR_CODE,
-                    Options = new ZXing.Common.EncodingOptions
+                    Format = Formato,
+                    Options = Options ?? new EncodingOptions
                     {
                         Width = Width,
                         Height = Height,
@@ -38,7 +42,6 @@ namespace Kit.iOS.Services
                 Log.Logger.Error(ex, "Al generar un código QR");
                 return null;
             }
-
         }
     }
 }
