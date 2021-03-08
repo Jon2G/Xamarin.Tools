@@ -24,6 +24,7 @@ using Kit.Services.Interfaces;
 using Kit.Services;
 using Kit.Enums;
 
+[assembly: Dependency(typeof(Kit.Droid.Services.HtmlToPDF.PrintHTML))]
 namespace Kit.Droid.Services.HtmlToPDF
 {
     public class PrintHTML : IPrintHTML

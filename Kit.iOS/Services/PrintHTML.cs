@@ -15,6 +15,7 @@ using Xamarin.Forms.Platform.iOS;
 using Kit.iOS.Services.HtmlToPDF;
 using Kit.Enums;
 
+[assembly: Dependency(typeof(Kit.iOS.Services.PrintHTML))]
 namespace Kit.iOS.Services
 {
     public class PrintHTML : IPrintHTML

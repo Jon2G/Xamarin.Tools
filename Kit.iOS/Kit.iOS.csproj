@@ -55,7 +55,7 @@
     <Compile Include="Services\PDFSaveAndOpen.cs" />
     <Compile Include="Services\PhotoPickerService.cs" />
     <Compile Include="Services\PrintHTML.cs" />
-    <Compile Include="Services\QRCode.cs" />
+    <Compile Include="Services\IBarCodeBuilder.cs" />
     <Compile Include="Services\ScreenManagerService.cs" />
     <Compile Include="Services\Screenshot.cs" />
     <Compile Include="Services\UIDocumentInteractionControllerDelegateClass.cs" />
@@ -74,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.1.0.475</Version>
+      <Version>7.1.0.480</Version>
     </PackageReference>
     <PackageReference Include="DeviceId">
       <Version>5.2.0</Version>
@@ -102,14 +102,8 @@
       <Version>5.0.0.2012</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Plugin.FilePicker">
-      <Version>2.1.41</Version>
-    </PackageReference>
-    <PackageReference Include="ZXing.Net.Mobile">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="ZXing.Net.Mobile.Forms">
-      <Version>2.4.1</Version>
+    <PackageReference Include="ZXing.Net">
+      <Version>0.16.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

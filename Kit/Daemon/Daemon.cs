@@ -449,7 +449,7 @@ namespace Kit.Daemon
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { Log.Logger.Verbose(ex, "Daemon attemping to connect to sqlserver."); }
             return false;
         }
 
