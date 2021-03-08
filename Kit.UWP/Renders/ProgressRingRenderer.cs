@@ -1,17 +1,11 @@
-﻿
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Kit.UWP.Renders;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using ProgressRingControl.Forms.Plugin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Tools.UWP.Renders;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
 [assembly: ExportRenderer(typeof(ProgressRing), typeof(ProgressRingRenderer))]
-namespace Kit.UWP.Renders
+namespace Tools.UWP.Renders
 {
     public class ProgressRingRenderer : ViewRenderer<ProgressRing, RadialProgressBar>
     {

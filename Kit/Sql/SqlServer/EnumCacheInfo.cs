@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Kit.Sql.Attributes;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     class EnumCacheInfo
     {

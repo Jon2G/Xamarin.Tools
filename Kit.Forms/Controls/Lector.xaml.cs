@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kit.Extensions;
 using Kit.Forms.Controls;
+using Kit.Forms.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing;

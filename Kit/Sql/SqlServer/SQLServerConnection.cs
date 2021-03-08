@@ -4,27 +4,22 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.IO.Pipes;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Kit;
-using Kit.Sql;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
 using Kit.Sql.Helpers;
-using Kit.Sql.Interfaces;
 using Kit.Sql.Readers;
-using Kit.Sql.SqlServer;
-using Kit.Sql.Sync;
+using Kit.Sql.Sqlite;
+using Kit.Sql.Tables;
 using static Kit.Sql.Base.BaseTableQuery;
-using TableMapping = Kit.Sql.Base.TableMapping;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     /// <summary>
     /// An open connection to a SQLite database.
@@ -34,7 +29,7 @@ namespace SQLServer
     {
         public override string MappingSuffix => "_sqlserver";
 
-        protected override TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
+        protected override Base.TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
         {
             return new Kit.Sql.SqlServer.TableMapping(type, createFlags);
         }
@@ -325,7 +320,7 @@ namespace SQLServer
                 {
                     Log.Logger.Error(ex, "Transaccion fallida reportada");
                     ReportaTransaccion(cmd);
-                    if (Sqlh.Instance.Debugging)
+                    if (Tools.Debugging)
                     {
                         throw;
                     }
@@ -506,7 +501,7 @@ namespace SQLServer
             {
                 Log.Logger.Error("Transaccion fallida reportada");
                 Log.Logger.Error(sql);
-                if (!Log.AlertOnDBConnectionError(ex) && Sqlh.Instance.Debugging)
+                if (!Log.AlertOnDBConnectionError(ex) && Tools.Debugging)
                 {
                     throw ex;
                 }
@@ -554,7 +549,7 @@ namespace SQLServer
             }
             catch (Exception ex)
             {
-                if (Sqlh.Instance.Debugging)
+                if (Tools.Debugging)
                 {
                     throw ex;
                 }
@@ -1182,7 +1177,7 @@ namespace SQLServer
         /// <param name="map">
         /// The TableMapping used to identify the table.
         /// </param>
-        public int DropTable(TableMapping map)
+        public int DropTable(Base.TableMapping map)
         {
             var query = string.Format("drop table if exists \"{0}\"", map.TableName);
             return Execute(query);
@@ -1272,7 +1267,7 @@ namespace SQLServer
         /// <returns>
         /// Whether the table was created or migrated.
         /// </returns>
-        public override CreateTableResult CreateTable(TableMapping map, CreateFlags createFlags = CreateFlags.None)
+        public override CreateTableResult CreateTable(Base.TableMapping map, CreateFlags createFlags = CreateFlags.None)
         {
 
             // Present a nice error if no columns specified
@@ -1545,9 +1540,9 @@ WHERE
             return Query<ColumnInfo>(query, new SqlParameter("tablename", tableName));
         }
 
-        void MigrateTable(TableMapping map, List<ColumnInfo> existingCols)
+        void MigrateTable(Base.TableMapping map, List<ColumnInfo> existingCols)
         {
-            var toBeAdded = new List<TableMapping.Column>();
+            var toBeAdded = new List<Base.TableMapping.Column>();
 
             foreach (var p in map.Columns)
             {
@@ -1570,10 +1565,10 @@ WHERE
                 if (p.ColumnType == typeof(Guid))
                 {
                     addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p) + " DEFAULT NEWID()";
-                    Execute(addCol); 
+                    Execute(addCol);
                     continue;
                 }
-                addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p)+ " DEFAULT NULL";
+                addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p) + " DEFAULT NULL";
                 Execute(addCol);
             }
         }
@@ -1812,7 +1807,7 @@ WHERE
         /// normally not used.
         /// </summary>
         /// <param name="map">
-        /// A <see cref="TableMapping"/> to use to convert the resulting rows
+        /// A <see cref="Base.TableMapping"/> to use to convert the resulting rows
         /// into objects.
         /// </param>
         /// <param name="query">
@@ -1824,7 +1819,7 @@ WHERE
         /// <returns>
         /// An enumerable with one result for each row returned by the query.
         /// </returns>
-        public List<object> Query(TableMapping map, string query, params SqlParameter[] args)
+        public List<object> Query(Base.TableMapping map, string query, params SqlParameter[] args)
         {
             var cmd = CreateCommand(query, args);
             return cmd.ExecuteQuery<object>(map);
@@ -1839,7 +1834,7 @@ WHERE
         /// normally not used.
         /// </summary>
         /// <param name="map">
-        /// A <see cref="TableMapping"/> to use to convert the resulting rows
+        /// A <see cref="Base.TableMapping"/> to use to convert the resulting rows
         /// into objects.
         /// </param>
         /// <param name="query">
@@ -1854,7 +1849,7 @@ WHERE
         /// will call sqlite3_step on each call to MoveNext, so the database
         /// connection must remain open for the lifetime of the enumerator.
         /// </returns>
-        public IEnumerable<object> DeferredQuery(TableMapping map, string query, params SqlParameter[] args)
+        public IEnumerable<object> DeferredQuery(Base.TableMapping map, string query, params SqlParameter[] args)
         {
             var cmd = CreateCommand(query, args);
             return cmd.ExecuteDeferredQuery<object>(map);
@@ -1905,7 +1900,7 @@ WHERE
         /// The object with the given primary key. Throws a not found exception
         /// if the object is not found.
         /// </returns>
-        public object Get(object pk, TableMapping map)
+        public object Get(object pk, Base.TableMapping map)
         {
             return Query(map, map.GetByPrimaryKeySql, new SqlParameter(map.PK.Name, pk)).First();
         }
@@ -1959,7 +1954,7 @@ WHERE
         /// The object with the given primary key or null
         /// if the object is not found.
         /// </returns>
-        public object Find(object pk, TableMapping map)
+        public object Find(object pk, Base.TableMapping map)
         {
             return Query(map, map.GetByPrimaryKeySql,
                 new SqlParameter(map.PK.Name, pk)).FirstOrDefault();
@@ -2017,7 +2012,7 @@ WHERE
         /// The object that matches the given predicate or null
         /// if the object is not found.
         /// </returns>
-        public object FindWithQuery(TableMapping map, string query, params SqlParameter[] args)
+        public object FindWithQuery(Base.TableMapping map, string query, params SqlParameter[] args)
         {
             return Query(map, query, args).FirstOrDefault();
         }
@@ -2513,7 +2508,7 @@ WHERE
             {
                 return 0;
             }
-            
+
 
             var map = GetMapping(objType);
             if (map.SyncDirection != SyncDirection.NoSync)
@@ -2601,7 +2596,7 @@ WHERE
 
         readonly Dictionary<Tuple<string, string>, PreparedSqlServerInsertCommand> _insertCommandMap = new Dictionary<Tuple<string, string>, PreparedSqlServerInsertCommand>();
 
-        PreparedSqlServerInsertCommand GetInsertCommand(TableMapping map, string extra)
+        PreparedSqlServerInsertCommand GetInsertCommand(Base.TableMapping map, string extra)
         {
             PreparedSqlServerInsertCommand prepCmd;
 
@@ -2631,7 +2626,7 @@ WHERE
             return prepCmd;
         }
 
-        PreparedSqlServerInsertCommand CreateInsertCommand(TableMapping map, string extra)
+        PreparedSqlServerInsertCommand CreateInsertCommand(Base.TableMapping map, string extra)
         {
             var cols = map.InsertColumns;
             string insertSql;
@@ -2672,7 +2667,7 @@ WHERE
         /// <returns>
         /// The number of rows updated.
         /// </returns>
-        public int Update(object obj)
+        public override int Update(object obj)
         {
             if (obj == null)
             {
@@ -2695,7 +2690,7 @@ WHERE
         /// <returns>
         /// The number of rows updated.
         /// </returns>
-        public int Update(object obj, Type objType)
+        public override int Update(object obj, Type objType, bool shouldnotify= true)
         {
             int rowsAffected = 0;
             if (obj == null || objType == null)
@@ -2756,7 +2751,7 @@ WHERE
                 throw ex;
             }
 
-            if (rowsAffected > 0)
+            if (shouldnotify && rowsAffected > 0)
             {
                 //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
                 //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
@@ -2865,7 +2860,7 @@ WHERE
         /// <returns>
         /// The number of objects deleted.
         /// </returns>
-        public int Delete(object primaryKey, TableMapping map)
+        public int Delete(object primaryKey, Base.TableMapping map)
         {
             var pk = map.PK;
             if (pk == null)
@@ -2912,7 +2907,7 @@ WHERE
         /// <returns>
         /// The number of objects deleted.
         /// </returns>
-        public int DeleteAll(TableMapping map)
+        public int DeleteAll(Base.TableMapping map)
         {
             var query = string.Format("delete from \"{0}\"", map.TableName);
             OnTableDeleteAll(map);
@@ -3010,13 +3005,13 @@ WHERE
         }
         public event EventHandler<NotifyTableChangedEventArgs> TableChanged;
 
-        void OnTableDeleteAll(TableMapping table)
+        void OnTableDeleteAll(Base.TableMapping table)
         {
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
             QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
                 .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
         }
-        void OnTableChanged(TableMapping table, NotifyTableChangedAction action)
+        void OnTableChanged(Base.TableMapping table, NotifyTableChangedAction action)
         {
             if (table.SyncDirection == SyncDirection.NoSync)
             {

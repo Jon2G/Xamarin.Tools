@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using Xamarin.Forms;
 
-namespace Kit.Forms.Controls.Pages.PinView
+namespace Kit.Forms.Pages.PinView
 {
     class LengthToListConverter : IValueConverter
     {

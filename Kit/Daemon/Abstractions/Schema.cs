@@ -6,10 +6,10 @@ using System.Reflection;
 using System.Text;
 using Kit.Daemon.Enums;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
 using Kit.Sql.Enums;
-using SQLServer;
+using Kit.Sql.SqlServer;
 using static Kit.Sql.Base.BaseOrm;
+using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace Kit.Daemon.Abstractions
 {

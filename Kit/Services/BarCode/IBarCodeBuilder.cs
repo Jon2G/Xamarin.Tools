@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using ZXing.Common;
 
-namespace Kit.Services.Interfaces
+namespace Kit.Services.BarCode
 {
     public interface IBarCodeBuilder
     {

@@ -1,31 +1,25 @@
-﻿using Kit.Sql;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using Kit.Services;
+﻿using System.Diagnostics;
+using Kit;
 using Kit.Enums;
-using Xamarin.Forms;
+using Kit.Forms.Controls.CrossImage;
+using Kit.Forms.Services;
 using Kit.Services.Interfaces;
+using Tools.UWP.Services;
+using CustomMessageBoxService = Tools.UWP.Services.CustomMessageBoxService;
 
-namespace Kit.UWP
+namespace Tools.UWP
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override ITools Init(IDeviceInfo DeviceInfo, bool AlertAfterCritical = false)
+        public override void Init()
         {
-            this.CustomMessageBox = new Services.CustomMessageBoxService();
-            base.Init(DeviceInfo, AlertAfterCritical);
-            return this; 
+            base.Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(),
+                new ScreenManagerService(), new ImageExtensions(), null);
+         
         }
 
-        //public override void CriticalAlert(object sender, EventArgs e)
-        //{
-        //    CustomMessageBox.Current
-        //        .ShowOK(sender.ToString(), "Alerta", "Entiendo", CustomMessageBoxImage.Error);
-        //}
+        public override RuntimePlatform RuntimePlatform { get=>RuntimePlatform.UWP; }
+
         #region UWP Especific
         public static ToolsImplementation UWPInstance
         {

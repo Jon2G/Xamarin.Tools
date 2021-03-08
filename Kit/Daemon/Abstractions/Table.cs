@@ -10,8 +10,8 @@ using Kit.Sql.Base;
 using static Kit.Daemon.Helpers.Helper;
 using Kit.Sql.Helpers;
 using Kit.Sql.Interfaces;
-using Kit.Sql.Sync;
-using SQLServer;
+using Kit.Sql.SqlServer;
+using Kit.Sql.Tables;
 
 namespace Kit.Daemon.Abstractions
 {

@@ -95,6 +95,10 @@ namespace Kit.Sql.Base
             cmdText += " where " + w.CommandText;
 
             object[] conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+            if (this.Connection is Kit.Sql.Partitioned.SQLiteConnection partitioned)
+            {
+                partitioned.ToPartitionedDb(Table.TableName);
+            }
             var command = Connection.CreateCommand(cmdText, conditions_array);
 
             int result = command.ExecuteNonQuery();

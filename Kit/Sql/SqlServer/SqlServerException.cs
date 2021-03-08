@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
 
 #if WINDOWS_PHONE && !USE_WP8_NATIVE_SQLITE
 #define USE_CSHARP_SQLITE
 #endif
 
-    using System;
 #if !USE_SQLITEPCL_RAW
 	using System.Runtime.InteropServices;
 #endif
-    using System.Linq.Expressions;
+
 #if USE_CSHARP_SQLITE
 using Sqlite3 = Community.CsharpSqlite.Sqlite3;
 using Sqlite3DatabaseHandle = Community.CsharpSqlite.Sqlite3.sqlite3;

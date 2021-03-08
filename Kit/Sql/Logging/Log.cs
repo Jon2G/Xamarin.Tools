@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Kit.Sql.Helpers;
-
-namespace Kit.Sql
+﻿namespace Kit.Sql.Logging
 {
 //    public static class Log
 //    {

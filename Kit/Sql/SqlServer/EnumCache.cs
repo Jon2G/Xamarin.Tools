@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     static class EnumCache
     {

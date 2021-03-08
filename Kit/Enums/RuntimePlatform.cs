@@ -6,6 +6,6 @@ namespace Kit.Enums
 {
     public enum RuntimePlatform
     {
-        WPF, Android,iOS
+        WPF, Android,iOS, UWP
     }
 }

@@ -1,16 +1,12 @@
-﻿using Rg.Plugins.Popup.Animations;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Xamarin.Essentials;
-using Xamarin.Forms;
 
-namespace Kit.Forms.Controls.Pages
+namespace Kit.Forms.Pages
 {
     public class BasePopUp : PopupPage
     {

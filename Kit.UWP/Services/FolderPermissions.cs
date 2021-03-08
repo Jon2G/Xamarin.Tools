@@ -1,12 +1,11 @@
-﻿using Kit.Sql;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using Kit.Services.Interfaces;
 using Windows.Storage;
-namespace Kit.UWP.Services
+using Kit;
+using Kit.Services.Interfaces;
+
+namespace Tools.UWP.Services
 {
     public class FolderPermissions : IFolderPermissions
     {

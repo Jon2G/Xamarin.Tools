@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
-using Kit.Sql.Tables;
 
-
-namespace Kit.Sql.Sync
+namespace Kit.Sql.Tables
 {
     /// <summary>
     /// A table that keeps track of every change made on sqlite databate

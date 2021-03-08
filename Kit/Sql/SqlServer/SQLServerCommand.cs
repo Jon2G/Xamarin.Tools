@@ -4,11 +4,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Kit;
 using Kit.Sql.Base;
 using SQLitePCL;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     public partial class SQLServerCommand : CommandBase
     {
@@ -68,7 +67,7 @@ namespace SQLServer
             return ExecuteDeferredQuery<T>(_conn.GetMapping(typeof(T))).ToList();
         }
 
-        public override List<T> ExecuteQuery<T>(TableMapping map)
+        public override List<T> ExecuteQuery<T>(Base.TableMapping map)
         {
             return ExecuteDeferredQuery<T>(map).ToList();
         }
@@ -88,7 +87,7 @@ namespace SQLServer
             // Can be overridden.
         }
 
-        public override IEnumerable<T> ExecuteDeferredQuery<T>(TableMapping map)
+        public override IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map)
         {
             if (_conn.Trace)
             {
@@ -112,7 +111,7 @@ namespace SQLServer
                     {
                         if (reader.Read())
                         {
-                            var cols = new TableMapping.Column[reader.FieldCount];
+                            var cols = new Base.TableMapping.Column[reader.FieldCount];
                             var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
                             for (int i = 0; i < cols.Length; i++)
                             {

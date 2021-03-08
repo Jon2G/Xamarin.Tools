@@ -21,7 +21,6 @@ using Kit.Sql.Helpers;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Readers;
 using Kit.Sql.Reflection;
-using Kit.Sql.Sync;
 using Kit.Sql.Tables;
 using SQLitePCL;
 using static Kit.Extensions.StringBuilderExtensions;
@@ -39,6 +38,12 @@ namespace Kit.Sql.Sqlite
         private string ScriptResourceName;
 
         public readonly int DBVersion;
+        /// <summary>
+        /// Gets the database path used by this connection.
+        /// </summary>
+        public string DatabasePath { get; protected set; }
+
+        protected new SQLiteConnectionString ConnectionString;
 
         public SQLiteConnection SetDbScriptResource<T>(string ScriptResourceName)
         {
@@ -49,9 +54,9 @@ namespace Kit.Sql.Sqlite
         public SQLiteConnection(FileInfo file, int DBVersion)
         : this(new SQLiteConnectionString(file.FullName), DBVersion)
         {
-            if (Sqlh.Instance is null)
+            if (Tools.Instance is null)
             {
-                throw new Exception("Please call SQLHelper.Initi(LibraryPath,Debugging); before using it");
+                throw new Exception("Please call Tools.Init(); before using it");
             }
             file.Refresh();
             DatabasePath = file.FullName;
@@ -74,6 +79,8 @@ namespace Kit.Sql.Sqlite
             if ((Version?.Version ?? 0) != DBVersion)
             {
                 this.Close();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
                 File.Delete(DatabasePath);
                 RenewConnection();
                 CreateSchema();
@@ -439,12 +446,7 @@ namespace Kit.Sql.Sqlite
         static readonly sqlite3 NullHandle = default(sqlite3);
         static readonly sqlite3_backup NullBackupHandle = default(sqlite3_backup);
 
-        /// <summary>
-        /// Gets the database path used by this connection.
-        /// </summary>
-        public string DatabasePath { get; private set; }
 
-        private readonly SQLiteConnectionString ConnectionString;
 
         /// <summary>
         /// Gets the SQLite library version number. 3007014 would be v3.7.14
@@ -567,11 +569,10 @@ namespace Kit.Sql.Sqlite
             #region SqliteHelperInit
             DatabasePath = connectionString.DatabasePath;
             this.DBVersion = DBVersion;
-            Sqlh.Init(Kit.Tools.Instance.LibraryPath, Debugger.IsAttached);
 
-            if (Sqlh.Instance is null)
+            if (Tools.Instance is null)
             {
-                throw new Exception("Please call SQLHelper.Init before using it");
+                throw new Exception("Please call Tools.Init before using it");
             }
             #endregion
 
@@ -2037,6 +2038,10 @@ namespace Kit.Sql.Sqlite
             }
 
             var map = GetMapping(objType);
+            if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
+            {
+                partitioned.ToPartitionedDb(map.TableName);
+            }
 
             if (map.PK != null && map.PK.IsAutoGuid)
             {
@@ -2165,7 +2170,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows updated.
         /// </returns>
-        public int Update(object obj)
+        public override int Update(object obj)
         {
             if (obj == null)
             {
@@ -2188,7 +2193,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows updated.
         /// </returns>
-        public int Update(object obj, Type objType)
+        public override int Update(object obj, Type objType, bool shouldnotify = true)
         {
             int rowsAffected = 0;
             if (obj == null || objType == null)
@@ -2226,6 +2231,10 @@ namespace Kit.Sql.Sqlite
 
             try
             {
+                if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
+                {
+                    partitioned.ToPartitionedDb(map.TableName);
+                }
                 rowsAffected = Execute(q, ps.ToArray());
             }
             catch (SQLiteException ex)
@@ -2239,7 +2248,7 @@ namespace Kit.Sql.Sqlite
                 throw ex;
             }
 
-            if (rowsAffected > 0)
+            if (shouldnotify && rowsAffected > 0)
             {
                 //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
                 //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));

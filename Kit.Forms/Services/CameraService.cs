@@ -1,9 +1,7 @@
-﻿using Kit.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Kit.Forms.Services.Interfaces;
 
-namespace Kit.Services
+namespace Kit.Forms.Services
 {
     public class CameraService
     {

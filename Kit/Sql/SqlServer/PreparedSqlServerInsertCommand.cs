@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-using Kit;
 using SQLitePCL;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     /// <summary>
     /// Since the insert never changed, we only need to prepare once.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.Forms.Controls.Pages.PinView
+﻿namespace Kit.Forms.Pages.PinView
 {
     public class PinSubmitEventArg
     {

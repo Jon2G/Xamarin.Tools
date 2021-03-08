@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Kit.Sql.Helpers;
+using Kit.Sql.Readers;
 using Kit.Sql.SQLiteNetExtensions;
 
 namespace Kit.Sql.Sqlite

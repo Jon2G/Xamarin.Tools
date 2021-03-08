@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using Kit.Sql.Base;
 using Kit.Sql.Sqlite;
-using SQLServer;
+using Kit.Sql.SqlServer;
 
 namespace Kit.Daemon
 {

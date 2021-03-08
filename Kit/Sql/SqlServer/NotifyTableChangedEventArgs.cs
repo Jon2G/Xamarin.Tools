@@ -1,15 +1,14 @@
 ﻿using System;
-using Kit.Sql.Base;
 using Kit.Sql.Enums;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     public class NotifyTableChangedEventArgs : EventArgs
     {
-        public TableMapping Table { get; private set; }
+        public Base.TableMapping Table { get; private set; }
         public NotifyTableChangedAction Action { get; private set; }
 
-        public NotifyTableChangedEventArgs(TableMapping table, NotifyTableChangedAction action)
+        public NotifyTableChangedEventArgs(Base.TableMapping table, NotifyTableChangedAction action)
         {
             Table = table;
             Action = action;

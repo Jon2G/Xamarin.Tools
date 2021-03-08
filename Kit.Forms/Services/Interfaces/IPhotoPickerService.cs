@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Kit.Services.Interfaces
+namespace Kit.Forms.Services.Interfaces
 {
     public interface IPhotoPickerService
     {

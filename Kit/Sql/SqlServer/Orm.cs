@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     public static class Orm
     {
@@ -24,7 +23,7 @@ namespace SQLServer
             return obj.GetType();
         }
 
-        public static string SqlDecl(TableMapping.Column p)
+        public static string SqlDecl(Base.TableMapping.Column p)
         {
             string decl = "\"" + p.Name + "\" " + SqlType(p) + " ";
 
@@ -95,7 +94,7 @@ namespace SQLServer
             return decl;
         }
 
-        public static string SqlType(TableMapping.Column p)
+        public static string SqlType(Base.TableMapping.Column p)
         {
             var clrType = p.ColumnType;
             if (clrType == typeof(Boolean) || clrType == typeof(Byte) || clrType == typeof(UInt16) || clrType == typeof(SByte) || clrType == typeof(Int16) || clrType == typeof(Int32) || clrType == typeof(UInt32) || clrType == typeof(Int64))

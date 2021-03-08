@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Kit.Sql.Attributes;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-
-namespace Kit.Forms.Controls.Views
+namespace Kit.Forms.Views
 {
     [Preserve(AllMembers = true)]
     [XamlCompilation(XamlCompilationOptions.Compile)]

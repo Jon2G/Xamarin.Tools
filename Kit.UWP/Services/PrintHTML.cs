@@ -1,17 +1,10 @@
-﻿
-
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using Kit;
 using Kit.Services.Interfaces;
-using Windows.UI.Xaml.Printing;
-using Kit.Sql.Helpers;
-using Kit.Sql;
 
-namespace Kit.UWP.Services
+namespace Tools.UWP.Services
 {
     public class PrintHTML : IPrintHTML
     {

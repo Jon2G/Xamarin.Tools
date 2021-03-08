@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Kit.Daemon.Sync;
-using Kit.Daemon.VersionControl;
-using Kit.Sql.Base;
 using Kit.Sql.Enums;
-using SQLServer;
+using Kit.Sql.SqlServer;
+using Kit.Sql.Tables;
+using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace Kit.Daemon.Abstractions
 {
@@ -74,8 +76,18 @@ END", System.Data.CommandType.Text);
 
                     var last = Table.Columns.LastOrDefault();
                     if (last != null)
-                        Connection.EXEC($"UPDATE {Table.TableName} SET SyncGuid=ISNULL(SyncGuid,NEWID())");
-
+                        using (var con = Connection.Con())
+                        {
+                            using (var cmd = new System.Data.SqlClient.SqlCommand($"UPDATE {Table.TableName} SET SyncGuid=ISNULL(SyncGuid,NEWID())", con)
+                            {
+                                CommandTimeout = Int32.MaxValue
+                            })
+                            {
+                                con.Open();
+                               cmd.ExecuteNonQuery();
+                                con.Close();
+                            }
+                        }
                     version.Version = DbVersion;
                     version.Save(Connection);
 

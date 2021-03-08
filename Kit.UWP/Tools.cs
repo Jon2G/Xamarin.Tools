@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
-using Kit.Sql;
-using Xamarin.Forms;
+using Windows.Storage;
+using Kit;
 
-
-namespace Kit.UWP
+namespace Tools.UWP
 {
     /// <summary>
     /// Interface for Xamarin.Tools
@@ -17,13 +13,18 @@ namespace Kit.UWP
         /// <summary>
         /// Initialize android user dialogs
         /// </summary>
-        public static AbstractTools Init(string LibraryPath)
+        public static AbstractTools Init()
         {
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Kit.Tools.Set(new ToolsImplementation());
-            Kit.Tools.Instance.SetLibraryPath(LibraryPath);
+            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+
+            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            StorageFolder file = storageFolder.CreateFolderAsync("KitData",
+                 Windows.Storage.CreationCollisionOption.OpenIfExists).GetAwaiter().GetResult();
+            Kit.Tools.Instance.SetLibraryPath(file.Path);
 
 
             //     ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();

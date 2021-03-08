@@ -1,14 +1,10 @@
-﻿using Plugin.Permissions;
+﻿using System.Threading.Tasks;
+using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 
-namespace Kit.Extensions
+namespace Kit.Forms.Extensions
 {
     public static class Permisos
     {

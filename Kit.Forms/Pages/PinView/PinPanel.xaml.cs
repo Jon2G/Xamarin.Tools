@@ -1,15 +1,12 @@
-﻿using Plugin.Fingerprint;
-using Plugin.Fingerprint.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Plugin.Fingerprint;
+using Plugin.Fingerprint.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Kit.Forms.Controls.Pages.PinView
+namespace Kit.Forms.Pages.PinView
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PinPanel : ContentView

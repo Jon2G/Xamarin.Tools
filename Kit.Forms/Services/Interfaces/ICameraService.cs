@@ -1,14 +1,12 @@
-﻿using Plugin.Media;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Kit.Services.Interfaces
+namespace Kit.Forms.Services.Interfaces
 {
     public class ICameraService
     {

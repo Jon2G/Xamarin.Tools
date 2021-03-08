@@ -18,7 +18,7 @@ using Kit.Daemon;
 using Kit.Forms.Services;
 using Kit.Services.Interfaces;
 using Kit.Sql.Helpers;
-using SQLServer;
+using Kit.Sql.SqlServer;
 using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 

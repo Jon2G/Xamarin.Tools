@@ -70,6 +70,12 @@ namespace Kit.Sql.Sqlite
                     }
                     cmdText += " offset " + _offset.Value;
                 }
+
+                if (this.Connection is Kit.Sql.Partitioned.SQLiteConnection partitioned)
+                {
+                    partitioned.ToPartitionedDb(Table.TableName);
+                }
+
                 if (Connection.IsClosed)
                     Connection.RenewConnection();
 

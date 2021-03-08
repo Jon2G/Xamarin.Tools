@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Foundation;
+using Kit.Forms.Services.Interfaces;
 using Kit.Services.Interfaces;
 using Kit.Sql;
 using UIKit;
@@ -11,7 +12,7 @@ using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
-    public class PhotoPickerService : Kit.Services.Interfaces.IPhotoPickerService
+    public class PhotoPickerService : IPhotoPickerService
     {
         TaskCompletionSource<Tuple<byte[], ImageSource>> taskCompletionSource;
         UIImagePickerController imagePicker;

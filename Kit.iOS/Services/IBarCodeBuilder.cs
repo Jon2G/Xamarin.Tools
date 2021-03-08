@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Kit.iOS.Services;
+using Kit.Services.BarCode;
 using UIKit;
 using Xamarin.Forms;
 using ZXing.Mobile;

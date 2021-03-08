@@ -1,17 +1,12 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
-using Kit.Services.Interfaces;
-using Windows.Graphics.Capture;
-using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+using Kit.Services.Interfaces;
 
-namespace Kit.UWP.Services
+namespace Tools.UWP.Services
 {
     public class ScreenShotService : IScreenshot
     {

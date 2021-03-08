@@ -4,10 +4,12 @@
              xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect" 
              xmlns:views="clr-namespace:Kit.Forms.Controls.Views" 
              xmlns:pinview="clr-namespace:Kit.Forms.Controls.Pages.PinView"
-             x:Class="Kit.Forms.Controls.Pages.PinView.PinPanel" x:Name="PinViewElement">
+             xmlns:pinView="clr-namespace:Kit.Forms.Pages.PinView;assembly=Kit.Forms"
+             xmlns:views1="clr-namespace:Kit.Forms.Views;assembly=Kit.Forms"
+             x:Class="Kit.Forms.Pages.PinView.PinPanel" x:Name="PinViewElement">
     <ContentView.Resources>
-        <pinview:LengthToListConverter x:Key="LengthToListConverter"/>
-        <pinview:DivideConverter x:Key="DivideConverter"/>
+        <pinView:LengthToListConverter x:Key="LengthToListConverter"/>
+        <pinView:DivideConverter x:Key="DivideConverter"/>
     </ContentView.Resources>
     <ContentView.Content>
         <StackLayout VerticalOptions="CenterAndExpand"
@@ -235,7 +237,7 @@
                     </Button.Effects>
                 </Button>
 
-                <views:MyButton 
+                <views1:MyButton 
                         NativeAnimation="True"
                         NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
@@ -254,7 +256,7 @@
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}" BorderColor="Transparent"/>
 
 
-                <views:MyButton VerticalOptions="Center"
+                <views1:MyButton VerticalOptions="Center"
                         NativeAnimation="True"
                         NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"

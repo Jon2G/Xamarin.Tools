@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
-using SQLServer;
 using Kit.Sql.Sqlite;
+using Kit.Sql.SqlServer;
 
 namespace Kit.CadenaConexion
 {

@@ -1,10 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Kit.Services.Interfaces;
+﻿using System;
+using Kit.Forms.Services.Interfaces;
 
-namespace Kit.Services
+namespace Kit.Forms.Services
 {
     public static class PhotoPicker
     {

@@ -2,7 +2,7 @@
 using Kit.Sql.Exceptions;
 using SQLitePCL;
 
-namespace SQLServer
+namespace Kit.Sql.SqlServer
 {
     public static class SQLite3
     {

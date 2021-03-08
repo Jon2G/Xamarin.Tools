@@ -1,20 +1,10 @@
-﻿using Kit.Daemon.Abstractions;
-using Kit.Enums;
-using Kit.Sql;
-using Kit.Sql.Helpers;
-using Kit.Sql.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Kit.Sql.Attributes;
+﻿using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
-using Kit.Sql.Sqlite;
-using SQLServer;
+using Kit.Sql.SqlServer;
 using TableMapping = Kit.Sql.Base.TableMapping;
 
-namespace Kit.Daemon.VersionControl
+namespace Kit.Sql.Tables
 {
     [Preserve(AllMembers = true)]
     public class SyncVersions

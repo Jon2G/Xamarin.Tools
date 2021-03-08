@@ -1,14 +1,10 @@
-﻿
-using Kit.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.ApplicationModel.Core;
+﻿using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Kit.Enums;
 using Kit.Services.Interfaces;
 
-namespace Kit.UWP.Services
+namespace Tools.UWP.Services
 {
     public class ScreenManagerService : IScreenManager
     {

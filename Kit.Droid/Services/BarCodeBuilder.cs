@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Android.Graphics;
+using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
 using ZXing;
 using ZXing.Android;

@@ -4,6 +4,7 @@
              xmlns:plugin="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin"
              xmlns:controls="clr-namespace:Kit.Forms.Controls" xmlns:views="clr-namespace:Kit.Forms.Controls.Views"
              xmlns:noti="clr-namespace:Kit.Forms.Controls.NotificationBar"
+             xmlns:views1="clr-namespace:Kit.Forms.Views;assembly=Kit.Forms"
              x:Class="Kit.Forms.Controls.NotificationBar.CustomToolBar" BindingContext="{Static noti:Notificaciones.Instance}"
              BackgroundColor="{DynamicResource ToolbarDynamicColor}"
              x:Name="Me">
@@ -60,7 +61,7 @@
                 </plugin:ProgressRing.Style>
             </plugin:ProgressRing>
 
-            <views:MyButton HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
+            <views1:MyButton HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
                               ImgSource="{Binding Logo,Source={Reference Me}}"
                               IsVisible="{Binding IsLogoVisible,Source={Reference Me}}" 
                               Text="{Binding LogoText,Source={Reference Me}}"

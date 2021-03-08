@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using Kit.Daemon.Devices;
 using Kit.Enums;
+using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
 using Serilog;
 
@@ -15,7 +16,7 @@ namespace Kit
         public Kit.Services.Interfaces.ICustomMessageBox CustomMessageBox { get; private set; }
         public Kit.Services.Interfaces.ISynchronizeInvoke SynchronizeInvoke { get; private set; }
         public Kit.Services.Interfaces.IScreenManager ScreenManager { get; private set; }
-        public Kit.Services.Interfaces.IBarCodeBuilder BarCodeBuilder { get; private set; }
+        public IBarCodeBuilder BarCodeBuilder { get; private set; }
         public Kit.Controls.CrossImage.CrossImageExtensions ImageExtensions { get; private set; }
 
         private string _LibraryPath;

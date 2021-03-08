@@ -1,14 +1,8 @@
-﻿using Plugin.DeviceInfo.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using Windows.Security.ExchangeActiveSyncProvisioning;
-using Windows.System.Profile;
+﻿using System;
+using Plugin.DeviceInfo.Abstractions;
 using IDeviceInfo = Kit.Services.Interfaces.IDeviceInfo;
 
-namespace Kit.UWP.Services
+namespace Tools.UWP.Services
 {
     public class DeviceInfo : IDeviceInfo
     {

@@ -1,14 +1,11 @@
-﻿using Kit.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
+using Kit.Enums;
 using Kit.Services.Interfaces;
-using System.Threading.Tasks;
-using Kit.UWP.Services;
+using Tools.UWP.Services;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(CustomMessageBoxService))]
-namespace Kit.UWP.Services
+namespace Tools.UWP.Services
 {
     public class CustomMessageBoxService : ICustomMessageBox
     {

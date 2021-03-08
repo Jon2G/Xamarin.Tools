@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using Xamarin.Forms;
 
-namespace Kit.Forms.Controls.Pages.PinView
+namespace Kit.Forms.Pages.PinView
 {
     class DivideConverter : IValueConverter
     {

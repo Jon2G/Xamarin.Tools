@@ -136,7 +136,6 @@
     <Compile Include="Services\CustomMessageBoxService.cs" />
     <Compile Include="Services\DeviceInfo.cs" />
     <Compile Include="Services\FolderPermissions.cs" />
-    <Compile Include="Services\License.cs" />
     <Compile Include="Services\PrintHTML.cs" />
     <Compile Include="Services\ScreenManagerService.cs" />
     <Compile Include="Services\ScreenShotService.cs" />
