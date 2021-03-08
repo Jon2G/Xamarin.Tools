@@ -444,7 +444,7 @@ namespace Kit.Sql.SqlServer
             DataTable result = new DataTable(TableName);
             if (IsClosed)
                 RenewConnection();
-            using (SqlConnection con = this.Connection)
+            using (SqlConnection con = this.Con())
             {
                 con.Open();
                 using (SqlCommand cmd = new SqlCommand(Querry, con) { CommandType = commandType })
