@@ -3,8 +3,7 @@ using System.Data.SQLite;
 using System.IO;
 using Kit;
 using Kit.Daemon;
-using Kit.Sql.Sync;
-using SQLServer;
+using Kit.Sql.SqlServer;
 using SyncTest.Models;
 
 namespace SyncTest

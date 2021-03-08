@@ -18,9 +18,9 @@ using Kit.Enums;
 using Kit.Sql;
 using Kit.Sql.Helpers;
 using Kit.Sql.Sqlite;
+using Kit.Sql.SqlServer;
 using Kit.WPF.Services;
 using Kit.WPF.Services.ICustomMessageBox;
-using SQLServer;
 
 namespace Kit.WPF.Pages
 {

@@ -346,7 +346,7 @@ namespace Kit.Sql.SqlServer
             {
                 if (IsClosed)
                     RenewConnection();
-                using (SqlConnection con = Connection)
+                using (SqlConnection con = this.Con())
                 {
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
