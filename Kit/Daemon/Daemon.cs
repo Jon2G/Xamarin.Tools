@@ -415,22 +415,23 @@ namespace Kit.Daemon
         }
         public bool IsTableSynced(int id)
         {
-            if (DaemonConfig.Local is SQLiteConnection SQLHLite)
-            {
-                bool synced = !SQLHLite.Exists($"SELECT ID FROM VERSION_CONTROL WHERE LLAVE={id} AND TABLA='R_MESAS'");
-                if (synced)
-                {
-                    if (DireccionActual == SyncDirecction.Local)
-                    {
-                        synced = false;
-                    }
-                }
-                return synced;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            //if (DaemonConfig.Local is SQLiteConnection SQLHLite)
+            //{
+            //    bool synced = !SQLHLite.Exists($"SELECT ID FROM VERSION_CONTROL WHERE LLAVE={id} AND TABLA='R_MESAS'");
+            //    if (synced)
+            //    {
+            //        if (DireccionActual == SyncDirecction.Local)
+            //        {
+            //            synced = false;
+            //        }
+            //    }
+            //    return synced;
+            //}
+            //else
+            //{
+            //    throw new NotImplementedException();
+            //}
+            return true;
         }
         private bool TryToConnect()
         {
@@ -461,30 +462,30 @@ namespace Kit.Daemon
         ///// <param name="Accion"></param>
         public void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
         {
-            char CharAccion;
-            switch (Accion)
-            {
-                case AccionDemonio.INSERT:
-                    CharAccion = 'I';
-                    break;
-                case AccionDemonio.UPDATE:
-                    CharAccion = 'U';
-                    break;
-                case AccionDemonio.DELETE:
-                    CharAccion = 'D';
-                    break;
-                default:
-                    throw new ArgumentException("Invalid Acction", nameof(Accion));
-            }
-            if (Accion == AccionDemonio.DELETE)
-            {
-                con.EXEC($"DELETE FROM VERSION_CONTROL WHERE TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
-            }
-            else
-            {
-                con.EXEC("DELETE FROM VERSION_CONTROL WHERE (ACCION='U' OR ACCION='I') AND TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
-            }
-            con.EXEC("INSERT INTO VERSION_CONTROL(ACCION,LLAVE,TABLA) VALUES(?,?,?)", CharAccion.ToString(), PrimaryKeyValue, TableName);
+            //char CharAccion;
+            //switch (Accion)
+            //{
+            //    case AccionDemonio.INSERT:
+            //        CharAccion = 'I';
+            //        break;
+            //    case AccionDemonio.UPDATE:
+            //        CharAccion = 'U';
+            //        break;
+            //    case AccionDemonio.DELETE:
+            //        CharAccion = 'D';
+            //        break;
+            //    default:
+            //        throw new ArgumentException("Invalid Acction", nameof(Accion));
+            //}
+            //if (Accion == AccionDemonio.DELETE)
+            //{
+            //    con.EXEC($"DELETE FROM VERSION_CONTROL WHERE TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
+            //}
+            //else
+            //{
+            //    con.EXEC("DELETE FROM VERSION_CONTROL WHERE (ACCION='U' OR ACCION='I') AND TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
+            //}
+            //con.EXEC("INSERT INTO VERSION_CONTROL(ACCION,LLAVE,TABLA) VALUES(?,?,?)", CharAccion.ToString(), PrimaryKeyValue, TableName);
 
         }
     }

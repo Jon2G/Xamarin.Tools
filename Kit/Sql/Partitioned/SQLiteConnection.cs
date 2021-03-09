@@ -85,19 +85,33 @@ namespace Kit.Sql.Partitioned
             throw new NotImplementedException();
         }
 
+        public T Single<T>(string sql,string Schema) where T:IConvertible
+        {
+            ToPartitionedDb(Schema);
+            return Single<T>(sql);
+        }
         public override T Single<T>(string sql)
         {
-            throw new NotImplementedException();
+            return base.Single<T>(sql);
         }
-
+        public object Single(string sql, string Schema) 
+        {
+            ToPartitionedDb(Schema);
+            return Single(sql);
+        }
         public override object Single(string sql)
         {
-            throw new NotImplementedException();
+            return base.Single(sql);
         }
 
+        public IReader Read(string sql,string Schema)
+        {
+            ToPartitionedDb(Schema);
+            return Read(sql);
+        }
         public override IReader Read(string sql)
         {
-            throw new NotImplementedException();
+            return base.Read(sql);
         }
 
 

@@ -52,8 +52,8 @@ namespace Kit.Sql.Sqlite
         /// If you use DateTimeOffset properties, it will be always stored as ticks regardingless
         /// the storeDateTimeAsTicks parameter.
         /// </param>
-        public SQLiteConnectionString (string databasePath, bool storeDateTimeAsTicks = true)
-            : this (databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite, storeDateTimeAsTicks)
+        public SQLiteConnectionString(string databasePath, bool storeDateTimeAsTicks = true)
+            : this(databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite, storeDateTimeAsTicks)
         {
         }
 
@@ -83,8 +83,8 @@ namespace Kit.Sql.Sqlite
         /// <param name="vfsName">
         /// Specifies the Virtual File System to use on the database.
         /// </param>
-        public SQLiteConnectionString (string databasePath, bool storeDateTimeAsTicks, object key = null, Action<SQLiteConnection> preKeyAction = null, Action<SQLiteConnection> postKeyAction = null, string vfsName = null)
-            : this (databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite, storeDateTimeAsTicks, key, preKeyAction, postKeyAction, vfsName)
+        public SQLiteConnectionString(string databasePath, bool storeDateTimeAsTicks, object key = null, Action<SQLiteConnection> preKeyAction = null, Action<SQLiteConnection> postKeyAction = null, string vfsName = null)
+            : this(databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite, storeDateTimeAsTicks, key, preKeyAction, postKeyAction, vfsName)
         {
         }
 
@@ -126,16 +126,16 @@ namespace Kit.Sql.Sqlite
         /// only here for backwards compatibility. There is a *significant* speed advantage, with no
         /// down sides, when setting storeTimeSpanAsTicks = true.
         /// </param>
-        public SQLiteConnectionString (string databasePath, SQLiteOpenFlags openFlags, bool storeDateTimeAsTicks, object key = null, Action<SQLiteConnection> preKeyAction = null, Action<SQLiteConnection> postKeyAction = null, string vfsName = null, string dateTimeStringFormat = DateTimeSqliteDefaultFormat, bool storeTimeSpanAsTicks = true)
+        public SQLiteConnectionString(string databasePath, SQLiteOpenFlags openFlags, bool storeDateTimeAsTicks, object key = null, Action<SQLiteConnection> preKeyAction = null, Action<SQLiteConnection> postKeyAction = null, string vfsName = null, string dateTimeStringFormat = DateTimeSqliteDefaultFormat, bool storeTimeSpanAsTicks = true)
         {
             if (key != null && !((key is byte[]) || (key is string)))
-                throw new ArgumentException ("Encryption keys must be strings or byte arrays", nameof (key));
+                throw new ArgumentException("Encryption keys must be strings or byte arrays", nameof(key));
 
-            UniqueKey = string.Format ("{0}_{1:X8}", databasePath, (uint)openFlags);
+            UniqueKey = string.Format("{0}_{1:X8}", databasePath, (uint)openFlags);
             StoreDateTimeAsTicks = storeDateTimeAsTicks;
             StoreTimeSpanAsTicks = storeTimeSpanAsTicks;
             DateTimeStringFormat = dateTimeStringFormat;
-            DateTimeStyle = "o".Equals (DateTimeStringFormat, StringComparison.OrdinalIgnoreCase) || "r".Equals (DateTimeStringFormat, StringComparison.OrdinalIgnoreCase) ? System.Globalization.DateTimeStyles.RoundtripKind : System.Globalization.DateTimeStyles.None;
+            DateTimeStyle = "o".Equals(DateTimeStringFormat, StringComparison.OrdinalIgnoreCase) || "r".Equals(DateTimeStringFormat, StringComparison.OrdinalIgnoreCase) ? System.Globalization.DateTimeStyles.RoundtripKind : System.Globalization.DateTimeStyles.None;
             Key = key;
             PreKeyAction = preKeyAction;
             PostKeyAction = postKeyAction;
@@ -150,6 +150,11 @@ namespace Kit.Sql.Sqlite
 #else
             DatabasePath = databasePath;
 #endif
+            var directoryinfo = new System.IO.DirectoryInfo(DatabasePath).Parent;
+            if (!directoryinfo.Exists)
+            {
+                directoryinfo.Create();
+            }
         }
     }
 }
