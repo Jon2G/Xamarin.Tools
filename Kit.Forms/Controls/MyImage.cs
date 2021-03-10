@@ -1,7 +1,9 @@
 ﻿using FFImageLoading.Forms;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using Kit.Forms.Extensions;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls
@@ -11,6 +13,24 @@ namespace Kit.Forms.Controls
         public static readonly BindableProperty MySourceProperty = BindableProperty.Create(
             propertyName: nameof(MySource), returnType: typeof(ImageSource), declaringType: typeof(MyImage), defaultValue: null,
           propertyChanged: ImgChanged);
+
+        public static readonly BindableProperty CrossImageProperty = BindableProperty.Create(
+            propertyName: nameof(CrossImage), returnType: typeof(Kit.Controls.CrossImage.CrossImage), declaringType: typeof(MyImage), defaultValue: null,
+            propertyChanged: CrossImageChanged);
+
+        private static void CrossImageChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is MyImage img)
+            {
+                if (newValue != null && newValue != oldValue)
+                {
+                    var imgSource = (newValue as CrossImage.CrossImage);
+                    if (imgSource != null)
+                        img.Source = Xamarin.Forms.ImageSource.FromStream(() => new MemoryStream(imgSource.ToArray()));
+
+                }
+            }
+        }
 
         private static void ImgChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -33,11 +53,21 @@ namespace Kit.Forms.Controls
                 OnPropertyChanged();
             }
         }
+        public Kit.Controls.CrossImage.CrossImage CrossImage
+        {
+            get { return (Kit.Controls.CrossImage.CrossImage)GetValue(CrossImageProperty); }
+            set
+            {
+                SetValue(CrossImageProperty, value);
+                OnPropertyChanged();
+            }
+        }
 
 
         public MyImage()
         {
-
+            this.CacheType = FFImageLoading.Cache.CacheType.Disk;
+            this.FadeAnimationForCachedImages = true;
         }
         public object Tag { get; set; }
     }

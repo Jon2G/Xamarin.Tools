@@ -265,7 +265,7 @@ namespace Kit.Daemon
 
 
 
-                //SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
+                //
                 //SQLHLite.CreateTable<SyncHistory>();
                 //IVersionControlTable controlTable = new VersionControlTable(SQLHLite);
                 //if (!SQLHLite.TableExists(controlTable.TableName))
@@ -273,6 +273,12 @@ namespace Kit.Daemon
                 //    controlTable.CreateTable();
                 //}
                 SetUp(SQLH);
+
+                SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
+                var types = new List<Type>(this.Schema.DownloadTables.Select(x => x.Value.MappedType));
+                types.AddRange(this.Schema.DownloadTables.Select(x => x.Value.MappedType));
+                SQLHLite.CheckTables(types.ToArray());
+
                 if (OnInicializate != null)
                 {
                     if (!OnInicializate.Invoke())

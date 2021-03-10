@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Kit.Model;
 
 namespace Kit.Controls.CrossImage
@@ -19,5 +21,6 @@ namespace Kit.Controls.CrossImage
         }
 
         public abstract byte[] ToArray();
+        public abstract Task<Stream> ToStream();
     }
 }

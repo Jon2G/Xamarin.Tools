@@ -305,11 +305,21 @@ namespace Kit.Sql.SqlServer
                 {
                     var colType = reader.GetFieldType(i);
                     if (colType != typeof(DBNull))
-                        setProperty.Invoke(o, getColumnValue.Invoke(reader, i));
+                    {
+                        if (reader[i] != DBNull.Value)
+                        {
+                            ColumnMemberType value = getColumnValue.Invoke(reader, i);
+                            setProperty.Invoke(o, value);
+                        }
+                        else
+                        {
+                            setProperty.Method.Invoke(o, new object[] { null });
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Log.Logger.Error(ex, "CreateTypedSetterDelegate");
+                    Log.Logger.Error(ex, "At CreateTypedSetterDelegate");
                 }
             };
         }
