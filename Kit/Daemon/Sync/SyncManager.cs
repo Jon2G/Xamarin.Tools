@@ -72,7 +72,7 @@ namespace Kit.Daemon.Sync
         {
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
-            this.PackageSize = 25;
+            this.PackageSize = 50;
         }
         public void SetPackageSize(int PackageSize)
         {
