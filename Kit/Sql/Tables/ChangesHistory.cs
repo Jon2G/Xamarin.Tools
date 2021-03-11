@@ -42,7 +42,7 @@ namespace Kit.Sql.Tables
                 {
                     DeviceId = Daemon.Devices.Device.Current.DeviceId, SyncGuid = this.SyncGuid
                 };
-                origin.Delete(syncHistory);
+                origin.Table<SyncHistory>().Delete(x => x.DeviceId == syncHistory.DeviceId && x.SyncGuid == syncHistory.SyncGuid);
                 origin.InsertOrReplace(syncHistory);
 
                 //if (connection is SqlServer SQLH)
