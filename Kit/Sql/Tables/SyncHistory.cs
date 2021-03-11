@@ -9,7 +9,7 @@ namespace Kit.Sql.Tables
 {
     public class SyncHistory:ISync
     {
-        [PrimaryKey]
+        //[PrimaryKey]
         public Guid SyncGuid { get; set; }
         [MaxLength(100)]
         public string DeviceId { get; set; }
