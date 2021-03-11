@@ -1126,6 +1126,7 @@ namespace Kit.Sql.Sqlite
 
             var cmd = NewCommand();
             cmd.CommandText = cmdText;
+
             foreach (var o in ps)
             {
                 cmd.Bind(o);

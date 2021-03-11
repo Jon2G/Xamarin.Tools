@@ -9,5 +9,7 @@ namespace Kit.Daemon.Sync
     {
         [Unique, NotNull]
         public Guid SyncGuid { get; set; }
+
+
     }
 }

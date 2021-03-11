@@ -19,8 +19,8 @@ namespace Kit.WPF.Services
             {
                 Options ??= new ZXing.Common.EncodingOptions();
                 Options.Width = Width;
-                Options.Height = Width;
-                Options.Margin = Width;
+                Options.Height = Height;
+                Options.Margin = Margin;
 
                 BarcodeWriter barcodeWriter = new BarcodeWriter
                 {

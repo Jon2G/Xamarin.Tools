@@ -24,10 +24,6 @@ namespace Kit.Sql.Sqlite
             this.Connection = con;
             this.Command = Command;
             this._Reader = null;
-            if (Debugger.IsAttached)
-            {
-                Debug.WriteLine(Command);
-            }
         }
 
         public bool Read()

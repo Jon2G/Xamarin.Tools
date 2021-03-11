@@ -13,17 +13,23 @@ using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 using Kit.CadenaConexion;
 using Kit.Forms.Controls;
-using ZXing;
 using Kit.Daemon;
 using Kit.Forms.Services;
+using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
 using Kit.Sql.Helpers;
 using Kit.Sql.SqlServer;
 using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
+using  ZXing;
+
+
 
 namespace Kit.Forms.Pages
 {
+    extern alias SharedZXingNet;
+    
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CadenaCon : BasePage
     {
@@ -293,10 +299,11 @@ namespace Kit.Forms.Pages
                 return;
             }
             BarcodeDecoding reader = new BarcodeDecoding();
-            Result result = await reader.Decode(qr, BarcodeFormat.QR_CODE
+            SharedZXingNet::ZXing.Result
+             result = await reader.Decode(new FileInfo(qr.FileName), SharedZXingNet::ZXing.BarcodeFormat.QR_CODE
                 , new[]
                 {
-                    new KeyValuePair<DecodeHintType, object>(DecodeHintType.TRY_HARDER,null)
+                    new KeyValuePair<SharedZXingNet::ZXing.DecodeHintType, object>(SharedZXingNet::ZXing.DecodeHintType.TRY_HARDER,null)
                 });
             Deserialize(result?.Text);
         }

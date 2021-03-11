@@ -74,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.1.0.480</Version>
+      <Version>7.1.0.481</Version>
     </PackageReference>
     <PackageReference Include="DeviceId">
       <Version>5.2.0</Version>

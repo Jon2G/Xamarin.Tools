@@ -25,9 +25,10 @@ namespace Kit.WPF.Controls.CrossImage
             //System.Windows.Controls.Image wimage = new System.Windows.Controls.Image();
             using (MemoryStream mstream = (MemoryStream)stream.Invoke())
             {
-                image.Native = BitmapFrame.Create(mstream,
-                                                  BitmapCreateOptions.None,
-                                                  BitmapCacheOption.OnLoad);
+                if (mstream != null)
+                    image.Native = BitmapFrame.Create(mstream,
+                                                      BitmapCreateOptions.None,
+                                                      BitmapCacheOption.OnLoad);
 
                 //wimage.Source = (BitmapFrame)image.Native;
             }

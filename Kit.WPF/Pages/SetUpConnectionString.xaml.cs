@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,25 +16,39 @@ using System.Windows.Shapes;
 using Kit.CadenaConexion;
 using Kit.Daemon.Devices;
 using Kit.Enums;
+using Kit.Services.BarCode;
 using Kit.Sql;
 using Kit.Sql.Helpers;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
+using Kit.WPF.Controls;
+using Kit.WPF.Extensions;
 using Kit.WPF.Services;
 using Kit.WPF.Services.ICustomMessageBox;
+using Microsoft.Win32;
+using ZXing;
 
 namespace Kit.WPF.Pages
 {
     /// <summary>
     /// Interaction logic for SetUpConnectionString.xaml
     /// </summary>
-    public partial class SetUpConnectionString : Window
+    public partial class SetUpConnectionString : ObservableWindow
     {
         private readonly Empresas Empresas;
         private readonly string DeviceId;
         private SQLServerConnection SqlServer;
         private readonly SQLiteConnection SqLite;
-        public Configuracion Configuration { get; set; }
+        public Configuracion _Configuration;
+        public Configuracion Configuration
+        {
+            get => _Configuration;
+            set
+            {
+                _Configuration = value;
+                Raise(() => Configuration);
+            }
+        }
 
         public SetUpConnectionString(Exception ex, Configuracion Configuration, SQLiteConnection SqLite = null)
         {
@@ -129,6 +144,53 @@ namespace Kit.WPF.Pages
             this.Configuration.CadenaCon = string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim();
 
             ChangeDataContext(Empresas.CadenaCon(CmbxEmpresas.SelectedItem.ToString(), DeviceId));
+        }
+
+        private async void ImportarCadena(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog abrir = new OpenFileDialog();
+            abrir.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            if (abrir.ShowDialog() ?? false)
+            {
+                var qr = new FileInfo(abrir.FileName);
+                BarcodeDecoding reader = new BarcodeDecoding();
+                Result result = await reader.Decode(qr, BarcodeFormat.QR_CODE
+                    , new[]
+                    {
+                        new KeyValuePair<DecodeHintType, object>(DecodeHintType.TRY_HARDER,null)
+                    });
+                Deserialize(result?.Text);
+            }
+        }
+        private void Deserialize(string json)
+        {
+            if (!string.IsNullOrEmpty(json))
+            {
+                Configuracion configuracion_qr = Configuracion.DeSerialize(json);
+                if (configuracion_qr != null)
+                {
+                    this.Configuration = configuracion_qr;
+                    //this.CargarCadena();
+                }
+                else
+                {
+                    Kit.WPF.Services.ICustomMessageBox.CustomMessageBox
+                        .Show("Formato Qr incorrecto", "Incorrecto", CustomMessageBoxButton.OK, CustomMessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void CompartirCadena(object sender, RoutedEventArgs e)
+        {
+            string code = this.Configuration?.Serialize();
+            if (!string.IsNullOrEmpty(code))
+            {
+                ShareCadenaCon share = new ShareCadenaCon(this.Configuration.NombreDB, code)
+                {
+                    Owner = this
+                };
+                share.ShowDialog();
+            }
         }
     }
 

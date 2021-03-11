@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using FFImageLoading;
 using ImageProcessing.JPEGCodec;
 using ImageProcessing.PNGCodec;
 using ImageProcessing.TGACodec;
-using MoyskleyTech.ImageProcessing;
 using MoyskleyTech.ImageProcessing.Image;
-using Xamarin.Essentials;
-using Xamarin.Forms;
 using ZXing;
 using ZXing.Common;
 
-namespace Kit.Forms.Services
+namespace Kit.Services.BarCode
 {
     public class BarcodeDecoding
     {
@@ -23,7 +19,7 @@ namespace Kit.Forms.Services
 
         }
 
-        public async Task<Result> Decode(FileResult file, BarcodeFormat? format = null, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
+        public async Task<Result> Decode(FileInfo file, BarcodeFormat format, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
         {
             MultiFormatReader r = GetReader(format, aditionalHints);
 
@@ -57,14 +53,17 @@ namespace Kit.Forms.Services
             return reader;
         }
 
-        async Task<BinaryBitmap> GetImage(FileResult fileName)
+        async Task<BinaryBitmap> GetImage(FileInfo fileName)
         {
             BinaryBitmap bBitmap = null;
-            using (var stream = await fileName.OpenReadAsync())
+            using (var stream = fileName.OpenRead())
             {
                 Image<Pixel> result;
-                using (var memory = new MemoryStream(stream.ToByteArray()))
+                using (var memory = new MemoryStream())
                 {
+                    await stream.CopyToAsync(memory);
+                    memory.Position = 0;
+
                     BitmapFactory factory = new BitmapFactory();
                     factory.AddCodec(new BitmapCodec());
                     factory.AddCodec(new PngCodec());

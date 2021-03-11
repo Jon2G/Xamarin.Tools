@@ -1,6 +1,7 @@
 ﻿using Kit.Sql.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace Kit.Sql.Readers
             try
             {
                 Connection = Cmd.Connection;
+                if (Connection.State == ConnectionState.Closed)
+                    Connection.Open();
                 this.Cmd = Cmd;
                 _Reader = Cmd.ExecuteReader();
             }

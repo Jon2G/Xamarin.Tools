@@ -1,12 +1,12 @@
-﻿<Window x:Class="Kit.WPF.Pages.SetUpConnectionString"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Kit.WPF.Pages" x:Name="Me"
-        xmlns:controls="clr-namespace:Kit.WPF.Controls"
-        mc:Ignorable="d" WindowStartupLocation="CenterOwner"
-        Title="SetUpConnectionString" Height="450" Width="800">
+﻿<controls:ObservableWindow x:Class="Kit.WPF.Pages.SetUpConnectionString"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:local="clr-namespace:Kit.WPF.Pages" x:Name="Me"
+                  xmlns:controls="clr-namespace:Kit.WPF.Controls"
+                  mc:Ignorable="d" WindowStartupLocation="CenterOwner"
+                  Title="SetUpConnectionString" Height="450" Width="800" DataContext="{Binding Configuration ,ElementName=Me}">
     <Window.Resources>
         <Style TargetType="Button"/>
     </Window.Resources>
@@ -22,13 +22,26 @@
                 <ColumnDefinition Width="70*"/>
             </Grid.ColumnDefinitions>
             <DockPanel  Grid.Column="1" >
-                <Button  DockPanel.Dock="Bottom" Height="35" Background="White"  Grid.Row="2" 
-                         Click="ProbarConexion"  Margin="5" BorderThickness="1" BorderBrush="Black">
-                    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Text="Probar Conexión"></TextBlock>
-                        <controls:MyImage x:Name="Try" Grid.Column="0" Grid.Row="1" Source="pack://siteoforigin:,,,/Imgs/003-wire.png" />
-                    </DockPanel>
-                </Button>
+                <Grid  DockPanel.Dock="Bottom" Height="45" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Background="White"  
+                             Click="ProbarConexion"  Margin="5" BorderThickness="1" BorderBrush="Black">
+                        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <TextBlock VerticalAlignment="Center" FontSize="16" Text="Probar Conexión"></TextBlock>
+                            <controls:MyImage x:Name="Try" Grid.Column="0" Grid.Row="1" Source="pack://siteoforigin:,,,/Imgs/003-wire.png" />
+                        </DockPanel>
+                    </Button>
+                    <Button Background="White"  Grid.Column="1"
+                            Click="ImportarCadena"  Margin="5" BorderThickness="1" BorderBrush="Black" Content="Importar cadena de conexión">
+                    </Button>
+                    <Button Background="White"  Grid.Column="2"
+                            Click="CompartirCadena"  Margin="5" BorderThickness="1" BorderBrush="Black" Content="Compartir cadena de conexión"/>
+                </Grid>
+
                 <TextBox DockPanel.Dock="Top" IsReadOnly="False" Text="{Binding CadenaCon}" Margin="10" BorderBrush="Black" BorderThickness="1"/>
 
 
@@ -84,4 +97,4 @@
             <TextBlock TextWrapping="Wrap" x:Name="TxtStatus" VerticalAlignment="Center" FontSize="14" Grid.Column="1" Text="Estado de la Conexión: OK"/>
         </DockPanel>
     </Grid>
-</Window>
+</controls:ObservableWindow>

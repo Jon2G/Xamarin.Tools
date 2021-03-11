@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Kit.Sql.Base;
 using Kit.Sql.Exceptions;
+using Kit.Sql.Readers;
 using SQLitePCL;
 
 namespace Kit.Sql.Sqlite
@@ -68,6 +69,11 @@ namespace Kit.Sql.Sqlite
         public override List<T> ExecuteQuery<T>(Kit.Sql.Base.TableMapping map)
         {
             return ExecuteDeferredQuery<T>(map).ToList();
+        }
+
+        public override IReader ExecuteReader()
+        {
+            return this._conn.Read(this.CommandText);
         }
 
         /// <summary>
@@ -222,6 +228,11 @@ namespace Kit.Sql.Sqlite
 
         public void Bind(object val)
         {
+            if (val is BaseTableQuery.Condition condition)
+            {
+                Bind(condition.ColumnName, condition.Value);
+                return;
+            }
             Bind(null, val);
         }
 

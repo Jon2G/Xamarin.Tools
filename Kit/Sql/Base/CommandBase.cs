@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Sql.Readers;
 
 namespace Kit.Sql.Base
 {
@@ -14,6 +15,7 @@ namespace Kit.Sql.Base
         public abstract IEnumerable<T> ExecuteDeferredQuery<T>();
         public abstract IEnumerable<T> ExecuteDeferredQuery<T>(TableMapping map);
         public abstract List<T> ExecuteQuery<T>(TableMapping map);
+        public abstract IReader ExecuteReader();
 
 
     }

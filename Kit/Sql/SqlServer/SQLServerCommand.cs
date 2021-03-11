@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Base;
+using Kit.Sql.Readers;
 using SQLitePCL;
 
 namespace Kit.Sql.SqlServer
@@ -70,6 +71,14 @@ namespace Kit.Sql.SqlServer
         public override List<T> ExecuteQuery<T>(Base.TableMapping map)
         {
             return ExecuteDeferredQuery<T>(map).ToList();
+        }
+
+        public override IReader ExecuteReader()
+        {
+            var cmd = new SqlCommand(this.CommandText, this._conn.Con());
+            cmd.Parameters.AddRange(this.Parameters.ToArray());
+            var reader= new Reader(cmd);
+            return reader;
         }
 
         /// <summary>
