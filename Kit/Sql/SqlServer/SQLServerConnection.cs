@@ -1179,8 +1179,13 @@ namespace Kit.Sql.SqlServer
         /// </param>
         public int DropTable(Base.TableMapping map)
         {
-            var query = string.Format("drop table if exists \"{0}\"", map.TableName);
-            return Execute(query);
+            if (TableExists(map.TableName))
+            {
+                var query = string.Format("drop table \"{0}\"", map.TableName);
+                return Execute(query);
+            }
+
+            return 0;
         }
 
         public SQLServerConnection CreateDatabase()
@@ -2553,6 +2558,10 @@ WHERE
                 //    cols[i] = map.SyncGuid;
                 //}
                 vals[i] = cols[i].GetValue(obj);
+                if (vals[i] is null)
+                {
+                    vals[i] = DBNull.Value;
+                }
                 parameters[i] = new SqlParameter(cols[i].Name, vals[i]);
             }
 

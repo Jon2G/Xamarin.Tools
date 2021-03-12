@@ -14,14 +14,24 @@ namespace Kit.Sql.Tables
         [Unique, MaxLength(50)]
         public string Name { get; set; }
         public int Version { get; set; }
-        public SyncVersionObject Type { get; set; }
+
+        [Ignore]
+        public SyncVersionObject SyncVersionObject
+        {
+            get => (SyncVersionObject) Type;
+            set
+            {
+                Type = (int) value;
+            }
+        }
+        public int Type { get; set; }
 
         internal static SyncVersions GetVersion(SQLServerConnection connection, string ObjectName, SyncVersionObject trigger)
         {
-            return connection.Table<SyncVersions>().FirstOrDefault(x => x.Name == ObjectName && x.Type == trigger) ?? new SyncVersions()
+            return connection.Table<SyncVersions>().FirstOrDefault(x => x.Name == ObjectName && x.Type == (int)trigger) ?? new SyncVersions()
             {
                 Name = ObjectName,
-                Type = trigger
+                SyncVersionObject = trigger
             };
         }
 
@@ -70,7 +80,7 @@ namespace Kit.Sql.Tables
             return new SyncVersions()
             {
                 Name = TableName,
-                Type = SyncVersionObject.Table,
+                SyncVersionObject = SyncVersionObject.Table,
                 Version = 0
             };
         }

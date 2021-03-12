@@ -7,7 +7,7 @@ namespace Kit.Daemon.Sync
 {
     public interface ISync
     {
-        [Unique, NotNull]
+        [Unique, NotNull,AutoIncrement]
         public Guid SyncGuid { get; set; }
 
 

@@ -228,11 +228,11 @@ namespace Kit.Sql.Sqlite
 
         public void Bind(object val)
         {
-            if (val is BaseTableQuery.Condition condition)
-            {
-                Bind(condition.ColumnName, condition.Value);
-                return;
-            }
+            //if (val is BaseTableQuery.Condition condition)
+            //{
+            //    Bind(condition.ColumnName, condition.Value);
+            //    return;
+            //}
             Bind(null, val);
         }
 

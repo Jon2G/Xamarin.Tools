@@ -468,10 +468,8 @@ namespace Kit.Daemon
         ///// <param name="Accion"></param>
         public void SqliteSync(SQLiteConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion)
         {
-            con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion));
+            con.UpdateVersionControl(new ChangesHistory(TableName,SyncGuid,Accion));
         }
-
-     
     }
 
 }

@@ -6,6 +6,7 @@ using Kit.Sql.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -97,8 +98,7 @@ namespace Kit.Daemon.Sync
                 UploadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncDirecction.Local]);
                 Log.Logger.Information("Prepared {0} Upload Query - [{1}]", "DAEMON", UploadQuery);
             }
-
-            return false; //return GetPendings(SyncDirecction.Remote);
+            return GetPendings(SyncDirecction.Remote);
         }
         private string PrepareQuery(SqlBase source)
         {
@@ -113,7 +113,7 @@ namespace Kit.Daemon.Sync
                     query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid)";
                     return query;
                 case SQLiteConnection:
-                    return $"select SyncGuid,TableName,Action from ChangesHistory limit {this.PackageSize}";
+                    return $"select SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) limit {this.PackageSize}";
             }
             return string.Empty;
         }
@@ -148,60 +148,7 @@ namespace Kit.Daemon.Sync
                     ProcesarAcciones(SyncTarget);
                     return true;
                 }
-
                 return false;
-
-
-                //using (IReader reader = Daemon.Current.DaemonConfig[SyncTarget.InvertDirection()].Read(query))
-                //{
-                //    if (reader is null)
-                //    {
-                //        return false;
-                //    }
-                //    if (!reader.Read())
-                //    {
-                //        ToDo = false;
-                //        return ToDo;
-                //    }
-                //    else
-                //    {
-                //        do
-                //        {
-                //            try
-                //            {
-                //                string Accion = Convert.ToString(reader[1]);
-                //                Pendientes pendiente = new Pendientes(
-                //                        Accion == "I" ? AccionDemonio.INSERT :
-                //                        Accion == "U" ? AccionDemonio.UPDATE :
-                //                        Accion == "D" ? AccionDemonio.DELETE : AccionDemonio.INVALIDA,
-                //                        reader[3], Convert.ToString(reader[2]), Convert.ToInt32(reader[0]));
-
-                //                if (pendiente.LLave is string iave && string.IsNullOrEmpty(iave))
-                //                {
-                //                    pendiente.Sincronizado(SyncTarget);
-                //                    continue;
-                //                }
-                //                if (Daemon.Current.IsSleepRequested)
-                //                {
-                //                    Pendings.Clear();
-                //                    TotalPendientes = Pendings.Count;
-                //                    ToDo = false;
-                //                    return ToDo;
-                //                }
-                //                Pendings.Enqueue(pendiente);
-                //            }
-                //            catch (Exception ex)
-                //            {
-                //                Log.Logger.Error(ex, "Al sincronizar");
-                //            }
-                //        } while (reader.Read());
-                //        TotalPendientes = Pendings.Count;
-                //        ProcesarAcciones(SyncTarget);
-                //        Pendings.Clear();
-                //        ToDo = true;
-                //        return ToDo;
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -218,6 +165,7 @@ namespace Kit.Daemon.Sync
             SyncDirecction source = direccion.InvertDirection();
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
             SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
+            string condition = (source_con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
             while (Pendings.Any())
             {
                 if (Daemon.Current.IsSleepRequested)
@@ -235,7 +183,7 @@ namespace Kit.Daemon.Sync
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
 
                         string selection_list = table.SelectionList;
-                        CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE SyncGuid=@SyncGuid",
+                        CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.SyncGuid));
                         MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(TableMapping) });
                         method = method.MakeGenericMethod(table.MappedType);
@@ -244,7 +192,57 @@ namespace Kit.Daemon.Sync
                         dynamic read = result.FirstOrDefault();
                         if (read != null)
                         {
-                            target_con.InsertOrReplace(read, false);
+                            object old_pk = null;
+                            //if (table.HasAutoIncPK && table.SyncMode.ReserveNewId)
+                            //{
+                            //    Type readType = read.GetType();
+                            //    PropertyInfo pkProperty = readType.GetProperty(table.PK.PropertyName);
+                            //    switch (pkProperty.GetValue(read))
+                            //    {
+                            //        case int _:
+                            //            pkProperty.SetValue(read, 0);
+                            //            break;
+                            //        default:
+                            //            throw new InvalidDataException("No default value for empty pk");
+                            //    }
+                            //}
+                            Type readType = read.GetType();
+                            if (table.PK!=null)
+                            {
+                                PropertyInfo pkProperty = readType.GetProperty(table.PK.PropertyName);
+                                old_pk = pkProperty.GetValue(read);
+                            }
+
+                            if (!string.IsNullOrEmpty(table.SyncMode.CustomUploadAction) && target_con is SQLServerConnection)
+                            {
+                                object affects_result =
+                                    readType.GetMethod(table.SyncMode.CustomUploadAction).Invoke(read, new object[] { source_con, (SqlBase)target_con });
+                                if (affects_result is bool b && b)
+                                {
+                                    CurrentPackage.MarkAsSynced(source_con);
+                                    Processed++;
+                                    return;
+                                }
+                            }
+
+
+                            if (target_con is SQLiteConnection)
+                            {
+                                target_con.InsertOrReplace(read, false);
+                            }
+                            else
+                            {
+                                target_con.Table<ChangesHistory>().Delete(x => x.SyncGuid == CurrentPackage.SyncGuid);
+                                target_con.Insert(read, String.Empty, read.GetType(), false);
+                            }
+                            if (table.HasAutoIncPK)
+                            {
+                                if (!string.IsNullOrEmpty(table.SyncMode.AffectsMethodName) && target_con is SQLServerConnection)
+                                {
+                                    object affects_result =
+                                        readType.GetMethod(table.SyncMode.AffectsMethodName).Invoke(read, new object[] { source_con, old_pk });
+                                }
+                            }
                         }
 
                     }
@@ -255,7 +253,6 @@ namespace Kit.Daemon.Sync
                     }
                     CurrentPackage.MarkAsSynced(source_con);
                     Processed++;
-
                 }
                 catch (Exception ex)
                 {
@@ -289,5 +286,10 @@ namespace Kit.Daemon.Sync
         }
 
 
+        public void Reset()
+        {
+            this.Pendings.Clear();
+            this.ToDo = false;
+        }
     }
 }

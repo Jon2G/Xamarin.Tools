@@ -288,6 +288,19 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
+        public List<object> Lista(string sql) 
+        {
+            List<object> result = new List<object>();
+            using (IReader reader = Read(sql))
+            {
+                while (reader.Read())
+                {
+                    result.Add(reader[0]);
+                }
+            }
+            return result;
+        }
         public List<T> Lista<T>(string sql) where T : IConvertible
         {
             List<T> result = new List<T>();
@@ -2505,7 +2518,7 @@ namespace Kit.Sql.Sqlite
             QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
                 .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
         }
-        void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
+        public void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
         {
             if (table.SyncDirection == SyncDirection.NoSync)
             {

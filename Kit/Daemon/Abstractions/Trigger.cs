@@ -63,14 +63,20 @@ BEGIN
 
 IF @ACTION='{NotifyTableChangedAction.Insert}' OR @action='{NotifyTableChangedAction.Update}'
 BEGIN
-   DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted) 
-   AND (Action='{NotifyTableChangedAction.Update}' OR Action='{NotifyTableChangedAction.Insert}') 
+DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
+DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 
-   INSERT INTO ChangesHistory(Action,SyncGuid,TableName) SELECT @action,SyncGuid,'{Table.TableName}' FROM inserted
+INSERT INTO ChangesHistory (Action,SyncGuid,TableName)
+SELECT @action,SyncGuid,'{Table.TableName}' FROM inserted
+
 END ELSE
 BEGIN
-   DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
-   INSERT INTO ChangesHistory(Action,SyncGuid,TableName) SELECT @action,SyncGuid,'{Table.TableName}' FROM deleted
+DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
+DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
+   
+INSERT INTO ChangesHistory (Action,SyncGuid,TableName)
+SELECT @action,SyncGuid,'{Table.TableName}' FROM deleted
+
 END
 END", System.Data.CommandType.Text);
 
