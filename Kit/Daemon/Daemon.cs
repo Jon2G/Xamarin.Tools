@@ -466,34 +466,12 @@ namespace Kit.Daemon
         ///// <param name="TableName"></param>
         ///// <param name="PrimaryKeyValue"></param>
         ///// <param name="Accion"></param>
-        public void SqliteSync(SQLiteConnection con, string TableName, object PrimaryKeyValue, AccionDemonio Accion)
+        public void SqliteSync(SQLiteConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion)
         {
-            //char CharAccion;
-            //switch (Accion)
-            //{
-            //    case AccionDemonio.INSERT:
-            //        CharAccion = 'I';
-            //        break;
-            //    case AccionDemonio.UPDATE:
-            //        CharAccion = 'U';
-            //        break;
-            //    case AccionDemonio.DELETE:
-            //        CharAccion = 'D';
-            //        break;
-            //    default:
-            //        throw new ArgumentException("Invalid Acction", nameof(Accion));
-            //}
-            //if (Accion == AccionDemonio.DELETE)
-            //{
-            //    con.EXEC($"DELETE FROM VERSION_CONTROL WHERE TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
-            //}
-            //else
-            //{
-            //    con.EXEC("DELETE FROM VERSION_CONTROL WHERE (ACCION='U' OR ACCION='I') AND TABLA=? AND LLAVE=?", TableName, PrimaryKeyValue);
-            //}
-            //con.EXEC("INSERT INTO VERSION_CONTROL(ACCION,LLAVE,TABLA) VALUES(?,?,?)", CharAccion.ToString(), PrimaryKeyValue, TableName);
-
+            con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion));
         }
+
+     
     }
 
 }

@@ -2536,7 +2536,7 @@ namespace Kit.Sql.Sqlite
                 ev(this, new NotifyTableChangedEventArgs(table, action));
         }
 
-        void UpdateVersionControl(ChangesHistory VersionControl)
+        public void UpdateVersionControl(ChangesHistory VersionControl)
         {
             Table<ChangesHistory>()
                 .Delete(x => x.SyncGuid == VersionControl.SyncGuid);
