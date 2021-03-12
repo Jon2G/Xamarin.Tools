@@ -48,7 +48,7 @@ namespace Kit.Sql.SqlServer
                 var cmdText = string.Empty;
                 if (_limit.HasValue)
                 {
-                    cmdText += " top " + _limit.Value;
+                    cmdText += " top " + _limit.Value+" ";
                 }
                 cmdText += selectionList + " from \"" + Table.TableName + "\"";
                 var args = new List<object>();

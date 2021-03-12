@@ -5,10 +5,9 @@ using Kit.Sql.Attributes;
 
 namespace Kit.Sql.Enums
 {
-    [StoreAsText]
     public enum SyncVersionObject
     {
-        Trigger,
-        Table
+        Trigger=2,
+        Table=1
     }
 }

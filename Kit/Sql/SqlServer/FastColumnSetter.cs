@@ -246,9 +246,13 @@ namespace Kit.Sql.SqlServer
 
                 return (o, reader, i) =>
                 {
-                    var colType = reader.GetFieldType(i);
-                    //if (colType != SQLite3.ColType.Null)
-                    //	setProperty.Invoke (o, getColumnValue.Invoke (stmt, i));
+                    //var colType = reader.GetFieldType(i);
+                    if (reader[i] is DBNull)
+                    {
+                        setProperty.Method.Invoke(o, new object[] { null });
+                        return;
+                    }
+                    setProperty.Invoke(o, getColumnValue.Invoke(reader, i));
                 };
             }
 

@@ -13,7 +13,8 @@ namespace Kit.Sql.Base
 {
     public abstract class TableMapping
     {
-        public SyncDirection SyncDirection { get; private set; }
+        public SyncMode SyncMode { get; private set; }
+        public SyncDirection SyncDirection => SyncMode?.Direction ?? SyncDirection.NoSync;
         public Type MappedType { get; private set; }
 
         public string TableName { get; private set; }
@@ -49,7 +50,8 @@ namespace Kit.Sql.Base
 
             WithoutRowId = tableAttr != null ? tableAttr.WithoutRowId : false;
 
-            SyncDirection = GetSyncModeAttribute(typeInfo)?.Direction ?? SyncDirection.NoSync;
+
+            this.SyncMode = GetSyncModeAttribute(typeInfo) ?? new SyncMode();
             if (SyncDirection != SyncDirection.NoSync)
             {
                 if (!type.GetInterfaces().Contains(typeof(ISync)))
