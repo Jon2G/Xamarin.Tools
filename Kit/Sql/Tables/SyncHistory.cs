@@ -11,6 +11,11 @@ namespace Kit.Sql.Tables
     {
         //[PrimaryKey]
         public Guid SyncGuid { get; set; }
+        public override object GetPk()
+        {
+            return SyncGuid;
+        }
+
         [MaxLength(100)]
         public string DeviceId { get; set; }
 

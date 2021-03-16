@@ -54,7 +54,7 @@ namespace Kit.Sql.Base
             this.SyncMode = GetSyncModeAttribute(typeInfo) ?? new SyncMode();
             if (SyncDirection != SyncDirection.NoSync)
             {
-                if (!type.GetInterfaces().Contains(typeof(ISync)))
+                if (!type.IsSubclassOf(typeof(ISync)))
                 {
                     throw new Exception($"{type} - Must implement ISync");
                 }

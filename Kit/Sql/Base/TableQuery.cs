@@ -295,9 +295,11 @@ namespace Kit.Sql.Base
                 {
                     Condition joinedCondition = new Condition(leftr.CurrentCondition, rightr.CurrentCondition);
                     if (joinedCondition.IsComplete)
+                    {
                         conditions.Add(joinedCondition);
-                    conditions.Remove(rightr.CurrentCondition);
-                    conditions.Remove(leftr.CurrentCondition);
+                        conditions.Remove(rightr.CurrentCondition);
+                        conditions.Remove(leftr.CurrentCondition);
+                    }
                 }
 
 
@@ -328,11 +330,29 @@ namespace Kit.Sql.Base
                 object val = opr.Value;
                 if (val is bool)
                     val = !((bool)val);
-                return new CompileResult
+
+                if (this is SQLServerTableQuery<T>)
                 {
-                    CommandText = "NOT(" + opr.CommandText + ")",
-                    Value = val
-                };
+                    Condition condition = new Condition(opr.CommandText, val);
+                    return new CompileResult
+                    {
+                        CommandText = "(" + opr.CommandText + "==0)",
+                        Value = val,
+                        CurrentCondition = condition
+                    };
+                }
+                else
+                {
+                    Condition condition = new Condition(opr.CommandText, val);
+                    return new CompileResult
+                    {
+                        CommandText = "NOT(" + opr.CommandText + ")",
+                        Value = val,
+                        CurrentCondition = condition
+                    };
+                }
+
+
             }
             else if (expr.NodeType == ExpressionType.Call)
             {

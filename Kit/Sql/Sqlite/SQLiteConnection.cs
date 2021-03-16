@@ -289,7 +289,7 @@ namespace Kit.Sql.Sqlite
             return result;
         }
 
-        public List<object> Lista(string sql) 
+        public List<object> Lista(string sql)
         {
             List<object> result = new List<object>();
             using (IReader reader = Read(sql))
@@ -1103,7 +1103,7 @@ namespace Kit.Sql.Sqlite
                 }
             }
 
-            foreach (var p in toBeAdded)
+            foreach (Base.TableMapping.Column p in toBeAdded)
             {
                 var addCol = "alter table \"" + map.TableName + "\" add column " + Orm.SqlDecl(p, StoreDateTimeAsTicks, StoreTimeSpanAsTicks);
                 Execute(addCol);
@@ -1135,7 +1135,7 @@ namespace Kit.Sql.Sqlite
         public override CommandBase CreateCommand(string cmdText, params object[] ps)
         {
             if (!_open)
-                throw SQLiteException.New(SQLite3.Result.Error, "Cannot create commands from unopened database");
+                RenewConnection();
 
             var cmd = NewCommand();
             cmd.CommandText = cmdText;
@@ -2069,19 +2069,18 @@ namespace Kit.Sql.Sqlite
 
             var cols = replacing ? map.InsertOrReplaceColumns : map.InsertColumns;
             var vals = new object[cols.Length];
+            if (obj is ISync i_sync && i_sync.SyncGuid == Guid.Empty)
+            {
+                i_sync.SyncGuid = Guid.NewGuid();
+            }
             for (var i = 0; i < vals.Length; i++)
             {
-                if (cols[i].Name == "SyncGuid" && map.SyncDirection != SyncDirection.NoSync)
-                {
-                    vals[i] = (obj as ISync).SyncGuid;
-                    continue;
-                }
                 vals[i] = cols[i].GetValue(obj);
             }
 
             var insertCmd = GetInsertCommand((Kit.Sql.Sqlite.TableMapping)map, extra);
             int count;
-
+            sqlite3 locked_handle = Handle;
             lock (insertCmd)
             {
                 // We lock here to protect the prepared statement returned via GetInsertCommand.
@@ -2102,7 +2101,16 @@ namespace Kit.Sql.Sqlite
 
                 if (map.HasAutoIncPK)
                 {
-                    var id = SQLite3.LastInsertRowid(Handle);
+                    var id = SQLite3.LastInsertRowid(locked_handle);
+                    if (id <= 0)
+                    {
+                        id = LastScopeIdentity(this);
+                        if (id <= 0 && obj is ISync isync)
+                        {
+                            id = Single<int>(
+                                $"SELECT {map.PK.Name} from {map.TableName} where {nameof(isync.SyncGuid)}='{isync.SyncGuid}'");
+                        }
+                    }
                     map.SetAutoIncPK(obj, id);
                 }
             }

@@ -300,7 +300,7 @@ namespace Kit.Forms.Pages
             }
             BarcodeDecoding reader = new BarcodeDecoding();
             SharedZXingNet::ZXing.Result
-             result = await reader.Decode(new FileInfo(qr.FileName), SharedZXingNet::ZXing.BarcodeFormat.QR_CODE
+             result = await reader.Decode(new FileInfo(qr.FullPath), SharedZXingNet::ZXing.BarcodeFormat.QR_CODE
                 , new[]
                 {
                     new KeyValuePair<SharedZXingNet::ZXing.DecodeHintType, object>(SharedZXingNet::ZXing.DecodeHintType.TRY_HARDER,null)

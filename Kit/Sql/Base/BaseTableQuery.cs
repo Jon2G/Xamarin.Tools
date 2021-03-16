@@ -25,6 +25,11 @@ namespace Kit.Sql.Base
             }
             public Condition(Condition left, Condition right)
             {
+                if (right is null || left is null)
+                {
+                    this.IsComplete = false;
+                    return;
+                }
                 this.ColumnName = left.ColumnName;
                 this.Value = right.Value;
                 this.IsComplete = true;

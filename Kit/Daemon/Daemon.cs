@@ -69,8 +69,17 @@ namespace Kit.Daemon
                 return ret;
             }
         }
-        private bool IsAwake { get; set; } //{ get => Thread?.IsAlive ?? false; } //{ get; set; }
-        internal bool IsSleepRequested { get; set; }
+        internal bool IsAwake
+        {
+            get;
+            set;
+        }
+        //{ get => Thread?.IsAlive ?? false; } //{ get; set; }
+        internal bool IsSleepRequested
+        {
+            get; 
+            set;
+        }
         private SyncManager _SyncManager;
         public SyncManager SyncManager
         {
@@ -219,18 +228,18 @@ namespace Kit.Daemon
         /// </summary>
         public async Task<Daemon> Sleep()
         {
+            Log.Logger.Debug("DAEMON COMMANDED TO SLEEP ACTUALLY IS =>{0}",this.IsAwake);
+            IsSleepRequested = true;
             await Task.Yield();
             while (IsAwake)
             {
-                IsSleepRequested = true;
                 WaitHandle.Reset();
                 if (OffLine)
                 {
                     return this;
                 }
-                Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                await Task.Delay(10);
             }
-            IsSleepRequested = false;
             //this.Thread = null;
             //this.WaitHandle?.Dispose();
             //this.WaitHandle = null;
@@ -336,8 +345,7 @@ namespace Kit.Daemon
                     {
                         if (IsSleepRequested)
                         {
-                            IsAwake = false;
-                            WaitHandle.WaitOne();
+                            GotoSleep();
                         }
                         IsAwake = true;
 
@@ -368,9 +376,11 @@ namespace Kit.Daemon
                             {
                                 //Asumir que no hay pendientes
                                 this.SyncManager.ToDo = false;
+                                this.IsAwake = true;
                                 //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
                                 if (!this.SyncManager.Upload() && !IsSleepRequested)
                                 {
+                                    this.IsAwake = true;
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
                                     this.SyncManager.Download();
                                 }
@@ -419,6 +429,14 @@ namespace Kit.Daemon
                 Start();
             }
         }
+
+        private void GotoSleep()
+        {
+            IsAwake = false;
+            IsSleepRequested = false;
+            WaitHandle.WaitOne();
+        }
+
         public bool IsTableSynced(int id)
         {
             //if (DaemonConfig.Local is SQLiteConnection SQLHLite)
@@ -468,7 +486,7 @@ namespace Kit.Daemon
         ///// <param name="Accion"></param>
         public void SqliteSync(SQLiteConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion)
         {
-            con.UpdateVersionControl(new ChangesHistory(TableName,SyncGuid,Accion));
+            con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion));
         }
     }
 

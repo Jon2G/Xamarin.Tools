@@ -1573,7 +1573,8 @@ WHERE
                     Execute(addCol);
                     continue;
                 }
-                addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p) + " DEFAULT NULL";
+
+                addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p) + (p.IsNullable ? " DEFAULT NULL" : "");
                 Execute(addCol);
             }
         }
@@ -2699,7 +2700,7 @@ WHERE
         /// <returns>
         /// The number of rows updated.
         /// </returns>
-        public override int Update(object obj, Type objType, bool shouldnotify= true)
+        public override int Update(object obj, Type objType, bool shouldnotify = true)
         {
             int rowsAffected = 0;
             if (obj == null || objType == null)

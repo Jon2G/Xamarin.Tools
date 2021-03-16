@@ -18,21 +18,25 @@ namespace Kit.Sql.Tables
         [Ignore]
         public SyncVersionObject SyncVersionObject
         {
-            get => (SyncVersionObject) Type;
-            set
-            {
-                Type = (int) value;
-            }
+            get => (SyncVersionObject)Type;
+            set => Type = (int)value;
         }
         public int Type { get; set; }
 
         internal static SyncVersions GetVersion(SQLServerConnection connection, string ObjectName, SyncVersionObject trigger)
         {
-            return connection.Table<SyncVersions>().FirstOrDefault(x => x.Name == ObjectName && x.Type == (int)trigger) ?? new SyncVersions()
+            int t_value = (int) trigger;
+            SyncVersions version =
+                connection.Table<SyncVersions>().FirstOrDefault(x => x.Name == ObjectName && x.Type == t_value);
+            if (version is null)
             {
-                Name = ObjectName,
-                SyncVersionObject = trigger
-            };
+                version = new SyncVersions()
+                {
+                    Name = ObjectName,
+                    SyncVersionObject = trigger
+                };
+            }
+            return version;
         }
 
         public SyncVersions() { }
@@ -93,7 +97,7 @@ namespace Kit.Sql.Tables
 
         public void Save(SQLServerConnection Connection)
         {
-            Connection.Table<SyncVersions>().Delete(x => x.Name == this.Name || x.Type == this.Type);
+            Connection.Table<SyncVersions>().Delete(x => x.Name == this.Name && x.Type == this.Type);
             Connection.InsertOrReplace(this);
         }
     }

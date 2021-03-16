@@ -177,7 +177,16 @@ namespace Kit.Sql.SqlServer
                 {
                     try
                     {
-                        return (Guid)reader[index];
+                        if (reader[index] is Guid)
+                        {
+                            return (Guid)reader[index];
+                        }
+                        if (reader[index] is string s_guid)
+                        {
+                            return Guid.Parse(s_guid);
+                        }
+
+                        return Guid.Parse(reader[index]?.ToString());
                     }
                     catch (Exception ex)
                     {

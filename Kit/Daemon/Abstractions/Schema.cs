@@ -145,7 +145,7 @@ namespace Kit.Daemon.Abstractions
 
         internal bool CheckTriggers(SQLServerConnection Connection)
         {
-            foreach (var table in this.DownloadTables)
+            foreach (var table in this.DownloadTables.Where(x=>x.Value is Kit.Sql.SqlServer.TableMapping))
             {
                 //if (IsSleepRequested || OffLine)
                 //{

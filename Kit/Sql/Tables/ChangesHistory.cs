@@ -11,11 +11,13 @@ namespace Kit.Sql.Tables
     /// A table that keeps track of every change made on sqlite databate
     /// </summary>
     public class ChangesHistory: ISync
-    {        /// <summary>
-        /// This guid identifies the row where the change is made
-        /// </summary>
-        [PrimaryKey]
-        public Guid SyncGuid { get; set; }
+    {
+
+        public override object GetPk()
+        {
+            return SyncGuid;
+        }
+
         /// <summary>
         /// Name of the table where te change has been made
         /// </summary>
