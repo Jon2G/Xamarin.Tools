@@ -99,21 +99,24 @@ namespace Kit
         #endregion
         private static void AlertCriticalUnhandled()
         {
-            FileInfo file = new FileInfo(Current.CriticalLoggerPath);
-            if (file.Exists)
+            try
             {
-                using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var sr = new StreamReader(fs, Encoding.Default))
+                FileInfo file = new FileInfo(Current.CriticalLoggerPath);
+                if (file.Exists)
                 {
-                    string criticalDescription = sr.ReadToEnd();
-                    if (!string.IsNullOrEmpty(criticalDescription))
+                    using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var sr = new StreamReader(fs, Encoding.Default))
                     {
-                        Log.Logger.Error(criticalDescription);
-                        Current.OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
-                        file.Delete();
+                        string criticalDescription = sr.ReadToEnd();
+                        if (!string.IsNullOrEmpty(criticalDescription))
+                        {
+                            Log.Logger.Error(criticalDescription);
+                            Current.OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
+                            file.Delete();
+                        }
                     }
                 }
-            }
+            }catch(Exception ex) { Log.Logger.Error(ex, "AlertCriticalUnhandled"); }
         }
         public static bool AlertOnDBConnectionError(Exception ex)
         {

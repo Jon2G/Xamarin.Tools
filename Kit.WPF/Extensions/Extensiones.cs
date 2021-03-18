@@ -94,7 +94,6 @@ namespace Kit.WPF.Extensions
 
             return bytes;
         }
-
         public static Bitmap BitmapImage2Bitmap(this BitmapImage bitmapImage)
         {
             // BitmapImage bitmapImage = new BitmapImage(new Uri("../Images/test.png", UriKind.Relative));
@@ -125,7 +124,6 @@ namespace Kit.WPF.Extensions
             }
             finally { DeleteObject(handle); }
         }
-
         public static BitmapImage Bitmap2BitmapImage(this Bitmap bitmap)
         {
             using (var memory = new MemoryStream())
