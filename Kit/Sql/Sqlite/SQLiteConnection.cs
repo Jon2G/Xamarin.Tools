@@ -54,10 +54,10 @@ namespace Kit.Sql.Sqlite
         public SQLiteConnection(FileInfo file, int DBVersion)
         : this(new SQLiteConnectionString(file.FullName), DBVersion)
         {
-            if (Tools.Instance is null)
-            {
-                throw new Exception("Please call Tools.Init(); before using it");
-            }
+            //if (Tools.Instance is null)
+            //{
+            //    throw new Exception("Please call Tools.Init(); before using it");
+            //}
             file.Refresh();
             DatabasePath = file.FullName;
         }
@@ -582,11 +582,6 @@ namespace Kit.Sql.Sqlite
             #region SqliteHelperInit
             DatabasePath = connectionString.DatabasePath;
             this.DBVersion = DBVersion;
-
-            if (Tools.Instance is null)
-            {
-                throw new Exception("Please call Tools.Init before using it");
-            }
             #endregion
 
             DatabasePath = connectionString.DatabasePath;

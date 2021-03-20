@@ -20,7 +20,10 @@ namespace Kit
             get
             {
                 if (currentInstance == null)
-                    throw new ArgumentException("Please Init Plugin.Xamarin.Tools before using it");
+                {
+                    return null;
+                }
+                    //throw new ArgumentException("Please Init Plugin.Xamarin.Tools before using it");
 
                 return currentInstance;
             }

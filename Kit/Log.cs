@@ -10,8 +10,18 @@ using Serilog.Core;
 namespace Kit
 {
     public class Log
-    {
-        public static ILogger Logger => Current._Logger;
+    {   private static DirectoryInfo LogDirectory => new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
+        public static ILogger Logger
+        {
+            get
+            {
+                if (Current._Logger is null)
+                {
+                    Current._Logger = Serilog.Log.Logger;
+                }
+                return Current._Logger;
+            }
+        }
         private ILogger _Logger;
 
 
@@ -34,17 +44,25 @@ namespace Kit
         public event EventHandler OnConecctionLost;
 
 
+        private static Log _Current;
         public static Log Current
         {
-            get;
-            private set;
+            get
+            {
+              return _Current ??= (new Log()
+                {
+                    LoggerPath = Path.Combine(LogDirectory.FullName, "log.log"),
+                    CriticalLoggerPath = Path.Combine(LogDirectory.FullName, "critcal_log.log")
+                });
+            }
+            private set => _Current = value;
         }
 
-        private Log() { }
+        public Log() { }
 
         public static Log Init(DirectoryInfo LogDirectory = null)
         {
-            string log_path = Path.Combine(LogDirectory?.FullName ?? Kit.Tools.Instance.LibraryPath, "Logs");
+            string log_path = Path.Combine(LogDirectory?.FullName ?? Log.LogDirectory.FullName);
             DirectoryInfo logDirectory = new DirectoryInfo(log_path);
             if (!logDirectory.Exists)
             {
@@ -57,7 +75,6 @@ namespace Kit
             };
             return Current;
         }
-
 
         public void SetLogger(ILogger Logger, EventHandler CriticalAction = null)
         {
