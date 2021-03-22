@@ -1,13 +1,15 @@
 ﻿using System;
 using System.IO;
 using Android.Graphics;
+using Kit.Droid.Services;
 using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
+using Xamarin.Forms;
 using ZXing;
 using ZXing.Android;
 using ZXing.Android.Rendering;
 using ZXing.Common;
-
+[assembly: Dependency(typeof(BarCodeBuilder))]
 namespace Kit.Droid.Services
 {
     public class BarCodeBuilder :IBarCodeBuilder

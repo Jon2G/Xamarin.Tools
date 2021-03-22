@@ -2,7 +2,6 @@
 <pages:BasePage  xmlns:pages="clr-namespace:Kit.Forms.Pages"
                  xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" BackgroundColor="White"
-                 xmlns:views="clr-namespace:Kit.Forms.Controls.Views"
                  x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="0" Padding="0" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">

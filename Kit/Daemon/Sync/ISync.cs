@@ -5,6 +5,7 @@ using Kit.Daemon.Enums;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
+using Kit.Sql.Enums;
 using Kit.Sql.Tables;
 
 namespace Kit.Daemon.Sync
@@ -30,6 +31,9 @@ namespace Kit.Daemon.Sync
         {
             return true;
         }
+
+        public virtual void OnDownloaded(NotifyTableChangedAction action) { }
+        public virtual void OnUploaded(NotifyTableChangedAction action) { }
         /// <summary>
         /// Mandatory for TwoWay Sync
         /// </summary>
@@ -135,6 +139,19 @@ namespace Kit.Daemon.Sync
         public ulong ToUInt64(IFormatProvider provider)
         {
             throw new InvalidCastException();
+        }
+
+        internal void OnSynced(SyncDirecction direccion, NotifyTableChangedAction action)
+        {
+            switch (direccion)
+            {
+                case SyncDirecction.Local:
+                    OnDownloaded(action);
+                    break;
+                case SyncDirecction.Remote:
+                    OnUploaded(action);
+                    break;
+            }
         }
     }
 }

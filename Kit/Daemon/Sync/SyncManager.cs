@@ -14,6 +14,7 @@ using System.Text;
 using Kit.Daemon.Devices;
 using Kit.Model;
 using Kit.Sql.Base;
+using Kit.Sql.Enums;
 using Kit.Sql.Exceptions;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
@@ -26,7 +27,7 @@ namespace Kit.Daemon.Sync
 {
     public class SyncManager : ModelBase
     {
-
+        public const int RegularPackageSize = 100;
         public bool ToDo { get; set; }
         public bool NothingToDo { get => !ToDo; }
         private Queue<ChangesHistory> Pendings;
@@ -73,9 +74,9 @@ namespace Kit.Daemon.Sync
         {
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
-            this.PackageSize = 50;
+            this.PackageSize = RegularPackageSize;
         }
-        public void SetPackageSize(int PackageSize)
+        public void SetPackageSize(int PackageSize = RegularPackageSize)
         {
             this.PackageSize = PackageSize;
             UploadQuery = null;
@@ -188,12 +189,12 @@ namespace Kit.Daemon.Sync
                 try
                 {
                     this.CurrentPackage = Pendings.Dequeue();
+
                     table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
                     if (table != null)
                     {
-
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
-
+                        var action = CurrentPackage.Action;
                         string selection_list = table.SelectionList;
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.SyncGuid));
@@ -203,46 +204,66 @@ namespace Kit.Daemon.Sync
                         if (Daemon.Current.IsSleepRequested) { return false; }
                         dynamic i_result = result.FirstOrDefault();
                         ISync read = Convert.ChangeType(i_result, typeof(ISync));
-                        if (read != null && read.ShouldSync(source_con, target_con))
+                        switch (CurrentPackage.Action)
                         {
-                            CanDo = true;
-                            object old_pk = null;
+                            case NotifyTableChangedAction.Insert:
+                            case NotifyTableChangedAction.Update:
 
-                            if (table.PK != null)
-                            {
-                                old_pk = read.GetPk();
-                            }
-
-                            if (read.CustomUpload(source_con, target_con))
-                            {
-                                CurrentPackage.MarkAsSynced(source_con);
-                                Processed++;
-                                return true;
-                            }
-
-                            if (target_con is SQLiteConnection)
-                            {
-                                target_con.InsertOrReplace(read, false);
-                            }
-                            else
-                            {
-                                target_con.Table<ChangesHistory>().Delete(x => x.SyncGuid == CurrentPackage.SyncGuid);
-                                target_con.Insert(read, String.Empty, read.GetType(), false);
-                            }
-
-                            if (source_con is SQLiteConnection lite)
-                            {
-                                if (read.Affects(lite, old_pk))
+                                if (read != null && direccion == SyncDirecction.Local || read.ShouldSync(source_con, target_con))
                                 {
+                                    CanDo = true;
+                                    object old_pk = null;
+
+                                    if (table.PK != null)
+                                    {
+                                        old_pk = read.GetPk();
+                                    }
+
+                                    if (read.CustomUpload(source_con, target_con))
+                                    {
+                                        CurrentPackage.MarkAsSynced(source_con);
+                                        Processed++;
+                                        read.OnSynced(direccion, action);
+                                        return true;
+                                    }
+
+                                    if (target_con is SQLiteConnection)
+                                    {
+                                        target_con.InsertOrReplace(read, false);
+
+                                    }
+                                    else
+                                    {
+                                        target_con.Table<ChangesHistory>().Delete(x => x.SyncGuid == CurrentPackage.SyncGuid);
+                                        target_con.Insert(read, String.Empty, read.GetType(), false);
+                                    }
+
+                                    if (source_con is SQLiteConnection lite)
+                                    {
+                                        if (read.Affects(lite, old_pk))
+                                        {
+                                            CurrentPackage.MarkAsSynced(source_con);
+                                            Processed++;
+                                            read.OnSynced(direccion, action);
+                                            return true;
+                                        }
+                                    }
+
                                     CurrentPackage.MarkAsSynced(source_con);
                                     Processed++;
-                                    return true;
+                                    read.OnSynced(direccion, action);
                                 }
-                            }
+                                break;
+                            case NotifyTableChangedAction.Delete:
+                                target_con.Delete(read);
+                                read.OnSynced(direccion, action);
+                                CurrentPackage.MarkAsSynced(source_con);
+                                Processed++;
+                                break;
 
-                            CurrentPackage.MarkAsSynced(source_con);
-                            Processed++;
+
                         }
+
 
                     }
                     else

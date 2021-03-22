@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Kit.Model
 {
@@ -22,8 +23,9 @@ namespace Kit.Model
         }
         #endregion
         #region PerfomanceHelpers
-        protected void Raise<T>(Expression<Func<T>> propertyExpression)
+        protected async void Raise<T>(Expression<Func<T>> propertyExpression)
         {
+            await Task.Yield();
             if (this.PropertyChanged != null)
             {
                 MemberExpression body = propertyExpression.Body as MemberExpression;

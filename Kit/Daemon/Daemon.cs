@@ -56,7 +56,7 @@ namespace Kit.Daemon
                 }
             }
         }
-        private static readonly Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static  Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
         public static Daemon Current
         {
             get
@@ -77,7 +77,7 @@ namespace Kit.Daemon
         //{ get => Thread?.IsAlive ?? false; } //{ get; set; }
         internal bool IsSleepRequested
         {
-            get; 
+            get;
             set;
         }
         private SyncManager _SyncManager;
@@ -104,7 +104,7 @@ namespace Kit.Daemon
         }
         public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);
         private bool IsInited;
-        public Daemon SetPackageSize(int PackageSize = 25)
+        public Daemon SetPackageSize(int PackageSize =Sync.SyncManager.RegularPackageSize)
         {
             this.SyncManager.SetPackageSize(PackageSize);
             return this;
@@ -223,12 +223,23 @@ namespace Kit.Daemon
             }
             WaitHandle.Set();
         }
+
+        public async Task Destroy()
+        {
+            await Sleep();
+            WaitHandle.Close();
+            WaitHandle.Dispose();
+            Thread.Abort();
+            Thread = null;
+            WaitHandle = null;
+            Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+        }
         /// <summary>
         /// Duerme al demonio hasta que se vuelva a despertar 
         /// </summary>
         public async Task<Daemon> Sleep()
         {
-            Log.Logger.Debug("DAEMON COMMANDED TO SLEEP ACTUALLY IS =>{0}",this.IsAwake);
+            Log.Logger.Debug("DAEMON COMMANDED TO SLEEP ACTUALLY IS =>{0}", this.IsAwake);
             IsSleepRequested = true;
             await Task.Yield();
             while (IsAwake)
@@ -296,6 +307,19 @@ namespace Kit.Daemon
                     }
                 }
 
+                DeviceInformation device = SQLHLite.Table<DeviceInformation>().FirstOrDefault() ??
+                                           new DeviceInformation()
+                                           {
+                                               IsFirstLaunchTime = true,
+                                               DeviceId = Device.Current.DeviceId
+                                           };
+                if (device.IsFirstLaunchTime)
+                {
+                    device.IsFirstLaunchTime = false;
+                    //I Have been deleted and reinstalled! :o, so i need to sync everything again...
+                    SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
+                    SQLHLite.Update(device);
+                }
                 //Log.OnConecctionLost += Log_OnConecctionLost;
                 IsInited = true;
             }
@@ -343,6 +367,10 @@ namespace Kit.Daemon
                     //{
                     try
                     {
+                        if (WaitHandle is null)
+                        {
+                            return;
+                        }
                         if (IsSleepRequested)
                         {
                             GotoSleep();
@@ -423,9 +451,6 @@ namespace Kit.Daemon
             {
 
                 Log.Logger.Error(ex, "En la rutina Run principal");
-            }
-            finally
-            {
                 Start();
             }
         }

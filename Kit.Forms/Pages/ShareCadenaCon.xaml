@@ -5,20 +5,23 @@
                   xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
                   xmlns:qrcode="clr-namespace:ZXing.QrCode;assembly=zxing.portable"
                   xmlns:pages1="clr-namespace:Kit.Forms.Pages;assembly=Kit.Forms"
-                  x:Class="Kit.Forms.Pages.ShareCadenaCon" x:Name="Me" BackgroundColor="#51FFFFFF">
+                  x:Class="Kit.Forms.Pages.ShareCadenaCon" x:Name="Me" BackgroundColor="#51FFFFFF" x:DataType="pages1:ShareCadenaCon">
     <ContentPage.Content>
         <Frame Margin="10" CornerRadius="5" BackgroundColor="WhiteSmoke" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-            <StackLayout Padding="0" VerticalOptions="Center" 
-                HorizontalOptions="CenterAndExpand">
-                <Label Text="Cadena de conexión " FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <forms:ZXingBarcodeImageView HeightRequest="350" WidthRequest="700" BarcodeFormat="QR_CODE" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                             BarcodeValue="{Binding Code,Source={Reference Me}}">
-                    <forms:ZXingBarcodeImageView.BarcodeOptions>
-                        <qrcode:QrCodeEncodingOptions Height="700" Width="700"/>
-                    </forms:ZXingBarcodeImageView.BarcodeOptions>
-                </forms:ZXingBarcodeImageView>
-                <Label x:Name="TxtTitle" Text="" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
-            </StackLayout>
+            <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto"  Padding="0" VerticalOptions="Center" 
+                  HorizontalOptions="CenterAndExpand">
+                    <Label Grid.Row="0" Grid.ColumnSpan="3" Text="Cadena de conexión " FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <forms:ZXingBarcodeImageView Aspect="AspectFill" Grid.Column="1" Grid.Row="1" BarcodeFormat="QR_CODE" VerticalOptions="Fill" HorizontalOptions="Fill"
+                                                 BarcodeValue="{Binding Code}">
+                        <forms:ZXingBarcodeImageView.BarcodeOptions>
+                        <qrcode:QrCodeEncodingOptions Height="1000" Width="1000"/>
+                        </forms:ZXingBarcodeImageView.BarcodeOptions>
+                    </forms:ZXingBarcodeImageView>
+                    <StackLayout  Grid.Row="2" Grid.ColumnSpan="3">
+                        <Label x:Name="TxtTitle" Text="" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Button Clicked="SalvarQr" Text="Guardar código en la galeria"/>
+                    </StackLayout>
+                </Grid>
         </Frame>
     </ContentPage.Content>
 </pages1:BasePopUp>

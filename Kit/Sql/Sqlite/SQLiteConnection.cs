@@ -89,6 +89,7 @@ namespace Kit.Sql.Sqlite
             CreateTable<ChangesHistory>();
             CreateTable<SyncHistory>();
             CreateTable<Configuracion>();
+            CreateTable<DeviceInformation>();
             foreach (Type table in Tables)
             {
                 CreateTable(table);
@@ -113,11 +114,16 @@ namespace Kit.Sql.Sqlite
                 CreateDbFromScript();
             }
             CreateTable<DatabaseVersion>();
-            DatabaseVersion version = new DatabaseVersion()
+            Insert(new DatabaseVersion()
             {
                 Version = DBVersion
-            };
-            Insert(version);
+            });
+            CreateTable<DeviceInformation>();
+            Insert(new DeviceInformation()
+            {
+                DeviceId = Daemon.Devices.Device.Current.DeviceId,
+                IsFirstLaunchTime = true
+            });
         }
         private void CreateDbFromScript()
         {
@@ -2518,8 +2524,9 @@ namespace Kit.Sql.Sqlite
         void OnTableDeleteAll(TableMapping table)
         {
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
-            QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
-                .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
+            if (table.SyncDirection != SyncDirection.NoSync)
+                QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
+                    .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
         }
         public void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
         {

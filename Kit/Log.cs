@@ -139,6 +139,7 @@ namespace Kit
         {
             if (IsDBConnectionError(ex))
             {
+                Daemon.Daemon.OffLine = true;
                 Current.OnConecctionLost?.Invoke(ex, EventArgs.Empty);
                 return true;
             }
