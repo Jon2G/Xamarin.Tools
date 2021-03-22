@@ -35,64 +35,33 @@ namespace Kit.WPF.Pages
     /// </summary>
     public partial class SetUpConnectionString : ObservableWindow
     {
-        private readonly Empresas Empresas;
-        private readonly string DeviceId;
-        private SQLServerConnection SqlServer;
-        private readonly SQLiteConnection SqLite;
-        public Configuracion _Configuration;
-        public Configuracion Configuration
-        {
-            get => _Configuration;
-            set
-            {
-                _Configuration = value;
-                Raise(() => Configuration);
-            }
-        }
+        public SetUpConnectionStringViewModelBase Model { get; set; }
 
-        public SetUpConnectionString(Exception ex, Configuracion Configuration, SQLiteConnection SqLite = null)
+        public SetUpConnectionString(Exception ex, SQLServerConnection SqlServer, SQLiteConnection SqLite, Configuracion Configuration)
         {
-            ChangeDataContext(Configuration);
-            this.SqLite = SqLite;
-            DeviceId = new Kit.WPF.Services.DeviceInfo().DeviceId;
-            if (SqLite != null)
-                Empresas = new Empresas(SqLite);
-            InitializeComponent();
-            TxtStatus.Text = ex.Message;
-        }
-        private void ChangeDataContext(Configuracion Configuration)
-        {
-            this.Configuration = Configuration;
-            this.Configuration.IdentificadorDispositivo = Device.Current.DeviceId;
-            this.DataContext = this.Configuration;
-        }
-
-        public SetUpConnectionString(SQLServerConnection SqlServer, SQLiteConnection SqLite = null, Exception ex = null)
-        {
-            ChangeDataContext(new Configuracion());
-            this.SqlServer = SqlServer;
-            this.SqLite = SqLite;
-            DeviceId = new Kit.WPF.Services.DeviceInfo().DeviceId;
-            if (SqLite != null)
-                Empresas = new Empresas(SqLite);
+            this.Model = new SetUpConnectionStringViewModelBase(SqLite, SqlServer, Configuration);
             InitializeComponent();
             TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
+        public SetUpConnectionString(Exception ex, Configuracion Configuration, SQLiteConnection SqLite = null) :
+            this(ex, null, SqLite, Configuration)
+        {
+            TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
+        }
 
-        //private void CadenaCon_OnLoaded(object sender, RoutedEventArgs e)
-        //{
-        //    this.Configuration.CadenaCon = SqlServer.ConnectionString;
+        public SetUpConnectionString(SQLServerConnection SqlServer, SQLiteConnection SqLite = null, Exception ex = null) :
+            this(ex, SqlServer, SqLite, new Configuracion())
+        {
+            TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
+        }
 
-        //    CmbxEmpresas.ItemsSource = Empresas.ListarEmpresas();
-        //}
-
-        private async void Guardar(object sender, RoutedEventArgs e)
+        private void Guardar(object sender, RoutedEventArgs e)
         {
             try
             {
-                SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);
-                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Configuration.CadenaCon);
-                if (SqlServer.TestConnection(this.Configuration.CadenaCon) is Exception ex)
+                var SqlServer = new SQLServerConnection(this.Model.ConnectionString);
+                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Model.ConnectionString);
+                if (SqlServer.TestConnection(this.Model.ConnectionString) is Exception ex)
                 {
                     if (CustomMessageBox.ShowYesNo(
                             "La conexión actual no es valida\n" + ex.Message + "\n¿Desea guardarla de todas formas?",
@@ -101,11 +70,9 @@ namespace Kit.WPF.Pages
                         return;
                     }
                 }
-                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Configuration.CadenaCon);
-                if (this.SqLite != null)
-                {
-                    this.Configuration.Salvar(SqLite, SqlServer);
-                }
+                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Model.ConnectionString);
+                this.Model.SqlServer = SqlServer;
+                this.Model.Save();
                 this.Close();
             }
             catch (Exception ex)
@@ -119,12 +86,9 @@ namespace Kit.WPF.Pages
             Environment.Exit(-1);
         }
 
-
-
         private void ProbarConexion(object sender, RoutedEventArgs e)
         {
-            SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);
-            if (SqlServer.TestConnection() is Exception ex)
+            if (this.Model.TestConnection() is Exception ex)
             {
                 CustomMessageBox.Show("La cadena de conexión no es valida." + Environment.NewLine + ex.Message, "La cadena de conexión no es valida.", CustomMessageBoxButton.OK, CustomMessageBoxImage.Error);
                 TxtStatus.Text = ex.Message;
@@ -137,13 +101,12 @@ namespace Kit.WPF.Pages
 
         private void SeleccionaEmpresa(object sender, SelectionChangedEventArgs e)
         {
-            if (CmbxEmpresas.SelectedItem == null) return;
-            string[] args = Empresas.CadenaCon(
-                CmbxEmpresas.SelectedValue.ToString(), DeviceId).CadenaCon.Replace(Environment.NewLine, "").Replace('\n', ' ')
-                .Replace('\r', ' ').Split(';');
-            this.Configuration.CadenaCon = string.Join(";" + Environment.NewLine, (from w in args where !string.IsNullOrEmpty(w.Trim()) select w)).Trim();
-
-            ChangeDataContext(Empresas.CadenaCon(CmbxEmpresas.SelectedItem.ToString(), DeviceId));
+            if (string.IsNullOrEmpty(this.Model.Empresas.Seleccionada))
+            {
+                this.Model.Clear();
+                return;
+            }
+            this.Model.FromEmpresa(this.Model.Empresas.Seleccionada);
         }
 
         private async void ImportarCadena(object sender, RoutedEventArgs e)
@@ -169,8 +132,7 @@ namespace Kit.WPF.Pages
                 Configuracion configuracion_qr = Configuracion.DeSerialize(json);
                 if (configuracion_qr != null)
                 {
-                    this.Configuration = configuracion_qr;
-                    //this.CargarCadena();
+                    this.Model.Configuration = configuracion_qr;
                 }
                 else
                 {
@@ -182,10 +144,10 @@ namespace Kit.WPF.Pages
 
         private void CompartirCadena(object sender, RoutedEventArgs e)
         {
-            string code = this.Configuration?.Serialize();
+            string code = this.Model.Configuration?.Serialize();
             if (!string.IsNullOrEmpty(code))
             {
-                ShareCadenaCon share = new ShareCadenaCon(this.Configuration.NombreDB, code)
+                ShareCadenaCon share = new ShareCadenaCon(this.Model.Configuration.NombreDB, code)
                 {
                     Owner = this
                 };

@@ -163,6 +163,7 @@ namespace Kit.Forms.Pages
                 {
                     this.Configuracion = Configuracion.BuildFrom(TxtDbName.Text, TxtContraseña.Text, TxtPuerto.Text, TxtServidor.Text, TxtUsuario.Text);
                     this.Configuracion.CadenaCon = TxtCadenaCon.Text;
+                    this.Configuracion.Empresa = this.Configuracion.NombreDB;
                     this.Configuracion.Salvar(this.DBConection, this.NewDBConection);
 
                     this.NewDBConection.ConnectionString = new SqlConnectionStringBuilder(this.Configuracion.CadenaCon);
