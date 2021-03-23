@@ -27,8 +27,7 @@ namespace Kit.CadenaConexion
         private string _password;
         private string _empresa;
 
-        [PrimaryKey, AutoIncrement]
-        public long Id { get; set; }
+
         [NotNull]
         public string IdentificadorDispositivo { get; set; }
         [NotNull]
@@ -41,6 +40,7 @@ namespace Kit.CadenaConexion
                 Raise(() => CadenaCon);
             }
         }
+
         public string NombreDB
         {
             get => _nombreDb;
@@ -106,6 +106,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+        [PrimaryKey, MaxLength(50)]
         public string Empresa
         {
             get => _empresa;

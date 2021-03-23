@@ -6,7 +6,8 @@
                   xmlns:local="clr-namespace:Kit.WPF.Pages" x:Name="Me"
                   xmlns:controls="clr-namespace:Kit.WPF.Controls"
                   mc:Ignorable="d" WindowStartupLocation="CenterOwner"
-                  Title="SetUpConnectionString" Height="450" Width="800" DataContext="{Binding Configuration ,ElementName=Me}">
+                  Title="SetUpConnectionString" Height="450" Width="800"
+                  DataContext="{Binding Model ,ElementName=Me}" >
     <Window.Resources>
         <Style TargetType="Button"/>
     </Window.Resources>
@@ -42,14 +43,13 @@
                             Click="CompartirCadena"  Margin="5" BorderThickness="1" BorderBrush="Black" Content="Compartir cadena de conexión"/>
                 </Grid>
 
-                <TextBox DockPanel.Dock="Top" IsReadOnly="False" Text="{Binding CadenaCon}" Margin="10" BorderBrush="Black" BorderThickness="1"/>
+                <TextBox DockPanel.Dock="Top" IsReadOnly="False" DataContext="{Binding Configuration}" Text="{Binding CadenaCon}" Margin="10" BorderBrush="Black" BorderThickness="1"/>
 
 
 
 
             </DockPanel>
             <DockPanel  Grid.Column="0">
-
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -66,7 +66,7 @@
                             Margin="5" BorderThickness="1"
                             BorderBrush="Black" Content="Cancelar"/>
                 </Grid>
-                <StackPanel DockPanel.Dock="Top" Margin="5" HorizontalAlignment="Stretch"
+                <StackPanel DataContext="{Binding Configuration}" DockPanel.Dock="Top" Margin="5" HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch" >
                     <StackPanel.Resources>
                         <Style TargetType="TextBlock">
@@ -77,7 +77,11 @@
                         </Style>
                     </StackPanel.Resources>
                     <TextBlock FontSize="16" VerticalAlignment="Center" Grid.Column="0" Text="Empresa:"/>
-                    <ComboBox SelectionChanged="SeleccionaEmpresa" x:Name="CmbxEmpresas"
+                    <ComboBox SelectionChanged="SeleccionaEmpresa" 
+                              Text="{Binding Model.Configuration.Empresa, ElementName=Me}"
+                              SelectedItem="{Binding Seleccionada}"
+                              DataContext="{Binding Model.Empresas,ElementName=Me}"
+                              ItemsSource="{Binding ListaEmpresas}"
                               IsEditable="True" VerticalAlignment="Center"/>
                     <TextBlock Text="Base de Datos:"/>
                     <TextBox Text="{Binding NombreDB }"/>

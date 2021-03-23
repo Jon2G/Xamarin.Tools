@@ -6,11 +6,22 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Kit.Sql.Sqlite;
+using Kit.Model;
 
 namespace Kit.CadenaConexion
 {
-    public class Empresas
+    public class Empresas : ModelBase
     {
+        public List<string> _ListaEmpresas;
+        public List<string> ListaEmpresas
+        {
+            get => _ListaEmpresas; set
+            {
+                _ListaEmpresas = value;
+                Raise(() => ListaEmpresas);
+            }
+        }
+        public string Seleccionada { get; set; }
         private readonly SQLiteConnection SQLHLite;
         public Empresas(SQLiteConnection SQLHLite)
         {
@@ -18,8 +29,9 @@ namespace Kit.CadenaConexion
         }
         public IEnumerable<string> ListarEmpresas()
         {
-            return SQLHLite.Table<Configuracion>().Select(x => x.Empresa);
-
+            this.ListaEmpresas = SQLHLite.Table<Configuracion>().Select(x => x.Empresa).ToList();
+            this.ListaEmpresas.Add(string.Empty);
+            return this.ListaEmpresas;           
         }
         public Configuracion CadenaCon(string Empresa, string DeviceId)
         {
