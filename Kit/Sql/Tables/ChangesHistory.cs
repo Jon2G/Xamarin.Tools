@@ -44,7 +44,7 @@ namespace Kit.Sql.Tables
                 {
                     DeviceId = Daemon.Devices.Device.Current.DeviceId, SyncGuid = this.SyncGuid
                 };
-                origin.Table<SyncHistory>().Delete(x => x.DeviceId == syncHistory.DeviceId && x.SyncGuid == syncHistory.SyncGuid);
+                origin.Table<SyncHistory>().Delete(x => x.SyncGuid == syncHistory.SyncGuid);
                 origin.Insert(syncHistory,string.Empty);
 
                 //if (connection is SqlServer SQLH)

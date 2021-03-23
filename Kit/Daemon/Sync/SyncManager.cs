@@ -68,8 +68,17 @@ namespace Kit.Daemon.Sync
             }
         }
 
-        private string DownloadQuery;
-        private string UploadQuery;
+        private string DownloadQuery
+        {
+            get;
+            set;
+        }
+
+        private string UploadQuery
+        {
+            get;
+            set;
+        }
         public SyncManager()
         {
             this.Pendings = new Queue<ChangesHistory>();
@@ -209,7 +218,7 @@ namespace Kit.Daemon.Sync
                             case NotifyTableChangedAction.Insert:
                             case NotifyTableChangedAction.Update:
 
-                                if (read != null && direccion == SyncDirecction.Local || read.ShouldSync(source_con, target_con))
+                                if (read != null && (direccion == SyncDirecction.Local || read.ShouldSync(source_con, target_con)))
                                 {
                                     CanDo = true;
                                     object old_pk = null;

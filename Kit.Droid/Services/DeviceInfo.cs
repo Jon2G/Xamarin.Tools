@@ -130,16 +130,14 @@ namespace Kit.Droid.Services
             get
             {
                 string id = null;
-                try
-                {
-                    id = HardUniqueId();
-                    //Context context = Android.App.Application.Context;
-                    //id = Secure.GetString(context.ContentResolver, Secure.AndroidId);
-                }
-                catch (Exception ex)
-                {
-                    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
-                }
+                //try
+                //{
+                //    id = HardUniqueId();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
+                //}
                 DeviceIdBuilder builder = new DeviceIdBuilder();
                 builder.AddProcessorId();
                 return string.Concat(id ?? string.Empty, builder.ToString());

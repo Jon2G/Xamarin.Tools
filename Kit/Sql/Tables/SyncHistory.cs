@@ -9,8 +9,6 @@ namespace Kit.Sql.Tables
 {
     public class SyncHistory:ISync
     {
-        //[PrimaryKey]
-        public Guid SyncGuid { get; set; }
         public override object GetPk()
         {
             return SyncGuid;

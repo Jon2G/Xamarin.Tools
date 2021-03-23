@@ -2234,9 +2234,10 @@ namespace Kit.Sql.Sqlite
             }
 
             var cols = from p in map.Columns
-                       where p != pk
+                       where p != pk && p.Name != nameof(ISync.SyncGuid)
                        select p;
             var vals = from c in cols
+                       where c.Name != nameof(ISync.SyncGuid)
                        select c.GetValue(obj);
             var ps = new List<object>(vals);
             if (ps.Count == 0)
