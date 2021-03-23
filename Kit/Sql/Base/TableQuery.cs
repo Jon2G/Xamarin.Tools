@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Kit.Sql.Attributes;
+using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 
@@ -64,15 +65,15 @@ namespace Kit.Sql.Base
         /// <summary>
         /// Delete all the rows that match this query.
         /// </summary>
-        public int Delete()
+        public int Delete(bool ShouldNotify=true)
         {
-            return Delete(null);
+            return Delete(null, ShouldNotify);
         }
 
         /// <summary>
         /// Delete all the rows that match this query and the given predicate.
         /// </summary>
-        public int Delete(Expression<Func<T, bool>> predExpr)
+        public int Delete(Expression<Func<T, bool>> predExpr, bool ShouldNotify=true)
         {
             if (_limit.HasValue || _offset.HasValue)
                 throw new InvalidOperationException("Cannot delete with limits or offsets");
@@ -102,6 +103,13 @@ namespace Kit.Sql.Base
             var command = Connection.CreateCommand(cmdText, conditions_array);
 
             int result = command.ExecuteNonQuery();
+            if (ShouldNotify && result > 0 && Table.SyncDirection != SyncDirection.NoSync)
+            {
+                if (Connection is SQLiteConnection sqlite)
+                {
+                    sqlite.OnTableChanged((Kit.Sql.Sqlite.TableMapping)Table, NotifyTableChangedAction.Delete, this);
+                }
+            }
             return result;
         }
 

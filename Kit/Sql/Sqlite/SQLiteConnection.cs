@@ -2563,7 +2563,7 @@ namespace Kit.Sql.Sqlite
         public void UpdateVersionControl(ChangesHistory VersionControl)
         {
             Table<ChangesHistory>()
-                .Delete(x => x.SyncGuid == VersionControl.SyncGuid);
+                .Delete(x => x.SyncGuid == VersionControl.SyncGuid,false);
             Insert(VersionControl);
         }
 

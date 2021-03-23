@@ -16,7 +16,7 @@ using Kit.Sql.SqlServer;
 
 namespace Kit.CadenaConexion
 {
-    [SyncMode(SyncDirection.NoSync)]
+    [Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
     public class Configuracion : ModelBase
     {
         private string _cadenaCon;
@@ -120,6 +120,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+        public bool Activa { get; set; }
 
         /// <summary>
         /// WARNING  SOLO PARA REFLEXIÓN XML
@@ -143,24 +144,25 @@ namespace Kit.CadenaConexion
 
         public static Configuracion ObtenerConfiguracion(SQLiteConnection SQHLite, string DeviceId)
         {
+            Configuracion configuracion = null;
             try
             {
                 var configs = SQHLite.Table<Configuracion>();
                 if (configs.Any())
                 {
-                    return configs.FirstOrDefault();
+                    configuracion = configs.FirstOrDefault(x => x.Activa) ?? new Configuracion(string.Empty, DeviceId);
                 }
             }
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "Al obtener la configuracion");
             }
-            return new Configuracion(string.Empty, DeviceId);
+            return configuracion;
         }
 
         public static bool IsUserDefined(SQLiteConnection SQLHLite)
         {
-            string pin = SQLHLite.ExecuteScalar<string>("SELECT DEFINED_USER_PIN FROM CONFIGURACION");
+            string pin = SQLHLite.ExecuteScalar<string>("SELECT DEFINED_USER_PIN FROM CONFIGURACION WHERE ACTIVA=1");
             return (!string.IsNullOrEmpty(pin));
         }
 
@@ -182,6 +184,8 @@ namespace Kit.CadenaConexion
             try
             {
                 SQLH.ConnectionString = (new SqlConnectionStringBuilder(this.CadenaCon));
+                this.Activa = true;
+                SQLHLite.EXEC("UPDATE CONFIGURACION SET ACTIVA=0");
                 SQLHLite.InsertOrReplace(this);
 
                 if (SQLH.TableExists("COMANDERAS_MOVILES"))
