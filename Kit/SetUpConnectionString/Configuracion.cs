@@ -147,11 +147,9 @@ namespace Kit.CadenaConexion
             Configuracion configuracion = null;
             try
             {
-                var configs = SQHLite.Table<Configuracion>();
-                if (configs.Any())
-                {
-                    configuracion = configs.FirstOrDefault(x => x.Activa) ?? new Configuracion(string.Empty, DeviceId);
-                }
+                var configs = SQHLite.Table<Configuracion>();       
+                    configuracion = configs.FirstOrDefault(x => x.Activa)
+                    ?? new Configuracion(string.Empty, DeviceId);
             }
             catch (Exception ex)
             {
