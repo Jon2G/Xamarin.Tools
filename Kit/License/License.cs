@@ -7,6 +7,8 @@ using Kit.Daemon.Devices;
 using Kit.Enums;
 using Kit.Services.Interfaces;
 using Kit.Sql;
+using Kit.Sql.Base;
+using Kit.Sql.Tables;
 
 namespace Kit.License
 {
@@ -15,6 +17,7 @@ namespace Kit.License
         public const string LoginSite = "https://ecommerce.blumitech.com.mx/";
         private readonly Dictionary<string, string> AppKeys;
         private readonly WebService WebService;
+        private DeviceInformation DeviceInformation;
         private readonly string AppName;
         private string AppKey;
 
@@ -32,6 +35,10 @@ namespace Kit.License
                 { "Alta y Modificación de Artículos","ALTA2020"}
 
             };
+            this.DeviceInformation = new DeviceInformation()
+            {
+                DeviceId = Device.Current.DeviceId
+            };
             WebService = new WebService(Device.Current.DeviceId);
         }
 
@@ -48,7 +55,7 @@ namespace Kit.License
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex,"Obtaining device brand");
+                Log.Logger.Error(ex, "Obtaining device brand");
             }
             return brand;
         }
@@ -92,12 +99,13 @@ namespace Kit.License
             return brand;
         }
 
-        public async Task<bool> IsAuthorizated()
+        public async Task<bool> IsAuthorizated(SqlBase sql)
         {
             if (Tools.Debugging)
             {
-                return await Task.FromResult(true); ;
+                return await Task.FromResult(true); 
             }
+            DeviceInformation = DeviceInformation.Get(sql);
             bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
             state = await Autheticate(AppName);
@@ -106,10 +114,12 @@ namespace Kit.License
                 case ProjectActivationState.Active:
                     Log.Logger.Information("Project is active");
                     Autorized = true;
+                    DeviceInformation.LastAuthorizedTime = DateTime.Now;
+                    sql.InsertOrReplace(DeviceInformation);
                     break;
                 case ProjectActivationState.Expired:
                     this.Reason = "La licencia para usar esta aplicación ha expirado";
-                   await Tools.Instance.CustomMessageBox.Show(this.Reason, "Acceso denegado");
+                    await Tools.Instance.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                     break;
                 case ProjectActivationState.Denied:
                     Log.Logger.Information("Acces denied");
@@ -122,16 +132,27 @@ namespace Kit.License
                     OpenRegisterForm();
                     //     BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
                     //   await page.Navigation.PushModalAsync(login, true);
-                    Autorized = false;
+                    Autorized = await IsAuthorizated(sql);
                     break;
                 case ProjectActivationState.ConnectionFailed:
                     this.Reason = "Revise su conexión a internet";
                     await Tools.Instance.CustomMessageBox.Show(this.Reason, "Atención");
-                    break;
+                    return CanBeAuthorizedByTime();
             }
             return Autorized;
         }
 
+
+
+        public bool CanBeAuthorizedByTime()
+        {
+            if (this.DeviceInformation is not null)
+            {
+                double days = Math.Abs((DateTime.Now - this.DeviceInformation.LastAuthorizedTime).TotalDays);
+                return days < 7;
+            }
+            return false;
+        }
         public async Task<bool> RegisterDevice(string userName, string password)
         {
             string DeviceBrand = GetDeviceBrand();

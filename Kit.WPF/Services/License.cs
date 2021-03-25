@@ -16,7 +16,8 @@ namespace Kit.WPF.Services
         {
             DeviceRegister register = new DeviceRegister(this, new ICustomMessageBox.CustomMessageBoxService())
             {
-                Owner = Tools.Instance.VentanaPadre()
+                Owner = null,
+                WindowStartupLocation=System.Windows.WindowStartupLocation.CenterScreen
             };
             register.ShowDialog();
         }
