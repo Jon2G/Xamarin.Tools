@@ -21,14 +21,14 @@ using Kit.Sql.Helpers;
 using Kit.Sql.SqlServer;
 using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
-using  ZXing;
+using ZXing;
 
 
 
 namespace Kit.Forms.Pages
 {
     extern alias SharedZXingNet;
-    
+
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CadenaCon : BasePage
@@ -42,7 +42,7 @@ namespace Kit.Forms.Pages
             set
             {
                 SetValue(LogoProperty, value);
-                Raise(()=>LogoProperty);
+                Raise(() => LogoProperty);
             }
         }
 
@@ -54,7 +54,7 @@ namespace Kit.Forms.Pages
             set
             {
                 SetValue(IsLogoVisibleProperty, value);
-                Raise(()=>IsLogoVisible);
+                Raise(() => IsLogoVisible);
             }
         }
         public Lector Leector { get; set; }
@@ -238,7 +238,7 @@ namespace Kit.Forms.Pages
         private void ToogleStatus(Exception ex)
         {
             TxtEstado.Text = ex?.Message ?? "Correcto";
-            Img.Source = ex is null ? "usbok.png" : "usbbad.png";
+            LblIcon.Text = ex is null ? "Ok." : "X";
         }
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {

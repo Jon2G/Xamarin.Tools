@@ -1569,7 +1569,7 @@ WHERE
                 string addCol;
                 if (p.ColumnType == typeof(Guid))
                 {
-                    addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p) + " DEFAULT NEWID()";
+                    addCol = "alter table \"" + map.TableName + "\" add " + Orm.SqlDecl(p);
                     Execute(addCol);
                     continue;
                 }

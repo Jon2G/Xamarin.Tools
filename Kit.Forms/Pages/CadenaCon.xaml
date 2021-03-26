@@ -53,7 +53,7 @@
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" x:Name="Img" Margin="0" Source="usbok.png" Aspect="Fill"/>
+                    <Label x:Name="LblIcon" Text="Ok." VerticalOptions="Center"/>
                     <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"  Padding="0" Margin="0" Grid.Column="1" HorizontalScrollBarVisibility="Never" VerticalScrollBarVisibility="Default">
                         <Label TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TxtEstado" Text="Ok" FontSize="Medium"/>
                     </ScrollView>
