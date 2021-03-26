@@ -15,8 +15,9 @@ namespace Kit.Droid.Services
 {
     public class GalleryService : IGalleryService
     {
-        public async Task<string> SaveImageToGallery(Stream stream, string ImageName,string AppName)
+        public async Task<string> SaveImageToGallery(Stream stream, string ImageName, string AppName = null)
         {
+            AppName ??= Kit.Droid.ToolsImplementation.Instance.MainActivity.ApplicationInfo.Name;
             var resolver = Kit.Droid.ToolsImplementation.Instance.MainActivity.ContentResolver;
             var contentValues = new ContentValues();
             contentValues.Put(MediaStore.MediaColumns.DisplayName, ImageName);

@@ -6,10 +6,13 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Android.Views;
+using Kit.Droid.Services;
 using Kit.Services.Interfaces;
+using Xamarin.Forms;
 using Bitmap = Android.Graphics.Bitmap;
+using View = Android.Views.View;
 
+[assembly: Xamarin.Forms.Dependency(typeof(Screenshot))]
 namespace Kit.Droid.Services
 {
     public class Screenshot : IScreenshot

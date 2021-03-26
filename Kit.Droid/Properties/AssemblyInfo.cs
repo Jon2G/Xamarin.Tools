@@ -2,6 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Android.App;
+using Kit.Droid.Services;
+
 [assembly: ComVisible(false)]
 [assembly: UsesPermission(name: "android.permission.READ_EXTERNAL_STORAGE")]
 [assembly: UsesPermission(name: "android.permission.WRITE_EXTERNAL_STORAGE")]
