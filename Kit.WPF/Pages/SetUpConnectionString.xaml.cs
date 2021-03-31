@@ -59,7 +59,13 @@ namespace Kit.WPF.Pages
         {
             try
             {
-                var SqlServer = new SQLServerConnection(this.Model.ConnectionString);
+                if (string.IsNullOrEmpty(this.Model.Configuration.Empresa))
+                {
+                    CustomMessageBox.Show("Debe indicar un nombre para esta cadena.","La conexión no es valida",CustomMessageBoxButton.OK, CustomMessageBoxImage.Warning);
+                    return;
+                }
+
+                    var SqlServer = new SQLServerConnection(this.Model.ConnectionString);
                 SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Model.ConnectionString);
                 if (SqlServer.TestConnection(this.Model.ConnectionString) is Exception ex)
                 {
@@ -132,6 +138,10 @@ namespace Kit.WPF.Pages
                 Configuracion configuracion_qr = Configuracion.DeSerialize(json);
                 if (configuracion_qr != null)
                 {
+                    if (string.IsNullOrEmpty(configuracion_qr.Empresa))
+                    {
+                        configuracion_qr.Empresa = configuracion_qr.NombreDB;
+                    }
                     this.Model.Configuration = configuracion_qr;
                 }
                 else
