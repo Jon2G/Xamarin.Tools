@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using Kit.Services.Interfaces;
 
-namespace Tools.UWP.Services
+namespace Kit.UWP.Services
 {
     public class ScreenShotService : IScreenshot
     {

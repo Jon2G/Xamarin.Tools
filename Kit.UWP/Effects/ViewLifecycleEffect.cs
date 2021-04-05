@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using Windows.UI.Xaml;
-using Tools.UWP.Effects;
+using Kit.UWP.Effects;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 using BaseViewLifecycleEffect = Kit.Forms.Effects.ViewLifecycleEffect;
 
 [assembly: ResolutionGroupName(Kit.Forms.Effects.ViewLifecycleEffect.EffectGroupName)]
 [assembly: ExportEffect(typeof(ViewLifecycleEffect), Kit.Forms.Effects.ViewLifecycleEffect.EffectName)]
-namespace Tools.UWP.Effects
+namespace Kit.UWP.Effects
 {
     public class ViewLifecycleEffect : PlatformEffect
     {

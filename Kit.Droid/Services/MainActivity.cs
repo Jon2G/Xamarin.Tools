@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -25,6 +26,8 @@ using Xamarin.Forms;
 
 namespace Kit.Droid.Services
 {
+    [Activity(Label = "Kit.MainActivity", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = false,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
 
@@ -79,6 +82,7 @@ namespace Kit.Droid.Services
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Rg.Plugins.Popup.Popup.Init(this);
             Kit.Droid.Tools.Init(this, savedInstanceState);
+            Forms9Patch.Droid.Settings.Initialize(this);
             Instance = this; //ImagePicker
         }
 

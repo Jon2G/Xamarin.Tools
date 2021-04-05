@@ -7,8 +7,8 @@
     <ProjectGuid>{448253EC-BF0C-4173-885B-F9F7B92D511C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tools.UWP</RootNamespace>
-    <AssemblyName>Tools.UWP</AssemblyName>
+    <RootNamespace>Kit.UWP</RootNamespace>
+    <AssemblyName>Kit.UWP</AssemblyName>
     <DefaultLanguage>es-ES</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -133,6 +133,7 @@
     <Compile Include="Effects\ViewLifecycleEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renders\ProgressRingRenderer.cs" />
+    <Compile Include="Services\Application.cs" />
     <Compile Include="Services\CustomMessageBoxService.cs" />
     <Compile Include="Services\DeviceInfo.cs" />
     <Compile Include="Services\FolderPermissions.cs" />
@@ -145,13 +146,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.1.0.475</Version>
+      <Version>7.1.0.483</Version>
+    </PackageReference>
+    <PackageReference Include="Forms9Patch">
+      <Version>2.4.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>6.1.1</Version>
+      <Version>7.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.DeviceInfo">
       <Version>4.1.1</Version>

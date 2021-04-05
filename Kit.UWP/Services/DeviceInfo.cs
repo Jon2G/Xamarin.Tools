@@ -2,7 +2,7 @@
 using Plugin.DeviceInfo.Abstractions;
 using IDeviceInfo = Kit.Services.Interfaces.IDeviceInfo;
 
-namespace Tools.UWP.Services
+namespace Kit.UWP.Services
 {
     public class DeviceInfo : IDeviceInfo
     {

@@ -6,6 +6,8 @@ using System.Text;
 using CoreGraphics;
 using Foundation;
 using Kit.Enums;
+using Kit.Forms.Services.XFPDF.Helpers.Enums;
+using Kit.Forms.Services.XFPDF.Model;
 using Kit.Services;
 using UIKit;
 using WebKit;

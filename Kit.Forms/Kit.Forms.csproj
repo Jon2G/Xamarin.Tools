@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.483" />
+    <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.IO" Version="1.0.1" />
@@ -108,6 +109,10 @@
     <EmbeddedResource Update="Pages\ShareCadenaCon.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Renders\" />
   </ItemGroup>
 
 </Project>

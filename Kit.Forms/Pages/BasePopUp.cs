@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
+using Xamarin.Forms;
 
 namespace Kit.Forms.Pages
 {
@@ -16,6 +18,18 @@ namespace Kit.Forms.Pages
         public ICommand ClosedCommad;
         [Obsolete("Use ClosedCommad")]
         public event EventHandler OnClosed;
+        private AutoResetEvent ShowDialogCallback;
+
+        public BasePopUp()
+        {
+            this.ShowDialogCallback = new AutoResetEvent(false);
+            this.BackgroundClickedCommand = new Command(BackgroundClicked);
+        }
+
+        private void BackgroundClicked()
+        {
+
+        }
         protected void InvokeConfirmado(object sender, EventArgs e)
         {
             Confirmado?.Invoke(sender, e);
@@ -25,7 +39,14 @@ namespace Kit.Forms.Pages
             base.OnDisappearing();
             Confirmado?.Invoke(this, null);
         }
-        public virtual async Task<BasePopUp> Mostrar()
+
+        public virtual async Task<BasePopUp> ShowDialog()
+        {
+            await Show();
+            await Task.Run(() => this.ShowDialogCallback.WaitOne());
+            return this;
+        }
+        public virtual async Task<BasePopUp> Show()
         {
             ScaleAnimation scaleAnimation = new ScaleAnimation
             {
@@ -44,12 +65,14 @@ namespace Kit.Forms.Pages
                 await Close();
             }
         }
+        
         public virtual async Task<BasePopUp> Close()
         {
+            this.ShowDialogCallback.Set();
             Closing();
             await PopupNavigation.Instance.RemovePageAsync(this, true);
             OnClosed?.Invoke(this, EventArgs.Empty);
-            ClosedCommad?.Execute(this);
+            ClosedCommad?.Execute( this);
             return this;
         }
         protected virtual void Closing() { }

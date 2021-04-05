@@ -38,6 +38,11 @@ namespace Kit.Sql.Reflection
             }
             return null;
         }
+
+        public  static ReflectionCaller FromAssembly<T>()
+        {
+            return new ReflectionCaller().GetAssembly<T>();
+        }
         public ReflectionCaller GetAssembly<T>()
         {
             return GetAssembly(typeof(T));

@@ -1,4 +1,6 @@
-﻿using System;
+﻿extern alias SharedZXingNet;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,8 +9,8 @@ using ImageProcessing.JPEGCodec;
 using ImageProcessing.PNGCodec;
 using ImageProcessing.TGACodec;
 using MoyskleyTech.ImageProcessing.Image;
-using ZXing;
-using ZXing.Common;
+using SharedZXingNet::ZXing;
+using SharedZXingNet::ZXing.Common;
 
 namespace Kit.Services.BarCode
 {

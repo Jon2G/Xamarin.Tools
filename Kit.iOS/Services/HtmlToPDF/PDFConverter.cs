@@ -7,6 +7,9 @@ using System.Text;
 using UIKit;
 using WebKit;
 using Kit.Enums;
+using Kit.Forms.Services.XFPDF.Helpers.Enums;
+using Kit.Forms.Services.XFPDF.Helpers.Interfaces;
+using Kit.Forms.Services.XFPDF.Model;
 using Kit.iOS.Services.HtmlToPDF;
 using Xamarin.Forms;
 

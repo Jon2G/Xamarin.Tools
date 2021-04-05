@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Kit;
 
-namespace Tools.UWP
+namespace Kit.UWP
 {
     /// <summary>
     /// Interface for Xamarin.Tools

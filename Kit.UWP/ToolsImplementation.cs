@@ -1,13 +1,11 @@
 ﻿using System.Diagnostics;
-using Kit;
 using Kit.Enums;
 using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
-using Kit.Services.Interfaces;
-using Tools.UWP.Services;
-using CustomMessageBoxService = Tools.UWP.Services.CustomMessageBoxService;
+using Kit.UWP.Services;
+using CustomMessageBoxService = Kit.UWP.Services.CustomMessageBoxService;
 
-namespace Tools.UWP
+namespace Kit.UWP
 {
     public class ToolsImplementation : AbstractTools
     {
