@@ -1,39 +1,32 @@
-﻿using Kit.Services.Interfaces;
+﻿extern alias SharedZXingNet;
+using Kit.Services.Interfaces;
 using Kit.Sql;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Kit.iOS.Services;
 using Kit.Services.BarCode;
 using UIKit;
 using Xamarin.Forms;
+using SharedZXingNet::ZXing;
+using SharedZXingNet::ZXing.Rendering;
 using ZXing.Mobile;
-using ZXing;
-using ZXing.Common;
+using EncodingOptions = SharedZXingNet::ZXing.Common.EncodingOptions;
 
 [assembly: Dependency(typeof(Kit.iOS.Services.BarCodeBuilder))]
 namespace Kit.iOS.Services
 {
     public class BarCodeBuilder : IBarCodeBuilder
     {
-
         public MemoryStream Generate(BarcodeFormat Formato, string Value, int Width = 350, int Height = 350, int Margin = 10, EncodingOptions Options = null)
         {
             try
             {
-                BarcodeWriter barcodeWriter = new ZXing.Mobile.BarcodeWriter
+                var barcodeWriter = new SharedZXingNet::ZXing.BarcodeWriter<UIImage>
                 {
                     Format = Formato,
-                    Options = Options ?? new EncodingOptions
-                    {
-                        Width = Width,
-                        Height = Height,
-                        Margin = Margin
-                    }
+                    Options = Options ?? new EncodingOptions { Width = Width, Height = Height, Margin = Margin },
+                    Renderer = (IBarcodeRenderer<UIImage>)new BitmapRenderer()
                 };
 
-                barcodeWriter.Renderer = new ZXing.Mobile.BitmapRenderer();
                 UIImage bitmap = barcodeWriter.Write(Value);
                 MemoryStream stream = (MemoryStream)bitmap.AsPNG().AsStream();
                 return stream;

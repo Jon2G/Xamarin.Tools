@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Kit;
 using Kit.Services.Interfaces;
 
-namespace Tools.UWP.Services
+namespace Kit.UWP.Services
 {
     public class PrintHTML : IPrintHTML
     {

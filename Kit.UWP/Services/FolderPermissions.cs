@@ -2,10 +2,9 @@
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Kit;
 using Kit.Services.Interfaces;
 
-namespace Tools.UWP.Services
+namespace Kit.UWP.Services
 {
     public class FolderPermissions : IFolderPermissions
     {

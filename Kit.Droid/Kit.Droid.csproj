@@ -1,6 +1,5 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-    <!--<TargetFrameworks>MonoAndroid81;MonoAndroid90;MonoAndroid10.0</TargetFrameworks>-->
     <TargetFrameworks>MonoAndroid10.0</TargetFrameworks>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -31,7 +30,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
     <UserSecretsId>4340845f-285e-41e0-97a6-d5680f180db2</UserSecretsId>
-    <Configurations>Debug;Release;Gorilla</Configurations>
+    <Configurations>Debug;Release</Configurations>
+    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,6 +63,10 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+ <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
@@ -72,18 +77,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Xamarin" Version="0.2.0.64" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.0.4" />
-    <PackageReference Include="Xamarin.Android.Support.Compat" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Android.Support.Core.UI" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Android.Support.Fragment" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Android.Support.Media.Compat" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Acr.UserDialogs">
       <Version>7.1.0.470</Version>
     </PackageReference>
@@ -136,6 +135,9 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
   <!--https://github.com/onovotny/MSBuildSdkExtras/issues/174-->
   <Target Name="_RemoveNonExistingResgenFile" BeforeTargets="CoreCompile" Condition="'$(_SdkSetAndroidResgenFile)' == 'true' And '$(AndroidResgenFile)' != '' And !Exists('$(AndroidResgenFile)')">

@@ -1417,7 +1417,7 @@ namespace Kit.Sql.Sqlite
         public T Get<T>(object pk) where T : new()
         {
             var map = GetMapping(typeof(T));
-            return Query<T>(map.GetByPrimaryKeySql, pk).First();
+            return Query<T>(map.GetByPrimaryKeySql, pk).FirstOrDefault();
         }
 
         /// <summary>

@@ -7,20 +7,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UIKit;
+using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
-    public class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public abstract class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
-        public bool FinishedLaunching<T>(UIApplication app, NSDictionary options) where T : Xamarin.Forms.Application
+        protected abstract Application GetApp { get; }
+        protected abstract void Initialize();
+        //
+        // This method is invoked when the application has loaded and is ready to run. In this 
+        // method you should instantiate the window, load the UI into it and then make the window
+        // visible.
+        //
+        // You have 17 seconds to return from this method, or iOS will terminate your application.
+        //
+        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.SetFlags("Expander_Experimental", "Brush_Experimental", "Shapes_Experimental", "DragAndDrop_Experimental");
-            //global::Xamarin.Forms.Forms.Init();
-            //global::Xamarin.Forms.FormsMaterial.Init();
-
+            global::Xamarin.Forms.Forms.Init();
+            global::Xamarin.Forms.FormsMaterial.Init();
+            Rg.Plugins.Popup.Popup.Init();
+            Forms9Patch.iOS.Settings.Initialize(this);
+            Init();
             new TintTransformation();
             Kit.iOS.Tools.Init();
-            LoadApplication((Xamarin.Forms.Application)Activator.CreateInstance(typeof(T)));
+            LoadApplication(GetApp);
             return base.FinishedLaunching(app, options);
         }
     }

@@ -14,6 +14,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Kit.iOS.Services.HtmlToPDF;
 using Kit.Enums;
+using Kit.Forms.Services.XFPDF.Helpers.Enums;
+using Kit.Forms.Services.XFPDF.Model;
 
 [assembly: Dependency(typeof(Kit.iOS.Services.PrintHTML))]
 namespace Kit.iOS.Services
@@ -38,25 +40,20 @@ namespace Kit.iOS.Services
             }
             return false;
         }
-        public void HTMLToPDF(string html, string filename)
+        public async void HTMLToPDF(string html, string filename)
         {
-            using (PDFToHtml pdf = new PDFToHtml(html, filename,new PDFConverter()))
+            using (PDFToHtml pdf = new PDFToHtml())
             {
+                pdf.HTMLString = html;
+                pdf.FileName = filename;
                 pdf.PageWidth = 204;
                 pdf.PageHeight = 8503;
-                pdf.OnCompleted += PdfCompleted;
-                pdf.GeneratePDF();
-
-            }
-        }
-        private void PdfCompleted(object sender, EventArgs e)
-        {
-            if (sender is PDFToHtml pdf)
-            {
+                await pdf.GeneratePDF();
                 if (pdf.Status == PDFEnum.Completed)
                 {
                     Print(pdf.FilePath);
                 }
+
             }
         }
         private bool Print(string fileName)
