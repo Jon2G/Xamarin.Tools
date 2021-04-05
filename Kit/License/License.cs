@@ -32,7 +32,8 @@ namespace Kit.License
                 { "InventarioFisico","INVIS001"},
                 { "EtiquetadorApp","ETIQUETADOR_2020"},
                 { "MyGourmetPOS","MGPOS2020"},
-                { "Alta y Modificación de Artículos","ALTA2020"}
+                { "Alta y Modificación de Artículos","ALTA2020"},
+                { "Toma de pedidos móvil","PEDIDOS19"}
 
             };
             this.DeviceInformation = new DeviceInformation()
