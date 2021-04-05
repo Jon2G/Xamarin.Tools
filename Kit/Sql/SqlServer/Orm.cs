@@ -134,8 +134,8 @@ namespace Kit.Sql.SqlServer
                     return "integer";
             }
             else if (clrType == typeof(byte[]))
-            {
-                return "blob";
+            {          
+                return "VARBINARY(MAX)";
             }
             else if (clrType == typeof(Guid))
             {

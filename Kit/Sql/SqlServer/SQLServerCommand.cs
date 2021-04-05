@@ -98,6 +98,7 @@ namespace Kit.Sql.SqlServer
 
         public override IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map)
         {
+            List<T> result = new List<T>();
             if (_conn.Trace)
             {
                 _conn.Tracer?.Invoke("Executing Query: " + this);
@@ -133,24 +134,31 @@ namespace Kit.Sql.SqlServer
                             do
                             {
                                 var obj = Activator.CreateInstance(map.MappedType);
-                                for (int i = 0; i < cols.Length; i++)
+                                try
                                 {
-                                    if (cols[i] == null)
-                                        continue;
 
-                                    if (fastColumnSetters[i] != null)
+                                    for (int i = 0; i < cols.Length; i++)
                                     {
-                                        fastColumnSetters[i].Invoke((T)obj, reader, i);
+                                        if (cols[i] == null)
+                                            continue;
+
+                                        if (fastColumnSetters[i] != null)
+                                        {
+                                            fastColumnSetters[i].Invoke((T)obj, reader, i);
+                                        }
+                                        else
+                                        {
+                                            var colType = reader.GetFieldType(i);
+                                            var val = ReadCol(reader, i, colType, cols[i].ColumnType);
+                                            cols[i].SetValue(obj, val);
+                                        }
                                     }
-                                    else
-                                    {
-                                        var colType = reader.GetFieldType(i);
-                                        var val = ReadCol(reader, i, colType, cols[i].ColumnType);
-                                        cols[i].SetValue(obj, val);
-                                    }
+                                    OnInstanceCreated(obj);
+                                    result.Add ((T)obj);
+                                }catch(Exception ex)
+                                {
+                                    Log.Logger.Error("");
                                 }
-                                OnInstanceCreated(obj);
-                                yield return (T)obj;
 
                             } while ((reader.Read()));
                         }
@@ -158,6 +166,7 @@ namespace Kit.Sql.SqlServer
 
                 }
             }
+            return result;
         }
 
         public override T ExecuteScalar<T>()

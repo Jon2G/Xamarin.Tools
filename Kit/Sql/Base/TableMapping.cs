@@ -95,6 +95,13 @@ namespace Kit.Sql.Base
                 }
             }
 
+            var pks = cols.Where(x => x.IsPK).ToList();
+            if (pks.Count > 1)
+            {
+                pks.Remove(pks.First());
+                pks.ForEach(pk => cols.Remove(pk));
+            }
+
             foreach (var c in cols)
             {
                 if (c.IsAutoInc && c.IsPK)

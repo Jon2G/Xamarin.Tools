@@ -820,6 +820,8 @@ namespace Kit.Sql.Sqlite
                 // Build query.
                 var query = "create " + @virtual + "table if not exists \"" + map.TableName + "\" " + @using + "(\n";
                 var decls = map.Columns.Select(p => Orm.SqlDecl(p, StoreDateTimeAsTicks, StoreTimeSpanAsTicks));
+
+
                 var decl = string.Join(",\n", decls.ToArray());
                 query += decl;
                 query += ")";
