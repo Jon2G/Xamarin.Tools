@@ -21,11 +21,16 @@ namespace Kit.WPF.Pages
     {
         public event EventHandler OnShowed;
         private bool IsActivated;
-        public SplashScreen()
+        public SplashScreen() : this(null)
+        {
+
+        }
+        public SplashScreen(string Title)
         {
             this.IsActivated = false;
             this.Activated += Window_Activated;
             InitializeComponent();
+            this.Title = Title ?? ToolsImplementation.Instance.ProductName();
         }
         private async void Window_Activated(object sender, EventArgs e)
         {

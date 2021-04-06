@@ -13,17 +13,26 @@ using Kit.Sql.Helpers;
 using Kit.WPF.Services;
 using Kit.WPF.Services.ICustomMessageBox;
 using Serilog;
+using System.Reflection;
 
 namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
+        public string ProductName()
+        {
+            return Assembly.GetEntryAssembly()
+                .GetCustomAttributes(typeof(AssemblyProductAttribute))
+                .OfType<AssemblyProductAttribute>()
+                .FirstOrDefault().Product;
+        }
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
+        public static new Kit.WPF.ToolsImplementation Instance => Tools.Instance as Kit.WPF.ToolsImplementation;
         public override void Init()
         {
             Init(
-                new Kit.WPF.Services.DeviceInfo(), 
-                new CustomMessageBoxService(), 
+                new Kit.WPF.Services.DeviceInfo(),
+                new CustomMessageBoxService(),
                 new SynchronizeInvoke(), new ScreenManagerService(),
                 new Kit.WPF.Controls.CrossImage.ImageExtensions(),
                 new BarCodeBuilder());
