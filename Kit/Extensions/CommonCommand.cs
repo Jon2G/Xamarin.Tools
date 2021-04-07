@@ -37,6 +37,7 @@ namespace Kit.Extensions
             this.CanExecuteFunction = CanExecuteFunction;
             this.ExecuteAction = ExecuteAction;
         }
+
         public CommonCommand(Action<object> ExecuteAction)
         {
             this.CanExecuteFunction = null;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using Kit.Extensions;
 using Kit.Sql.Base;
 
 namespace Kit.Sql.SqlServer
@@ -57,6 +58,7 @@ namespace Kit.Sql.SqlServer
                 {
                     var w = CompileExpr(_where, args, conditions);
                     conditions.RemoveAll(x => !x.IsComplete);
+                    conditions = conditions.DistinctBy(x=>x.ColumnName).ToList();
                     cmdText += " where " + w.CommandText;
                 }
                 if ((_orderBys != null) && (_orderBys.Count > 0))

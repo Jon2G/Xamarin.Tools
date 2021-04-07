@@ -65,7 +65,7 @@ namespace Kit.Sql.Base
         /// <summary>
         /// Delete all the rows that match this query.
         /// </summary>
-        public int Delete(bool ShouldNotify=true)
+        public int Delete(bool ShouldNotify = true)
         {
             return Delete(null, ShouldNotify);
         }
@@ -73,7 +73,7 @@ namespace Kit.Sql.Base
         /// <summary>
         /// Delete all the rows that match this query and the given predicate.
         /// </summary>
-        public int Delete(Expression<Func<T, bool>> predExpr, bool ShouldNotify=true)
+        public int Delete(Expression<Func<T, bool>> predExpr, bool ShouldNotify = true)
         {
             if (_limit.HasValue || _offset.HasValue)
                 throw new InvalidOperationException("Cannot delete with limits or offsets");
@@ -365,6 +365,7 @@ namespace Kit.Sql.Base
             else if (expr.NodeType == ExpressionType.Call)
             {
 
+                Condition CurrentCondition = null;
                 var call = (MethodCallExpression)expr;
                 var args = new CompileResult[call.Arguments.Count];
                 var obj = call.Object != null ? CompileExpr(call.Object, queryArgs, conditions) : null;
@@ -388,12 +389,28 @@ namespace Kit.Sql.Base
                 {
                     if (call.Object != null && call.Object.Type == typeof(string))
                     {
-                        sqlCall = "( instr(" + obj.CommandText + "," + args[0].CommandText + ") >0 )";
+                        if (this.Connection is SQLServerConnection)
+                        {
+                            sqlCall = "( (" + obj.CommandText + "LIKE '%'+@" + args[0].CurrentCondition.ColumnName + "+'%') )";
+                        }
+                        else
+                        {
+                            sqlCall = "( instr(" + obj.CommandText + "," + args[0].CommandText + ") >0 )";
+                        }
                     }
                     else
                     {
-                        sqlCall = "(" + args[0].CommandText + " in " + obj.CommandText + ")";
+                        if (this.Connection is SQLServerConnection)
+                        {
+                            sqlCall = "(@" + args[0].CurrentCondition.ColumnName + " in " + obj.CommandText + ")";
+                        }
+                        else
+                        {
+                            sqlCall = "(" + args[0].CommandText + " in " + obj.CommandText + ")";
+                        }
                     }
+
+                    CurrentCondition = args[0].CurrentCondition;
                 }
                 else if (call.Method.Name == "StartsWith" && args.Length >= 1)
                 {
@@ -452,13 +469,22 @@ namespace Kit.Sql.Base
                 }
                 else if (call.Method.Name == "IsNullOrEmpty" && args.Length == 1)
                 {
-                    sqlCall = "(" + args[0].CommandText + " is null or" + args[0].CommandText + " ='' )";
+                    if (this.Connection is SQLServerConnection)
+                    {
+                        sqlCall = "(@" + args[0].CurrentCondition.ColumnName + " is null or @" + args[0].CurrentCondition.ColumnName + " ='' )";
+                    }
+                    else
+                    {
+                        sqlCall = "(" + args[0].CommandText + " is null or" + args[0].CommandText + " ='' )";
+                    }
+
+                    CurrentCondition = args[0].CurrentCondition;
                 }
                 else
                 {
                     sqlCall = call.Method.Name.ToLower() + "(" + string.Join(",", args.Select(a => a.CommandText).ToArray()) + ")";
                 }
-                return new CompileResult { CommandText = sqlCall };
+                return new CompileResult { CommandText = sqlCall, CurrentCondition = CurrentCondition };
 
             }
             else if (expr.NodeType == ExpressionType.Constant)
@@ -553,16 +579,18 @@ namespace Kit.Sql.Base
                     // Get the member value
                     //
                     object val = null;
-
+                    string fieldname = string.Empty;
                     if (mem.Member is PropertyInfo)
                     {
                         var m = (PropertyInfo)mem.Member;
                         val = m.GetValue(obj, null);
+                        fieldname = m.Name;
                     }
                     else if (mem.Member is FieldInfo)
                     {
                         var m = (FieldInfo)mem.Member;
                         val = m.GetValue(obj);
+                        fieldname = m.Name;
                     }
                     else
                     {
@@ -593,7 +621,7 @@ namespace Kit.Sql.Base
                     }
                     else
                     {
-                        var con = new Condition(val);
+                        var con = new Condition(fieldname, val);
                         queryArgs.Add(val);
                         conditions.Add(con);
                         return new CompileResult
