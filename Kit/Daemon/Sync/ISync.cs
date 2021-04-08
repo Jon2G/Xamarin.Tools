@@ -6,16 +6,20 @@ using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
+using Kit.Sql.Interfaces;
 using Kit.Sql.Tables;
 
 namespace Kit.Daemon.Sync
 {
-    public abstract class ISync : ModelBase, IConvertible
-    { /// <summary>
-      /// This guid identifies the row where the change is made
-      /// </summary>
-        [Unique, NotNull, AutoIncrement]
-        public Guid SyncGuid { get; set; }
+    public abstract class ISync : ModelBase, IConvertible, IGuid
+    {
+        //[Ignore]
+        //public Guid SyncGuid { get => Guid; set => Guid = value; }
+        /// <summary>
+        /// This guid identifies the row where the change is made
+        /// </summary>
+        [Unique, NotNull, AutoIncrement, Column("SyncGuid")]
+        public Guid Guid { get; set; }
 
         public virtual bool CustomUpload(SqlBase con, SqlBase targecon)
         {
@@ -40,12 +44,12 @@ namespace Kit.Daemon.Sync
         /// <returns></returns>
         public virtual object GetPk()
         {
-            return SyncGuid;
+            return Guid;
         }
 
         public virtual SyncStatus GetSyncStatus(SqlBase source_con)
         {
-            var history = source_con.Table<SyncHistory>().FirstOrDefault(x => x.SyncGuid == this.SyncGuid);
+            var history = source_con.Table<SyncHistory>().FirstOrDefault(x => x.Guid == this.Guid);
             if (history is null)
             {
                 return SyncStatus.Pending;

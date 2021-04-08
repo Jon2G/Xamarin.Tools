@@ -13,11 +13,6 @@ namespace Kit.Sql.Tables
     public class ChangesHistory: ISync
     {
 
-        public override object GetPk()
-        {
-            return SyncGuid;
-        }
-
         /// <summary>
         /// Name of the table where te change has been made
         /// </summary>
@@ -31,7 +26,7 @@ namespace Kit.Sql.Tables
         public ChangesHistory(string TableName, Guid SyncGuid, NotifyTableChangedAction Action)
         {
             this.TableName = TableName;
-            this.SyncGuid = SyncGuid;
+            this.Guid = SyncGuid;
             this.Action = Action;
         }
 
@@ -42,9 +37,10 @@ namespace Kit.Sql.Tables
             {
                 SyncHistory syncHistory = new SyncHistory
                 {
-                    DeviceId = Daemon.Devices.Device.Current.DeviceId, SyncGuid = this.SyncGuid
+                    DeviceId = Daemon.Devices.Device.Current.DeviceId,
+                    Guid = this.Guid
                 };
-                origin.Table<SyncHistory>().Delete(x => x.SyncGuid == syncHistory.SyncGuid);
+                origin.Table<SyncHistory>().Delete(x => x.Guid == syncHistory.Guid);
                 origin.Insert(syncHistory,string.Empty);
 
                 //if (connection is SqlServer SQLH)
@@ -104,7 +100,7 @@ namespace Kit.Sql.Tables
                         sb.Append(this.TableName);
                         break;
                 }
-                sb.Append(" [").AppendFormat("{0:N}", SyncGuid).Append("]");
+                sb.Append(" [").AppendFormat("{0:N}", Guid).Append("]");
             }
             catch (Exception ex)
             {

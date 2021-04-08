@@ -206,7 +206,7 @@ namespace Kit.Daemon.Sync
                         var action = CurrentPackage.Action;
                         string selection_list = table.SelectionList;
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
-                         new BaseTableQuery.Condition("SyncGuid", CurrentPackage.SyncGuid));
+                         new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
                         MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(TableMapping) });
                         method = method.MakeGenericMethod(table.MappedType);
                         IEnumerable<dynamic> result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table });
@@ -243,7 +243,7 @@ namespace Kit.Daemon.Sync
                                     }
                                     else
                                     {
-                                        target_con.Table<ChangesHistory>().Delete(x => x.SyncGuid == CurrentPackage.SyncGuid);
+                                        target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
                                         target_con.Insert(read, String.Empty, read.GetType(), false);
                                     }
 

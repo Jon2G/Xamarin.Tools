@@ -61,10 +61,7 @@ namespace Kit.Droid
 
         public override void CriticalAlert(object sender, EventArgs e)
         {
-            
-               // Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
-            
-
+            Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
         }
 
 

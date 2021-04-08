@@ -9,11 +9,6 @@ namespace Kit.Sql.Tables
 {
     public class SyncHistory:ISync
     {
-        public override object GetPk()
-        {
-            return SyncGuid;
-        }
-
         [MaxLength(100)]
         public string DeviceId { get; set; }
 

@@ -3040,7 +3040,7 @@ WHERE
         void UpdateVersionControl(ChangesHistory VersionControl)
         {
             Table<ChangesHistory>()
-                .Delete(x => x.SyncGuid == VersionControl.SyncGuid);
+                .Delete(x => x.Guid == VersionControl.Guid);
             Insert(VersionControl);
         }
 

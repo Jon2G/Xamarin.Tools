@@ -2072,9 +2072,9 @@ namespace Kit.Sql.Sqlite
 
             var cols = replacing ? map.InsertOrReplaceColumns : map.InsertColumns;
             var vals = new object[cols.Length];
-            if (obj is ISync i_sync && i_sync.SyncGuid == Guid.Empty)
+            if (obj is IGuid i_sync && i_sync.Guid == Guid.Empty)
             {
-                i_sync.SyncGuid = Guid.NewGuid();
+                i_sync.Guid = Guid.NewGuid();
             }
             for (var i = 0; i < vals.Length; i++)
             {
@@ -2108,10 +2108,11 @@ namespace Kit.Sql.Sqlite
                     if (id <= 0)
                     {
                         id = LastScopeIdentity(this);
-                        if (id <= 0 && obj is ISync isync)
+                        if (id <= 0 && obj is IGuid isync)
                         {
+                            var ColumnName = map.FindColumnWithPropertyName(nameof(isync.Guid));
                             id = Single<int>(
-                                $"SELECT {map.PK.Name} from {map.TableName} where {nameof(isync.SyncGuid)}='{isync.SyncGuid}'");
+                                $"SELECT {map.PK.Name} from {map.TableName} where {ColumnName.Name}='{isync.Guid}'");
                         }
                     }
                     map.SetAutoIncPK(obj, id);
@@ -2236,10 +2237,10 @@ namespace Kit.Sql.Sqlite
             }
 
             var cols = from p in map.Columns
-                       where p != pk && p.Name != nameof(ISync.SyncGuid)
+                       where p != pk && p.Name != nameof(ISync.Guid)
                        select p;
             var vals = from c in cols
-                       where c.Name != nameof(ISync.SyncGuid)
+                       where c.Name != nameof(ISync.Guid)
                        select c.GetValue(obj);
             var ps = new List<object>(vals);
             if (ps.Count == 0)
@@ -2555,7 +2556,7 @@ namespace Kit.Sql.Sqlite
             }
             UpdateVersionControl(new ChangesHistory(
                 table.TableName
-                , (obj as ISync).SyncGuid
+                , (obj as ISync).Guid
                 , action));
             var ev = TableChanged;
             if (ev != null)
@@ -2565,7 +2566,7 @@ namespace Kit.Sql.Sqlite
         public void UpdateVersionControl(ChangesHistory VersionControl)
         {
             Table<ChangesHistory>()
-                .Delete(x => x.SyncGuid == VersionControl.SyncGuid,false);
+                .Delete(x => x.Guid == VersionControl.Guid, false);
             Insert(VersionControl);
         }
 

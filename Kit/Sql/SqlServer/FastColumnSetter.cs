@@ -289,7 +289,7 @@ namespace Kit.Sql.SqlServer
                         {
                             if (o is ISync isync)
                             {
-                                isync.SyncGuid = (Guid)reader[i];
+                                isync.Guid = (Guid)reader[i];
                                 return;
                             }
                             column.PropertyInfo.GetSetMethod(false).Invoke(o,

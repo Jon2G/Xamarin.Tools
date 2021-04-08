@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using Kit.Forms.Extensions;
+using Kit.Model;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
 
 namespace Kit.Forms.Services
 {
-    public class IKeyboardListenerService : IDisposable
+    public class IKeyboardListenerService : ModelBase, IDisposable
     {
         public const string Message = "IKeyboardListenerService.OnKeyUp";
         private StringBuilder RecievedText;
@@ -31,9 +32,12 @@ namespace Kit.Forms.Services
                     {
                         UnSuscribe();
                     }
+                    Raise(() => IsEnabled);
+                    Raise(() => IsDisabled);
                 }
             }
         }
+        public bool IsDisabled => !IsEnabled;
 
         private void UnSuscribe()
         {
@@ -69,7 +73,7 @@ namespace Kit.Forms.Services
         private void Confirm()
         {
             this.CountDown.Stop();
-            ReciveCode?.Invoke(RecievedText?.ToString());
+            ReciveCode?.Invoke(RecievedText?.ToString()?.Trim());
             this.RecievedText = new StringBuilder();
         }
         public void OnKeyUp(object sender, char character)
