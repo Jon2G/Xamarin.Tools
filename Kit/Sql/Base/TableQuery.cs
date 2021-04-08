@@ -549,7 +549,11 @@ namespace Kit.Sql.Base
                     // This is a column of our table, output just the column name
                     // Need to translate it if that column name is mapped
                     //
-                    var columnName = Table.FindColumnWithPropertyName(mem.Member.Name).Name;
+                    var column = Table.FindColumnWithPropertyName(mem.Member.Name);
+                    if (column is null)
+                        throw new KeyNotFoundException($"La columna {mem.Member.Name} no existe en la tabla {Table.TableName}");
+
+                    var columnName =column.Name;
                     return new CompileResult
                     {
                         CommandText = "\"" + columnName + "\"",
