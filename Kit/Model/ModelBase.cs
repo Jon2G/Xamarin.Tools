@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Kit.Model
 {
 
-    public abstract class ModelBase : INotifyPropertyChanged
+    public abstract class ModelBase : INotifyPropertyChanged,IDisposable
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -62,5 +62,8 @@ namespace Kit.Model
 
 
         #endregion
+        public virtual void Dispose()
+        {
+        }
     }
 }

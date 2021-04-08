@@ -17,6 +17,40 @@ namespace Kit.Forms.Pages
 {
     public class BasePage : ContentPage, INotifyPropertyChanged
     {
+        #region IDisposable
+
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+            if (Parent == null)
+            {
+                DisposeBindingContext();
+            }
+        }
+
+        protected void DisposeBindingContext()
+        {
+            if (DisposeAlso != null)
+            {
+                foreach (IDisposable disposable in DisposeAlso)
+                {
+                    disposable?.Dispose();
+                }
+            }
+            if (BindingContext is IDisposable disposableBindingContext)
+            {
+                disposableBindingContext.Dispose();
+                BindingContext = null;
+            }
+        }
+        protected virtual IDisposable[] DisposeAlso { get; }
+
+        ~BasePage()
+        {
+            DisposeBindingContext();
+        }
+
+        #endregion
         public object Auxiliar { get; set; }
         public class PageOrientationEventArgs : EventArgs
         {
