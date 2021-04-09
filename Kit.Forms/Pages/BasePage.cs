@@ -15,9 +15,13 @@ using Xamarin.Forms.Platform;
 
 namespace Kit.Forms.Pages
 {
-    public class BasePage : ContentPage, INotifyPropertyChanged
+    public class BasePage : ContentPage, INotifyPropertyChanged,IDisposable
     {
         #region IDisposable
+        public virtual void Dispose()
+        {
+            DisposeBindingContext();
+        }
 
         protected override void OnParentSet()
         {
