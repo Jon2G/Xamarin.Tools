@@ -157,31 +157,7 @@ namespace Kit.Sql.SqlServer
         //}
 
 
-        public static bool IsInjection(string value)
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                if (value.Contains('\''))
-                {
-                    return true;
-                }
-            }
 
-            return false;
-        }
-
-        public static bool IsInjection(params string[] values)
-        {
-            foreach (string value in values)
-            {
-                if (IsInjection(value))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         //public T Single<T>(string sql,
         //    params SqlParameter[] parametros) where T : IConvertible

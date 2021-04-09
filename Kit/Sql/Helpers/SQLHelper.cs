@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 
 namespace Kit.Sql.Helpers
@@ -52,6 +53,31 @@ namespace Kit.Sql.Helpers
             //'2020-09-17T12:27:55'  Formato universal de fecha y hora sql server
             return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");
             //}
+        }
+        public static bool IsInjection(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value.Contains('\''))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsInjection(params string[] values)
+        {
+            foreach (string value in values)
+            {
+                if (IsInjection(value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static object NullIfEmpty(string value)
