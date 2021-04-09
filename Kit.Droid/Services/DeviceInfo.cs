@@ -24,7 +24,7 @@ using static Android.Provider.Settings;
 using Platform = Plugin.DeviceInfo.Abstractions.Platform;
 using IDeviceInfo = Kit.Services.Interfaces.IDeviceInfo;
 using Permissions = Xamarin.Essentials.Permissions;
-using Android.Support.V4.Content;
+using AndroidX.Core.Content;
 
 namespace Kit.Droid.Services
 {

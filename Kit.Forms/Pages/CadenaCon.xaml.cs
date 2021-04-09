@@ -1,4 +1,7 @@
-﻿using Acr.UserDialogs;
+﻿extern alias SharedZXingNet;
+using SharedZXingNet::ZXing;
+
+using Acr.UserDialogs;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

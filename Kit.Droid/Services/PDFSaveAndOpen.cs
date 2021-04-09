@@ -2,7 +2,6 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.Support.V4.App;
-using Android.Support.V4.Content;
 using Android.Webkit;
 using Java.IO;
 using System;
@@ -13,6 +12,9 @@ using Kit.Droid.Services;
 using Xamarin.Forms;
 using Plugin.CurrentActivity;
 using Kit.Services.Interfaces;
+using AndroidX.Core.Content;
+using AndroidX.Core.App;
+
 [assembly: Dependency(typeof(PDFSaveAndOpen))]
 namespace Kit.Droid.Services
 {

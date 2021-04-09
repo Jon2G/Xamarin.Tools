@@ -3,9 +3,9 @@
                   xmlns="http://xamarin.com/schemas/2014/forms" CloseWhenBackgroundIsClicked="True"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
                   xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
-                  xmlns:qrcode="clr-namespace:ZXing.QrCode;assembly=zxing.portable"
-                  xmlns:pages1="clr-namespace:Kit.Forms.Pages;assembly=Kit.Forms"
-                  x:Class="Kit.Forms.Pages.ShareCadenaCon" x:Name="Me" BackgroundColor="#51FFFFFF" x:DataType="pages1:ShareCadenaCon">
+                  
+                  xmlns:pages1="clr-namespace:Kit.Forms.Pages;assembly=Kit.Forms" xmlns:qrcode="clr-namespace:ZXing.QrCode;assembly=zxing"
+    x:Class="Kit.Forms.Pages.ShareCadenaCon" x:Name="Me" BackgroundColor="#51FFFFFF" x:DataType="pages1:ShareCadenaCon">
     <ContentPage.Content>
         <Frame Margin="10" CornerRadius="5" BackgroundColor="WhiteSmoke" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
             <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto"  Padding="0" VerticalOptions="Center" 

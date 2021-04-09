@@ -1,4 +1,7 @@
-﻿using System;
+﻿extern alias SharedZXingNet;
+using SharedZXingNet::ZXing;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
