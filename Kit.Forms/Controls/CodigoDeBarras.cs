@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,7 +10,6 @@ using Xamarin.Forms;
 using ZXing;
 using ZXing.Mobile;
 using ZXing.Net.Mobile.Forms;
-
 
 namespace Kit.Forms.Controls
 {

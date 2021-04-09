@@ -112,9 +112,6 @@
     <PackageReference Include="Xamarin.Forms.Visual.Material">
       <Version>5.0.0.2012</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Plugin.FilePicker">
-      <Version>2.1.41</Version>
-    </PackageReference>
     <PackageReference Include="ZXing.Net" Version="0.16.6">
       <Aliases></Aliases>
     </PackageReference>
