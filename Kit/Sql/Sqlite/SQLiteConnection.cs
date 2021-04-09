@@ -1473,6 +1473,11 @@ namespace Kit.Sql.Sqlite
         public override T Find<T>(object pk)
         {
             var map = GetMapping(typeof(T));
+            if (map.PK is null)
+            {
+                throw new NotSupportedException(
+                    $"No se puede ejecutar Find en la tabla {map.TableName} porque no tiene llave primaria");
+            }
             return Query<T>(map.GetByPrimaryKeySql, pk).FirstOrDefault();
         }
 
