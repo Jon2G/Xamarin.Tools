@@ -41,7 +41,7 @@ namespace Kit.Forms.Pages
                     disposable?.Dispose();
                 }
             }
-            if (BindingContext is IDisposable disposableBindingContext)
+            if (BindingContext!=this&& BindingContext is IDisposable disposableBindingContext)
             {
                 disposableBindingContext.Dispose();
                 BindingContext = null;
