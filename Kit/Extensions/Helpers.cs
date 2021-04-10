@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Kit.Extensions;
 
@@ -377,5 +378,22 @@ namespace Kit.Extensions
         }
 
 
+        public static string ExtractInitialsFromName(string name, int length=2)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return string.Empty;
+            }
+
+            // Extract the first character out of each block of non-whitespace
+            // exept name suffixes, e.g. Jr., III. The number of initials is not limited.
+            name = Regex.Replace(name, @"(?i)(?:^|\s|-)+([^\s-])[^\s-]*(?:(?:\s+)(?:the\s+)?(?:jr|sr|II|2nd|III|3rd|IV|4th)\.?$)?", "$1").ToUpper();
+            if (name.Length > length)
+            {
+                name = name.Substring(0, length);
+            }
+
+            return name;
+        }
     }
 }

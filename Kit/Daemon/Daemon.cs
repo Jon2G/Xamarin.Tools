@@ -165,7 +165,7 @@ namespace Kit.Daemon
                 return;
             }
 
-            WaitHandle = new AutoResetEvent(true);
+            WaitHandle = new ManualResetEvent(true); //new AutoResetEvent(true);
             Thread = new Thread(() =>
             {
                 IsAwake = true;
