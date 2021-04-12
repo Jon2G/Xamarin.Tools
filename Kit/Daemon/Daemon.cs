@@ -429,7 +429,8 @@ namespace Kit.Daemon
                             //Descansar :)
                             Log.Logger.Information($"Rest :{FactorDeDescanso} mins.");
                             IsAwake = false;
-                            WaitHandle?.WaitOne(TimeSpan.FromSeconds(FactorDeDescanso));
+                            Thread.Sleep(TimeSpan.FromSeconds(FactorDeDescanso));
+                            //GotoSleep();
                             IsAwake = true;
                         }
                         else
@@ -455,32 +456,18 @@ namespace Kit.Daemon
             }
         }
 
-        private void GotoSleep()
+        private void GotoSleep(bool HasBeenForcedToSleep = false)
         {
             IsAwake = false;
+            bool signaled = WaitHandle.WaitOne();
+            if (signaled&&!HasBeenForcedToSleep)
+            {
+                HasBeenForcedToSleep = true;
+                WaitHandle.Reset();
+                GotoSleep(HasBeenForcedToSleep);
+            }
+            IsAwake = true;
             IsSleepRequested = false;
-            WaitHandle.WaitOne();
-        }
-
-        public bool IsTableSynced(int id)
-        {
-            //if (DaemonConfig.Local is SQLiteConnection SQLHLite)
-            //{
-            //    bool synced = !SQLHLite.Exists($"SELECT ID FROM VERSION_CONTROL WHERE LLAVE={id} AND TABLA='R_MESAS'");
-            //    if (synced)
-            //    {
-            //        if (DireccionActual == SyncDirecction.Local)
-            //        {
-            //            synced = false;
-            //        }
-            //    }
-            //    return synced;
-            //}
-            //else
-            //{
-            //    throw new NotImplementedException();
-            //}
-            return true;
         }
         private bool TryToConnect()
         {

@@ -2035,6 +2035,7 @@ namespace Kit.Sql.Sqlite
             return Insert(obj, extra, Orm.GetType(obj));
         }
 
+
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -2058,7 +2059,6 @@ namespace Kit.Sql.Sqlite
             {
                 return 0;
             }
-
             var map = GetMapping(objType);
             if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
             {
@@ -2074,6 +2074,17 @@ namespace Kit.Sql.Sqlite
             }
 
             var replacing = string.Compare(extra, "OR REPLACE", StringComparison.OrdinalIgnoreCase) == 0;
+            if (replacing && map.HasAutoIncPK)
+            {
+                if (map.PK.GetValue(obj) is int autoPk)
+                {
+                    if (autoPk <= 0)
+                    {
+                        extra = string.Empty;
+                        replacing = false;
+                    }
+                }
+            }
 
             var cols = replacing ? map.InsertOrReplaceColumns : map.InsertColumns;
             var vals = new object[cols.Length];
@@ -2088,7 +2099,7 @@ namespace Kit.Sql.Sqlite
 
             var insertCmd = GetInsertCommand((Kit.Sql.Sqlite.TableMapping)map, extra);
             int count;
-            sqlite3 locked_handle = Handle;
+
             lock (insertCmd)
             {
                 // We lock here to protect the prepared statement returned via GetInsertCommand.
@@ -2109,16 +2120,10 @@ namespace Kit.Sql.Sqlite
 
                 if (map.HasAutoIncPK)
                 {
-                    var id = SQLite3.LastInsertRowid(locked_handle);
+                    var id = SQLite3.LastInsertRowid(Handle);
                     if (id <= 0)
                     {
-                        id = LastScopeIdentity(this);
-                        if (id <= 0 && obj is IGuid isync)
-                        {
-                            var ColumnName = map.FindColumnWithPropertyName(nameof(isync.Guid));
-                            id = Single<int>(
-                                $"SELECT {map.PK.Name} from {map.TableName} where {ColumnName.Name}='{isync.Guid}'");
-                        }
+
                     }
                     map.SetAutoIncPK(obj, id);
                 }
@@ -2128,6 +2133,7 @@ namespace Kit.Sql.Sqlite
 
             return count;
         }
+
 
         readonly Dictionary<Tuple<string, string>, PreparedSqlLiteInsertCommand> _insertCommandMap = new Dictionary<Tuple<string, string>, PreparedSqlLiteInsertCommand>();
 

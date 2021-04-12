@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage  xmlns:pages="clr-namespace:Kit.Forms.Pages"
                  xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" BackgroundColor="White"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fonts="clr-namespace:Kit.Forms.Fonts;assembly=Kit.Forms"
+             BackgroundColor="White"
                  x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="0" Padding="0" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
@@ -53,9 +55,12 @@
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="LblIcon" Text="Ok." VerticalOptions="Center"/>
+                    <Label x:Name="LblIcon"
+                           FontFamily="{x:Static fonts:FontelloIcons.Font}"
+                           Text="{x:Static fonts:FontelloIcons.Ok}" FontSize="25" TextColor="Green"
+                           VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                     <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"  Padding="0" Margin="0" Grid.Column="1" HorizontalScrollBarVisibility="Never" VerticalScrollBarVisibility="Default">
-                        <Label TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TxtEstado" Text="Ok" FontSize="Medium"/>
+                        <Label VerticalTextAlignment="Center" TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TxtEstado" Text="Ok." FontSize="Medium"/>
                     </ScrollView>
                 </Grid>
             </Frame>

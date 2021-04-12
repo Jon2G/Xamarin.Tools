@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SQLServer;
+using Kit.Sql.SqlServer;
 using SyncTest.Models;
 
 namespace SyncTest

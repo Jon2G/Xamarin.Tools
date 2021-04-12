@@ -15,7 +15,7 @@ namespace Kit.Sql.Sqlite
 
         string CommandText;
 
-        sqlite3_stmt Statement;
+       public sqlite3_stmt Statement;
         static readonly sqlite3_stmt NullStatement = default (sqlite3_stmt);
 
         public PreparedSqlLiteInsertCommand (SQLiteConnection conn, string commandText)

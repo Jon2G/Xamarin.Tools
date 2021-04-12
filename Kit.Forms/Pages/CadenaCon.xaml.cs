@@ -17,6 +17,7 @@ using Xamarin.Forms.Xaml;
 using Kit.CadenaConexion;
 using Kit.Forms.Controls;
 using Kit.Daemon;
+using Kit.Forms.Fonts;
 using Kit.Forms.Services;
 using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
@@ -217,6 +218,7 @@ namespace Kit.Forms.Pages
             await Task.Yield();
 
             Exception ex = this.NewDBConection.TestConnection(Test);
+            ToogleStatus(ex);
             if (ex != null)
             {
                 if (MostrarMensajesStatus)
@@ -228,7 +230,6 @@ namespace Kit.Forms.Pages
                 }
                 return false;
             }
-            ToogleStatus(ex);
             if (MostrarMensajesStatus)
             {
                 Device.BeginInvokeOnMainThread(async () =>
@@ -241,7 +242,8 @@ namespace Kit.Forms.Pages
         private void ToogleStatus(Exception ex)
         {
             TxtEstado.Text = ex?.Message ?? "Correcto";
-            LblIcon.Text = ex is null ? "Ok." : "X";
+            LblIcon.Text = ex is null ? FontelloIcons.Ok : FontelloIcons.Cross;
+            LblIcon.TextColor = ex is null ? Color.Green : Color.Red;
         }
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
@@ -276,7 +278,7 @@ namespace Kit.Forms.Pages
                 return false;
             }
         }
-        private async void Importar_Touched(object sender, EventArgs e)
+        private void Importar_Touched(object sender, EventArgs e)
         {
             ActionSheetConfig config = new ActionSheetConfig()
             {
@@ -291,7 +293,6 @@ namespace Kit.Forms.Pages
             };
             UserDialogs.Instance.ActionSheet(config);
         }
-
         private async void FromGallery()
         {
             FileResult qr = await MediaPicker.PickPhotoAsync(new MediaPickerOptions()
@@ -320,7 +321,6 @@ namespace Kit.Forms.Pages
             }
             this.Leector.Abrir();
         }
-
         private void Leector_CodigoEntrante(object sender, EventArgs e)
         {
             if (sender is Lector leector)
@@ -329,7 +329,6 @@ namespace Kit.Forms.Pages
                 Deserialize(leector.CodigoBarras);
             }
         }
-
         private void Deserialize(string json)
         {
             if (!string.IsNullOrEmpty(json))

@@ -16,9 +16,11 @@ namespace SyncTest.Models
         Promocion
     }
     [SyncMode(SyncDirection.Download)]
-    public class Prods:ISync
+    public class Prods : ISync
     {
-        [PrimaryKey, MaxLength(30)]
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        [MaxLength(30)]
         public string Articulo { get; set; }
         public string Descrip { get; set; }
         public string Linea { get; set; }
@@ -56,6 +58,5 @@ namespace SyncTest.Models
         public float Maximo { get; set; }
         public float Minimo { get; set; }
         public Prods() { }
-        public Guid SyncGuid { get; set; }
     }
 }
