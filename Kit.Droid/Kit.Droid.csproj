@@ -63,6 +63,14 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\paths.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\xml\paths.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
  <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />

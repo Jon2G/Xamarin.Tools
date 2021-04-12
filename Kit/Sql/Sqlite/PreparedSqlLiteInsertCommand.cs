@@ -12,7 +12,7 @@ namespace Kit.Sql.Sqlite
         bool Initialized;
 
         SQLiteConnection Connection;
-
+        public sqlite3 Handle;
         string CommandText;
 
        public sqlite3_stmt Statement;
@@ -39,7 +39,7 @@ namespace Kit.Sql.Sqlite
             var r = SQLite3.Result.OK;
 
             if (!Initialized) {
-                Statement = SQLite3.Prepare2 (Connection.Handle, CommandText);
+                Statement = SQLite3.Prepare2 (Handle, CommandText);
                 Initialized = true;
             }
 
@@ -51,23 +51,32 @@ namespace Kit.Sql.Sqlite
             }
             r = SQLite3.Step (Statement);
 
-            if (r == SQLite3.Result.Done) {
-                int rowsAffected = SQLite3.Changes (Connection.Handle);
-                SQLite3.Reset (Statement);
+            if (r == SQLite3.Result.Done)
+            {
+                int rowsAffected = SQLite3.Changes(Handle);
+                SQLite3.Reset(Statement);
                 return rowsAffected;
             }
-            else if (r == SQLite3.Result.Error) {
-                string msg = SQLite3.GetErrmsg (Connection.Handle);
-                SQLite3.Reset (Statement);
-                throw SQLiteException.New (r, msg);
+            else if (r == SQLite3.Result.Error)
+            {
+                string msg = SQLite3.GetErrmsg(Handle);
+                SQLite3.Reset(Statement);
+                throw SQLiteException.New(r, msg);
             }
-            else if (r == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode (Connection.Handle) == SQLite3.ExtendedResult.ConstraintNotNull) {
-                SQLite3.Reset (Statement);
-                throw NotNullConstraintViolationException.New (r, SQLite3.GetErrmsg (Connection.Handle));
+            else if (r == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode(Handle) == SQLite3.ExtendedResult.ConstraintNotNull)
+            {
+                SQLite3.Reset(Statement);
+                throw NotNullConstraintViolationException.New(r, SQLite3.GetErrmsg(Handle));
             }
-            else {
-                SQLite3.Reset (Statement);
-                throw SQLiteException.New (r, SQLite3.GetErrmsg (Connection.Handle));
+            else if (r == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode(Handle) == SQLite3.ExtendedResult.ConstraintUnique)
+            {
+                SQLite3.Reset(Statement);
+                throw NotNullConstraintViolationException.New(r, SQLite3.GetErrmsg(Handle));
+            }
+            else
+            {
+                SQLite3.Reset(Statement);
+                throw SQLiteException.New(r, SQLite3.GetErrmsg(Handle));
             }
         }
 

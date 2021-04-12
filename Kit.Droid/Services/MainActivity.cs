@@ -28,6 +28,7 @@ using Xamarin.Forms;
 
 namespace Kit.Droid.Services
 {
+    [MetaData(name: "android.support.FILE_PROVIDER_PATH", Resource = "@xml/paths")]
     [Activity(Label = "Kit.MainActivity", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = false,
         ConfigurationChanges =
             ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode |
@@ -118,10 +119,9 @@ namespace Kit.Droid.Services
         //}
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
         protected override void OnDestroy()
         {
