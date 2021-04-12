@@ -2097,40 +2097,44 @@ namespace Kit.Sql.Sqlite
                 vals[i] = cols[i].GetValue(obj);
             }
             int count;
-            using (PreparedSqlLiteInsertCommand insertCmd = GetInsertCommand((Kit.Sql.Sqlite.TableMapping)map, extra))
+
+
+
+
+            lock (this)
             {
-                insertCmd.Handle = this.Handle;
+                if (this.IsClosed)
+                    RenewConnection();
+                PreparedSqlLiteInsertCommand insertCmd = GetInsertCommand((Kit.Sql.Sqlite.TableMapping)map, extra);
 
-                lock (insertCmd)
+                // We lock here to protect the prepared statement returned via GetInsertCommand.
+                // A SQLite prepared statement can be bound for only one operation at a time.
+                try
                 {
-
-                    // We lock here to protect the prepared statement returned via GetInsertCommand.
-                    // A SQLite prepared statement can be bound for only one operation at a time.
-                    try
-                    {
-                        count = insertCmd.ExecuteNonQuery(vals);
-                        Log.Logger.Debug("INSERTED ROWS: [{0}]", count);
-                    }
-                    catch (SQLiteException ex)
-                    {
-                        if (SQLite3.ExtendedErrCode(insertCmd.Handle) == SQLite3.ExtendedResult.ConstraintNotNull)
-                        {
-                            throw NotNullConstraintViolationException.New(ex.Result, ex.Message, map, obj);
-                        }
-                        throw;
-                    }
-
-                    if (map.HasAutoIncPK)
-                    {
-                        var id = SQLite3.LastInsertRowid(insertCmd.Handle);
-                        if (id <= 0)
-                        {
-
-                        }
-                        map.SetAutoIncPK(obj, id);
-                    }
+                    count = insertCmd.ExecuteNonQuery(vals);
+                    Log.Logger.Debug("INSERTED ROWS: [{0}]", count);
                 }
+                catch (SQLiteException ex)
+                {
+                    if (SQLite3.ExtendedErrCode(this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull)
+                    {
+                        throw NotNullConstraintViolationException.New(ex.Result, ex.Message, map, obj);
+                    }
+                    throw;
+                }
+
+                if (map.HasAutoIncPK)
+                {
+                    var id = SQLite3.LastInsertRowid(this.Handle);
+                    if (id <= 0)
+                    {
+
+                    }
+                    map.SetAutoIncPK(obj, id);
+                }
+                this.Close();
             }
+
             if (shouldnotify && count > 0)
                 OnTableChanged((Kit.Sql.Sqlite.TableMapping)map, NotifyTableChangedAction.Insert, obj);
 
