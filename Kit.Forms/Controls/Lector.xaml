@@ -3,9 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fonts="clr-namespace:Kit.Forms.Fonts"
              mc:Ignorable="d"
              x:Class="Kit.Forms.Controls.Lector">
   <ContentView.Content>
-        <Image x:Name="ImgCamera" BindingContext="{Binding CodigoDeBarras}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="25" Aspect="AspectFit" Source="camera.png"/>
+        <Label x:Name="ImgCamera" BindingContext="{Binding CodigoDeBarras}" HorizontalOptions="Fill"
+               VerticalOptions="Fill" HeightRequest="25" 
+               Text="{x:Static fonts:FontelloIcons.Camera}" TextColor="Black"
+               FontFamily="{x:Static fonts:FontelloIcons.Font}" FontSize="25"/>
     </ContentView.Content>
 </ContentView>

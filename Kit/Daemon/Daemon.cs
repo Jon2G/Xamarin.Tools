@@ -371,7 +371,7 @@ namespace Kit.Daemon
                         {
                             return;
                         }
-                        if (IsSleepRequested)
+                        if (IsSleepRequested&&!OffLine)
                         {
                             GotoSleep();
                         }
@@ -381,13 +381,20 @@ namespace Kit.Daemon
                         {
                             if (!TryToConnect())
                             {
+                                IsAwake = false;
                                 OffLine = true;
                                 Log.Logger.Error("Daemon failed to connect");
                                 WaitHandle?.WaitOne(TimeSpan.FromSeconds(10));
+                                WaitHandle.Reset();
                             }
                             else
                             {
+                                WaitHandle.Set();
+                                IsAwake = true;
+                                IsSleepRequested = false;
                                 OffLine = false;
+                                Start();
+                                return;
                             }
                             this.SyncManager.ToDo = true;
                         }

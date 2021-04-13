@@ -16,10 +16,11 @@
 
   <ItemGroup>
     <None Remove="Fonts\FontelloIcons\font\KitIcons.ttf" />
+    <None Remove="Fonts\FontelloIcons\font\kiticons_1.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Fonts\FontelloIcons\font\KitIcons.ttf" />
+    <EmbeddedResource Include="Fonts\FontelloIcons\font\kiticons_1.ttf" />
   </ItemGroup>
 
 
