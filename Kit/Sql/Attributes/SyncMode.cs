@@ -4,7 +4,7 @@ using Kit.Sql.Enums;
 
 namespace Kit.Sql.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [Preserve, AttributeUsage(AttributeTargets.Class)]
     public class SyncMode : Attribute
     {
         public SyncDirection Direction { get; private set; }

@@ -26,6 +26,7 @@ using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using TableMapping = Kit.Sql.Base.TableMapping;
+using System.Windows.Input;
 
 namespace Kit.Daemon
 {
@@ -39,7 +40,7 @@ namespace Kit.Daemon
         private EventWaitHandle WaitHandle { get; set; }
         #endregion
         public Schema Schema { get; private set; }
-        public event EventHandler OnConnectionStateChanged;
+        public ICommand OnConnectionStateChanged;
         public event Func<bool> OnInicializate;
 
         private static bool _OffLine;
@@ -52,7 +53,7 @@ namespace Kit.Daemon
                 {
                     _OffLine = value;
                     OnGlobalPropertyChanged();
-                    Current.OnConnectionStateChanged?.Invoke(Current, EventArgs.Empty);
+                    Current.OnConnectionStateChanged?.Execute(Current);        
                 }
             }
         }
