@@ -19,6 +19,7 @@ using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Kit.Sql;
 using Xamarin.Forms;
+using Java.Lang;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
@@ -127,6 +128,21 @@ namespace Kit.Droid.Services
         {
             Serilog.Log.CloseAndFlush();
             base.OnDestroy();
+        }
+        protected bool IsServiceRunning(Type serviceClass)
+        {
+            var service_class = Java.Lang.Class.FromType(serviceClass);
+            ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
+#pragma warning disable CS0618 // Type or member is obsolete
+            foreach (var service in manager.GetRunningServices(Integer.MaxValue))
+#pragma warning restore CS0618 // Type or member is obsolete
+            {
+                if (service_class.Name == service.Service.ClassName)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
