@@ -1,0 +1,8 @@
+﻿<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kit.Forms.Dictionaries.SylesDictionary">
+    <Color x:Key="ToolbarDangerColor">#37FF0000</Color>
+    <Color x:Key="ToolbarRegularColor">#37FFFFFF</Color>
+    <Color x:Key="ToolbarDynamicColor">#37FFFFFF</Color>
+</ResourceDictionary>

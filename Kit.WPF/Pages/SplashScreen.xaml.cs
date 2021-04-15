@@ -30,7 +30,7 @@ namespace Kit.WPF.Pages
             this.IsActivated = false;
             this.Activated += Window_Activated;
             InitializeComponent();
-            this.Title = Title ?? ToolsImplementation.Instance.ProductName();
+            this.Title = Title;
         }
         private async void Window_Activated(object sender, EventArgs e)
         {

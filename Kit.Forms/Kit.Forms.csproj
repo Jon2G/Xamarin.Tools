@@ -15,6 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="Dictionaries\ResourceDictionary.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Fonts\FontelloIcons\font\KitIcons.ttf" />
     <None Remove="Fonts\FontelloIcons\font\kiticons_1.ttf" />
   </ItemGroup>
@@ -114,6 +118,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Dictionaries\SylesDictionary.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Pages\ShareCadenaCon.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
