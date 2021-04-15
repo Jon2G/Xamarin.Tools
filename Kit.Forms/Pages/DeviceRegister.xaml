@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage 
+<pages:BasePopUp  xmlns:pages="clr-namespace:Kit.Forms.Pages"
     xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
@@ -9,7 +9,7 @@
     <ContentPage.Content>
         <StackLayout Spacing="5" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
 
-            <Image Margin="10" HeightRequest="45" Source="logo_blum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>
+            <!--<Image Margin="10" HeightRequest="45" Source="logo_blum.png" VerticalOptions="Start" HorizontalOptions="CenterAndExpand"/>-->
 
             <Frame BackgroundColor="White" 
                    BindingContext="{Binding Model,Source={Reference Me}}"
@@ -48,4 +48,4 @@
 
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</pages:BasePopUp>

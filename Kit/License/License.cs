@@ -22,7 +22,7 @@ namespace Kit.License
         private string AppKey;
 
         public string Reason { get; private set; }
-        protected abstract void OpenRegisterForm();
+        protected abstract Task OpenRegisterForm();
 
         protected License(string AppName)
         {
@@ -102,10 +102,11 @@ namespace Kit.License
 
         public async Task<bool> IsAuthorizated(SqlBase sql)
         {
-            if (Tools.Debugging)
-            {
-                return await Task.FromResult(true); 
-            }
+            //if (Tools.Debugging)
+            //{
+            //    return await Task.FromResult(true); 
+            //}
+            await Task.Yield();
             DeviceInformation = DeviceInformation.Get(sql);
             bool Autorized = false;
             ProjectActivationState state = ProjectActivationState.Unknown;
@@ -130,9 +131,7 @@ namespace Kit.License
                 case ProjectActivationState.LoginRequired:
                     this.Reason = "Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación";
                     await Tools.Instance.CustomMessageBox.Show(this.Reason, "Acceso denegado");
-                    OpenRegisterForm();
-                    //     BlumLogin login = new BlumLogin(page.Background, this) as BlumLogin;
-                    //   await page.Navigation.PushModalAsync(login, true);
+                    await OpenRegisterForm();
                     Autorized = await IsAuthorizated(sql);
                     break;
                 case ProjectActivationState.ConnectionFailed:

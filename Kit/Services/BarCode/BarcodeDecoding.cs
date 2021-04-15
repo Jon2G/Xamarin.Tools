@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using ImageProcessing.JPEGCodec;
 using ImageProcessing.PNGCodec;
 using ImageProcessing.TGACodec;
+using Kit.Sql.Attributes;
 using MoyskleyTech.ImageProcessing.Image;
 using SharedZXingNet::ZXing;
 using SharedZXingNet::ZXing.Common;
 
 namespace Kit.Services.BarCode
 {
+    [Preserve()]
     public class BarcodeDecoding
     {
         public BarcodeDecoding()
@@ -26,7 +28,10 @@ namespace Kit.Services.BarCode
             MultiFormatReader r = GetReader(format, aditionalHints);
 
             BinaryBitmap image = await GetImage(file);
-
+            if (image is null)
+            {
+                return null;
+            }
             Result result = r.decode(image);
 
             return result;
@@ -55,45 +60,43 @@ namespace Kit.Services.BarCode
             return reader;
         }
 
-        async Task<BinaryBitmap> GetImage(FileInfo fileName)
+        private async Task<BinaryBitmap> GetImage(FileInfo fileName)
         {
             BinaryBitmap bBitmap = null;
-            using (var stream = fileName.OpenRead())
+            try
             {
-                Image<Pixel> result;
-                using (var memory = new MemoryStream())
+
+                var png = new Hjg.Pngcs.Chunks.PngChunkIHDR(new Hjg.Pngcs.ImageInfo(10,10,8,true));
+
+
+                using (var stream = fileName.OpenRead())
                 {
-                    await stream.CopyToAsync(memory);
-                    memory.Position = 0;
+                    Image<Pixel> result;
+                    using (var memory = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(memory);
+                        memory.Position = 0;
 
-                    BitmapFactory factory = new BitmapFactory();
-                    factory.AddCodec(new BitmapCodec());
-                    factory.AddCodec(new PngCodec());
-                    factory.AddCodec(new JPEGCodec());
-                    factory.AddCodec(new TGACodec());
-                    result = factory.Decode(memory);
-                    result = result.GetBitmap(0, 0, result.Width, result.Height);
+                        BitmapFactory factory = new BitmapFactory();
+                        factory.AddCodec(new BitmapCodec());
+                        factory.AddCodec(new PngCodec());
+                        factory.AddCodec(new JPEGCodec());
+                        factory.AddCodec(new TGACodec());
+                        result = factory.Decode(memory);
+                        result = result.GetBitmap(0, 0, result.Width, result.Height);
+                    }
+
+                    byte[] rgbBytes = GetRgbBytes(result);
+                    var bin = new HybridBinarizer(new RGBLuminanceSource(rgbBytes, result.Width, result.Height));
+                    Log.Logger.Debug("Memory:" + rgbBytes.Length);
+                    Log.Logger.Debug("Size:" + (result.Width * result.Height) * 3);
+                    bBitmap = new BinaryBitmap(bin);
                 }
-
-                //using (var memory = new MemoryStream())
-                //{
-                // result.ToStream(memory);
-
-
-
-                byte[] rgbBytes = GetRgbBytes(result);
-                var bin = new HybridBinarizer(new RGBLuminanceSource(rgbBytes, result.Width, result.Height));
-                Log.Logger.Debug("Memory:" + rgbBytes.Length);
-                Log.Logger.Debug("Size:" + (result.Width * result.Height) * 3);
-                bBitmap = new BinaryBitmap(bin);
-
-
-
-                //LuminanceSource luminanceSource = new RGBLuminanceSource(memory.ToArray(), result.Width, result.Height);
-                //HybridBinarizer hb = new HybridBinarizer(luminanceSource);
-                //Binarizer a = hb.createBinarizer(luminanceSource);
-                //bBitmap = new BinaryBitmap(a);
-                //}
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "BarcodeDecoding.GetImage");
+                await Tools.Instance.CustomMessageBox.Show(ex.Message);
             }
             return bBitmap;
         }

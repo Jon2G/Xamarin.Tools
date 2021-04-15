@@ -12,14 +12,14 @@ using Xamarin.Forms.Xaml;
 namespace Kit.Forms.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DeviceRegister : ContentPage
+    public partial class DeviceRegister
     {
-        public DeviceRegisterModel Model { get;private set; }
-        public DeviceRegister(Brush brush, License.License Licence,ICustomMessageBox CustomMesaggeBox)
+        public DeviceRegisterModel Model { get; private set; }
+        public DeviceRegister(License.License Licence, ICustomMessageBox CustomMesaggeBox)
         {
             this.Model = new DeviceRegisterModel(Licence, CustomMesaggeBox);
-            this.Background = brush;
             InitializeComponent();
+            this.LockModal();
 
         }
         private void MailChanged(object sender, EventArgs e)
@@ -53,7 +53,7 @@ namespace Kit.Forms.Pages
         {
             if (await this.Model.LogIn())
             {
-                await this.Navigation.PopModalAsync();
+                await this.Close();
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Kit.WPF.Pages;
 using BaseLicense = Kit.License.License;
 namespace Kit.WPF.Services
@@ -12,7 +13,7 @@ namespace Kit.WPF.Services
 
         }
 
-        protected override void OpenRegisterForm()
+        protected override Task OpenRegisterForm()
         {
             DeviceRegister register = new DeviceRegister(this, new ICustomMessageBox.CustomMessageBoxService())
             {
@@ -20,6 +21,7 @@ namespace Kit.WPF.Services
                 WindowStartupLocation=System.Windows.WindowStartupLocation.CenterScreen
             };
             register.ShowDialog();
+            return Task.FromResult(true);
         }
     }
 }

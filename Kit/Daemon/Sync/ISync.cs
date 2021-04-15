@@ -52,6 +52,12 @@ namespace Kit.Daemon.Sync
             var history = source_con.Table<SyncHistory>().FirstOrDefault(x => x.Guid == this.Guid);
             if (history is null)
             {
+                ChangesHistory changes= source_con.Table<ChangesHistory>().FirstOrDefault(x => x.Guid == this.Guid);
+                if(changes is null)
+                {
+                    //Has been downloaded by Daemon service since daemon downloads dont get inserted here
+                    return SyncStatus.Done;
+                }
                 return SyncStatus.Pending;
             }
             return SyncStatus.Done;

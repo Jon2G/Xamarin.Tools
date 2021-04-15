@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System.Threading.Tasks;
+using Xamarin.Forms;
 using BaseLicense = Kit.License.License;
 
 namespace Kit.Forms.Services
@@ -10,12 +11,10 @@ namespace Kit.Forms.Services
 
         }
 
-        protected override async void OpenRegisterForm()
+        protected override async Task OpenRegisterForm()
         {
-            Page page = Xamarin.Forms.Application.Current.MainPage;
-
-            Forms.Pages.DeviceRegister login = new Forms.Pages.DeviceRegister(page.Background, this,new CustomMessageBoxService());
-            await page.Navigation.PushModalAsync(login, true);
+            Forms.Pages.DeviceRegister login = new Forms.Pages.DeviceRegister(this,new CustomMessageBoxService());
+            await login.ShowDialog();
         }
     }
 }
