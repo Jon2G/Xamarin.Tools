@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Base;
+using Kit.Sql.Helpers;
 using Kit.Sql.Readers;
 using SQLitePCL;
 
@@ -12,7 +13,7 @@ namespace Kit.Sql.SqlServer
 {
     public partial class SQLServerCommand : CommandBase
     {
-        SQLServerConnection _conn;
+        private SQLServerConnection _conn;
         private List<Binding> _bindings;
         public string CommandText { get; set; }
         public List<SqlParameter> Parameters { get; internal set; }
@@ -23,6 +24,7 @@ namespace Kit.Sql.SqlServer
             CommandText = cmd;
             _conn = conn;
         }
+
         public SQLServerCommand(SQLServerConnection conn)
         {
             _conn = conn;
@@ -77,7 +79,7 @@ namespace Kit.Sql.SqlServer
         {
             var cmd = new SqlCommand(this.CommandText, this._conn.Con());
             cmd.Parameters.AddRange(this.Parameters.ToArray());
-            var reader= new Reader(cmd);
+            var reader = new Reader(cmd);
             return reader;
         }
 
@@ -108,35 +110,34 @@ namespace Kit.Sql.SqlServer
             {
                 _conn.RenewConnection();
             }
-            using (var con = _conn.Connection)
+            try
             {
-                con.Open();
-                using (var cmd = new SqlCommand(this.CommandText, con))
+                using (var con = _conn.Connection)
                 {
-                    if (this.Parameters.Any())
+                    con.Open();
+                    using (var cmd = new SqlCommand(this.CommandText, con))
                     {
-                        cmd.Parameters.AddRange(Parameters.ToArray());
-                    }
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
+                        if (this.Parameters.Any())
                         {
-                            var cols = new Base.TableMapping.Column[reader.FieldCount];
-                            var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
-                            for (int i = 0; i < cols.Length; i++)
+                            cmd.Parameters.AddRange(Parameters.ToArray());
+                        }
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
                             {
-                                var name = reader.GetName(i);
-                                cols[i] = map.FindColumn(name);
-                                if (cols[i] != null)
-                                    fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(cols[i]);
-                            }
-
-                            do
-                            {
-                                var obj = Activator.CreateInstance(map.MappedType);
-                                try
+                                var cols = new Base.TableMapping.Column[reader.FieldCount];
+                                var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
+                                for (int i = 0; i < cols.Length; i++)
                                 {
+                                    var name = reader.GetName(i);
+                                    cols[i] = map.FindColumn(name);
+                                    if (cols[i] != null)
+                                        fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(cols[i]);
+                                }
 
+                                do
+                                {
+                                    var obj = Activator.CreateInstance(map.MappedType);
                                     for (int i = 0; i < cols.Length; i++)
                                     {
                                         if (cols[i] == null)
@@ -154,16 +155,18 @@ namespace Kit.Sql.SqlServer
                                         }
                                     }
                                     OnInstanceCreated(obj);
-                                    result.Add ((T)obj);
-                                }catch(Exception ex)
-                                {
-                                    Log.Logger.Error("");
-                                }
-
-                            } while ((reader.Read()));
+                                    result.Add((T)obj);
+                                } while ((reader.Read()));
+                            }
                         }
                     }
-
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.IsDBConnectionError(ex))
+                {
+                    Daemon.Daemon.OffLine = false;
                 }
             }
             return result;
@@ -195,7 +198,6 @@ namespace Kit.Sql.SqlServer
                     {
                         if (reader.Read())
                         {
-
                             var colval = ReadCol(reader, 0, reader.GetFieldType(0), typeof(T));
                             if (colval != null)
                             {
@@ -289,7 +291,7 @@ namespace Kit.Sql.SqlServer
             this._conn?.Close();
         }
 
-        SqlCommand Prepare(SqlCommand cmd)
+        private SqlCommand Prepare(SqlCommand cmd)
         {
             cmd.Prepare();
             return cmd;
@@ -298,13 +300,13 @@ namespace Kit.Sql.SqlServer
             //return stmt;
         }
 
-        void Finalize(SqlCommand cmd)
+        private void Finalize(SqlCommand cmd)
         {
             cmd.Dispose();
             //SQLite3.Finalize (stmt);
         }
 
-        void BindAll(sqlite3_stmt stmt)
+        private void BindAll(sqlite3_stmt stmt)
         {
             int nextIdx = 1;
             foreach (var b in _bindings)
@@ -322,7 +324,7 @@ namespace Kit.Sql.SqlServer
             }
         }
 
-        static IntPtr NegativePointer = new IntPtr(-1);
+        private static IntPtr NegativePointer = new IntPtr(-1);
 
         internal static void BindParameter(sqlite3_stmt stmt, int index, object value)
         {
@@ -409,7 +411,7 @@ namespace Kit.Sql.SqlServer
             }
         }
 
-        class Binding
+        private class Binding
         {
             public string Name { get; set; }
 
@@ -418,7 +420,7 @@ namespace Kit.Sql.SqlServer
             public int Index { get; set; }
         }
 
-        object ReadCol(SqlDataReader reader, int index, Type coltype, Type clrType)
+        private object ReadCol(SqlDataReader reader, int index, Type coltype, Type clrType)
         {
             if (coltype == typeof(DBNull))
             {
@@ -455,7 +457,6 @@ namespace Kit.Sql.SqlServer
                 }
                 else if (clrType == typeof(TimeSpan))
                 {
-
                     var text = Convert.ToString(reader[index]);
                     TimeSpan resultTime;
                     if (!TimeSpan.TryParseExact(text, "c", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.TimeSpanStyles.None, out resultTime))
@@ -463,7 +464,6 @@ namespace Kit.Sql.SqlServer
                         resultTime = TimeSpan.Parse(text);
                     }
                     return resultTime;
-
                 }
                 else if (clrType == typeof(DateTime))
                 {
@@ -474,7 +474,6 @@ namespace Kit.Sql.SqlServer
                     //	resultDate = DateTime.Parse (text);
                     //}
                     return resultDate;
-
                 }
                 else if (clrType == typeof(DateTimeOffset))
                 {

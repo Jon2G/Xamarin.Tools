@@ -34,10 +34,12 @@ namespace Kit.Sql.Sqlite
     public class SQLiteConnection : SqlBase, IDisposable
     {
         #region BaseSqlite
+
         private Type AssemblyType;
         private string ScriptResourceName;
 
         public readonly int DBVersion;
+
         /// <summary>
         /// Gets the database path used by this connection.
         /// </summary>
@@ -51,6 +53,7 @@ namespace Kit.Sql.Sqlite
             this.ScriptResourceName = ScriptResourceName;
             return this;
         }
+
         public SQLiteConnection(FileInfo file, int DBVersion)
         : this(new SQLiteConnectionString(file.FullName), DBVersion)
         {
@@ -63,6 +66,7 @@ namespace Kit.Sql.Sqlite
         }
 
         public override string MappingSuffix => "_sqlite";
+
         protected override Base.TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
         {
             return new Kit.Sql.Sqlite.TableMapping(type, createFlags);
@@ -96,6 +100,7 @@ namespace Kit.Sql.Sqlite
             }
             return this;
         }
+
         //private void RevisarTablaDbVersion(SQLiteConnection connection)
         //{
         //    if (TableExists("DB_VERSION"))
@@ -105,7 +110,6 @@ namespace Kit.Sql.Sqlite
         //    connection.Execute(@"CREATE TABLE DB_VERSION ( VERSION VARCHAR NOT NULL )");
         //    connection.Execute($"INSERT INTO DB_VERSION(VERSION) VALUES('{DBVersion}')");
         //}
-
 
         private void CreateSchema()
         {
@@ -125,6 +129,7 @@ namespace Kit.Sql.Sqlite
                 IsFirstLaunchTime = true
             });
         }
+
         private void CreateDbFromScript()
         {
             string sql = string.Empty;
@@ -141,6 +146,7 @@ namespace Kit.Sql.Sqlite
             AssemblyType = null;
             ScriptResourceName = null;
         }
+
         public bool EliminarDB()
         {
             try
@@ -158,6 +164,7 @@ namespace Kit.Sql.Sqlite
                 return false;
             }
         }
+
         public SQLiteConnection Conecction()
         {
             SQLiteConnection con;
@@ -173,6 +180,7 @@ namespace Kit.Sql.Sqlite
             }
             return con;
         }
+
         public SQLiteAsyncConnection ConecctionAsync()
         {
             SQLiteAsyncConnection con;
@@ -188,6 +196,7 @@ namespace Kit.Sql.Sqlite
             }
             return con;
         }
+
         public int Querry(string sql, params object[] args)
         {
             int afectadas = -1;
@@ -199,6 +208,7 @@ namespace Kit.Sql.Sqlite
 
             return afectadas;
         }
+
         public override object Single(string sql)
         {
             object result = default;
@@ -218,6 +228,7 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
         public override T Single<T>(string sql)
         {
             T result = default;
@@ -231,6 +242,7 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
         public T Single<T>(SQLiteConnection con, string sql) where T : IConvertible
         {
             T result = default;
@@ -250,10 +262,12 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
         public override int EXEC(string sql)
         {
             return EXEC(sql);
         }
+
         public int InsertAndRecoverPK(string sql, params object[] parametros)
         {
             int Id = 1;
@@ -267,6 +281,7 @@ namespace Kit.Sql.Sqlite
             }
             return Id;
         }
+
         public int EXEC(string sql, params object[] parametros)
         {
             Log.Logger.Debug(sql);
@@ -278,11 +293,13 @@ namespace Kit.Sql.Sqlite
             }
             return afectadas;
         }
+
         public int EXEC(SQLiteConnection con, string sql, params object[] parametros)
         {
             Log.Logger.Debug(sql);
             return con.Execute(sql, parametros);
         }
+
         public T ExecuteRead<T>(string sql, params object[] parametros)
         {
             Log.Logger.Debug(sql);
@@ -307,6 +324,7 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
         public List<T> Lista<T>(string sql) where T : IConvertible
         {
             List<T> result = new List<T>();
@@ -319,6 +337,7 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, params object[] parameters)
             where T : IConvertible
             where Q : IConvertible
@@ -335,6 +354,7 @@ namespace Kit.Sql.Sqlite
 
             return result;
         }
+
         public DataTable DataTable(string Querry, string TableName = null)
         {
             DataTable result = new DataTable(TableName);
@@ -364,6 +384,7 @@ namespace Kit.Sql.Sqlite
             }
             return result;
         }
+
         public override IReader Read(string sql)
         {
             try
@@ -376,6 +397,7 @@ namespace Kit.Sql.Sqlite
                 return new FakeReader();
             }
         }
+
         public IReader Read(string sql, SQLiteConnection connection)
         {
             try
@@ -388,6 +410,7 @@ namespace Kit.Sql.Sqlite
                 return null;
             }
         }
+
         public bool Exists(string sql)
         {
             using (IReader reader = Read(sql))
@@ -395,6 +418,7 @@ namespace Kit.Sql.Sqlite
                 return reader?.Read() ?? false;
             }
         }
+
         public override bool TableExists(string TableName)
         {
             using (IReader reader = Read($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
@@ -438,6 +462,7 @@ namespace Kit.Sql.Sqlite
                 Log.Logger.Error(ex.Message);
             }
         }
+
         private bool IsBalanced(string batch)
         {
             int open = batch.Count(x => x == '(');
@@ -445,13 +470,14 @@ namespace Kit.Sql.Sqlite
 
             return open == closed;
         }
+
         public int LastScopeIdentity(SQLiteConnection con)
         {
             return Single<int>(con, "SELECT last_insert_rowid();");
         }
 
+        #endregion BaseSqlite
 
-        #endregion
         private bool _open;
         private TimeSpan _busyTimeout;
 
@@ -462,10 +488,8 @@ namespace Kit.Sql.Sqlite
         private Random _rand = new Random();
 
         public sqlite3 Handle { get; private set; }
-        static readonly sqlite3 NullHandle = default(sqlite3);
-        static readonly sqlite3_backup NullBackupHandle = default(sqlite3_backup);
-
-
+        private static readonly sqlite3 NullHandle = default(sqlite3);
+        private static readonly sqlite3_backup NullBackupHandle = default(sqlite3_backup);
 
         /// <summary>
         /// Gets the SQLite library version number. 3007014 would be v3.7.14
@@ -519,10 +543,12 @@ namespace Kit.Sql.Sqlite
         }
 
 #if USE_SQLITEPCL_RAW && !NO_SQLITEPCL_RAW_BATTERIES
+
         static SQLiteConnection()
         {
             SQLitePCL.Batteries_V2.Init();
         }
+
 #endif
 
         /// <summary>
@@ -564,7 +590,6 @@ namespace Kit.Sql.Sqlite
         public SQLiteConnection(string databasePath, SQLiteOpenFlags openFlags, int DBVersion, bool storeDateTimeAsTicks = true)
             : this(new SQLiteConnectionString(databasePath, openFlags, storeDateTimeAsTicks), DBVersion)
         {
-
         }
 
         /// <summary>
@@ -576,8 +601,8 @@ namespace Kit.Sql.Sqlite
         public SQLiteConnection(SQLiteConnectionString connectionString)
             : this(connectionString, 0)
         {
-
         }
+
         public SQLiteConnection(SQLiteConnectionString connectionString, int DBVersion)
         {
             if (connectionString == null)
@@ -586,9 +611,11 @@ namespace Kit.Sql.Sqlite
                 throw new InvalidOperationException("DatabasePath must be specified");
 
             #region SqliteHelperInit
+
             DatabasePath = connectionString.DatabasePath;
             this.DBVersion = DBVersion;
-            #endregion
+
+            #endregion SqliteHelperInit
 
             DatabasePath = connectionString.DatabasePath;
 
@@ -620,8 +647,6 @@ namespace Kit.Sql.Sqlite
             connectionString.PostKeyAction?.Invoke(this);
         }
 
-
-
         public override SqlBase RenewConnection()
         {
 #if NETFX_CORE
@@ -649,6 +674,7 @@ namespace Kit.Sql.Sqlite
             _open = true;
             return this;
         }
+
         /// <summary>
         /// Enables the write ahead logging. WAL is significantly faster in most scenarios
         /// by providing better concurrency and better disk IO performance than the normal
@@ -664,7 +690,7 @@ namespace Kit.Sql.Sqlite
         /// </summary>
         /// <returns>The quoted string.</returns>
         /// <param name="unsafeString">The unsafe string to quote.</param>
-        static string Quote(string unsafeString)
+        private static string Quote(string unsafeString)
         {
             // TODO: Doesn't call sqlite3_mprintf("%Q", u) because we're waiting on https://github.com/ericsink/SQLitePCL.raw/issues/153
             if (unsafeString == null)
@@ -680,7 +706,7 @@ namespace Kit.Sql.Sqlite
         /// This only has an effect if you are using the SQLCipher nuget package.
         /// </summary>
         /// <param name="key">Ecryption key plain text that is converted to the real encryption key using PBKDF2 key derivation</param>
-        void SetKey(string key)
+        private void SetKey(string key)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -695,7 +721,7 @@ namespace Kit.Sql.Sqlite
         /// This only has an effect if you are using the SQLCipher nuget package.
         /// </summary>
         /// <param name="key">256-bit (32 byte) ecryption key data</param>
-        void SetKey(byte[] key)
+        private void SetKey(byte[] key)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -745,7 +771,6 @@ namespace Kit.Sql.Sqlite
             }
         }
 
-
         private struct IndexedColumn
         {
             public int Order;
@@ -780,8 +805,6 @@ namespace Kit.Sql.Sqlite
             return Execute(query);
         }
 
-
-
         /// <summary>
         /// Executes a "create table if not exists" on the database. It also
         /// creates any specified indexes on the columns of the table. It uses
@@ -795,7 +818,6 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public override CreateTableResult CreateTable(Kit.Sql.Base.TableMapping map, CreateFlags createFlags = CreateFlags.None)
         {
-
             // Present a nice error if no columns specified
             if (map.Columns.Length == 0)
             {
@@ -809,7 +831,6 @@ namespace Kit.Sql.Sqlite
             // Create or migrate it
             if (existingCols.Count == 0)
             {
-
                 // Facilitate virtual tables a.k.a. full-text search.
                 bool fts3 = (createFlags & CreateFlags.FullTextSearch3) != 0;
                 bool fts4 = (createFlags & CreateFlags.FullTextSearch4) != 0;
@@ -820,7 +841,6 @@ namespace Kit.Sql.Sqlite
                 // Build query.
                 var query = "create " + @virtual + "table if not exists \"" + map.TableName + "\" " + @using + "(\n";
                 var decls = map.Columns.Select(p => Orm.SqlDecl(p, StoreDateTimeAsTicks, StoreTimeSpanAsTicks));
-
 
                 var decl = string.Join(",\n", decls.ToArray());
                 query += decl;
@@ -1087,7 +1107,7 @@ namespace Kit.Sql.Sqlite
             return Query<ColumnInfo>(query);
         }
 
-        void MigrateTable(TableMapping map, List<ColumnInfo> existingCols)
+        private void MigrateTable(TableMapping map, List<ColumnInfo> existingCols)
         {
             var toBeAdded = new List<TableMapping.Column>();
 
@@ -1566,9 +1586,6 @@ namespace Kit.Sql.Sqlite
             get { return _transactionDepth > 0; }
         }
 
-
-
-
         /// <summary>
         /// Begins a new transaction. Call <see cref="Commit"/> to end the transaction.
         /// </summary>
@@ -1693,7 +1710,7 @@ namespace Kit.Sql.Sqlite
         /// </summary>
         /// <param name="savepoint">The name of the savepoint to roll back to, as returned by <see cref="SaveTransactionPoint"/>.  If savepoint is null or empty, this method is equivalent to a call to <see cref="Rollback"/></param>
         /// <param name="noThrow">true to avoid throwing exceptions, false otherwise</param>
-        void RollbackTo(string savepoint, bool noThrow)
+        private void RollbackTo(string savepoint, bool noThrow)
         {
             // Rolling back without a TO clause rolls backs all transactions
             //    and leaves the transaction stack empty.
@@ -1715,7 +1732,6 @@ namespace Kit.Sql.Sqlite
             {
                 if (!noThrow)
                     throw;
-
             }
             // No need to rollback if there are no transactions open.
         }
@@ -1755,7 +1771,7 @@ namespace Kit.Sql.Sqlite
             }
         }
 
-        void DoSavePointExecute(string savepoint, string cmd)
+        private void DoSavePointExecute(string savepoint, string cmd)
         {
             // Validate the savepoint
             int firstLen = savepoint.IndexOf('D');
@@ -2010,7 +2026,6 @@ namespace Kit.Sql.Sqlite
             return Insert(obj, "", objType, shouldnotify);
         }
 
-
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -2034,7 +2049,6 @@ namespace Kit.Sql.Sqlite
             }
             return Insert(obj, extra, Orm.GetType(obj));
         }
-
 
         /// <summary>
         /// Inserts the given object (and updates its
@@ -2098,9 +2112,6 @@ namespace Kit.Sql.Sqlite
             }
             int count;
 
-
-
-
             lock (this)
             {
                 if (this.IsClosed)
@@ -2128,7 +2139,6 @@ namespace Kit.Sql.Sqlite
                     var id = SQLite3.LastInsertRowid(this.Handle);
                     if (id <= 0)
                     {
-
                     }
                     map.SetAutoIncPK(obj, id);
                 }
@@ -2141,10 +2151,9 @@ namespace Kit.Sql.Sqlite
             return count;
         }
 
+        private readonly Dictionary<Tuple<string, string>, PreparedSqlLiteInsertCommand> _insertCommandMap = new Dictionary<Tuple<string, string>, PreparedSqlLiteInsertCommand>();
 
-        readonly Dictionary<Tuple<string, string>, PreparedSqlLiteInsertCommand> _insertCommandMap = new Dictionary<Tuple<string, string>, PreparedSqlLiteInsertCommand>();
-
-        PreparedSqlLiteInsertCommand GetInsertCommand(TableMapping map, string extra)
+        private PreparedSqlLiteInsertCommand GetInsertCommand(TableMapping map, string extra)
         {
             PreparedSqlLiteInsertCommand prepCmd;
 
@@ -2174,7 +2183,7 @@ namespace Kit.Sql.Sqlite
             return prepCmd;
         }
 
-        PreparedSqlLiteInsertCommand CreateInsertCommand(TableMapping map, string extra)
+        private PreparedSqlLiteInsertCommand CreateInsertCommand(TableMapping map, string extra)
         {
             var cols = map.InsertColumns;
             string insertSql;
@@ -2196,7 +2205,6 @@ namespace Kit.Sql.Sqlite
                                       select "\"" + c.Name + "\"").ToArray()),
                     string.Join(",", (from c in cols
                                       select "?").ToArray()), extra);
-
             }
 
             var insertCommand = new PreparedSqlLiteInsertCommand(this, insertSql);
@@ -2284,7 +2292,6 @@ namespace Kit.Sql.Sqlite
             }
             catch (SQLiteException ex)
             {
-
                 if (ex.Result == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode(this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull)
                 {
                     throw NotNullConstraintViolationException.New(ex, map, obj);
@@ -2541,15 +2548,17 @@ namespace Kit.Sql.Sqlite
                 }
             }
         }
+
         public event EventHandler<NotifyTableChangedEventArgs> TableChanged;
 
-        void OnTableDeleteAll(TableMapping table)
+        private void OnTableDeleteAll(TableMapping table)
         {
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
             if (table.SyncDirection != SyncDirection.NoSync)
                 QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
                     .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
         }
+
         public void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
         {
             if (table.SyncDirection == SyncDirection.NoSync)
@@ -2587,6 +2596,5 @@ namespace Kit.Sql.Sqlite
                 .Delete(x => x.Guid == VersionControl.Guid, false);
             Insert(VersionControl);
         }
-
     }
 }

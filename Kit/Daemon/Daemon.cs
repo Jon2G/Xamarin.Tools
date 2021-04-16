@@ -34,16 +34,22 @@ namespace Kit.Daemon
     public class Daemon : StaticModel<Daemon>
     {
         public DaemonConfig DaemonConfig { get; set; }
+
         #region ThreadMonitor
+
         private static object Locker = new object();
         private Thread Thread { get; set; }
         private EventWaitHandle WaitHandle { get; set; }
-        #endregion
+
+        #endregion ThreadMonitor
+
         public Schema Schema { get; private set; }
         public ICommand OnConnectionStateChanged;
+
         public event Func<bool> OnInicializate;
 
         private static bool _OffLine;
+
         public static bool OffLine
         {
             get => _OffLine;
@@ -53,11 +59,13 @@ namespace Kit.Daemon
                 {
                     _OffLine = value;
                     OnGlobalPropertyChanged();
-                    Current.OnConnectionStateChanged?.Execute(Current);        
+                    Current.OnConnectionStateChanged?.Execute(Current);
                 }
             }
         }
-        private static  Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+
         public static Daemon Current
         {
             get
@@ -70,18 +78,22 @@ namespace Kit.Daemon
                 return ret;
             }
         }
+
         internal bool IsAwake
         {
             get;
             set;
         }
+
         //{ get => Thread?.IsAlive ?? false; } //{ get; set; }
         internal bool IsSleepRequested
         {
             get;
             set;
         }
+
         private SyncManager _SyncManager;
+
         public SyncManager SyncManager
         {
             get => _SyncManager;
@@ -93,6 +105,7 @@ namespace Kit.Daemon
         }
 
         private int _FactorDeDescanso;
+
         public int FactorDeDescanso
         {
             get => _FactorDeDescanso;
@@ -103,18 +116,22 @@ namespace Kit.Daemon
                 Raise(() => Inactive);
             }
         }
+
         public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);
         private bool IsInited;
-        public Daemon SetPackageSize(int PackageSize =Sync.SyncManager.RegularPackageSize)
+
+        public Daemon SetPackageSize(int PackageSize = Sync.SyncManager.RegularPackageSize)
         {
             this.SyncManager.SetPackageSize(PackageSize);
             return this;
         }
+
         public SyncDirecction DireccionActual
         {
             get;
             private set;
         }
+
         private static Daemon Born()
         {
             Daemon demon = new Daemon()
@@ -124,12 +141,14 @@ namespace Kit.Daemon
             };
             return demon;
         }
+
         private async void SQLH_OnConnectionStringChanged(object sender, EventArgs e)
         {
             await Sleep();
             Current.IsInited = false;
             Awake();
         }
+
         private Daemon()
         {
             this.DireccionActual = SyncDirecction.INVALID;
@@ -146,6 +165,7 @@ namespace Kit.Daemon
             Log.Logger.Debug("Daemon has been configured");
             return this;
         }
+
         public Daemon SetSchema(params Type[] tables)
         {
             this.Schema = new Schema(tables);
@@ -158,6 +178,7 @@ namespace Kit.Daemon
             IsInited = false;
             Awake();
         }
+
         private void Run()
         {
             if (Thread != null)
@@ -181,6 +202,7 @@ namespace Kit.Daemon
             Thread.SetApartmentState(ApartmentState.STA);
             Thread.Start();
         }
+
         /// <summary>
         /// Comprueba que las tablas de versión coincidan con la versión de este servicio, las crea ó renueva según sea el caso
         /// </summary>
@@ -235,8 +257,9 @@ namespace Kit.Daemon
             WaitHandle = null;
             Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
         }
+
         /// <summary>
-        /// Duerme al demonio hasta que se vuelva a despertar 
+        /// Duerme al demonio hasta que se vuelva a despertar
         /// </summary>
         public async Task<Daemon> Sleep()
         {
@@ -276,15 +299,13 @@ namespace Kit.Daemon
 
                 SQLServerConnection SQLH = DaemonConfig.GetSqlServerConnection();
                 CheckSyncTables(SQLH);
-
+                SQLH.SetCacheIdentity(false);
                 if (!Device.Current.EnsureDeviceIsRegistred(SQLH))
                 {
                     return;
                 }
 
                 Schema.CheckTriggers(SQLH);
-
-
 
                 //
                 //SQLHLite.CreateTable<SyncHistory>();
@@ -349,7 +370,6 @@ namespace Kit.Daemon
                     version.Save(con);
                 }
             }
-
         }
 
         private void Log_OnConecctionLost(object sender, EventArgs e)
@@ -361,7 +381,6 @@ namespace Kit.Daemon
         {
             try
             {
-
                 do
                 {
                     //lock (Locker)
@@ -372,7 +391,7 @@ namespace Kit.Daemon
                         {
                             return;
                         }
-                        if (IsSleepRequested&&!OffLine)
+                        if (IsSleepRequested && !OffLine)
                         {
                             GotoSleep();
                         }
@@ -420,7 +439,6 @@ namespace Kit.Daemon
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
                                     this.SyncManager.Download();
                                 }
-
                             }
                             catch (Exception ex)
                             {
@@ -446,7 +464,6 @@ namespace Kit.Daemon
                             //Trabajar!!
                             FactorDeDescanso = 0;
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -454,11 +471,9 @@ namespace Kit.Daemon
                     }
                     //}
                 } while (true);
-
             }
             catch (Exception ex)
             {
-
                 Log.Logger.Error(ex, "En la rutina Run principal");
                 Start();
             }
@@ -468,7 +483,7 @@ namespace Kit.Daemon
         {
             IsAwake = false;
             bool signaled = WaitHandle.WaitOne();
-            if (signaled&&!HasBeenForcedToSleep)
+            if (signaled && !HasBeenForcedToSleep)
             {
                 HasBeenForcedToSleep = true;
                 WaitHandle.Reset();
@@ -477,6 +492,7 @@ namespace Kit.Daemon
             IsAwake = true;
             IsSleepRequested = false;
         }
+
         private bool TryToConnect()
         {
             try
@@ -496,7 +512,6 @@ namespace Kit.Daemon
             return false;
         }
 
-
         ///// <summary>
         ///// Le indica a la base de datos de sqlite que existe un nuevo registro que debe ser sincronizado
         ///// </summary>
@@ -509,5 +524,4 @@ namespace Kit.Daemon
             con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion));
         }
     }
-
 }

@@ -156,9 +156,6 @@ namespace Kit.Sql.SqlServer
         //    return result;
         //}
 
-
-
-
         //public T Single<T>(string sql,
         //    params SqlParameter[] parametros) where T : IConvertible
         //{
@@ -172,7 +169,6 @@ namespace Kit.Sql.SqlServer
         //                result = Sqlh.Parse<T>(reader[0]);
         //            }
         //        }
-
 
         //        Log.Logger.Debug(sql);
 
@@ -308,7 +304,6 @@ namespace Kit.Sql.SqlServer
 
                 ReportaTransaccion(cmd);
                 con.Close();
-
             }
 
             return Rows;
@@ -364,6 +359,7 @@ namespace Kit.Sql.SqlServer
         {
             return Lista<T>(sql, CommandType.Text, 0);
         }
+
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.Text, params SqlParameter[] parameters)
             where T : IConvertible
             where Q : IConvertible
@@ -409,12 +405,14 @@ namespace Kit.Sql.SqlServer
             }
             return result;
         }
+
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, params SqlParameter[] parameters)
             where T : IConvertible
             where Q : IConvertible
         {
             return ListaTupla<T, Q>(sql, CommandType.Text, parameters);
         }
+
         public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, bool Reportar = true, params SqlParameter[] parameters)
         {
             DataTable result = new DataTable(TableName);
@@ -444,23 +442,26 @@ namespace Kit.Sql.SqlServer
             }
             return result;
         }
+
         public DataTable DataTable(string Querry, string TableName = null, params SqlParameter[] parameters)
         {
             return DataTable(Querry, CommandType.Text, TableName, false, parameters);
         }
+
         public override IReader Read(string sql)
         {
             return Read(sql, CommandType.Text);
         }
+
         public IReader Read(string sql, params SqlParameter[] parameters)
         {
             return Read(sql, CommandType.Text, parameters);
         }
+
         public IReader Read(string sql, CommandType commandType = CommandType.Text, params SqlParameter[] parameters)
         {
             try
             {
-
                 //con.Open();
                 SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
                 if (parameters != null)
@@ -471,7 +472,6 @@ namespace Kit.Sql.SqlServer
                     cmd.Connection.Open();
                 ReportaTransaccion(cmd);
                 return new Reader(cmd);
-
             }
             catch (Exception ex)
             {
@@ -483,9 +483,9 @@ namespace Kit.Sql.SqlServer
                 }
                 this.LastException = ex;
                 return new FakeReader();
-
             }
         }
+
         public void RunBatch(string Batch, bool Reportar = false)
         {
             Batch += "\nGO";   // make sure last batch is executed.
@@ -510,6 +510,7 @@ namespace Kit.Sql.SqlServer
                 Log.Logger.Error(ex.Message);
             }
         }
+
         public async Task<Reader> AsyncLeector(string sql, CommandType commandType = CommandType.StoredProcedure, bool Reportar = true, params SqlParameter[] parameters)
         {
             if (IsClosed)
@@ -534,10 +535,12 @@ namespace Kit.Sql.SqlServer
                 return null;
             }
         }
+
         public Task<Reader> AsyncLeector(string sql, params SqlParameter[] parameters)
         {
             return AsyncLeector(sql, CommandType.Text, false, parameters);
         }
+
         public bool Exists(string sql, params SqlParameter[] parametros)
         {
             bool result = false;
@@ -556,17 +559,18 @@ namespace Kit.Sql.SqlServer
             return Exists($@"SELECT 1 FROM sys.columns WHERE name = N'{Campo}' AND Object_ID = Object_ID(N'{Tabla}')");
         }
 
-
         public bool TieneIdentidad(string Tabla)
         {
             return Exists("SELECT * from syscolumns where id = Object_ID(@TABLE_NAME) and colstat & 1 = 1",
                 new SqlParameter("TABLE_NAME", Tabla));
         }
+
         public void ReportaTransaccion(SqlCommand cmd)
         {
             string sql = GetCommandText(cmd);
             Log.Logger.Debug("Executing:[{0}]", sql);
         }
+
         private string GetCommandText(SqlCommand sqc)
         {
             StringBuilder sbCommandText = new StringBuilder();
@@ -645,6 +649,7 @@ namespace Kit.Sql.SqlServer
             //sbCommandText.AppendLine("-- END COMMAND");
             return sbCommandText.ToString();
         }
+
         private void LogParameterToSqlBatch(SqlParameter param, StringBuilder sbCommandText)
         {
             sbCommandText.Append("DECLARE ");
@@ -678,6 +683,7 @@ namespace Kit.Sql.SqlServer
                 }
             }
         }
+
         private void LogStructuredParameter(SqlParameter param, StringBuilder sbCommandText)
         {
             sbCommandText.AppendLine(" {List Type};");
@@ -702,7 +708,9 @@ namespace Kit.Sql.SqlServer
                 sbCommandText.AppendLine(");");
             }
         }
-        const string DATETIME_FORMAT_ROUNDTRIP = "o";
+
+        private const string DATETIME_FORMAT_ROUNDTRIP = "o";
+
         private void LogQuotedParameterValue(object value, StringBuilder sbCommandText)
         {
             try
@@ -747,7 +755,7 @@ namespace Kit.Sql.SqlServer
                     else if (value is DateTime time)
                     {
                         // SQL Server only supports ISO8601 with 3 digit precision on datetime,
-                        // datetime2 (>= SQL Server 2008) parses the .net format, and will 
+                        // datetime2 (>= SQL Server 2008) parses the .net format, and will
                         // implicitly cast down to datetime.
                         // Alternatively, use the format string "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK"
                         // to match SQL server parsing
@@ -796,7 +804,6 @@ namespace Kit.Sql.SqlServer
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 sbCommandText.AppendLine("/* Exception occurred while converting parameter: ");
@@ -804,6 +811,7 @@ namespace Kit.Sql.SqlServer
                 sbCommandText.AppendLine("*/");
             }
         }
+
         private object UnboxNullable(object value)
         {
             Type typeOriginal = value.GetType();
@@ -822,6 +830,7 @@ namespace Kit.Sql.SqlServer
                 return value;
             }
         }
+
         private void LogParameterType(SqlParameter param, StringBuilder sbCommandText)
         {
             switch (param.SqlDbType)
@@ -837,6 +846,7 @@ namespace Kit.Sql.SqlServer
                         sbCommandText.Append(')');
                     }
                     break;
+
                 case SqlDbType.VarChar:
                 case SqlDbType.NVarChar:
                 case SqlDbType.VarBinary:
@@ -875,16 +885,22 @@ namespace Kit.Sql.SqlServer
                 // Unknown
                 case SqlDbType.SmallDateTime:
                     break;
+
                 case SqlDbType.Variant:
                     break;
+
                 case SqlDbType.Xml:
                     break;
+
                 case SqlDbType.Udt:
                     break;
+
                 case SqlDbType.Structured:
                     break;
+
                 case SqlDbType.Time:
                     break;
+
                 case SqlDbType.Timestamp:
                 default:
                     {
@@ -896,27 +912,24 @@ namespace Kit.Sql.SqlServer
                     break;
             }
         }
+
         public void CrearCampo(string Tabla, string Campo, string TipoDato, bool Nulleable)
         {
             Execute($"alter table [{Tabla}] add [{Campo}] {TipoDato} {(Nulleable ? "" : "NOT NULL")}");
         }
 
-        #endregion
+        #endregion SQLH
+
         private System.Diagnostics.Stopwatch _sw;
         private long _elapsedMilliseconds = 0;
 
         private int _transactionDepth = 0;
         private Random _rand = new Random();
 
-
-
-
         /// <summary>
         /// Gets or sets the database path used by this connection.
         /// </summary>
         public SqlConnectionStringBuilder ConnectionString { get; set; }
-
-
 
         /// <summary>
         /// Whether Trace lines should be written that show the execution time of queries.
@@ -958,9 +971,6 @@ namespace Kit.Sql.SqlServer
 
         public SqlConnection Connection { get; private set; }
 
-
-
-
         public string DataBaseName { get; private set; }
         public string Server { get; private set; }
         public string Port { get; private set; }
@@ -986,7 +996,7 @@ namespace Kit.Sql.SqlServer
                 .Append((!string.IsNullOrEmpty(Port?.Trim()) ? "," + Port : ""))//no puerto no lo pongo
                 .Append(";Initial Catalog=")
                 .Append(DataBaseName);
-            if (string.IsNullOrEmpty(User?.Trim()) && string.IsNullOrEmpty(Password?.Trim()))//no user provided,default authentication 
+            if (string.IsNullOrEmpty(User?.Trim()) && string.IsNullOrEmpty(Password?.Trim()))//no user provided,default authentication
             {
                 ConnectionString.Append(";Integrated Security=True;");
             }
@@ -1015,8 +1025,8 @@ namespace Kit.Sql.SqlServer
         /// </param>
         public SQLServerConnection(string connectionString) : this(new SqlConnectionStringBuilder(connectionString))
         {
-
         }
+
         public SQLServerConnection(SqlConnectionStringBuilder connectionString)
         {
             if (connectionString == null)
@@ -1027,6 +1037,7 @@ namespace Kit.Sql.SqlServer
             Tracer = line => Debug.WriteLine(line);
             Connection = new SqlConnection(ConnectionString.ConnectionString);
         }
+
         public override SqlBase RenewConnection()
         {
             if (IsOpen)
@@ -1037,6 +1048,7 @@ namespace Kit.Sql.SqlServer
             Connection = new SqlConnection(ConnectionString.ConnectionString);
             return this;
         }
+
         public void ChangeCatalog(string newcatalog)
         {
             this.ConnectionString.InitialCatalog = newcatalog;
@@ -1064,6 +1076,7 @@ namespace Kit.Sql.SqlServer
             }
             return null;
         }
+
         public Exception TestConnection()
         {
             try
@@ -1086,7 +1099,10 @@ namespace Kit.Sql.SqlServer
             return null;
         }
 
-
+        public void SetCacheIdentity(bool enabled)
+        {
+            EXEC($"ALTER DATABASE SCOPED CONFIGURATION SET IDENTITY_CACHE={(enabled ? "ON" : "OFF")};");
+        }
 
         public override bool TableExists(string tablename)
         {
@@ -1099,7 +1115,7 @@ namespace Kit.Sql.SqlServer
         /// </summary>
         /// <returns>The quoted string.</returns>
         /// <param name="unsafeString">The unsafe string to quote.</param>
-        static string Quote(string unsafeString)
+        private static string Quote(string unsafeString)
         {
             if (unsafeString == null)
                 return "NULL";
@@ -1120,10 +1136,6 @@ namespace Kit.Sql.SqlServer
         //		}
         //	}
         //}
-
-
-
-
 
         //internal struct IndexedColumn
         //{
@@ -1177,7 +1189,6 @@ namespace Kit.Sql.SqlServer
             }
             catch (Exception e)
             {
-
                 throw SqlServerException.New(SQLite3.Result.CannotOpen, e.Message);
             }
 
@@ -1191,7 +1202,6 @@ namespace Kit.Sql.SqlServer
             ChangeCatalog(DbName);
             return exists;
         }
-
 
         //public bool Exists(string sql, params SqlParameter[] parameters)
         //{
@@ -1250,7 +1260,6 @@ namespace Kit.Sql.SqlServer
         /// </returns>
         public override CreateTableResult CreateTable(Base.TableMapping map, CreateFlags createFlags = CreateFlags.None)
         {
-
             // Present a nice error if no columns specified
             if (map.Columns.Length == 0)
             {
@@ -1264,10 +1273,7 @@ namespace Kit.Sql.SqlServer
             // Create or migrate it
             if (existingCols.Count == 0)
             {
-
                 // Facilitate virtual tables a.k.a. full-text search.
-
-
 
                 // Build query.
                 var query = "create table \"" + map.TableName + "\" (\n";
@@ -1508,9 +1514,9 @@ LEFT JOIN (
             SELECT ku.TABLE_CATALOG,ku.TABLE_SCHEMA,ku.TABLE_NAME,ku.COLUMN_NAME
             FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS tc
             INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS ku
-                ON tc.CONSTRAINT_TYPE = 'PRIMARY KEY' 
+                ON tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
                 AND tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME
-         )   pk 
+         )   pk
 ON  c.TABLE_CATALOG = pk.TABLE_CATALOG
             AND c.TABLE_SCHEMA = pk.TABLE_SCHEMA
             AND c.TABLE_NAME = pk.TABLE_NAME
@@ -1521,7 +1527,7 @@ WHERE
             return Query<ColumnInfo>(query, new SqlParameter("tablename", tableName));
         }
 
-        void MigrateTable(Base.TableMapping map, List<ColumnInfo> existingCols)
+        private void MigrateTable(Base.TableMapping map, List<ColumnInfo> existingCols)
         {
             var toBeAdded = new List<Base.TableMapping.Column>();
 
@@ -2151,7 +2157,7 @@ WHERE
         /// </summary>
         /// <param name="savepoint">The name of the savepoint to roll back to, as returned by <see cref="SaveTransactionPoint"/>.  If savepoint is null or empty, this method is equivalent to a call to <see cref="Rollback"/></param>
         /// <param name="noThrow">true to avoid throwing exceptions, false otherwise</param>
-        void RollbackTo(string savepoint, bool noThrow)
+        private void RollbackTo(string savepoint, bool noThrow)
         {
             // Rolling back without a TO clause rolls backs all transactions
             //    and leaves the transaction stack empty.
@@ -2173,7 +2179,6 @@ WHERE
             {
                 if (!noThrow)
                     throw;
-
             }
             // No need to rollback if there are no transactions open.
         }
@@ -2213,7 +2218,7 @@ WHERE
             }
         }
 
-        void DoSavePointExecute(string savepoint, string cmd)
+        private void DoSavePointExecute(string savepoint, string cmd)
         {
             // Validate the savepoint
             int firstLen = savepoint.IndexOf('D');
@@ -2449,7 +2454,6 @@ WHERE
             return Insert(obj, "OR REPLACE", Orm.GetType(obj), shouldnotify);
         }
 
-
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -2497,11 +2501,9 @@ WHERE
                 return 0;
             }
 
-
             var map = GetMapping(objType);
             if (map.SyncDirection != SyncDirection.NoSync)
             {
-
             }
 
             if (map.PK != null && map.PK.IsAutoGuid)
@@ -2522,14 +2524,12 @@ WHERE
             //    SyncGuid.SetValue(null, null);
             //}
 
-
             var replacing = string.Compare(extra, "OR REPLACE", StringComparison.OrdinalIgnoreCase) == 0;
             if (replacing)
             {
                 Delete(obj);
                 extra = string.Empty;
             }
-
 
             var cols = replacing ? map.InsertOrReplaceColumns : map.InsertColumns;
             var vals = new object[cols.Length];
@@ -2584,11 +2584,9 @@ WHERE
             return count;
         }
 
+        private readonly Dictionary<Tuple<string, string>, PreparedSqlServerInsertCommand> _insertCommandMap = new Dictionary<Tuple<string, string>, PreparedSqlServerInsertCommand>();
 
-
-        readonly Dictionary<Tuple<string, string>, PreparedSqlServerInsertCommand> _insertCommandMap = new Dictionary<Tuple<string, string>, PreparedSqlServerInsertCommand>();
-
-        PreparedSqlServerInsertCommand GetInsertCommand(Base.TableMapping map, string extra)
+        private PreparedSqlServerInsertCommand GetInsertCommand(Base.TableMapping map, string extra)
         {
             PreparedSqlServerInsertCommand prepCmd;
 
@@ -2618,7 +2616,7 @@ WHERE
             return prepCmd;
         }
 
-        PreparedSqlServerInsertCommand CreateInsertCommand(Base.TableMapping map, string extra)
+        private PreparedSqlServerInsertCommand CreateInsertCommand(Base.TableMapping map, string extra)
         {
             var cols = map.InsertColumns;
             string insertSql;
@@ -2641,7 +2639,6 @@ WHERE
                                         select "\"" + c.Name + "\"").ToArray())
                     , string.Join(",", (from c in cols
                                         select "@" + c.Name).ToArray()), extra);
-
             }
 
             var insertCommand = new PreparedSqlServerInsertCommand(this, insertSql);
@@ -2699,7 +2696,6 @@ WHERE
                 throw new NotSupportedException("Cannot update " + map.TableName + ": it has no PK");
             }
 
-
             var cols = (from p in map.Columns
                         where p != pk
                         select p);
@@ -2735,7 +2731,6 @@ WHERE
             }
             catch (SqlServerException ex)
             {
-
                 //if (ex.Result == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode (this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull) {
                 //	throw NotNullConstraintViolationException.New (ex, map, obj);
                 //}
@@ -2995,15 +2990,17 @@ WHERE
                 }
             }
         }
+
         public event EventHandler<NotifyTableChangedEventArgs> TableChanged;
 
-        void OnTableDeleteAll(Base.TableMapping table)
+        private void OnTableDeleteAll(Base.TableMapping table)
         {
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
             QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
                 .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
         }
-        void OnTableChanged(Base.TableMapping table, NotifyTableChangedAction action)
+
+        private void OnTableChanged(Base.TableMapping table, NotifyTableChangedAction action)
         {
             if (table.SyncDirection == SyncDirection.NoSync)
             {
@@ -3019,12 +3016,11 @@ WHERE
                 ev(this, new NotifyTableChangedEventArgs(table, action));
         }
 
-        void UpdateVersionControl(ChangesHistory VersionControl)
+        private void UpdateVersionControl(ChangesHistory VersionControl)
         {
             Table<ChangesHistory>()
                 .Delete(x => x.Guid == VersionControl.Guid);
             Insert(VersionControl);
         }
-
     }
 }
