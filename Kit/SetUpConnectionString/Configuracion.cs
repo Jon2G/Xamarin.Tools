@@ -16,7 +16,7 @@ using Kit.Sql.SqlServer;
 
 namespace Kit.CadenaConexion
 {
-    [Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
+    [Preserve(AllMembers = true),Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
     public class Configuracion : ModelBase
     {
         private string _cadenaCon;
