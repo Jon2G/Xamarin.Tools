@@ -24,12 +24,14 @@ namespace Kit.iOS.Services
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.SetFlags("Expander_Experimental", "Brush_Experimental", "Shapes_Experimental", "DragAndDrop_Experimental");
+            global::Xamarin.Forms.Forms.SetFlags("Shapes_Experimental", "DragAndDrop_Experimental");
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();
             Rg.Plugins.Popup.Popup.Init();
             Forms9Patch.iOS.Settings.Initialize(this);
-            Init();
+            ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
+            Initialize();
             new TintTransformation();
             Kit.iOS.Tools.Init();
             LoadApplication(GetApp);

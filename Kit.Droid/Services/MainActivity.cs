@@ -144,5 +144,9 @@ namespace Kit.Droid.Services
             }
             return false;
         }
+        public static Context GetAppContext()
+        {
+            return Android.App.Application.Context;
+        }
     }
 }
