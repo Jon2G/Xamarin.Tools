@@ -43,7 +43,7 @@ namespace Kit.iOS.Services
         {
             get
             {
-                return UIDevice.CurrentDevice.IdentifierForVendor.AsString();
+                return GenerateAppId(true); //UIDevice.CurrentDevice.IdentifierForVendor.AsString();
             }
         }
 

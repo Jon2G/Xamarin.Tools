@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Kit.Extensions
 {
-    public class CommonCommand : ICommand
+    public class CommonCommand<T> : ICommand
     {
         private bool _CanExecute;
         public bool CanExecute
@@ -31,14 +31,14 @@ namespace Kit.Extensions
         }
         public event EventHandler CanExecuteChanged;
         private Func<bool> CanExecuteFunction;
-        private Action<object> ExecuteAction;
-        public CommonCommand(Func<bool> CanExecuteFunction, Action<object> ExecuteAction)
+        private Action<T> ExecuteAction;
+        public CommonCommand(Func<bool> CanExecuteFunction, Action<T> ExecuteAction)
         {
             this.CanExecuteFunction = CanExecuteFunction;
             this.ExecuteAction = ExecuteAction;
         }
 
-        public CommonCommand(Action<object> ExecuteAction)
+        public CommonCommand(Action<T> ExecuteAction)
         {
             this.CanExecuteFunction = null;
             this.ExecuteAction = ExecuteAction;
@@ -47,7 +47,7 @@ namespace Kit.Extensions
         public void Execute(object parameter)
         {
             if (CanBeExecuted)
-                ExecuteAction.Invoke(parameter);
+                ExecuteAction.Invoke((T)parameter);
         }
 
         bool ICommand.CanExecute(object parameter)
