@@ -14,8 +14,6 @@ namespace Kit.Sql.Base
     {
         public SqlBase Connection { get; private set; }
 
-
-
         protected Expression _where;
         protected List<Ordering> _orderBys;
         protected int? _limit;
@@ -142,6 +140,7 @@ namespace Kit.Sql.Base
         }
 
         protected bool _deferred;
+
         public TableQuery<T> Deferred()
         {
             var q = Clone<T>();
@@ -181,7 +180,7 @@ namespace Kit.Sql.Base
             return AddOrderBy<U>(orderExpr, false);
         }
 
-        TableQuery<T> AddOrderBy<U>(Expression<Func<T, U>> orderExpr, bool asc)
+        private TableQuery<T> AddOrderBy<U>(Expression<Func<T, U>> orderExpr, bool asc)
         {
             if (orderExpr.NodeType == ExpressionType.Lambda)
             {
@@ -266,7 +265,6 @@ namespace Kit.Sql.Base
 
         protected abstract CommandBase GenerateCommand(string selectionList);
 
-
         protected class CompileResult
         {
             public string CommandText { get; set; }
@@ -295,7 +293,6 @@ namespace Kit.Sql.Base
                         bin = Expression.MakeBinary(bin.NodeType, call.Arguments[0], call.Arguments[1]);
                 }
 
-
                 var leftr = CompileExpr(bin.Left, queryArgs, conditions);
                 var rightr = CompileExpr(bin.Right, queryArgs, conditions);
 
@@ -310,7 +307,6 @@ namespace Kit.Sql.Base
                     }
                 }
 
-
                 //If either side is a parameter and is null, then handle the other side specially (for "is null"/"is not null")
                 string text;
                 if (leftr.CommandText == "?" && leftr.Value == null)
@@ -323,9 +319,14 @@ namespace Kit.Sql.Base
                     {
                         rightr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
                     }
+
+                    if (leftr.CommandText == "?" && this is SQLServerTableQuery<T>)
+                    {
+                        leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                    }
+
                     text = "(" + leftr.CommandText + " " + GetSqlName(bin) + " " + rightr.CommandText + ")";
                 }
-
 
                 leftr.CurrentCondition = null;
                 rightr.CurrentCondition = null;
@@ -341,10 +342,15 @@ namespace Kit.Sql.Base
 
                 if (this is SQLServerTableQuery<T>)
                 {
+                    if (opr.CommandText.EndsWith("=1"))
+                    {
+                        opr.CommandText = opr.CommandText.Replace("=1", "=0");
+                    }
+
                     Condition condition = new Condition(opr.CommandText, val);
                     return new CompileResult
                     {
-                        CommandText = "(" + opr.CommandText + "==0)",
+                        CommandText = "(" + opr.CommandText + "=0)",
                         Value = val,
                         CurrentCondition = condition
                     };
@@ -359,12 +365,9 @@ namespace Kit.Sql.Base
                         CurrentCondition = condition
                     };
                 }
-
-
             }
             else if (expr.NodeType == ExpressionType.Call)
             {
-
                 Condition CurrentCondition = null;
                 var call = (MethodCallExpression)expr;
                 var args = new CompileResult[call.Arguments.Count];
@@ -425,12 +428,12 @@ namespace Kit.Sql.Base
                         case StringComparison.CurrentCulture:
                             sqlCall = "( substr(" + obj.CommandText + ", 1, " + args[0].Value.ToString().Length + ") =  " + args[0].CommandText + ")";
                             break;
+
                         case StringComparison.OrdinalIgnoreCase:
                         case StringComparison.CurrentCultureIgnoreCase:
                             sqlCall = "(" + obj.CommandText + " like (" + args[0].CommandText + " || '%'))";
                             break;
                     }
-
                 }
                 else if (call.Method.Name == "EndsWith" && args.Length >= 1)
                 {
@@ -445,6 +448,7 @@ namespace Kit.Sql.Base
                         case StringComparison.CurrentCulture:
                             sqlCall = "( substr(" + obj.CommandText + ", length(" + obj.CommandText + ") - " + args[0].Value.ToString().Length + "+1, " + args[0].Value.ToString().Length + ") =  " + args[0].CommandText + ")";
                             break;
+
                         case StringComparison.OrdinalIgnoreCase:
                         case StringComparison.CurrentCultureIgnoreCase:
                             sqlCall = "(" + obj.CommandText + " like ('%' || " + args[0].CommandText + "))";
@@ -485,7 +489,6 @@ namespace Kit.Sql.Base
                     sqlCall = call.Method.Name.ToLower() + "(" + string.Join(",", args.Select(a => a.CommandText).ToArray()) + ")";
                 }
                 return new CompileResult { CommandText = sqlCall, CurrentCondition = CurrentCondition };
-
             }
             else if (expr.NodeType == ExpressionType.Constant)
             {
@@ -519,7 +522,6 @@ namespace Kit.Sql.Base
                                 truvalue = text_enum;
                             }
                         }
-
                     }
                 }
                 return new CompileResult
@@ -553,7 +555,15 @@ namespace Kit.Sql.Base
                     if (column is null)
                         throw new KeyNotFoundException($"La columna {mem.Member.Name} no existe en la tabla {Table.TableName}");
 
-                    var columnName =column.Name;
+                    var columnName = column.Name;
+                    if (column.ColumnType == typeof(bool) && this.Connection is SQLServerConnection)
+                    {
+                        return new CompileResult
+                        {
+                            CommandText = "\"" + columnName + "\"=1",
+                            CurrentCondition = new Condition(columnName)
+                        };
+                    }
                     return new CompileResult
                     {
                         CommandText = "\"" + columnName + "\"",
@@ -639,7 +649,6 @@ namespace Kit.Sql.Base
             }
             throw new NotSupportedException("Cannot compile: " + expr.NodeType.ToString());
         }
-
 
         protected static object ConvertTo(object obj, Type t)
         {
