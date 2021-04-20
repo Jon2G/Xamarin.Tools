@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -102,7 +103,15 @@ namespace Kit.Sql.Sqlite
             }
             else
             {
-                throw new NotSupportedException("Don't know about " + clrType);
+                if (Tools.Debugging)
+                {
+                    Debugger.Break();
+                    return "What?";
+                }
+                else
+                {
+                    throw new NotSupportedException($"Don't know about {clrType} on  property name:{p.Name}");
+                }
             }
         }
 

@@ -21,7 +21,13 @@ namespace Kit.CadenaConexion
                 Raise(() => ListaEmpresas);
             }
         }
-        public string Seleccionada { get; set; }
+
+        public string _Seleccionada;
+        public string Seleccionada
+        {
+            get => _Seleccionada;
+            set { _Seleccionada = value; Raise(() => Seleccionada); }
+        }
         private readonly SQLiteConnection SQLHLite;
         public Empresas(SQLiteConnection SQLHLite)
         {
@@ -30,16 +36,20 @@ namespace Kit.CadenaConexion
         public IEnumerable<string> ListarEmpresas()
         {
             this.ListaEmpresas = SQLHLite.Table<Configuracion>().Select(x => x.Empresa).ToList();
+            if (this.ListaEmpresas.Any())
+            {
+                this.Seleccionada = SQLHLite.Table<Configuracion>().Where(x => x.Activa).Select(x => x.Empresa).FirstOrDefault();
+            }
             this.ListaEmpresas.Add(string.Empty);
-            return this.ListaEmpresas;           
+            return this.ListaEmpresas;
         }
         public Configuracion CadenaCon(string Empresa, string DeviceId)
         {
             Configuracion configuracion = null;
             try
             {
-                configuracion = SQLHLite.Table<Configuracion>()
-                    .Where(x => x.Empresa == Empresa).FirstOrDefault();
+                configuracion = SQLHLite
+                    .Table<Configuracion>().FirstOrDefault(x => x.Empresa == Empresa);
                 if (configuracion != null)
                 {
                     configuracion.IdentificadorDispositivo = DeviceId;

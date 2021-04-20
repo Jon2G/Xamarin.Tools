@@ -66,7 +66,7 @@ namespace Kit.Sql.Base
         /// <returns>
         /// The number of rows modified.
         /// </returns>
-        public abstract int InsertOrReplace(object obj,bool shouldnotify=true);
+        public abstract int InsertOrReplace(object obj, bool shouldnotify = true);
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -119,7 +119,7 @@ namespace Kit.Sql.Base
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify=false);
+        public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify = false);
 
         /// <summary>
         /// Deletes the given object from the database using its primary key.
@@ -177,6 +177,11 @@ namespace Kit.Sql.Base
             {
                 if (_mappings.TryGetValue(key, out map))
                 {
+                    if (map.MappedType != type)
+                    {
+                        map = _GetMapping(type, createFlags);
+                        return map;
+                    }
                     if (createFlags != CreateFlags.None && createFlags != map.CreateFlags)
                     {
                         map = _GetMapping(type, createFlags);
@@ -292,7 +297,7 @@ namespace Kit.Sql.Base
         /// <returns>
         /// The number of rows updated.
         /// </returns>
-        public abstract int Update(object obj, Type objType,bool shouldnotify= true);
+        public abstract int Update(object obj, Type objType, bool shouldnotify = true);
         public abstract void Dispose();
 
     }

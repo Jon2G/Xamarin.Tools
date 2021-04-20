@@ -93,6 +93,7 @@ namespace Kit.Sql.Sqlite
 
         public override IEnumerable<T> ExecuteDeferredQuery<T>(Kit.Sql.Base.TableMapping map)
         {
+            List<T> result = new List<T>();
             if (_conn.IsClosed)
                 _conn.RenewConnection();
 
@@ -126,6 +127,10 @@ namespace Kit.Sql.Sqlite
 
                         if (fastColumnSetters[i] != null)
                         {
+                            if(obj is not T)
+                            {
+
+                            }
                             fastColumnSetters[i].Invoke((T)obj, stmt, i);
                         }
                         else
@@ -135,14 +140,21 @@ namespace Kit.Sql.Sqlite
                             cols[i].SetValue(obj, val);
                         }
                     }
+
                     OnInstanceCreated(obj);
-                    yield return (T)obj;
+                    result.Add((T)obj);
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "SqliteCommand.ExecuteDeferredQuery");
             }
             finally
             {
                 SQLite3.Finalize(stmt);
             }
+
+            return result;
         }
 
         public override T ExecuteScalar<T>()

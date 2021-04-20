@@ -33,7 +33,7 @@ namespace Kit.Forms.Controls.NotificationBar
             this.Imagen = Icono;
             this.Color = Color;
             this.Texto = Texto;
-            this.Command = new CommonCommand<object>(x => Click());
+            this.Command = new Xamarin.Forms.Command<object>(x => Click());
         }
 
         private bool Click()

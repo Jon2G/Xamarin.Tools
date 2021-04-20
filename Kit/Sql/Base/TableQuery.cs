@@ -344,7 +344,7 @@ namespace Kit.Sql.Base
                 {
                     if (opr.CommandText.EndsWith("=1"))
                     {
-                        opr.CommandText = opr.CommandText.Replace("=1", "=0");
+                        opr.CommandText = opr.CommandText.Replace("=1", "");
                     }
 
                     Condition condition = new Condition(opr.CommandText, val);
