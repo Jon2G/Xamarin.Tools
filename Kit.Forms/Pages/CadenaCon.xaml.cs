@@ -1,4 +1,5 @@
 ﻿extern alias SharedZXingNet;
+
 using SharedZXingNet::ZXing;
 
 using Acr.UserDialogs;
@@ -27,18 +28,16 @@ using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using ZXing;
 
-
-
 namespace Kit.Forms.Pages
 {
     extern alias SharedZXingNet;
-
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CadenaCon : BasePage
     {
         public static readonly BindableProperty LogoProperty = BindableProperty.Create(
             propertyName: nameof(Logo), returnType: typeof(ImageSource), declaringType: typeof(CadenaCon), defaultValue: null);
+
         [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Logo
         {
@@ -52,6 +51,7 @@ namespace Kit.Forms.Pages
 
         public static readonly BindableProperty IsLogoVisibleProperty = BindableProperty.Create(
             propertyName: nameof(IsLogoVisible), returnType: typeof(bool), declaringType: typeof(CadenaCon), defaultValue: false);
+
         public bool IsLogoVisible
         {
             get { return (bool)GetValue(IsLogoVisibleProperty); }
@@ -61,13 +61,14 @@ namespace Kit.Forms.Pages
                 Raise(() => IsLogoVisible);
             }
         }
+
         public Lector Leector { get; set; }
+
         public event EventHandler Confirmado;
-        private Configuracion Configuracion;
-        private readonly Kit.Sql.Sqlite.SQLiteConnection DBConection;
-        private readonly IDeviceInfo DeviceInfo;
-        public SQLServerConnection NewDBConection { get; private set; }
+
         public bool ShouldSetUpDaemon { get; set; }
+        public SetUpConnectionStringViewModelBase Model { get; set; }
+
         public static bool IsActive()
         {
             if ((Application.Current.MainPage.Navigation.ModalStack.Any() && Application.Current.MainPage.Navigation.ModalStack.LastOrDefault() is CadenaCon)
@@ -77,53 +78,41 @@ namespace Kit.Forms.Pages
             }
             return false;
         }
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection)
+
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection) : this(DeviceInfo, DBConection, null, null)
         {
-            this.DeviceInfo = DeviceInfo;
-            InitializeComponent();
-            this.DBConection = DBConection;
-            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
-            this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
         }
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Exception ex)
+
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Exception exception) : this(DeviceInfo, DBConection, null, exception)
         {
-            this.DeviceInfo = DeviceInfo;
-            InitializeComponent();
-            this.DBConection = DBConection;
-            this.Configuracion = Configuracion.ObtenerConfiguracion(this.DBConection, DeviceInfo.DeviceId);
-            this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
-            ToogleStatus(ex);
         }
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion)
+
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion) : this(DeviceInfo, DBConection, Configuracion, null)
         {
-            this.DeviceInfo = DeviceInfo;
-            InitializeComponent();
+        }
+
+        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion, Exception exception)
+        {
             try
             {
-                this.DBConection = DBConection;
-                this.Configuracion = Configuracion;
-                this.NewDBConection = new SQLServerConnection(this.Configuracion.CadenaCon);
-                this.TxtCadenaCon.Text = this.Configuracion.CadenaCon;
+                var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection, DeviceInfo.DeviceId);
+                this.Model = new SetUpConnectionStringViewModelBase(DBConection, new SQLServerConnection(config.CadenaCon), config);
+                this.BindingContext = this.Model;
+                InitializeComponent();
+                ToogleStatus(exception);
             }
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "Al leer la cadena de conexion para editar desde cadenacon.cs");
             }
         }
+
         private void BasePage_Appearing(object sender, EventArgs e)
         {
             this.LockOrientation(DeviceOrientation.Portrait);
-            CargarCadena();
+            this.Model.Configuration.RefreshConnectionString();
         }
-        private void CargarCadena()
-        {
-            TxtDbName.Text = this.Configuracion.NombreDB;
-            TxtContraseña.Text = this.Configuracion.Password;
-            TxtPuerto.Text = this.Configuracion.Puerto;
-            TxtServidor.Text = this.Configuracion.Servidor;
-            TxtUsuario.Text = this.Configuracion.Usuario;
-            TxtCadenaCon.Text = this.Configuracion.CadenaCon;
-        }
+
         private void BasePage_Disappearing(object sender, EventArgs e)
         {
             if (this.Leector != null)
@@ -131,15 +120,7 @@ namespace Kit.Forms.Pages
                 this.Leector.CodigoEntrante -= Leector_CodigoEntrante;
             }
         }
-        private void RecargaCadena(object sender, TextChangedEventArgs e)
-        {
-            string usuario = TxtUsuario.Text?.Trim()?.Replace(" ", "") ?? string.Empty;
-            string password = TxtContraseña.Text?.Trim()?.Replace(" ", "") ?? string.Empty;
-            string puerto = TxtPuerto.Text?.Trim()?.Replace(" ", "") ?? string.Empty;
-            string servidor = TxtServidor.Text?.Trim()?.Replace(" ", "") ?? string.Empty;
-            string dbName = TxtDbName.Text?.Trim()?.Replace(" ", "") ?? string.Empty;
-            TxtCadenaCon.Text = Configuracion.BuildFrom(dbName, password, puerto, servidor, usuario).CadenaCon;
-        }
+
         private async void Guardar(object sender, EventArgs e)
         {
             using (Acr.UserDialogs.UserDialogs.Instance.Loading("Espere un momento..."))
@@ -147,34 +128,29 @@ namespace Kit.Forms.Pages
                 await GuardarAsync();
             }
         }
+
         private async Task GuardarAsync()
         {
+            await Task.Yield();
             try
             {
-                string Test = TxtCadenaCon.Text;
                 Exception ex;
                 //using (Acr.UserDialogs.UserDialogs.Instance.Loading("Intentando conectar..."))
                 //{
-                ex = this.NewDBConection.TestConnection(Test);
+                ex = this.Model.TestConnection();
                 //}
                 ToogleStatus(ex);
                 if (ex != null)
                 {
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync($"La conexión actual no es valida.\n{ex.Message}", "Mensaje informativo");
-
                 }
                 else
                 {
-                    this.Configuracion = Configuracion.BuildFrom(TxtDbName.Text, TxtContraseña.Text, TxtPuerto.Text, TxtServidor.Text, TxtUsuario.Text);
-                    this.Configuracion.CadenaCon = TxtCadenaCon.Text;
-                    this.Configuracion.Empresa = this.Configuracion.NombreDB;
-                    this.Configuracion.Salvar(this.DBConection, this.NewDBConection);
-
-                    this.NewDBConection.ConnectionString = new SqlConnectionStringBuilder(this.Configuracion.CadenaCon);
+                    this.Model.Save();
 
                     if (this.ShouldSetUpDaemon)
                     {
-                        Daemon.Daemon.Current.SetUp(NewDBConection);
+                        Daemon.Daemon.Current.SetUp(this.Model.SqlServer);
                     }
 
                     if (this.Navigation.ModalStack.Count > 0)
@@ -191,10 +167,12 @@ namespace Kit.Forms.Pages
                 await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(exx.Message, "Alerta");
             }
         }
+
         private void Cancelar(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }
+
         protected override bool OnBackButtonPressed()
         {
             if (this.IsModalLocked)
@@ -205,19 +183,20 @@ namespace Kit.Forms.Pages
             Confirmado?.Invoke(this, EventArgs.Empty);
             Confirmado = null;
             return true;
-
         }
+
         private async void ProbarConexion(object sender, EventArgs e)
         {
             UserDialogs.Instance.ShowLoading("Intentando conectar...", MaskType.Black);
-            await ProbarConexionAsync(TxtCadenaCon.Text.Replace(Environment.NewLine, "").Trim());
+            await ProbarConexionAsync();
             UserDialogs.Instance.HideLoading();
         }
-        private async Task<bool> ProbarConexionAsync(string Test, bool MostrarMensajesStatus = true)
+
+        private async Task<bool> ProbarConexionAsync(bool MostrarMensajesStatus = true)
         {
             await Task.Yield();
 
-            Exception ex = this.NewDBConection.TestConnection(Test);
+            Exception ex = this.Model.TestConnection();
             ToogleStatus(ex);
             if (ex != null)
             {
@@ -239,21 +218,24 @@ namespace Kit.Forms.Pages
             }
             return true;
         }
+
         private void ToogleStatus(Exception ex)
         {
             TxtEstado.Text = ex?.Message ?? "Correcto";
             LblIcon.Text = ex is null ? FontelloIcons.Ok : FontelloIcons.Cross;
             LblIcon.TextColor = ex is null ? Color.Green : Color.Red;
         }
+
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(TxtEstado.Text, "Información", "Ok");
         }
+
         private async void GuardarRenovar_Touched(object sender, EventArgs e)
         {
             using (Acr.UserDialogs.UserDialogs.Instance.Loading("Espere un momento..."))
             {
-                if (EliminarDB(DBConection.DatabasePath))
+                if (EliminarDB(this.Model.SqLite.DatabasePath))
                 {
                     Log.Logger.Warning("Se elimino la base de datos");
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Se elimino la base de datos local", "Atención", "Ok");
@@ -261,6 +243,7 @@ namespace Kit.Forms.Pages
                 }
             }
         }
+
         public bool EliminarDB(string RutaDb)
         {
             try
@@ -278,6 +261,7 @@ namespace Kit.Forms.Pages
                 return false;
             }
         }
+
         private void Importar_Touched(object sender, EventArgs e)
         {
             ActionSheetConfig config = new ActionSheetConfig()
@@ -293,6 +277,7 @@ namespace Kit.Forms.Pages
             };
             UserDialogs.Instance.ActionSheet(config);
         }
+
         private async void FromGallery()
         {
             FileResult qr = await MediaPicker.PickPhotoAsync(new MediaPickerOptions()
@@ -312,6 +297,7 @@ namespace Kit.Forms.Pages
                 });
             Deserialize(result?.Text);
         }
+
         private void FromCamera()
         {
             if (this.Leector is null)
@@ -321,6 +307,7 @@ namespace Kit.Forms.Pages
             }
             this.Leector.Abrir();
         }
+
         private void Leector_CodigoEntrante(object sender, EventArgs e)
         {
             if (sender is Lector leector)
@@ -329,6 +316,7 @@ namespace Kit.Forms.Pages
                 Deserialize(leector.CodigoBarras);
             }
         }
+
         private void Deserialize(string json)
         {
             if (!string.IsNullOrEmpty(json))
@@ -336,8 +324,8 @@ namespace Kit.Forms.Pages
                 Configuracion configuracion_qr = Configuracion.DeSerialize(json);
                 if (configuracion_qr != null)
                 {
-                    this.Configuracion = configuracion_qr;
-                    this.CargarCadena();
+                    this.Model.Configuration = configuracion_qr;
+                    this.Model.Configuration.RefreshConnectionString();
                 }
                 else
                 {

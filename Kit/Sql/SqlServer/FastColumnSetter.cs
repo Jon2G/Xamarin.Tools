@@ -77,7 +77,6 @@ namespace Kit.Sql.SqlServer
             }
             else if (clrType == typeof(TimeSpan))
             {
-
                 fastSetter = CreateNullableTypedSetterDelegate<T, TimeSpan>(column, (reader, index) =>
                 {
                     var text = Convert.ToString(reader[index]);
@@ -88,21 +87,23 @@ namespace Kit.Sql.SqlServer
                     }
                     return resultTime;
                 });
-
             }
             else if (clrType == typeof(DateTime))
             {
-
                 fastSetter = CreateNullableTypedSetterDelegate<T, DateTime>(column, (reader, index) =>
                 {
+                    if (reader[index] is DateTime date)
+                    {
+                        return date;
+                    }
                     var text = Convert.ToString(reader[index]);
                     DateTime resultDate = DateTime.Now;
-                    //if (!DateTime.TryParseExact (text, "", System.Globalization.CultureInfo.InvariantCulture, out resultDate)) {
-                    //	resultDate = DateTime.Parse (text);
-                    //}
+                    if (!DateTime.TryParse(text, out resultDate))
+                    {
+                        resultDate = DateTime.Parse(text);
+                    }
                     return resultDate;
                 });
-
             }
             else if (clrType == typeof(DateTimeOffset))
             {
@@ -294,7 +295,6 @@ namespace Kit.Sql.SqlServer
                             }
                             column.PropertyInfo.GetSetMethod(false).Invoke(o,
                                     new object[] { reader[i] });
-
                         }
                         catch (Exception ex)
                         {

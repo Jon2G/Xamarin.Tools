@@ -317,7 +317,16 @@ namespace Kit.Sql.Base
                 {
                     if (rightr.CommandText == "?" && this is SQLServerTableQuery<T>)
                     {
-                        rightr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                        if (string.IsNullOrEmpty(rightr.CurrentCondition.ColumnName))
+                        {
+                            var constCondtion = new Condition($"Constant{Guid.NewGuid():N}", rightr.CurrentCondition.Value);
+                            conditions.Insert(0, constCondtion);
+                            rightr.CommandText = "@" + constCondtion.ColumnName;
+                        }
+                        else
+                        {
+                            rightr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                        }
                     }
 
                     if (leftr.CommandText == "?" && this is SQLServerTableQuery<T>)

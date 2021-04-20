@@ -11,6 +11,7 @@ namespace Kit.CadenaConexion
     public class SetUpConnectionStringViewModelBase : ModelBase
     {
         public Empresas _Empresas { get; set; }
+
         public Empresas Empresas
         {
             get => _Empresas; set
@@ -21,10 +22,12 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         public string DeviceId => Daemon.Devices.Device.Current.DeviceId;
         public SQLServerConnection SqlServer { get; set; }
-        private readonly SQLiteConnection SqLite;
+        public readonly SQLiteConnection SqLite;
         private Configuracion _Configuration;
+
         public Configuracion Configuration
         {
             get => _Configuration;
@@ -32,10 +35,12 @@ namespace Kit.CadenaConexion
             {
                 _Configuration = value;
                 Raise(() => Configuration);
-                Raise(() => ConnectionString); 
+                Raise(() => ConnectionString);
             }
         }
+
         public string ConnectionString => this.Configuration?.CadenaCon;
+
         public SetUpConnectionStringViewModelBase(SQLiteConnection SqLite, SQLServerConnection SqlServer, Configuracion configuracion)
         {
             this.SqLite = SqLite;
@@ -45,6 +50,7 @@ namespace Kit.CadenaConexion
             Configuration.IdentificadorDispositivo = DeviceId;
             this.Empresas.ListarEmpresas();
         }
+
         public Exception TestConnection()
         {
             SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);

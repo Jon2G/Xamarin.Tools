@@ -16,7 +16,7 @@ using Kit.Sql.SqlServer;
 
 namespace Kit.CadenaConexion
 {
-    [Preserve(AllMembers = true),Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
+    [Preserve(AllMembers = true), Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
     public class Configuracion : ModelBase
     {
         private string _cadenaCon;
@@ -27,9 +27,9 @@ namespace Kit.CadenaConexion
         private string _password;
         private string _empresa;
 
-
         [NotNull]
         public string IdentificadorDispositivo { get; set; }
+
         [NotNull]
         public string CadenaCon
         {
@@ -54,6 +54,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         public string Servidor
         {
             get => _servidor;
@@ -67,6 +68,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         public string Puerto
         {
             get => _puerto;
@@ -80,6 +82,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         public string Usuario
         {
             get => _usuario;
@@ -93,6 +96,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         public string Password
         {
             get => _password;
@@ -106,6 +110,7 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         [PrimaryKey, MaxLength(50)]
         public string Empresa
         {
@@ -120,17 +125,20 @@ namespace Kit.CadenaConexion
                 }
             }
         }
+
         public bool Activa { get; set; }
 
         /// <summary>
         /// WARNING  SOLO PARA REFLEXIÓN XML
         /// </summary>
         public Configuracion() { }
+
         public Configuracion(string CadenaCon, string DeviceId)
         {
             this.IdentificadorDispositivo = DeviceId;
             this.CadenaCon = CadenaCon;
         }
+
         public Configuracion(string NombreDB, string Servidor, string Puerto, string Usuario, string Password, string CadenaCon, string DeviceId)
         {
             this.NombreDB = NombreDB;
@@ -147,9 +155,9 @@ namespace Kit.CadenaConexion
             Configuracion configuracion = null;
             try
             {
-                var configs = SQHLite.Table<Configuracion>();       
-                    configuracion = configs.FirstOrDefault(x => x.Activa)
-                    ?? new Configuracion(string.Empty, DeviceId);
+                var configs = SQHLite.Table<Configuracion>();
+                configuracion = configs.FirstOrDefault(x => x.Activa)
+                ?? new Configuracion(string.Empty, DeviceId);
             }
             catch (Exception ex)
             {
@@ -173,14 +181,20 @@ namespace Kit.CadenaConexion
             }
             return resultado;
         }
+
         public static Configuracion PorDefecto()
         {
             return new Configuracion(string.Empty, string.Empty);
         }
+
         public void Salvar(SQLiteConnection SQLHLite, SQLServerConnection SQLH)
         {
             try
             {
+                if (string.IsNullOrEmpty(this.Empresa))
+                {
+                    this.Empresa = NombreDB;
+                }
                 SQLH.ConnectionString = (new SqlConnectionStringBuilder(this.CadenaCon));
                 this.Activa = true;
                 SQLHLite.EXEC("UPDATE CONFIGURACION SET ACTIVA=0");
@@ -204,6 +218,7 @@ namespace Kit.CadenaConexion
                 Log.Logger.Error(ex, "Al salvar la configuración");
             }
         }
+
         public static Configuracion BuildFrom(Configuracion configuracion)
         {
             return BuildFrom(configuracion.NombreDB, configuracion.Password, configuracion.Puerto, configuracion.Servidor, configuracion.Usuario, configuracion.IdentificadorDispositivo);
@@ -236,8 +251,8 @@ namespace Kit.CadenaConexion
                 Split(';');
 
             this.CadenaCon = string.Join(";" + Environment.NewLine, args);
-
         }
+
         public static Configuracion BuildFrom(
             string NombreDB = "", string Password = "",
             string Puerto = "", string Servidor = "",
@@ -250,7 +265,6 @@ namespace Kit.CadenaConexion
                 Puerto = Puerto,
                 Servidor = Servidor,
                 Usuario = Usuario,
-
             };
         }
 
@@ -272,7 +286,6 @@ namespace Kit.CadenaConexion
                 Log.Logger.Error(ex, "While deserializing the connection string qr");
                 return null;
             }
-
         }
     }
 }

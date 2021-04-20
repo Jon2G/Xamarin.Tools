@@ -1,66 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage  xmlns:pages="clr-namespace:Kit.Forms.Pages"
                  xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:fonts="clr-namespace:Kit.Forms.Fonts;assembly=Kit.Forms"
-             BackgroundColor="White"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:fonts="clr-namespace:Kit.Forms.Fonts;assembly=Kit.Forms"
+                 xmlns:cadenaconexion="clr-namespace:Kit.CadenaConexion;assembly=Kit"
+                 BackgroundColor="White"
+                 x:DataType="cadenaconexion:SetUpConnectionStringViewModelBase"
                  x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="0" Padding="0" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
-            <Label Margin="0" BackgroundColor="{DynamicResource DarkAccentColor}" HorizontalOptions="FillAndExpand" 
+            <Label Margin="0" BackgroundColor="{DynamicResource DarkAccentColor}" HorizontalOptions="FillAndExpand"
                    VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                   TextColor="White" Text="Cadena de conexión"/>
+                   TextColor="White" Text="Cadena de conexión" />
             <Grid Margin="5" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView VerticalScrollBarVisibility="Default" HorizontalScrollBarVisibility="Never">
                     <StackLayout Margin="0" Padding="10" HorizontalOptions="Center" VerticalOptions="StartAndExpand">
-                        <Label TextColor="Black" FontSize="Subtitle" Text="Base de Datos:"/>
-                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtDbName" TextChanged="RecargaCadena"/>
-                        <Label TextColor="Black" FontSize="Subtitle" Text="Servidor"/>
-                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtServidor" TextChanged="RecargaCadena"/>
-                        <Label TextColor="Black" FontSize="Subtitle" Text="Puerto del servidor:"/>
-                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtPuerto" TextChanged="RecargaCadena"/>
-                        <Label TextColor="Black" FontSize="Subtitle" Text="Usuario"/>
-                        <Entry TextColor="Black" FontSize="Subtitle" x:Name="TxtUsuario" TextChanged="RecargaCadena"/>
-                        <Label TextColor="Black" FontSize="Subtitle" Text="Contraseña"/>
-                        <Entry Text="" TextColor="Black" FontSize="Subtitle"  x:Name="TxtContraseña" TextChanged="RecargaCadena"/>
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Base de Datos:" />
+                        <Entry TextColor="Black" FontSize="Subtitle" Text="{Binding Configuration.NombreDB}" />
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Servidor" />
+                        <Entry TextColor="Black" FontSize="Subtitle" Text="{Binding Configuration.Servidor}" />
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Puerto del servidor:" />
+                        <Entry TextColor="Black" FontSize="Subtitle" Text="{Binding Configuration.Puerto}" />
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Usuario" />
+                        <Entry TextColor="Black" FontSize="Subtitle" Text="{Binding Configuration.Usuario}" />
+                        <Label TextColor="Black" FontSize="Subtitle" Text="Contraseña" />
+                        <Entry TextColor="Black" FontSize="Subtitle"  Text="{Binding Configuration.Password}" />
                         <Grid BackgroundColor="White"  Margin="0,5" VerticalOptions="FillAndExpand">
-                            <Frame BackgroundColor="White" BorderColor="Black" Padding="1" >
-                                <Editor HeightRequest="200" TextColor="Black" VerticalOptions="FillAndExpand" Text="" FontSize="Subtitle" x:Name="TxtCadenaCon"/>
+                            <Frame BackgroundColor="White" BorderColor="Black" Padding="1">
+                                <Editor TextColor="Black" VerticalOptions="FillAndExpand" FontSize="16" AutoSize="TextChanges" Text="{Binding Configuration.CadenaCon}" />
                             </Frame>
                         </Grid>
-                        
+
                         <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="Fill">
                             <Grid ColumnDefinitions="*,*">
-                                <Button x:Name="BtnProbar" HeightRequest="70" Clicked="ProbarConexion" FontSize="Body" BackgroundColor="WhiteSmoke"  Text="Probar conexión"/>
-                                <Button Grid.Column="1" x:Name="BtnGuardar" Clicked="Guardar" FontSize="Body"  BackgroundColor="WhiteSmoke"  Text="Guardar y utilizar"/>
+                                <Button x:Name="BtnProbar" HeightRequest="70" Clicked="ProbarConexion" FontSize="Body" BackgroundColor="WhiteSmoke"  Text="Probar conexión" />
+                                <Button Grid.Column="1" x:Name="BtnGuardar" Clicked="Guardar" FontSize="Body"  BackgroundColor="WhiteSmoke"  Text="Guardar y utilizar" />
                             </Grid>
                             <Grid ColumnDefinitions="*,*">
-                                <Button HeightRequest="70" Text="Guardar y renovar base local" Clicked="GuardarRenovar_Touched" BackgroundColor="WhiteSmoke"/>
-                                <Button Grid.Column="1" x:Name="BtnCancelar" Clicked="Cancelar" BackgroundColor="WhiteSmoke"  Text="Salir sin hacer nada"/>
+                                <Button HeightRequest="70" Text="Guardar y renovar base local" Clicked="GuardarRenovar_Touched" BackgroundColor="WhiteSmoke" />
+                                <Button Grid.Column="1" x:Name="BtnCancelar" Clicked="Cancelar" BackgroundColor="WhiteSmoke"  Text="Salir sin hacer nada" />
                             </Grid>
-                        
-                                <Button HeightRequest="70" Text="Importar cadena de conexión" Clicked="Importar_Touched" BackgroundColor="WhiteSmoke"/>
-                            
 
+                            <Button HeightRequest="70" Text="Importar cadena de conexión" Clicked="Importar_Touched" BackgroundColor="WhiteSmoke" />
                         </StackLayout>
                     </StackLayout>
                 </ScrollView>
             </Grid>
             <Frame VerticalOptions="EndAndExpand" Padding="3" CornerRadius="5" MinimumHeightRequest="40" BackgroundColor="White" BorderColor="Black" Margin="5">
                 <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                 </Frame.GestureRecognizers>
                 <Grid VerticalOptions="Fill" HeightRequest="40">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="35"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="35" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Label x:Name="LblIcon"
                            FontFamily="{x:Static fonts:FontelloIcons.Font}"
                            Text="{x:Static fonts:FontelloIcons.Ok}" FontSize="25" TextColor="Green"
-                           VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                           VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                     <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"  Padding="0" Margin="0" Grid.Column="1" HorizontalScrollBarVisibility="Never" VerticalScrollBarVisibility="Default">
-                        <Label VerticalTextAlignment="Center" TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TxtEstado" Text="Ok." FontSize="Medium"/>
+                        <Label VerticalTextAlignment="Center" TextColor="Black" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TxtEstado" Text="Ok." FontSize="Medium" />
                     </ScrollView>
                 </Grid>
             </Frame>
