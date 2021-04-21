@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Kit.Model
 {
 
-    public abstract class ModelBase : INotifyPropertyChanged,IDisposable
+    public abstract class ModelBase : INotifyPropertyChanged, IDisposable
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,7 +42,9 @@ namespace Kit.Model
                 try
                 {
                     PropertyChanged(target, e);
-                }catch(Exception ex)
+                    OnPropertyRaised(target, e.PropertyName);
+                }
+                catch (Exception ex)
                 {
                     Log.Logger.Error(ex, "On RAISE");
                 }
@@ -57,7 +59,10 @@ namespace Kit.Model
                 Raise<T>(propertyExpression);
             }
         }
+        protected virtual void OnPropertyRaised(object target, string PropertyName)
+        {
 
+        }
 
 
 

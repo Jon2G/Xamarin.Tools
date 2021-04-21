@@ -14,10 +14,11 @@ namespace Kit.Sql.SqlServer
         public SQLServerTableQuery(SqlBase conn) : base(conn)
         {
         }
+
         protected SQLServerTableQuery(SqlBase conn, Kit.Sql.Base.TableMapping table) : base(conn, table)
         {
-
         }
+
         public override TableQuery<U> Clone<U>()
         {
             var q = new SQLServerTableQuery<U>(Connection, Table);
@@ -49,7 +50,7 @@ namespace Kit.Sql.SqlServer
                 var cmdText = string.Empty;
                 if (_limit.HasValue)
                 {
-                    cmdText += " top " + _limit.Value+" ";
+                    cmdText += " top " + _limit.Value + " ";
                 }
                 cmdText += selectionList + " from \"" + Table.TableName + "\"";
                 var args = new List<object>();
@@ -57,8 +58,9 @@ namespace Kit.Sql.SqlServer
                 if (_where != null)
                 {
                     var w = CompileExpr(_where, args, conditions);
+                    conditions.RemoveAll(x => x.Value is Kit.Sql.Base.TableMapping);
                     conditions.RemoveAll(x => !x.IsComplete);
-                    conditions = conditions.DistinctBy(x=>x.ColumnName).ToList();
+                    conditions = conditions.DistinctBy(x => x.ColumnName).ToList();
                     cmdText += " where " + w.CommandText;
                 }
                 if ((_orderBys != null) && (_orderBys.Count > 0))
@@ -82,8 +84,5 @@ namespace Kit.Sql.SqlServer
                 return Connection.CreateCommand(cmdText, conditions.ToArray());
             }
         }
-
-
-
     }
 }

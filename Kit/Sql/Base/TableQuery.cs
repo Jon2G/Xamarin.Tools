@@ -509,13 +509,13 @@ namespace Kit.Sql.Base
             {
                 var c = (ConstantExpression)expr;
                 queryArgs.Add(c.Value);
-                var condition = new Condition(c.Value);
-                conditions.Add(condition);
+                //var condition = new Condition(c.Value);
+                //conditions.Add(condition);
                 return new CompileResult
                 {
                     CommandText = "?",
                     Value = c.Value,
-                    CurrentCondition = condition
+                    CurrentCondition = new Condition(c.Value)
                 };
             }
             else if (expr.NodeType == ExpressionType.Convert)

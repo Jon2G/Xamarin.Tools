@@ -36,8 +36,14 @@ namespace Kit.Daemon.Sync
             return true;
         }
 
-        public virtual void OnDownloaded(NotifyTableChangedAction action) { }
-        public virtual void OnUploaded(NotifyTableChangedAction action) { }
+        public virtual void OnDownloaded(NotifyTableChangedAction action)
+        {
+        }
+
+        public virtual void OnUploaded(NotifyTableChangedAction action)
+        {
+        }
+
         /// <summary>
         /// Mandatory for TwoWay Sync
         /// </summary>
@@ -49,11 +55,16 @@ namespace Kit.Daemon.Sync
 
         public virtual SyncStatus GetSyncStatus(SqlBase source_con)
         {
-            var history = source_con.Table<SyncHistory>().FirstOrDefault(x => x.Guid == this.Guid);
+            return GetSyncStatus(source_con, this.Guid);
+        }
+
+        public static SyncStatus GetSyncStatus(SqlBase source_con, Guid guid)
+        {
+            var history = source_con.Table<SyncHistory>().FirstOrDefault(x => x.Guid == guid);
             if (history is null)
             {
-                ChangesHistory changes= source_con.Table<ChangesHistory>().FirstOrDefault(x => x.Guid == this.Guid);
-                if(changes is null)
+                ChangesHistory changes = source_con.Table<ChangesHistory>().FirstOrDefault(x => x.Guid == guid);
+                if (changes is null)
                 {
                     //Has been downloaded by Daemon service since daemon downloads dont get inserted here
                     return SyncStatus.Done;
@@ -62,6 +73,25 @@ namespace Kit.Daemon.Sync
             }
             return SyncStatus.Done;
         }
+
+        protected static Guid GetGuid<T>(SqlBase source_con, object id)
+        {
+            Guid result = Guid.NewGuid();
+            var map = source_con.GetMapping<T>();
+            string text = source_con.Single<string>($"SELECT SyncGuid FROM {map.TableName} where {map.PK.Name}='{id}'");
+            if (!string.IsNullOrEmpty(text))
+            {
+                Guid.TryParse(text, out result);
+            }
+            return result;
+        }
+
+        public static bool IsSynced<T>(SqlBase source_con, int id)
+        {
+            Guid guid = GetGuid<T>(source_con, id);
+            return GetSyncStatus(source_con, guid) == SyncStatus.Done;
+        }
+
         public TypeCode GetTypeCode()
         {
             return TypeCode.Object;
@@ -158,6 +188,7 @@ namespace Kit.Daemon.Sync
                 case SyncDirecction.Local:
                     OnDownloaded(action);
                     break;
+
                 case SyncDirecction.Remote:
                     OnUploaded(action);
                     break;
