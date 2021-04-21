@@ -6,7 +6,7 @@
                   xmlns:local="clr-namespace:Kit.WPF.Pages" x:Name="Me"
                   xmlns:controls="clr-namespace:Kit.WPF.Controls"
                   mc:Ignorable="d" WindowStartupLocation="CenterOwner"
-                  Title="SetUpConnectionString" Height="450" Width="800"
+                  Title="Conexión con el servidor" Height="450" Width="800"
                   DataContext="{Binding Model ,ElementName=Me}" >
     <Window.Resources>
         <Style TargetType="Button"/>

@@ -310,9 +310,15 @@ namespace Kit.Sql.Base
                 //If either side is a parameter and is null, then handle the other side specially (for "is null"/"is not null")
                 string text;
                 if (leftr.CommandText == "?" && leftr.Value == null)
-                    text = CompileNullBinaryExpression(bin, rightr);
-                else if (rightr.CommandText == "?" && rightr.Value == null)
+                {
                     text = CompileNullBinaryExpression(bin, leftr);
+                    conditions.Insert(0, leftr.CurrentCondition);
+                }
+                else if (rightr.CommandText == "?" && rightr.Value == null)
+                {
+                    text = CompileNullBinaryExpression(bin, leftr);
+                    conditions.Insert(0, leftr.CurrentCondition);
+                }
                 else
                 {
                     if (rightr.CommandText == "?" && this is SQLServerTableQuery<T>)
@@ -593,7 +599,7 @@ namespace Kit.Sql.Base
                         {
                             int remove_index = queryArgs.Count - 1;
                             queryArgs.RemoveAt(remove_index);
-                            conditions.RemoveAt(remove_index);
+                            //conditions.RemoveAt(remove_index);
                         }
                         obj = r.Value;
                     }
@@ -683,14 +689,26 @@ namespace Kit.Sql.Base
         protected string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter)
         {
             if (expression.NodeType == ExpressionType.Equal)
+            {
+                if (this.Connection is SQLServerConnection)
+                {
+                    return $"(@{parameter.CurrentCondition.ColumnName} is NULL)";
+                }
                 return "(" + parameter.CommandText + " is ?)";
+            }
             else if (expression.NodeType == ExpressionType.NotEqual)
                 return "(" + parameter.CommandText + " is not ?)";
             else if (expression.NodeType == ExpressionType.GreaterThan
                      || expression.NodeType == ExpressionType.GreaterThanOrEqual
                      || expression.NodeType == ExpressionType.LessThan
                      || expression.NodeType == ExpressionType.LessThanOrEqual)
+            {
+                if (this.Connection is SQLServerConnection)
+                {
+                    return $"({parameter.CurrentCondition.ColumnName} < @{parameter.CurrentCondition.ColumnName})";
+                }
                 return "(" + parameter.CommandText + " < ?)"; // always false
+            }
             else
                 throw new NotSupportedException("Cannot compile Null-BinaryExpression with type " + expression.NodeType.ToString());
         }

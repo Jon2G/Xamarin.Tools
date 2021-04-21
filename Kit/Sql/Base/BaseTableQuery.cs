@@ -51,7 +51,7 @@ namespace Kit.Sql.Base
             {
                 this.ColumnName = columnName;
                 this.Value = Value;
-                if (!string.IsNullOrEmpty(ColumnName) && Value != null)
+                if (!string.IsNullOrEmpty(ColumnName))
                 {
                     this.IsComplete = true;
                 }
