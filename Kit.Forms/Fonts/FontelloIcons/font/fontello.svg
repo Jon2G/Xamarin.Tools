@@ -11,6 +11,8 @@
 <glyph glyph-name="ok" unicode="&#xe803;" d="M875 588l-535-600-340 338 123 124 196-195 420 457z" horiz-adv-x="875" />
 
 <glyph glyph-name="cancel-1" unicode="&#xe804;" d="M123 654l181-181 181 181 123-124-182-178 183-184-124-121-181 182-181-182-123 122 183 183-182 178z" horiz-adv-x="609" />
+
+<glyph glyph-name="angle-right" unicode="&#xf105;" d="M332 314q0-7-5-12l-261-261q-5-5-12-5t-13 5l-28 28q-6 6-6 13t6 13l219 219-219 220q-6 5-6 12t6 13l28 28q5 6 13 6t12-6l261-260q5-5 5-13z" horiz-adv-x="357.1" />
 </font>
 </defs>
 </svg>

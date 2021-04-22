@@ -21,10 +21,11 @@
   <ItemGroup>
     <None Remove="Fonts\FontelloIcons\font\KitIcons.ttf" />
     <None Remove="Fonts\FontelloIcons\font\kiticons_1.ttf" />
+    <None Remove="Fonts\FontelloIcons\font\kiticons_2.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Fonts\FontelloIcons\font\kiticons_1.ttf" />
+    <EmbeddedResource Include="Fonts\FontelloIcons\font\kiticons_2.ttf" />
   </ItemGroup>
 
 
@@ -118,16 +119,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Controls\ArrowButton.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Dictionaries\SylesDictionary.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\ShareCadenaCon.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Renders\" />
   </ItemGroup>
 
 </Project>
