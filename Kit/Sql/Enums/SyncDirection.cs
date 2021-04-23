@@ -2,9 +2,9 @@
 {
     public enum SyncDirection
     {
+        NoSync = 0,
         TwoWay = 2,
         Download = 1,
-        Upload = 3,
-        NoSync = 0
+        Upload = 3
     }
 }

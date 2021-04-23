@@ -59,10 +59,12 @@ namespace Kit.Sql.Base
 
             public void SetValue(object Value)
             {
+                this.Value = Value;
             }
 
             public void SetColumnName(string ColumnName)
             {
+                this.ColumnName = ColumnName;
             }
 
             public string ColumnName

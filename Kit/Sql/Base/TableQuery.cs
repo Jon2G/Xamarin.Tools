@@ -296,6 +296,14 @@ namespace Kit.Sql.Base
                 var leftr = CompileExpr(bin.Left, queryArgs, conditions);
                 var rightr = CompileExpr(bin.Right, queryArgs, conditions);
 
+                if (leftr.CurrentCondition?.IsComplete ?? false)
+                {
+                    conditions.Add(leftr.CurrentCondition);
+                }
+                if (rightr.CurrentCondition?.IsComplete ?? false)
+                {
+                    conditions.Add(rightr.CurrentCondition);
+                }
                 if (leftr.CurrentCondition != null && !leftr.CurrentCondition.IsComplete)
                 {
                     Condition joinedCondition = new Condition(leftr.CurrentCondition, rightr.CurrentCondition);
@@ -650,14 +658,12 @@ namespace Kit.Sql.Base
                     }
                     else
                     {
-                        var con = new Condition(fieldname, val);
                         queryArgs.Add(val);
-                        conditions.Add(con);
                         return new CompileResult
                         {
                             CommandText = "?",
                             Value = val,
-                            CurrentCondition = con
+                            CurrentCondition = new Condition(fieldname, val)
                         };
                     }
                 }

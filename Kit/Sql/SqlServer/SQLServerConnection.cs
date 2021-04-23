@@ -212,18 +212,17 @@ namespace Kit.Sql.SqlServer
         {
             LastException = null;
             int Rows = Error;
-
-            if (this.IsClosed)
-                RenewConnection();
-
-            using (var con = Con())
+            try
             {
-                using (SqlTransaction transaction = con.BeginTransaction(IsolationLevel.Serializable))
+                if (this.IsClosed)
+                    RenewConnection();
+                using (var con = Con())
                 {
+                    con.Open();
+
                     try
                     {
-                        con.Open();
-                        using SqlCommand cmd = new SqlCommand(sql, con, transaction)
+                        using SqlCommand cmd = new SqlCommand(sql, con)
                         { CommandType = commandType };
                         if (parametros.Any(x => x.Value is null))
                         {
@@ -243,11 +242,9 @@ namespace Kit.Sql.SqlServer
 
                         ReportaTransaccion(cmd);
                         Rows = cmd.ExecuteNonQuery();
-                        transaction.Commit();
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
                         LastException = ex;
                         Log.AlertOnDBConnectionError(LastException);
                     }
@@ -257,7 +254,13 @@ namespace Kit.Sql.SqlServer
                     }
                 }
             }
-
+            catch (Exception ex)
+            {
+                if (Log.IsDBConnectionError(ex))
+                {
+                    Daemon.Daemon.OffLine = true;
+                }
+            }
             return Rows;
         }
 
@@ -1598,6 +1601,10 @@ WHERE
                 for (int i = 0; i < ps.Length; i++)
                 {
                     Condition condition = (Condition)(ps[i]);
+                    if (condition.Value is null)
+                    {
+                        condition.SetValue(DBNull.Value);
+                    }
                     parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
                 }
             }

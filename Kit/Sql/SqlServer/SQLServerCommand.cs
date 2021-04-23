@@ -119,15 +119,7 @@ namespace Kit.Sql.SqlServer
                     {
                         if (this.Parameters.Any())
                         {
-                            foreach (var parameter in Parameters)
-                            {
-                                if (parameter.Value is null)
-                                {
-                                    parameter.Value = DBNull.Value;
-                                }
-
-                                cmd.Parameters.Add(parameter);
-                            }
+                            cmd.Parameters.AddRange(this.Parameters.ToArray());
                         }
                         using (var reader = cmd.ExecuteReader())
                         {
