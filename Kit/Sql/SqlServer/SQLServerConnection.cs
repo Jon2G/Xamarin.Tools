@@ -218,38 +218,43 @@ namespace Kit.Sql.SqlServer
 
             using (var con = Con())
             {
-                try
+                using (SqlTransaction transaction = con.BeginTransaction(IsolationLevel.Serializable))
                 {
-                    con.Open();
-                    using SqlCommand cmd = new SqlCommand(sql, con)
-                    { CommandType = commandType };
-                    if (parametros.Any(x => x.Value is null))
+                    try
                     {
-                        foreach (SqlParameter t in parametros)
+                        con.Open();
+                        using SqlCommand cmd = new SqlCommand(sql, con, transaction)
+                        { CommandType = commandType };
+                        if (parametros.Any(x => x.Value is null))
                         {
-                            if (t.Value is null)
+                            foreach (SqlParameter t in parametros)
                             {
-                                t.Value = DBNull.Value;
+                                if (t.Value is null)
+                                {
+                                    t.Value = DBNull.Value;
+                                }
+
+                                if (!parametros.Any(x => x.Value is null))
+                                    break;
                             }
-
-                            if (!parametros.Any(x => x.Value is null))
-                                break;
                         }
+
+                        cmd.Parameters.AddRange(parametros);
+
+                        ReportaTransaccion(cmd);
+                        Rows = cmd.ExecuteNonQuery();
+                        transaction.Commit();
                     }
-
-                    cmd.Parameters.AddRange(parametros);
-
-                    ReportaTransaccion(cmd);
-                    Rows = cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    LastException = ex;
-                    Log.AlertOnDBConnectionError(LastException);
-                }
-                finally
-                {
-                    con.Close();
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        LastException = ex;
+                        Log.AlertOnDBConnectionError(LastException);
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
                 }
             }
 
