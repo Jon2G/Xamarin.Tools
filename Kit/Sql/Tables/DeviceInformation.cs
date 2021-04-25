@@ -17,7 +17,7 @@ namespace Kit.Sql.Tables
         {
             //Is not the first time unless proven otherwise
             this.IsFirstLaunchTime = false;
-            this.DeviceId = Daemon.Devices.Device.Current.DeviceId;
+            this.DeviceId = Daemon.Devices.Device.Current?.DeviceId;
         }
         [Column("LAST_TIME_SEEN")]
         public DateTime LastAuthorizedTime { get; set; }

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:controls="clr-namespace:Kit.Forms.Controls"
              x:Class="Kit.Forms.Views.MyButton" BackgroundColor="White">
     <ContentView.Content>
@@ -9,12 +9,12 @@
                CornerRadius="{Binding CornerRadius}"
                BorderColor="{Binding BorderColor}" 
                Padding="{Binding Padding}"
-               touch:TouchEff.RegularBackgroundColor="{Binding BackgroundColor}"
-               touch:TouchEff.NativeAnimation="{Binding NativeAnimation}" 
-               touch:TouchEff.NativeAnimationColor="{Binding NativeAnimationColor}"
-               touch:TouchEff.PressedBackgroundColor="{Binding PressedBackgroundColor}">
+               xct:TouchEffect.NormalBackgroundColor="{Binding BackgroundColor}"
+               xct:TouchEffect.NativeAnimation="{Binding NativeAnimation}" 
+               xct:TouchEffect.NativeAnimationColor="{Binding NativeAnimationColor}"
+               xct:TouchEffect.PressedBackgroundColor="{Binding PressedBackgroundColor}">
             <Frame.Effects>
-                <touch:TouchEff Completed="TouchEff_Completed"/>
+                <xct:TouchEffect Completed="TouchEffect_OnCompleted"/>
             </Frame.Effects>
             <StackLayout Margin="{Binding StackMargin}" BackgroundColor="Transparent" 
                          Orientation="{Binding Orientation}" VerticalOptions="{Binding StackVerticalOptions}"

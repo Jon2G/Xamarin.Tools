@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:pinView="clr-namespace:Kit.Forms.Pages.PinView;assembly=Kit.Forms"
              xmlns:views1="clr-namespace:Kit.Forms.Views;assembly=Kit.Forms"
              x:Class="Kit.Forms.Pages.PinView.PinPanel" x:Name="PinViewElement">
@@ -57,14 +57,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button1_Clicked"/>
+                        <xct:TouchEffect Completed="Button1_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -75,14 +75,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button2_Clicked"/>
+                        <xct:TouchEffect Completed="Button2_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -93,14 +93,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button3_Clicked"/>
+                        <xct:TouchEffect Completed="Button3_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -111,14 +111,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button4_Clicked"/>
+                        <xct:TouchEffect Completed="Button4_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -130,14 +130,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button5_Clicked"/>
+                        <xct:TouchEffect Completed="Button5_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -149,14 +149,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button6_Clicked"/>
+                        <xct:TouchEffect Completed="Button6_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -167,14 +167,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button7_Clicked"/>
+                        <xct:TouchEffect Completed="Button7_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -186,14 +186,14 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button8_Clicked"/>
+                        <xct:TouchEffect Completed="Button8_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
@@ -205,23 +205,23 @@
                         HeightRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
                         CornerRadius="{Binding Source={x:Reference PinViewElement}, Path=ButtonCornerRadius}"
                         TextColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonTextColor}"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button9_Clicked"/>
+                        <xct:TouchEffect Completed="Button9_Clicked"/>
                     </Button.Effects>
                 </Button>
                 <Button VerticalOptions="CenterAndExpand"
                         HorizontalOptions="CenterAndExpand"
                         Text="0"
-                        touch:TouchEff.RegularBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
-                        touch:TouchEff.NativeAnimation="True" 
-                        touch:TouchEff.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
-                        touch:TouchEff.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.NormalBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=ButtonColor}"
+                        xct:TouchEffect.NativeAnimation="True" 
+                        xct:TouchEffect.NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
+                        xct:TouchEffect.PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         Grid.Row="3"
                         Grid.Column="1"
                         WidthRequest="{Binding Source={x:Reference PinViewElement}, Path=ButtonSize}"
@@ -231,7 +231,7 @@
                         FontSize="{Binding Source={x:Reference PinViewElement}, Path=ButtonFontsize}"
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}">
                     <Button.Effects>
-                        <touch:TouchEff Completed="Button0_Clicked"/>
+                        <xct:TouchEffect Completed="Button0_Clicked"/>
                     </Button.Effects>
                 </Button>
 

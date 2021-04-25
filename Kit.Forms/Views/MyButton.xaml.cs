@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using Kit.Sql.Attributes;
+using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -261,9 +262,10 @@ namespace Kit.Forms.Views
             this.Frame.BindingContext = this;
         }
 
-        private void TouchEff_Completed(VisualElement sender, TouchEffect.EventArgs.TouchCompletedEventArgs args)
+
+        private void TouchEffect_OnCompleted(object sender, TouchCompletedEventArgs e)
         {
-            Touched?.Invoke(this, args);
+            Touched?.Invoke(this, e);
             TouchedCommand?.Execute(this);
         }
     }

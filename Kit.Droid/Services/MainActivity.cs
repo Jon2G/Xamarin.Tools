@@ -36,7 +36,7 @@ namespace Kit.Droid.Services
             ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden |
             ConfigChanges.Mcc | ConfigChanges.Mnc | ConfigChanges.Navigation
     )]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
 
         // Field, property, and method for Picture Picker

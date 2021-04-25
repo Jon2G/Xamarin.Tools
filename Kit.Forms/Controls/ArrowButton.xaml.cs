@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.Xaml;
 
 namespace Kit.Forms.Controls
@@ -14,7 +16,7 @@ namespace Kit.Forms.Controls
     {
 
         public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
-            propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Gray);
+            propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Accent);
 
         public Color ArrowColor
         {
@@ -106,19 +108,62 @@ namespace Kit.Forms.Controls
             }
         }
 
-        public static readonly BindableProperty CommandProperty = BindableProperty.Create(
-            propertyName: nameof(Command), returnType: typeof(ICommand), declaringType: typeof(ArrowButton), defaultValue: null);
-
+        private bool IsEnabledCore { set; get; }
+        public static readonly BindableProperty CommandProperty =
+            BindableProperty.Create(nameof(ArrowButton.Command), typeof(ICommand),
+            typeof(ArrowButton), null,
+            propertyChanging: OnCommandChanging, propertyChanged: OnCommandChanged);
         public ICommand Command
         {
-            get => (ICommand)GetValue(CommandProperty);
-            set
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+        static void OnCommandChanged(BindableObject bo, object o, object n)
+        {
+            ArrowButton button = (ArrowButton)bo;
+            if (n is ICommand newCommand)
+                newCommand.CanExecuteChanged += button.OnCommandCanExecuteChanged;
+
+            CommandChanged(button);
+        }
+
+        private void OnCommandCanExecuteChanged(object sender, EventArgs e)
+        {
+            bool can = this.Command?.CanExecute(this.CommandParameter) ?? true;
+            if (!can)
             {
-                SetValue(CommandProperty, value);
-                OnPropertyChanged();
+
             }
         }
 
+        static void OnCommandChanging(BindableObject bo, object o, object n)
+        {
+            ArrowButton button = (ArrowButton)bo;
+            if (o != null)
+            {
+                (o as ICommand).CanExecuteChanged -= button.OnCommandCanExecuteChanged;
+            }
+        }
+        public static void CommandChanged(ArrowButton sender)
+        {
+            if (sender.Command != null)
+            {
+                CommandCanExecuteChanged(sender, EventArgs.Empty);
+            }
+            else
+            {
+                sender.IsEnabledCore = true;
+            }
+        }
+        public static void CommandCanExecuteChanged(object sender, EventArgs e)
+        {
+            ArrowButton ButtonElementManager = (ArrowButton)sender;
+            ICommand cmd = ButtonElementManager.Command;
+            if (cmd != null)
+            {
+                ButtonElementManager.IsEnabledCore = cmd.CanExecute(ButtonElementManager.CommandParameter);
+            }
+        }
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(
             propertyName: nameof(CommandParameter), returnType: typeof(object), declaringType: typeof(ArrowButton), defaultValue: null);
 
@@ -146,10 +191,30 @@ namespace Kit.Forms.Controls
         }
 
 
+
+        public static readonly BindableProperty IconHeightRequestProperty = BindableProperty.Create(
+            propertyName: nameof(IconHeightRequest), returnType: typeof(double), declaringType: typeof(ArrowButton), defaultValue: 20d);
+
+        public double IconHeightRequest
+        {
+            get => (double)GetValue(IconHeightRequestProperty);
+            set
+            {
+                SetValue(IconHeightRequestProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+
         public ArrowButton()
         {
-            this.BindingContext = this;
             InitializeComponent();
+        }
+
+        private void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
+        {
+            HapticFeedback.Perform(HapticFeedbackType.Click);
+            this.Command?.Execute(this.CommandParameter);
         }
     }
 }

@@ -98,7 +98,7 @@ namespace Kit.Forms.Controls.NotificationBar
             InitializeComponent();
         }
 
-        private void WarningOffLine(VisualElement sender, TouchEffect.EventArgs.TouchCompletedEventArgs args)
+        private void WarningOffLine(VisualElement sender, EventArgs args)
         {
             Acr.UserDialogs.UserDialogs.Instance.Alert("No fue posible conectarse al servidor,esto puede impedir o dificultar la operación.", "Alerta", "Ok");
         }

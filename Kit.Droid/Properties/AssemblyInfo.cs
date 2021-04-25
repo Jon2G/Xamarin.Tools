@@ -14,3 +14,4 @@ using Kit.Droid.Services;
 [assembly: UsesPermission(name: "android.permission.CAMERA")]
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
 [assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.Vibrate)]

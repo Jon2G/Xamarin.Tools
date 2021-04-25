@@ -3,37 +3,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:fonts="clr-namespace:Kit.Forms.Fonts;assembly=Kit.Forms"
              xmlns:controls="clr-namespace:Kit.Forms.Controls;assembly=Kit.Forms"
-             x:Class="Kit.Forms.Controls.ArrowButton" 
-             x:DataType="controls:ArrowButton" BackgroundColor="WhiteSmoke">
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:converters="clr-namespace:Kit.Forms.Converters;assembly=Kit.Forms"
+             x:Class="Kit.Forms.Controls.ArrowButton" x:Name="arrow"
+             x:DataType="controls:ArrowButton" 
+             BackgroundColor="WhiteSmoke"
+             HorizontalOptions="FillAndExpand" 
+             xct:TouchEffect.NormalBackgroundColor="WhiteSmoke"
+             xct:TouchEffect.PressedBackgroundColor="LightGray"
+             xct:TouchEffect.NativeAnimationColor="LightGray"
+             xct:TouchEffect.PressedScale="0.99"
+             xct:TouchEffect.Command="{Binding Command}"
+             xct:TouchEffect.NativeAnimation="True">
+    <ContentView.Resources>
+        <converters:StringNullOrEmptyBoolConverter x:Key="StringNullOrEmptyBoolConverter" IsReversed="True"/>
+    </ContentView.Resources>
     <ContentView.GestureRecognizers>
-        <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter }"/>
+        <TapGestureRecognizer 
+            Command="{Binding Command}"
+                              CommandParameter="{Binding CommandParameter}"
+                              Tapped="TapGestureRecognizer_OnTapped"/>
     </ContentView.GestureRecognizers>
     <ContentView.Content>
-        <Frame Padding="5" BorderColor="LightGray">
-            <Grid ColumnDefinitions="Auto,*,Auto">
+        <StackLayout>
+            <Frame BindingContext="{x:Reference arrow}" Padding="5" BorderColor="LightGray" BackgroundColor="Transparent">
+                <Grid ColumnDefinitions="Auto,*,Auto">
 
-                <Image HeightRequest="20" Margin="5,0,0,0" Grid.Column="0" VerticalOptions="CenterAndExpand" 
-                       Source="{Binding Icon}"/>
+                    <Image HeightRequest="{Binding IconHeightRequest}" Margin="5,0,0,0" Grid.Column="0" VerticalOptions="CenterAndExpand" 
+                           Source="{Binding Icon}"/>
 
-                <StackLayout Margin="10,5" Grid.Column="1">
-                    <Label Text="{Binding Title}" 
-                           TextColor="{Binding TitleColor}"
-                           FontSize="{Binding TitleFontSize}"/>
+                    <StackLayout Margin="10,5" Grid.Column="1">
+                        <Label Text="{Binding Title}" 
+                               TextColor="{Binding TitleColor}"
+                               FontSize="{Binding TitleFontSize}"
+                               IsVisible="{Binding Title,
+                                           Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>
 
-                    <Label Text="{Binding SubTitle}" TextColor="{Binding SubTitleColor}" 
-                           FontSize="{Binding SubTitleFontSize}"/>
-                </StackLayout>
+                        <Label Grid.Row="1" Text="{Binding SubTitle}" TextColor="{Binding SubTitleColor}" 
+                               FontSize="{Binding SubTitleFontSize}"
+                               IsVisible="{Binding SubTitle,
+                                           Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>
+                    </StackLayout>
 
-                <Image Margin="10,0" Grid.Column="2" VerticalOptions="CenterAndExpand">
-                    <Image.Source>
-                        <FontImageSource Size="30"
-                                         Glyph="{x:Static fonts:FontelloIcons.RightArrow}"  
-                                         FontFamily="{x:Static fonts:FontelloIcons.Font}" 
-                                         Color="{Binding ArrowColor}"/>
-                    </Image.Source>
-                </Image>
-                <Label />
-            </Grid>
-        </Frame>
+                    <Image Margin="10,0" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                        <Image.Source>
+                            <FontImageSource Size="30"
+                                             Glyph="{x:Static fonts:FontelloIcons.RightArrow}"  
+                                             FontFamily="{x:Static fonts:FontelloIcons.Font}" 
+                                             Color="{Binding ArrowColor}"/>
+                        </Image.Source>
+                    </Image>
+                    <Label />
+                </Grid>
+            </Frame>
+        </StackLayout>
+
     </ContentView.Content>
 </ContentView>
