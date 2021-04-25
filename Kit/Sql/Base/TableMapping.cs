@@ -25,15 +25,15 @@ namespace Kit.Sql.Base
 
         public Column PK { get; private set; }
 
-
         public string GetByPrimaryKeySql { get; protected set; }
+
         protected abstract string _GetByPrimaryKeySql();
 
         public CreateFlags CreateFlags { get; private set; }
 
-        readonly Column _autoPk;
-        readonly Column[] _insertColumns;
-        readonly Column[] _insertOrReplaceColumns;
+        private readonly Column _autoPk;
+        private readonly Column[] _insertColumns;
+        private readonly Column[] _insertOrReplaceColumns;
 
         public TableMapping(Type type, CreateFlags createFlags = CreateFlags.None)
         {
@@ -49,7 +49,6 @@ namespace Kit.Sql.Base
             TableName = GetTableName(tableAttr, type);
 
             WithoutRowId = tableAttr != null ? tableAttr.WithoutRowId : false;
-
 
             this.SyncMode = GetSyncModeAttribute(typeInfo) ?? new SyncMode();
             if (SyncDirection != SyncDirection.NoSync)
@@ -82,8 +81,6 @@ namespace Kit.Sql.Base
                 props.AddRange(newProps);
                 baseType = ti.BaseType;
             }
-
-
 
             var cols = new List<Column>();
             foreach (var p in props)
@@ -137,12 +134,13 @@ namespace Kit.Sql.Base
         protected static TypeInfo GetTypeInfo(Type type)
         {
             return type.GetTypeInfo();
-
         }
+
         public static string GetTableName(Type type)
         {
             return GetTableName(GetTableAttributes(GetTypeInfo(type)), type);
         }
+
         protected static TableAttribute GetTableAttributes(TypeInfo typeInfo)
         {
             return typeInfo.CustomAttributes
@@ -155,6 +153,7 @@ namespace Kit.Sql.Base
         {
             return GetSyncModeAttribute(obj.GetType().GetTypeInfo());
         }
+
         protected static SyncMode GetSyncModeAttribute(TypeInfo typeInfo)
         {
             return typeInfo.CustomAttributes
@@ -167,6 +166,7 @@ namespace Kit.Sql.Base
         {
             return (tableAttr != null && !string.IsNullOrEmpty(tableAttr.Name)) ? tableAttr.Name : MappedType.Name;
         }
+
         public bool HasAutoIncPK { get; private set; }
 
         public void SetAutoIncPK(object obj, long id)
@@ -222,7 +222,7 @@ namespace Kit.Sql.Base
 
         public class Column
         {
-            PropertyInfo _prop;
+            private PropertyInfo _prop;
 
             public string Name { get; protected set; }
 
@@ -247,7 +247,10 @@ namespace Kit.Sql.Base
 
             public bool StoreAsText { get; protected set; }
 
-            protected Column() { }
+            protected Column()
+            {
+            }
+
             public Column(PropertyInfo prop, CreateFlags createFlags = CreateFlags.None)
             {
                 var colAttr = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType == typeof(ColumnAttribute));
