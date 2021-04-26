@@ -15,8 +15,8 @@ namespace Kit.Sql.Sqlite
 
         protected SQLiteTableQuery(SqlBase conn, Kit.Sql.Base.TableMapping table) : base(conn, table)
         {
-
         }
+
         public override TableQuery<U> Clone<U>()
         {
             var q = new SQLiteTableQuery<U>(Connection, Table);
@@ -51,6 +51,7 @@ namespace Kit.Sql.Sqlite
                 if (_where != null)
                 {
                     var w = CompileExpr(_where, args, conditions);
+                    conditions.RemoveAll(x => !x.IsComplete);
                     cmdText += " where " + w.CommandText;
                 }
                 if ((_orderBys != null) && (_orderBys.Count > 0))
@@ -82,7 +83,5 @@ namespace Kit.Sql.Sqlite
                 return Connection.CreateCommand(cmdText, args.ToArray());
             }
         }
-
-
     }
 }

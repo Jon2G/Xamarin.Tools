@@ -1867,6 +1867,13 @@ WHERE
             return new SQLServerTableQuery<T>(this);
         }
 
+        public override BaseTableQuery Table(Type Type)
+        {
+            var queryType = typeof(SQLServerTableQuery<dynamic>);
+            queryType.MakeGenericType(Type);
+            return (BaseTableQuery)Activator.CreateInstance(queryType, new object[] { });
+        }
+
         /// <summary>
         /// Attempts to retrieve an object with the given primary key from the table
         /// associated with the specified type. Use of this method requires that

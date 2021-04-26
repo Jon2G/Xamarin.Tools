@@ -502,7 +502,7 @@ namespace Kit.Sql.Base
                     }
                     else
                     {
-                        sqlCall = "(" + args[0].CommandText + " is null or" + args[0].CommandText + " ='' )";
+                        sqlCall = "(" + args[0].CommandText + " is null or " + args[0].CommandText + " ='' )";
                     }
 
                     CurrentCondition = args[0].CurrentCondition;
