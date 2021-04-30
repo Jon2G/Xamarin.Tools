@@ -345,7 +345,14 @@ namespace Kit.Sql.Base
 
                     if (leftr.CommandText == "?" && this is SQLServerTableQuery<T>)
                     {
-                        leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                        if (leftr.Value is bool)
+                        {
+                            leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "") + "=1";
+                        }
+                        else
+                        {
+                            leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                        }
                     }
 
                     text = "(" + leftr.CommandText + " " + GetSqlName(bin) + " " + rightr.CommandText + ")";
