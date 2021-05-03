@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Kit.Forms.Extensions;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
+using Xamarin.Essentials;
 
 namespace Kit.Forms.Services.Interfaces
 {
@@ -22,12 +22,12 @@ namespace Kit.Forms.Services.Interfaces
         public async Task Init()
         {
             await CrossMedia.Current.Initialize();
-            cameraOK = await CrossPermissions.Current.CheckPermissionStatusAsync<CameraPermission>();
-            storageOK = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+            cameraOK = await Permisos.GetPermissionStatus<Xamarin.Essentials.Permissions.Camera>();
+            storageOK = await Permisos.GetPermissionStatus<Xamarin.Essentials.Permissions.StorageRead>();
             if (cameraOK != PermissionStatus.Granted || storageOK != PermissionStatus.Granted)
             {
-                cameraOK = await CrossPermissions.Current.RequestPermissionAsync<CameraPermission>();
-                storageOK = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+                cameraOK = await Permisos.GetPermissionStatus<Xamarin.Essentials.Permissions.Camera>();
+                storageOK = await Permisos.GetPermissionStatus<Xamarin.Essentials.Permissions.StorageRead>();
             }
             this.IsInited = true;
         }
