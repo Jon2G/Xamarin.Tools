@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class Linq
     {
@@ -220,6 +220,7 @@ namespace Kit.Extensions
         }
 
 #endif
+
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
         {
             T[] elements = source.ToArray();
@@ -234,5 +235,4 @@ namespace Kit.Extensions
             }
         }
     }
-
 }

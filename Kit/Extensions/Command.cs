@@ -64,6 +64,8 @@ namespace Kit.Extensions
     {
         readonly Func<object, bool> _canExecute;
         readonly Action<object> _execute;
+        private ICommand extractForApp;
+
         private event EventHandler _weakEventManager;
 
         public Command(Action<object> execute)
@@ -94,6 +96,11 @@ namespace Kit.Extensions
                 throw new ArgumentNullException(nameof(execute));
             if (canExecute == null)
                 throw new ArgumentNullException(nameof(canExecute));
+        }
+
+        public Command(ICommand extractForApp)
+        {
+            this.extractForApp = extractForApp;
         }
 
         public virtual bool CanExecute(object parameter)

@@ -345,7 +345,14 @@ namespace Kit.Sql.Base
 
                     if (leftr.CommandText == "?" && this is SQLServerTableQuery<T>)
                     {
-                        leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                        if (leftr.Value is bool)
+                        {
+                            leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "") + "=1";
+                        }
+                        else
+                        {
+                            leftr.CommandText = "@" + leftr.CurrentCondition.ColumnName.Replace("\"", "");
+                        }
                     }
 
                     text = "(" + leftr.CommandText + " " + GetSqlName(bin) + " " + rightr.CommandText + ")";
@@ -502,7 +509,7 @@ namespace Kit.Sql.Base
                     }
                     else
                     {
-                        sqlCall = "(" + args[0].CommandText + " is null or" + args[0].CommandText + " ='' )";
+                        sqlCall = "( IFNULL(" + args[0].CommandText + ",'')='' )";
                     }
 
                     CurrentCondition = args[0].CurrentCondition;

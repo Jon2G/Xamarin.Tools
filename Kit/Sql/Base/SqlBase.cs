@@ -223,6 +223,7 @@ namespace Kit.Sql.Base
             return GetMapping(typeof(T), createFlags);
         }
         public abstract TableQuery<T> Table<T>() where T : new();
+        public abstract BaseTableQuery Table(Type Type);
 
         public abstract SqlBase RenewConnection();
         public abstract CommandBase CreateCommand(string cmdText, params object[] ps);

@@ -785,18 +785,19 @@ namespace Kit.Sql.SqlServer
                     }
                     else if (value is byte[] data)
                     {
-                        if (data.Length == 0)
-                        {
-                            sbCommandText.Append("NULL");
-                        }
-                        else
-                        {
-                            sbCommandText.Append("0x");
-                            foreach (byte t in data)
-                            {
-                                sbCommandText.Append(t.ToString("h2"));
-                            }
-                        }
+                        sbCommandText.Append("BYNARY DATA");
+                        //if (data.Length == 0)
+                        //{
+                        //    sbCommandText.Append("NULL");
+                        //}
+                        //else
+                        //{
+                        //    sbCommandText.Append("0x");
+                        //    foreach (byte t in data)
+                        //    {
+                        //        sbCommandText.Append(t.ToString("h2"));
+                        //    }
+                        //}
                     }
                     else if (value == DBNull.Value)
                     {
@@ -1865,6 +1866,13 @@ WHERE
         public override TableQuery<T> Table<T>()
         {
             return new SQLServerTableQuery<T>(this);
+        }
+
+        public override BaseTableQuery Table(Type Type)
+        {
+            var queryType = typeof(SQLServerTableQuery<>);
+            queryType = queryType.MakeGenericType(Type);
+            return (BaseTableQuery)Activator.CreateInstance(queryType, new object[] { this });
         }
 
         /// <summary>
