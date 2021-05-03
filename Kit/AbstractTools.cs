@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using Kit.Daemon.Devices;
 using Kit.Enums;
@@ -22,6 +23,7 @@ namespace Kit
         private string _LibraryPath;
 
         public string LibraryPath => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        public string TemporalPath => Path.Combine(LibraryPath, "..", "tmp");
 
         protected AbstractTools()
         {

@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Kit.Forms.Services.Interfaces;
 using Plugin.Media;
-using Plugin.Permissions.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -44,7 +43,7 @@ namespace Kit.Forms.Pages
 
         private async void SalvarQr(object sender, EventArgs e)
         {
-            if (await Permisos.PedirPermiso(Permission.Storage))
+            if (await Permisos.EnsurePermission<Permissions.StorageWrite>("Permita el acceso")==PermissionStatus.Granted)
             {
                 ScreenshotResult screenshot = await Screenshot.CaptureAsync();
                 using (Stream stream = await screenshot.OpenReadAsync())

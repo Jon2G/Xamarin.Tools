@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Kit.Extensions;
 using Kit.Forms.Controls;
 using Kit.Forms.Extensions;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing;
@@ -54,10 +55,8 @@ namespace Kit.Forms.Controls
             {
                 throw new WarningException("Please call Init before attemping to open this Reader");
             }
-            if (!await Permisos.TenemosPermiso(Plugin.Permissions.Abstractions.Permission.Camera))
-            {
-                await Permisos.PedirPermiso(Plugin.Permissions.Abstractions.Permission.Camera);
-            }
+
+            await Permisos.EnsurePermission<Permissions.Camera>("Por favor permita el acceso");
             this.CodigoDeBarras.ButtonCommand.Execute(null);
         }
 
