@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Kit.WPF.Reportes
         private StiReport StiReport;
         private readonly string RutaLogo;
         private readonly string RutaReportes;
-        public Reporteador(string RutaLogo, string RutaReportes = "/mrt")
+        public Reporteador(string RutaLogo=null, string RutaReportes = "\\mrt")
         {
             this.RutaLogo = RutaLogo;
             //Importante para evitar 'Error al registrar DragDrop.'
@@ -32,9 +33,11 @@ namespace Kit.WPF.Reportes
             StiOptions.Viewer.AllowUseDragDrop =
             StiOptions.Designer.AllowUseDragDrop = false;
             this.RutaReportes = RutaReportes;
-            if (RutaReportes[0] == '/')
+            if (RutaReportes[0] == '\\')
             {
-                RutaReportes = $"{Kit.Tools.Instance.LibraryPath}{RutaReportes}";
+                string directorio = RutaReportes.Substring(1);
+                string path = $"{Kit.Tools.Instance.LibraryPath}{directorio}";
+                this.RutaReportes = path;
             }
         }
         public StiReport GetStiReportObject()
@@ -353,7 +356,7 @@ namespace Kit.WPF.Reportes
 
             return this;
         }
-        private string NuevoReporte(string nombre, bool Disenando = false, bool EspacioDeTrabajo = false, FormatoReporte Formato = FormatoReporte.PDF, params Variable[] variables)
+        public string NuevoReporte(string nombre, bool Disenando = false, bool EspacioDeTrabajo = false, FormatoReporte Formato = FormatoReporte.PDF, params Variable[] variables)
         {
             this.StiReport =
                 NuevoReporte(nombre, Disenando, variables)

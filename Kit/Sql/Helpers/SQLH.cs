@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Text;
 
 namespace Kit.Sql.Helpers
@@ -107,7 +108,7 @@ namespace Kit.Sql.Helpers
             return IsNull(value) ? ifnull : value;
         }
 
-        public static T Parse<T>(object obj,T ifnull) where T : IConvertible
+        public static T Parse<T>(object obj,T ifnull) 
         {
             if (IsNull(obj))
             {
@@ -116,25 +117,44 @@ namespace Kit.Sql.Helpers
 
             return Parse<T>(obj);
         }
-        public static T Parse<T>(object obj) where  T: IConvertible
+
+        public static object Parse(Type type,object obj)
         {
-            var type = typeof(T);
             try
             {
 
                 if (type.IsEnum)
                 {
-                    return (T)Enum.Parse(typeof(T), obj.ToString(), true);
+                    return Enum.Parse(type, obj.ToString(), true);
                 }
 
-                return (T)Convert.ChangeType(obj, typeof(T));
+                switch (type.Name)
+                {
+                    case "Guid":
+                        return Guid.Parse(obj.ToString());
+                    case "String":
+                        return Convert.ToString(obj);
+                    default:
+                        if (obj is IConvertible)
+                        {
+                            return Convert.ChangeType(obj, type);
+                        }
+                        if (Debugger.IsAttached)
+                            Debugger.Break();
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, $"Al convertir un dato desde Parse<T> el tipo de dato: {type.Name}=>{obj}");
             }
 
-            return default(T);
+            return null;
+        }
+        public static T Parse<T>(object obj) 
+        {
+            var type = typeof(T);
+            return (T)Parse(type, obj);
         }
 
 
