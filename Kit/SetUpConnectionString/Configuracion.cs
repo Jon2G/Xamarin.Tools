@@ -278,6 +278,10 @@ namespace Kit.CadenaConexion
             Configuracion configuracion = null;
             try
             {
+                if (string.IsNullOrEmpty(codigoBarras))
+                {
+                    return null;
+                }
                 configuracion = JsonConvert.DeserializeObject<Configuracion>(codigoBarras);
                 return configuracion;
             }

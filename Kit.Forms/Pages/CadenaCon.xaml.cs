@@ -27,6 +27,7 @@ using Kit.Sql.SqlServer;
 using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using ZXing;
+using System.Windows.Input;
 
 namespace Kit.Forms.Pages
 {
@@ -79,6 +80,9 @@ namespace Kit.Forms.Pages
             return false;
         }
 
+        private Command<CadenaCon> OnAppearingCommand;
+        private readonly CancellationTokenSource CancellationTokenSource;
+
         public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection) : this(DeviceInfo, DBConection, null, null)
         {
         }
@@ -95,6 +99,7 @@ namespace Kit.Forms.Pages
         {
             try
             {
+                this.CancellationTokenSource = new CancellationTokenSource();
                 var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection, DeviceInfo.DeviceId);
                 this.Model = new SetUpConnectionStringViewModelBase(DBConection, new SQLServerConnection(config.CadenaCon), config);
                 this.BindingContext = this.Model;
@@ -107,14 +112,43 @@ namespace Kit.Forms.Pages
             }
         }
 
-        private void BasePage_Appearing(object sender, EventArgs e)
+        public async void FocusOnImport()
         {
-            this.LockOrientation(DeviceOrientation.Portrait);
-            this.Model.Configuration.RefreshConnectionString();
+            await ScrollView.ScrollToAsync(BtnImportConnection, ScrollToPosition.End, true);
+            GlowAnimation(BtnImportConnection, this.CancellationTokenSource.Token);
         }
 
-        private void BasePage_Disappearing(object sender, EventArgs e)
+        private static async void GlowAnimation(VisualElement element, CancellationToken cancellation)
         {
+            while (!cancellation.IsCancellationRequested)
+            {
+                await Task.Delay(200);
+                await element.FadeTo(.7, 100);
+                await element.ScaleTo(0.7);
+                await Task.Delay(200);
+                await element.FadeTo(1, 250);
+                await element.ScaleTo(1.2);
+            }
+        }
+
+        public async Task ShowAndExecute(Command<CadenaCon> Command)
+        {
+            await Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync(this);
+            this.OnAppearingCommand = Command;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            this.LockOrientation(DeviceOrientation.Portrait);
+            this.Model.Configuration.RefreshConnectionString();
+            this.OnAppearingCommand?.Execute(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            this.CancellationTokenSource.Cancel();
+            base.OnDisappearing();
             if (this.Leector != null)
             {
                 this.Leector.CodigoEntrante -= Leector_CodigoEntrante;

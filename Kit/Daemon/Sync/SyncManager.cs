@@ -32,6 +32,7 @@ namespace Kit.Daemon.Sync
         public bool NothingToDo { get => !ToDo; }
         private Queue<ChangesHistory> Pendings;
         private int TotalPendientes;
+
         public float Progress
         {
             get
@@ -46,7 +47,9 @@ namespace Kit.Daemon.Sync
                 }
             }
         }
+
         private int _Processed;
+
         private int Processed
         {
             get => _Processed;
@@ -56,8 +59,10 @@ namespace Kit.Daemon.Sync
                 Raise(() => this.Progress);
             }
         }
+
         public int PackageSize { get; private set; }
         private ChangesHistory _CurrentPackage;
+
         public ChangesHistory CurrentPackage
         {
             get => _CurrentPackage;
@@ -79,18 +84,21 @@ namespace Kit.Daemon.Sync
             get;
             set;
         }
+
         public SyncManager()
         {
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
             this.PackageSize = RegularPackageSize;
         }
+
         public void SetPackageSize(int PackageSize = RegularPackageSize)
         {
             this.PackageSize = PackageSize;
             UploadQuery = null;
             DownloadQuery = null;
         }
+
         public bool Download()
         {
             if (DownloadQuery is null)
@@ -110,6 +118,7 @@ namespace Kit.Daemon.Sync
             }
             return GetPendings(SyncDirecction.Remote);
         }
+
         private string PrepareQuery(SqlBase source)
         {
             switch (source)
@@ -122,12 +131,12 @@ namespace Kit.Daemon.Sync
                     }
                     query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid)";
                     return query;
+
                 case SQLiteConnection:
                     return $"select SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) limit {this.PackageSize}";
             }
             return string.Empty;
         }
-
 
         private bool GetPendings(SyncDirecction SyncTarget)
         {
@@ -145,6 +154,7 @@ namespace Kit.Daemon.Sync
                     case SyncDirecction.Local:
                         query = DownloadQuery;
                         break;
+
                     case SyncDirecction.Remote:
                         query = UploadQuery;
                         break;
@@ -176,6 +186,7 @@ namespace Kit.Daemon.Sync
             }
             return false;
         }
+
         private bool ProcesarAcciones(SyncDirecction direccion)
         {
             Processed = 0;
@@ -239,7 +250,6 @@ namespace Kit.Daemon.Sync
                                     if (target_con is SQLiteConnection)
                                     {
                                         target_con.InsertOrReplace(read, false);
-
                                     }
                                     else
                                     {
@@ -263,17 +273,14 @@ namespace Kit.Daemon.Sync
                                     read.OnSynced(direccion, action);
                                 }
                                 break;
+
                             case NotifyTableChangedAction.Delete:
                                 target_con.Delete(read);
                                 read.OnSynced(direccion, action);
                                 CurrentPackage.MarkAsSynced(source_con);
                                 Processed++;
                                 break;
-
-
                         }
-
-
                     }
                     else
                     {
@@ -312,7 +319,6 @@ namespace Kit.Daemon.Sync
                 .Append(Device.Current.DeviceId).Append("') --ORDER BY TABLA DESC, LLAVE ASC;");
             return sb.ToString();
         }
-
 
         public void Reset()
         {

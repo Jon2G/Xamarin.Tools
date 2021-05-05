@@ -7,7 +7,6 @@ namespace Kit.Forms.Extensions
 {
     public static class Permisos
     {
-
         public static async Task<bool> PedirPermiso(Permissions.BasePermission Permiso, string Mensaje = "Permita el acceso")
         {
             return await Device.InvokeOnMainThreadAsync(async () =>
@@ -19,12 +18,13 @@ namespace Kit.Forms.Extensions
                     {
                         await Acr.UserDialogs.UserDialogs.Instance.AlertAsync(Mensaje, "Atención.");
                     }
-                    await Permiso.CheckStatusAsync();
+                    await Permiso.RequestAsync();
                     status = await Permiso.CheckStatusAsync();
                 }
                 return (status == PermissionStatus.Granted);
             });
         }
+
         public static async Task<bool> TenemosPermiso(Permissions.BasePermission Permiso) => (await GetPermissionStatus(Permiso) == PermissionStatus.Granted);
 
         public static bool IsDisabled(Permissions.BasePermission permission) => permission.ShouldShowRationale();
@@ -33,6 +33,7 @@ namespace Kit.Forms.Extensions
         {
             return await GetPermissionStatus(new T());
         }
+
         public static async Task<Xamarin.Essentials.PermissionStatus> GetPermissionStatus(Permissions.BasePermission Permiso)
         {
             return await Device.InvokeOnMainThreadAsync(async () =>
@@ -42,10 +43,11 @@ namespace Kit.Forms.Extensions
             });
         }
 
-        public static async Task<PermissionStatus> EnsurePermission<T>(string RequestMessage, T Permiso = null) where T : Permissions.BasePermission, new()
+        public static async Task<PermissionStatus> EnsurePermission<T>(string RequestMessage = "Permita el acceso", T Permiso = null) where T : Permissions.BasePermission, new()
         {
             Permiso ??= new T();
-            if (await Permiso.CheckStatusAsync() != PermissionStatus.Granted)
+            var status = await Permiso.CheckStatusAsync();
+            if (status != PermissionStatus.Granted)
             {
                 if (await PedirPermiso(Permiso, RequestMessage))
                 {
@@ -63,6 +65,14 @@ namespace Kit.Forms.Extensions
             }
 
             return await Permiso.CheckStatusAsync();
+        }
+
+        public static async Task<Tuple<PermissionStatus, PermissionStatus>> RequestStorage()
+        {
+            return
+                new Tuple<PermissionStatus, PermissionStatus>(
+                    await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageRead>(),
+                    await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageWrite>());
         }
     }
 }

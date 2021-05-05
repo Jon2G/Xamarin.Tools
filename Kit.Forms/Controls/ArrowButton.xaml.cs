@@ -14,7 +14,6 @@ namespace Kit.Forms.Controls
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ArrowButton : ContentView
     {
-
         public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
             propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Accent);
 
@@ -40,7 +39,6 @@ namespace Kit.Forms.Controls
                 OnPropertyChanged();
             }
         }
-
 
         public static readonly BindableProperty SubTitleColorProperty = BindableProperty.Create(
             propertyName: nameof(SubTitleColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Black);
@@ -68,7 +66,6 @@ namespace Kit.Forms.Controls
             }
         }
 
-
         public static readonly BindableProperty SubTitleProperty = BindableProperty.Create(
             propertyName: nameof(SubTitle), returnType: typeof(string), declaringType: typeof(ArrowButton), defaultValue: string.Empty);
 
@@ -84,6 +81,7 @@ namespace Kit.Forms.Controls
 
         public static readonly BindableProperty SubTitleFontSizeProperty = BindableProperty.Create(
             propertyName: nameof(SubTitleFontSize), returnType: typeof(int), declaringType: typeof(ArrowButton), defaultValue: 12);
+
         [TypeConverter(typeof(FontSizeConverter))]
         public int SubTitleFontSize
         {
@@ -97,6 +95,7 @@ namespace Kit.Forms.Controls
 
         public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(
             propertyName: nameof(TitleFontSize), returnType: typeof(int), declaringType: typeof(ArrowButton), defaultValue: 14);
+
         [TypeConverter(typeof(FontSizeConverter))]
         public int TitleFontSize
         {
@@ -109,16 +108,19 @@ namespace Kit.Forms.Controls
         }
 
         private bool IsEnabledCore { set; get; }
+
         public static readonly BindableProperty CommandProperty =
             BindableProperty.Create(nameof(ArrowButton.Command), typeof(ICommand),
             typeof(ArrowButton), null,
             propertyChanging: OnCommandChanging, propertyChanged: OnCommandChanged);
+
         public ICommand Command
         {
             get { return (ICommand)GetValue(CommandProperty); }
             set { SetValue(CommandProperty, value); }
         }
-        static void OnCommandChanged(BindableObject bo, object o, object n)
+
+        private static void OnCommandChanged(BindableObject bo, object o, object n)
         {
             ArrowButton button = (ArrowButton)bo;
             if (n is ICommand newCommand)
@@ -132,11 +134,10 @@ namespace Kit.Forms.Controls
             bool can = this.Command?.CanExecute(this.CommandParameter) ?? true;
             if (!can)
             {
-
             }
         }
 
-        static void OnCommandChanging(BindableObject bo, object o, object n)
+        private static void OnCommandChanging(BindableObject bo, object o, object n)
         {
             ArrowButton button = (ArrowButton)bo;
             if (o != null)
@@ -144,6 +145,7 @@ namespace Kit.Forms.Controls
                 (o as ICommand).CanExecuteChanged -= button.OnCommandCanExecuteChanged;
             }
         }
+
         public static void CommandChanged(ArrowButton sender)
         {
             if (sender.Command != null)
@@ -155,6 +157,7 @@ namespace Kit.Forms.Controls
                 sender.IsEnabledCore = true;
             }
         }
+
         public static void CommandCanExecuteChanged(object sender, EventArgs e)
         {
             ArrowButton ButtonElementManager = (ArrowButton)sender;
@@ -164,6 +167,7 @@ namespace Kit.Forms.Controls
                 ButtonElementManager.IsEnabledCore = cmd.CanExecute(ButtonElementManager.CommandParameter);
             }
         }
+
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(
             propertyName: nameof(CommandParameter), returnType: typeof(object), declaringType: typeof(ArrowButton), defaultValue: null);
 
@@ -179,6 +183,7 @@ namespace Kit.Forms.Controls
 
         public static readonly BindableProperty IconProperty = BindableProperty.Create(
             propertyName: nameof(Icon), returnType: typeof(ImageSource), declaringType: typeof(ArrowButton), defaultValue: null);
+
         [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Icon
         {
@@ -189,8 +194,6 @@ namespace Kit.Forms.Controls
                 OnPropertyChanged();
             }
         }
-
-
 
         public static readonly BindableProperty IconHeightRequestProperty = BindableProperty.Create(
             propertyName: nameof(IconHeightRequest), returnType: typeof(double), declaringType: typeof(ArrowButton), defaultValue: 20d);
@@ -205,6 +208,18 @@ namespace Kit.Forms.Controls
             }
         }
 
+        public static readonly BindableProperty IsArrowVisibleProperty = BindableProperty.Create(
+            propertyName: nameof(IsArrowVisible), returnType: typeof(bool), declaringType: typeof(ArrowButton), defaultValue: true);
+
+        public bool IsArrowVisible
+        {
+            get => (bool)GetValue(IsArrowVisibleProperty);
+            set
+            {
+                SetValue(IsArrowVisibleProperty, value);
+                OnPropertyChanged();
+            }
+        }
 
         public ArrowButton()
         {

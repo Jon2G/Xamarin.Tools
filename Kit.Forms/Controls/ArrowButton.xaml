@@ -45,7 +45,7 @@
                                            Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>
                     </StackLayout>
 
-                    <Image Margin="10,0" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                    <Image Margin="10,0" Grid.Column="2" VerticalOptions="CenterAndExpand" IsVisible="{Binding IsArrowVisible}">
                         <Image.Source>
                             <FontImageSource Size="30"
                                              Glyph="{x:Static fonts:FontelloIcons.RightArrow}"  

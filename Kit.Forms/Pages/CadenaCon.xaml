@@ -13,7 +13,7 @@
                    VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                    TextColor="White" Text="Cadena de conexión" />
             <Grid Margin="5" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                <ScrollView VerticalScrollBarVisibility="Default" HorizontalScrollBarVisibility="Never">
+                <ScrollView VerticalScrollBarVisibility="Default" HorizontalScrollBarVisibility="Never" x:Name="ScrollView">
                     <StackLayout Margin="0" Padding="10" HorizontalOptions="Center" VerticalOptions="StartAndExpand">
                         <Label TextColor="Black" FontSize="Subtitle" Text="Base de Datos:" />
                         <Entry TextColor="Black" FontSize="Subtitle" Text="{Binding Configuration.NombreDB}" />
@@ -41,7 +41,7 @@
                                 <Button Grid.Column="1" x:Name="BtnCancelar" Clicked="Cancelar" BackgroundColor="WhiteSmoke"  Text="Salir sin hacer nada" />
                             </Grid>
 
-                            <Button HeightRequest="70" Text="Importar cadena de conexión" Clicked="Importar_Touched" BackgroundColor="WhiteSmoke" />
+                            <Button x:Name="BtnImportConnection" HeightRequest="70" Text="Importar cadena de conexión" Clicked="Importar_Touched" BackgroundColor="WhiteSmoke" />
                         </StackLayout>
                     </StackLayout>
                 </ScrollView>
