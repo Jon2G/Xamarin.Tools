@@ -1605,6 +1605,8 @@ WHERE
                     if (condition.Value is null)
                     {
                         condition.SetValue(DBNull.Value);
+                        parameters[i] = new SqlParameter(condition.ColumnName, DBNull.Value);
+                        continue;
                     }
                     parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
                 }

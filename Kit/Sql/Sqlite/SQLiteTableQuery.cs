@@ -13,7 +13,7 @@ namespace Kit.Sql.Sqlite
         {
         }
 
-        protected SQLiteTableQuery(SqlBase conn, Kit.Sql.Base.TableMapping table) : base(conn, table)
+        public SQLiteTableQuery(SqlBase conn, Kit.Sql.Base.TableMapping table) : base(conn, table)
         {
         }
 
