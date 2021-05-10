@@ -1801,6 +1801,12 @@ WHERE
             return cmd.ExecuteDeferredQuery<T>();
         }
 
+        public override IEnumerable<T> DeferredQuery<T>(string query, params object[] args)
+        {
+            var parameters = args?.Select(x => (SqlParameter)x);
+            return DeferredQuery<T>(query, parameters?.ToArray());
+        }
+
         /// <summary>
         /// WARNING: Changes made through this method will not be tracked on history.
         /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -14,6 +15,17 @@ namespace Kit.Forms.Controls
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ArrowButton : ContentView
     {
+        public Color BackgroundColor
+        {
+            get => (Color)GetValue(BackgroundColorProperty);
+            set
+            {
+                SetValue(TouchEffect.NormalBackgroundColorProperty, value);
+                SetValue(BackgroundColorProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
         public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
             propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Accent);
 

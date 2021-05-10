@@ -10,9 +10,12 @@ namespace Kit.Sql.Base
     public abstract class SqlBase : IDisposable
     {
         public Exception LastException { get; protected set; }
+
         public event EventHandler OnConnectionStringChanged;
+
         public const int Error = -2;
         private string _ConnectionString;
+
         public string ConnectionString
         {
             get => _ConnectionString;
@@ -30,7 +33,9 @@ namespace Kit.Sql.Base
         /// Whether <see cref="SQLiteConnection"/> has been disposed and the database is closed.
         /// </summary>
         public abstract bool IsClosed { get; }
+
         public abstract string MappingSuffix { get; }
+
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -52,6 +57,7 @@ namespace Kit.Sql.Base
         {
             return Insert(obj, "OR REPLACE", objType);
         }
+
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -67,6 +73,7 @@ namespace Kit.Sql.Base
         /// The number of rows modified.
         /// </returns>
         public abstract int InsertOrReplace(object obj, bool shouldnotify = true);
+
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -102,6 +109,7 @@ namespace Kit.Sql.Base
         /// </returns>
 
         public abstract int Insert(object obj, string extra);
+
         /// <summary>
         /// Inserts the given object (and updates its
         /// auto incremented primary key if it has one).
@@ -131,15 +139,18 @@ namespace Kit.Sql.Base
         /// The number of rows deleted.
         /// </returns>
         public abstract int Delete(object objectToDelete);
+
         protected SqlBase()
         {
-
         }
+
         public SqlBase(string ConnectionString)
         {
             this.ConnectionString = ConnectionString;
         }
+
         protected readonly static Dictionary<string, TableMapping> _mappings = new Dictionary<string, TableMapping>();
+
         /// <summary>
         /// Returns the mappings from types to tables that the connection
         /// currently understands.
@@ -156,6 +167,7 @@ namespace Kit.Sql.Base
         }
 
         protected abstract TableMapping _GetMapping(Type type, CreateFlags createFlags = CreateFlags.None);
+
         /// <summary>
         /// Retrieves the mapping that is automatically generated for the given type.
         /// </summary>
@@ -199,7 +211,6 @@ namespace Kit.Sql.Base
 
         //public string GetTableMappingKey(Type type)
         //{
-
         //    return type.FullName + MappingSuffix;
         //}
         public string GetTableMappingKey(string TableName)
@@ -222,12 +233,38 @@ namespace Kit.Sql.Base
         {
             return GetMapping(typeof(T), createFlags);
         }
+
         public abstract TableQuery<T> Table<T>() where T : new();
+
         public abstract BaseTableQuery Table(Type Type);
 
         public abstract SqlBase RenewConnection();
+
+        /// <summary>
+        /// /// WARNING: Changes made through this method will not be tracked on history.
+        /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'
+        /// in the command text for each of the arguments and then executes that command.
+        /// It returns each row of the result using the mapping automatically generated for
+        /// the given type.
+        /// </summary>
+        /// <param name="query">
+        /// The fully escaped SQL.
+        /// </param>
+        /// <param name="args">
+        /// Arguments to substitute for the occurences of '?' in the query.
+        /// </param>
+        /// <returns>
+        /// An enumerable with one result for each row returned by the query.
+        /// The enumerator (retrieved by calling GetEnumerator() on the result of this method)
+        /// will call sqlite3_step on each call to MoveNext, so the database
+        /// connection must remain open for the lifetime of the enumerator.
+        /// </returns>
+        public abstract IEnumerable<T> DeferredQuery<T>(string query, params object[] args) where T : new();
+
         public abstract CommandBase CreateCommand(string cmdText, params object[] ps);
+
         public abstract T Find<T>(object pk) where T : new();
+
         /// <summary>
         /// Executes a "create table if not exists" on the database. It also
         /// creates any specified indexes on the columns of the table. It uses
@@ -248,6 +285,7 @@ namespace Kit.Sql.Base
         {
             return CreateTable(GetMapping(ty, createFlags), createFlags);
         }
+
         /// <summary>
         /// Deterima si existe una tabla con el nombre proporcionado
         /// </summary>
@@ -259,22 +297,27 @@ namespace Kit.Sql.Base
         {
             return TableExists(typeof(T));
         }
+
         public bool TableExists(Type type)
         {
             return TableExists(GetMapping(type).TableName);
         }
+
         /// <summary>
         /// Ejecuta una consulta sin parametros ni argumentos en la conexión actual
         /// </summary>
         /// <param name="sql"></param>
         public abstract int EXEC(string sql);
+
         /// <summary>
         /// Regresa el primer elemento leido en la primer columna y le realiza un casting a T
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
         public abstract T Single<T>(string sql) where T : IConvertible;
+
         public abstract object Single(string sql);
+
         /// <summary>
         /// Retorna un objeto IReader resultado de la consulta proporcionada
         /// </summary>
@@ -299,7 +342,7 @@ namespace Kit.Sql.Base
         /// The number of rows updated.
         /// </returns>
         public abstract int Update(object obj, Type objType, bool shouldnotify = true);
-        public abstract void Dispose();
 
+        public abstract void Dispose();
     }
 }

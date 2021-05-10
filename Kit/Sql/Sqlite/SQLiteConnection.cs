@@ -1349,7 +1349,7 @@ namespace Kit.Sql.Sqlite
         /// will call sqlite3_step on each call to MoveNext, so the database
         /// connection must remain open for the lifetime of the enumerator.
         /// </returns>
-        public IEnumerable<T> DeferredQuery<T>(string query, params object[] args) where T : new()
+        public override IEnumerable<T> DeferredQuery<T>(string query, params object[] args)
         {
             var cmd = CreateCommand(query, args);
             return cmd.ExecuteDeferredQuery<T>();
