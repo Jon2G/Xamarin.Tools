@@ -134,6 +134,8 @@ namespace Kit.Sql.Helpers
                         return Guid.Parse(obj.ToString());
                     case "String":
                         return Convert.ToString(obj);
+                    case "Int32":
+                        return Convert.ToInt32(obj);
                     case "Int64":
                         return Convert.ToInt64(obj);
                     default:

@@ -16,6 +16,7 @@ namespace Kit.Forms.Services
         private Action<string> ReciveCode;
 
         private bool _IsEnabled;
+
         public bool IsEnabled
         {
             get => _IsEnabled;
@@ -37,6 +38,7 @@ namespace Kit.Forms.Services
                 }
             }
         }
+
         public bool IsDisabled => !IsEnabled;
 
         private void UnSuscribe()
@@ -70,12 +72,14 @@ namespace Kit.Forms.Services
             CountDown = new MyTimer(TimeSpan.FromMilliseconds(WaitMillis), Confirm);
             return this;
         }
+
         private void Confirm()
         {
             this.CountDown.Stop();
             ReciveCode?.Invoke(RecievedText?.ToString()?.Trim());
             this.RecievedText = new StringBuilder();
         }
+
         public void OnKeyUp(object sender, char character)
         {
             if (!IsEnabled)
@@ -90,18 +94,16 @@ namespace Kit.Forms.Services
             }
             RecievedText.Append(character);
             CountDown.Restart();
-
         }
 
         private void ReleaseUnmanagedResources()
         {
-
         }
 
         public void Dispose()
         {
             UnSuscribe();
-            CountDown.Stop();
+            CountDown?.Stop();
             CountDown = null;
             ReciveCode = null;
         }

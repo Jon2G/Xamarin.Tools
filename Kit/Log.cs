@@ -10,7 +10,9 @@ using Serilog.Core;
 namespace Kit
 {
     public class Log
-    {   private static DirectoryInfo LogDirectory => new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
+    {
+        private static DirectoryInfo LogDirectory => new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
+
         public static ILogger Logger
         {
             get
@@ -22,34 +24,38 @@ namespace Kit
                 return Current._Logger;
             }
         }
-        private ILogger _Logger;
 
+        private ILogger _Logger;
 
         public string CriticalLoggerPath
         {
             get;
             private set;
         }
+
         public string LoggerPath
         {
             get;
             private set;
         }
+
         public bool AlertAfterCritical
         {
             get;
             private set;
         }
+
         private EventHandler OnAlertCritical;
+
         public event EventHandler OnConecctionLost;
 
-
         private static Log _Current;
+
         public static Log Current
         {
             get
             {
-              return _Current ??= (new Log()
+                return _Current ??= (new Log()
                 {
                     LoggerPath = Path.Combine(LogDirectory.FullName, "log.log"),
                     CriticalLoggerPath = Path.Combine(LogDirectory.FullName, "critcal_log.log")
@@ -58,7 +64,9 @@ namespace Kit
             private set => _Current = value;
         }
 
-        public Log() { }
+        public Log()
+        {
+        }
 
         public static Log Init(DirectoryInfo LogDirectory = null)
         {
@@ -88,6 +96,7 @@ namespace Kit
         }
 
         #region Errores
+
         public static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs unobservedTaskExceptionEventArgs)
         {
             Exception newExc = new Exception("TaskSchedulerOnUnobservedTaskException", unobservedTaskExceptionEventArgs.Exception);
@@ -113,7 +122,9 @@ namespace Kit
                 // just suppress any error logging exceptions
             }
         }
-        #endregion
+
+        #endregion Errores
+
         private static void AlertCriticalUnhandled()
         {
             try
@@ -133,8 +144,10 @@ namespace Kit
                         }
                     }
                 }
-            }catch(Exception ex) { Log.Logger.Error(ex, "AlertCriticalUnhandled"); }
+            }
+            catch (Exception ex) { Log.Logger.Error(ex, "AlertCriticalUnhandled"); }
         }
+
         public static bool AlertOnDBConnectionError(Exception ex)
         {
             if (IsDBConnectionError(ex))
@@ -145,6 +158,7 @@ namespace Kit
             }
             return false;
         }
+
         /// <summary>
         /// Retorna la excepcion base de donde se origino el error
         /// </summary>
@@ -159,6 +173,7 @@ namespace Kit
             }
             return Exbase;
         }
+
         public static bool IsDBConnectionError(Exception ex)
         {
             Exception Exbase = MainExcepcion(ex);
@@ -196,8 +211,6 @@ namespace Kit
                 Log.Logger.Warning($"-->[WARNING!!!] FAKE ERROR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
             }
             return desconexion;
-
-
         }
     }
 }

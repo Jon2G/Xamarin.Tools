@@ -1605,6 +1605,8 @@ WHERE
                     if (condition.Value is null)
                     {
                         condition.SetValue(DBNull.Value);
+                        parameters[i] = new SqlParameter(condition.ColumnName, DBNull.Value);
+                        continue;
                     }
                     parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
                 }
@@ -1797,6 +1799,12 @@ WHERE
         {
             var cmd = CreateCommand(query, args);
             return cmd.ExecuteDeferredQuery<T>();
+        }
+
+        public override IEnumerable<T> DeferredQuery<T>(string query, params object[] args)
+        {
+            var parameters = args?.Select(x => (SqlParameter)x);
+            return DeferredQuery<T>(query, parameters?.ToArray());
         }
 
         /// <summary>

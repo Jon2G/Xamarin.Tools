@@ -6,23 +6,28 @@ using System.Threading.Tasks;
 
 namespace Kit.Model
 {
-
     public abstract class ModelBase : INotifyPropertyChanged, IDisposable
     {
         #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         //[Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
-        void OnPropertyChanged(PropertyChangedEventArgs args)
+
+        private void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged
+
         #region PerfomanceHelpers
+
         protected async void Raise<T>(Expression<Func<T>> propertyExpression)
         {
             await Task.Yield();
@@ -32,11 +37,13 @@ namespace Kit.Model
                 if (body == null)
                     throw new ArgumentException("'propertyExpression' should be a member expression");
 
-                ConstantExpression expression = body.Expression as ConstantExpression;
-                if (expression == null)
-                    throw new ArgumentException("'propertyExpression' body should be a constant expression");
+                //ConstantExpression expression = body.Expression as ConstantExpression;
+                //if (expression == null)
+                //{
+                //    throw new ArgumentException("'propertyExpression' body should be a constant expression");
+                //}
 
-                object target = Expression.Lambda(expression).Compile().DynamicInvoke();
+                object target = Expression.Lambda(body.Expression).Compile().DynamicInvoke();
 
                 PropertyChangedEventArgs e = new PropertyChangedEventArgs(body.Member.Name);
                 try
@@ -48,7 +55,6 @@ namespace Kit.Model
                 {
                     Log.Logger.Error(ex, "On RAISE");
                 }
-
             }
         }
 
@@ -59,14 +65,13 @@ namespace Kit.Model
                 Raise<T>(propertyExpression);
             }
         }
+
         protected virtual void OnPropertyRaised(object target, string PropertyName)
         {
-
         }
 
+        #endregion PerfomanceHelpers
 
-
-        #endregion
         public virtual void Dispose()
         {
         }

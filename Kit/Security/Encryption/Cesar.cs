@@ -32,7 +32,7 @@ namespace Kit.Security.Encryption
             NewNumero = Key / 256 * 4;
             for (n = 0; n < nLargo; n++)
             {
-                cCaracter = (char)(Value.Substring(n, 1)[0] - NewNumero);
+                cCaracter = (char)(Value.Substring(n, 1)[0] + NewNumero);
                 NewCadena += cCaracter;
             }
             return ToBytes(NewCadena);
@@ -55,7 +55,7 @@ namespace Kit.Security.Encryption
             NewNumero = Key / 256 * 4;
             for (n = 0; n < nLargo; n++)
             {
-                cCaracter = (char)(Value.Substring(n, 1)[0] +NewNumero);
+                cCaracter = (char)(Value.Substring(n, 1)[0] -NewNumero);
                 NewCadena += cCaracter;
             }
 

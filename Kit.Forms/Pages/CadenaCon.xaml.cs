@@ -114,6 +114,7 @@ namespace Kit.Forms.Pages
 
         public async void FocusOnImport()
         {
+            await Task.Delay(500);
             await ScrollView.ScrollToAsync(BtnImportConnection, ScrollToPosition.End, true);
             GlowAnimation(BtnImportConnection, this.CancellationTokenSource.Token);
         }
@@ -124,17 +125,17 @@ namespace Kit.Forms.Pages
             {
                 await Task.Delay(200);
                 await element.FadeTo(.7, 100);
-                await element.ScaleTo(0.7);
+                await element.ScaleTo(1);
                 await Task.Delay(200);
                 await element.FadeTo(1, 250);
-                await element.ScaleTo(1.2);
+                await element.ScaleTo(1.1);
             }
         }
 
         public async Task ShowAndExecute(Command<CadenaCon> Command)
         {
-            await Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync(this);
             this.OnAppearingCommand = Command;
+            await Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync(this);
         }
 
         protected override void OnAppearing()
