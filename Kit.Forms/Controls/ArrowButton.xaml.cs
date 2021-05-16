@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FFImageLoading;
+using Kit.Extensions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -14,6 +16,71 @@ namespace Kit.Forms.Controls
     [XamlCompilation(XamlCompilationOptions.Compile), Preserve()]
     public partial class ArrowButton : ContentView
     {
+        public static readonly BindableProperty ColorBackgroundProperty = BindableProperty.Create(
+            propertyName: nameof(ColorBackground),
+            returnType: typeof(Color),
+            declaringType: typeof(ArrowButton),
+            defaultValue: Color.WhiteSmoke,
+            propertyChanged: BackgroundColorPropertyChanged);
+
+        private static void BackgroundColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is ArrowButton arrow)
+            {
+                arrow.ColorBackground = (Color)newValue;
+            }
+        }
+
+        public new Color BackgroundColor
+        {
+            get => ColorBackground;
+            set => ColorBackground = value;
+        }
+        public Color ColorBackground
+        {
+            get => (Color)GetValue(ColorBackgroundProperty);
+            set
+            {
+                SetValue(BackgroundColorProperty, Color.Transparent);
+                SetValue(ColorBackgroundProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
+            propertyName: nameof(TextColor),
+            returnType: typeof(Color),
+            declaringType: typeof(ArrowButton),
+            defaultValue: Color.Black,
+            propertyChanged: TextColorChanged);
+
+        private static void TextColorChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is ArrowButton arrow)
+            {
+                arrow.TitleColor = (Color)newValue;
+                arrow.SubTitleColor = (Color)newValue;
+                arrow.TextColor = (Color)newValue;
+            }
+        }
+
+        public Color TextColor
+        {
+            get => (Color)GetValue(TextColorProperty);
+            set
+            {
+                SetValue(TextColorProperty, value);
+                SubTitleColor = value;
+                SetValue(SubTitleColorProperty, value);
+                TitleColor = value;
+                SetValue(TitleColorProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+
+
+
         public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
             propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Accent);
 
