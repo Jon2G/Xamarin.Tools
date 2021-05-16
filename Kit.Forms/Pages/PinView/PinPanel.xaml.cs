@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Plugin.Fingerprint;
-using Plugin.Fingerprint.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -309,15 +307,15 @@ namespace Kit.Forms.Pages.PinView
             Pin = string.Empty;
         }
         #endregion
-        public async Task<bool> IsFingerPrintAvaible(bool allowAlternativeAuthentication = true)
-        {
-            return await CrossFingerprint.Current.IsAvailableAsync(allowAlternativeAuthentication);
-        }
-        public async Task<bool> RequestFingerPrint(string title, string reason)
-        {
-            AuthenticationRequestConfiguration request = new AuthenticationRequestConfiguration(title, reason);
-            FingerprintAuthenticationResult result = await CrossFingerprint.Current.AuthenticateAsync(request);
-            return result.Authenticated;
-        }
+        //public async Task<bool> IsFingerPrintAvaible(bool allowAlternativeAuthentication = true)
+        //{
+        //    return await CrossFingerprint.Current.IsAvailableAsync(allowAlternativeAuthentication);
+        //}
+        //public async Task<bool> RequestFingerPrint(string title, string reason)
+        //{
+        //    AuthenticationRequestConfiguration request = new AuthenticationRequestConfiguration(title, reason);
+        //    FingerprintAuthenticationResult result = await CrossFingerprint.Current.AuthenticateAsync(request);
+        //    return result.Authenticated;
+        //}
     }
 }

@@ -83,24 +83,24 @@ namespace Kit.Forms.Pages
         private Command<CadenaCon> OnAppearingCommand;
         private readonly CancellationTokenSource CancellationTokenSource;
 
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection) : this(DeviceInfo, DBConection, null, null)
+        public CadenaCon(SQLiteConnection DBConection) : this(DBConection, null, null)
         {
         }
 
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Exception exception) : this(DeviceInfo, DBConection, null, exception)
+        public CadenaCon(SQLiteConnection DBConection, Exception exception) : this( DBConection, null, exception)
         {
         }
 
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion) : this(DeviceInfo, DBConection, Configuracion, null)
+        public CadenaCon( SQLiteConnection DBConection, Configuracion Configuracion) : this( DBConection, Configuracion, null)
         {
         }
 
-        public CadenaCon(IDeviceInfo DeviceInfo, SQLiteConnection DBConection, Configuracion Configuracion, Exception exception)
+        public CadenaCon(SQLiteConnection DBConection, Configuracion Configuracion, Exception exception)
         {
             try
             {
                 this.CancellationTokenSource = new CancellationTokenSource();
-                var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection, DeviceInfo.DeviceId);
+                var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection,Daemon.Devices.Device.Current.DeviceId);
                 this.Model = new SetUpConnectionStringViewModelBase(DBConection, new SQLServerConnection(config.CadenaCon), config);
                 this.BindingContext = this.Model;
                 InitializeComponent();

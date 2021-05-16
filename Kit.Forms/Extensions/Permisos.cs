@@ -67,12 +67,11 @@ namespace Kit.Forms.Extensions
             return await Permiso.CheckStatusAsync();
         }
 
-        public static async Task<Tuple<PermissionStatus, PermissionStatus>> RequestStorage()
+        public static async Task<bool> RequestStorage()
         {
-            return
-                new Tuple<PermissionStatus, PermissionStatus>(
-                    await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageRead>(),
-                    await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageWrite>());
+          return  await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageRead>() == PermissionStatus.Granted &&
+                await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageWrite>() ==
+                PermissionStatus.Granted;
         }
     }
 }

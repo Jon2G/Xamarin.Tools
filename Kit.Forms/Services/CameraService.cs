@@ -1,65 +1,53 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Kit.Forms.Services.Interfaces;
+using Xamarin.Essentials;
 
 namespace Kit.Forms.Services
 {
-    public class CameraService
+    public static class CameraService
     {
-        /// <summary>
-        /// Lazy-initialized file picker implementation
-        /// </summary>
-        private static Lazy<ICameraService> implementation =
-            new Lazy<ICameraService>(CreateDataShare, System.Threading.LazyThreadSafetyMode.PublicationOnly);
-
-        /// <summary>
-        /// Current file picker plugin implementation to use
-        /// </summary>
-        public static ICameraService Current
+        public static async Task<FileInfo> TakePhotoAsync()
         {
-            get
+            try
             {
-                ICameraService ret = implementation.Value;
-                if (ret == null)
-                {
-                    throw NotImplementedInReferenceAssembly();
-                }
-
-                return ret;
+                var photo = await MediaPicker.CapturePhotoAsync();
+                var file = await LoadPhotoAsync(photo);
+                Console.WriteLine($"CapturePhotoAsync COMPLETED: {file}");
+                return file;
             }
+            catch (FeatureNotSupportedException fnsEx)
+            {
+                // Feature is now supported on the device
+            }
+            catch (PermissionException pEx)
+            {
+                // Permissions not granted
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"CapturePhotoAsync THREW: {ex.Message}");
+            }
+
+            return null;
         }
 
-        /// <summary>
-        /// Creates file picker instance for the platform
-        /// </summary>
-        /// <returns>file picker instance</returns>
-        private static ICameraService CreateDataShare()
+        public static async Task<FileInfo> LoadPhotoAsync(this FileResult photo)
         {
-#if NETSTANDARD1_0 || NETSTANDARD2_1||NETCOREAPP|| NETSTANDARD
-            return null;
-#else
-#if MONOANDROID
-            return new Kit.Services.Interfaces.ICameraService();
-#endif
-#if __IOS__
-            return new Kit.Services.Interfaces.ICameraService();
-#endif
-#if WINDOWS_UWP
-            return new Kit.Services.Interfaces.ICameraService();
-#endif
-#if NET47
-            return null;
-#endif
-#endif
+            // canceled
+            if (photo == null)
+            {
+                await Task.Yield();
+                return null;
+            }
+            // save the file into local storage
+            var newFile = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+            using (var stream = await photo.OpenReadAsync())
+            using (var newStream = File.OpenWrite(newFile))
+                await stream.CopyToAsync(newStream);
+
+            return new FileInfo(newFile);
         }
-
-        /// <summary>
-        /// Returns new exception to throw when implementation is not found. This is the case when
-        /// the NuGet package is not added to the platform specific project.
-        /// </summary>
-        /// <returns>exception to throw</returns>
-        internal static Exception NotImplementedInReferenceAssembly() =>
-            new NotImplementedException(
-                "This functionality is not implemented in the portable version of this assembly. You should reference the NuGet package from your main application project in order to reference the platform-specific implementation.");
-
     }
 }

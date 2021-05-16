@@ -35,6 +35,7 @@ namespace Kit.UWP.Services
                 Xamarin.Forms.Forms.Init(e, IncludedAssemblies);
                 Tools.Init();
                 Forms9Patch.UWP.Settings.Initialize(this);
+                Rg.Plugins.Popup.Popup.Init();
                 Init();
                 //Sqlh.Init(Path.Combine(Kit.Tools.Instance.LibraryPath, "db"), Kit.Tools.Debugging);
             }

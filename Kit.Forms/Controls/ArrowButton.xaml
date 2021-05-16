@@ -6,28 +6,34 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:converters="clr-namespace:Kit.Forms.Converters;assembly=Kit.Forms"
              x:Class="Kit.Forms.Controls.ArrowButton" x:Name="arrow"
-             x:DataType="controls:ArrowButton" 
-             BackgroundColor="WhiteSmoke"
-             HorizontalOptions="FillAndExpand" 
-             xct:TouchEffect.NormalBackgroundColor="WhiteSmoke"
-             xct:TouchEffect.PressedBackgroundColor="LightGray"
-             xct:TouchEffect.NativeAnimationColor="LightGray"
-             xct:TouchEffect.PressedScale="0.99"
-             xct:TouchEffect.Command="{Binding Command}"
-             xct:TouchEffect.NativeAnimation="True">
+             x:DataType="controls:ArrowButton" BackgroundColor="Transparent"
+             HorizontalOptions="FillAndExpand" >
+    <ContentView.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS">5</On>
+            <On Platform="Android">3</On>
+        </OnPlatform>
+    </ContentView.Padding>
     <ContentView.Resources>
         <converters:StringNullOrEmptyBoolConverter x:Key="StringNullOrEmptyBoolConverter" IsReversed="True"/>
     </ContentView.Resources>
-    <ContentView.GestureRecognizers>
+    <!--<ContentView.GestureRecognizers>
         <TapGestureRecognizer 
             Command="{Binding Command}"
                               CommandParameter="{Binding CommandParameter}"
                               Tapped="TapGestureRecognizer_OnTapped"/>
-    </ContentView.GestureRecognizers>
+    </ContentView.GestureRecognizers>-->
     <ContentView.Content>
         <StackLayout>
-            <Frame BindingContext="{x:Reference arrow}" Padding="5" BorderColor="LightGray" BackgroundColor="Transparent">
-                <Grid ColumnDefinitions="Auto,*,Auto">
+            <Frame BindingContext="{x:Reference arrow}" Padding="5"
+                   BackgroundColor="{Binding ColorBackground}"
+                   xct:TouchEffect.NormalBackgroundColor="{Binding ColorBackground}"
+                   xct:TouchEffect.PressedBackgroundColor="LightGray"
+                   xct:TouchEffect.NativeAnimationColor="LightGray"
+                   xct:TouchEffect.PressedScale="0.99"
+                   xct:TouchEffect.Command="{Binding TouchedCommand}"
+                   xct:TouchEffect.NativeAnimation="True">
+                <Grid ColumnDefinitions="Auto,*,Auto" Margin="0">
 
                     <Image HeightRequest="{Binding IconHeightRequest}" Margin="5,0,0,0" Grid.Column="0" VerticalOptions="CenterAndExpand" 
                            Source="{Binding Icon}"/>
@@ -39,7 +45,8 @@
                                IsVisible="{Binding Title,
                                            Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>
 
-                        <Label Grid.Row="1" Text="{Binding SubTitle}" TextColor="{Binding SubTitleColor}" 
+                        <Label Grid.Row="1" Text="{Binding SubTitle}" 
+                               TextColor="{Binding SubTitleColor}" 
                                FontSize="{Binding SubTitleFontSize}"
                                IsVisible="{Binding SubTitle,
                                            Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>

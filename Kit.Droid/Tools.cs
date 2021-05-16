@@ -8,7 +8,6 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Plugin.CurrentActivity;
-using Plugin.Fingerprint;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Application = Android.App.Application;
@@ -26,7 +25,6 @@ namespace Kit.Droid
         {
             Xamarin.Essentials.Platform.Init(activity, bundle);
             Xamarin.Forms.Forms.Init(activity, bundle);
-            FormsMaterial.Init(activity, bundle);
 
             Acr.UserDialogs.UserDialogs.Init(activity);
             CrossCurrentActivity.Current.Init(activity, bundle);
@@ -39,7 +37,6 @@ namespace Kit.Droid
             CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
-            CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
             return Instance;
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)

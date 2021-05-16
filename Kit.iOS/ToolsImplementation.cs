@@ -13,7 +13,6 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Kit.Services.Interfaces;
 using Serilog;
-using DeviceInfo = Kit.iOS.Services.DeviceInfo;
 using Kit.Enums;
 using Kit.Forms.Controls.CrossImage;
 
@@ -24,7 +23,7 @@ namespace Kit.iOS
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
         public override void Init()
         {
-            Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(), new ScreenManagerService(), new ImageExtensions(), new BarCodeBuilder());
+            Init(new CustomMessageBoxService(), new SynchronizeInvoke(), new ScreenManagerService(), new ImageExtensions(), new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()

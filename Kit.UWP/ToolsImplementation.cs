@@ -11,7 +11,7 @@ namespace Kit.UWP
     {
         public override void Init()
         {
-            base.Init(new DeviceInfo(), new CustomMessageBoxService(), new SynchronizeInvoke(),
+            base.Init(new CustomMessageBoxService(), new SynchronizeInvoke(),
                 new ScreenManagerService(), new ImageExtensions(), null);
          
         }

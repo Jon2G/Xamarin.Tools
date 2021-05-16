@@ -26,7 +26,6 @@ namespace Kit.iOS.Services
         {
             global::Xamarin.Forms.Forms.SetFlags("Shapes_Experimental", "DragAndDrop_Experimental");
             global::Xamarin.Forms.Forms.Init();
-            global::Xamarin.Forms.FormsMaterial.Init();
             Rg.Plugins.Popup.Popup.Init();
             Forms9Patch.iOS.Settings.Initialize(this);
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();

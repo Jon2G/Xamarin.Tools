@@ -1,49 +1,44 @@
-﻿using AdSupport;
-using Kit.Sql;
-using Plugin.DeviceInfo;
-using Plugin.DeviceInfo.Abstractions;
+﻿using Plugin.DeviceInfo.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
-using UIKit;
-using Xamarin.Forms.PlatformConfiguration;
-using IDeviceInfo = Kit.Services.Interfaces.IDeviceInfo;
+using DeviceId;
 
-namespace Kit.iOS.Services
+namespace Kit.Services.Interfaces
 {
-    public class DeviceInfo : IDeviceInfo
+    public class DeviceInfo
     {
+
         public string MacAdress
         {
             get
             {
-                try
-                {
-                    NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()
-                        .OrderBy(intf => intf.NetworkInterfaceType)
-                        .FirstOrDefault(intf => intf.OperationalStatus == OperationalStatus.Up
-                        && (intf.NetworkInterfaceType == NetworkInterfaceType.Wireless80211
-                        || intf.NetworkInterfaceType == NetworkInterfaceType.Ethernet));
-                    PhysicalAddress hw = ni.GetPhysicalAddress();
-                    return string.Join(":", (from ma in hw.GetAddressBytes() select ma.ToString("X2")).ToArray());
-                }
-                catch (Exception ex)
-                {
-                    Log.Logger.Error(ex, "Trying to get the MacAdress");
-                    return "Unavaible";
-                }
+                DeviceIdBuilder builder = new DeviceIdBuilder();
+                builder.AddMacAddress();
+                return builder.ToString();
             }
         }
+
+
         /// <summary>
-        /// Returns the IdentifierForVendor wich is unique for each device
+        /// Returns the build serial wich is unique foreach device
         /// </summary>
         public string DeviceId
         {
             get
             {
-                return GenerateAppId(true); //UIDevice.CurrentDevice.IdentifierForVendor.AsString();
+                string id = null;
+                //try
+                //{
+                //    id = HardUniqueId();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
+                //}
+                DeviceIdBuilder builder = new DeviceIdBuilder();
+                builder.AddProcessorId();
+                return string.Concat(id ?? string.Empty, builder.ToString());
             }
         }
 

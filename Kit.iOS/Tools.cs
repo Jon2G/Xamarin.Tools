@@ -13,6 +13,7 @@ using UserNotifications;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using FFImageLoading.Forms.Platform;
+using Xamarin.CommunityToolkit.Effects;
 
 namespace Kit.iOS
 {
@@ -22,7 +23,6 @@ namespace Kit.iOS
         {
             //////////////////////////////////////////
             Xamarin.Forms.Forms.Init();
-            FormsMaterial.Init();
 
             Rg.Plugins.Popup.Popup.Init();
             CachedImageRenderer.Init();
@@ -30,8 +30,6 @@ namespace Kit.iOS
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
             Set(new ToolsImplementation());
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
-            TouchEffect.iOS.TouchEffectPreserver.Preserve();
-            TouchEffect.iOS.PlatformTouchEff.Preserve();
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
             {

@@ -34,7 +34,7 @@ namespace Kit
 
 
         public abstract void Init();
-        protected AbstractTools Init(IDeviceInfo DeviceInfo,
+        protected AbstractTools Init(
                 ICustomMessageBox CustomMessageBox, ISynchronizeInvoke SynchronizeInvoke,IScreenManager ScreenManager,
                 Kit.Controls.CrossImage.CrossImageExtensions ImageExtensions,IBarCodeBuilder BarCodeBuilder) 
         {
@@ -43,7 +43,7 @@ namespace Kit
             this.ScreenManager = ScreenManager;
             this.ImageExtensions = ImageExtensions;
             this.BarCodeBuilder = BarCodeBuilder;
-            Device.Init(DeviceInfo);
+            Device.Init();
             return this;
         }
 

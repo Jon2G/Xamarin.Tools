@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
@@ -12,20 +7,17 @@ using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Android.Widget;
 using FFImageLoading.Forms.Platform;
 using Kit.Forms.Services;
 using Plugin.CurrentActivity;
-using Plugin.Permissions;
-using Kit.Sql;
 using Xamarin.Forms;
 using Java.Lang;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
-[assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
-[assembly: UsesPermission("android.permission.READ_PHONE_STATE")]
-[assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
-[assembly: UsesPermission("android.permission.BLUETOOTH")]
+//[assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
+//[assembly: UsesPermission("android.permission.READ_PHONE_STATE")]
+//[assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
+//[assembly: UsesPermission("android.permission.BLUETOOTH")]
 
 namespace Kit.Droid.Services
 {
@@ -100,7 +92,6 @@ namespace Kit.Droid.Services
             global::Xamarin.Forms.Forms.SetFlags("Shapes_Experimental", "DragAndDrop_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
             CachedImageRenderer.InitImageViewHandler();
             CachedImageRenderer.Init(false);
             UserDialogs.Init(this);
@@ -120,7 +111,6 @@ namespace Kit.Droid.Services
         //}
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
-            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }

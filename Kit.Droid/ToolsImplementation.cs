@@ -15,7 +15,7 @@ using Serilog;
 using Android.Telephony;
 using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
-using DeviceInfo = Kit.Droid.Services.DeviceInfo;
+
 
 namespace Kit.Droid
 {
@@ -32,7 +32,7 @@ namespace Kit.Droid
         }
         public override void Init()
         {
-            Init(new DeviceInfo(), new CustomMessageBoxService(),
+            Init(new CustomMessageBoxService(),
                 new SynchronizeInvoke(),new ScreenManagerService(),
                 new ImageExtensions(),new BarCodeBuilder());
 

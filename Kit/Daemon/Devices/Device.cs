@@ -16,20 +16,20 @@ namespace Kit.Daemon.Devices
     public class Device
     {
         public static Device Current { get; set; }
-        public IDeviceInfo IDeviceInfo { get; private set; }
+        public DeviceInfo IDeviceInfo { get; private set; }
 
         public string DeviceId { get; set; }
         public DeviceRegisterStatus RegisterStatus;
 
-        public Device(IDeviceInfo IDeviceInfo)
+        public Device()
         {
-            this.IDeviceInfo = IDeviceInfo;
+            this.IDeviceInfo = new DeviceInfo();
             this.DeviceId = IDeviceInfo.DeviceId;
             this.RegisterStatus = DeviceRegisterStatus.Unkown;
         }
-        internal static void Init(IDeviceInfo IDeviceInfo)
+        internal static void Init()
         {
-            Current = new Device(IDeviceInfo);
+            Current = new Device();
         }
 
         private void EnsureTableExists(SQLServerConnection SQLH)

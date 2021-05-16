@@ -5,18 +5,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using Kit.Enums;
-using Kit.Services.Interfaces;
+using Kit.Forms.Fonts;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform;
-
+using Xamarin.Forms.Xaml;
 
 
 namespace Kit.Forms.Pages
 {
-    public class BasePage : ContentPage, INotifyPropertyChanged,IDisposable
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class BasePage : ContentPage, INotifyPropertyChanged, IDisposable
     {
+  
         #region IDisposable
         public virtual void Dispose()
         {
@@ -41,7 +44,7 @@ namespace Kit.Forms.Pages
                     disposable?.Dispose();
                 }
             }
-            if (BindingContext!=this&& BindingContext is IDisposable disposableBindingContext)
+            if (BindingContext != this && BindingContext is IDisposable disposableBindingContext)
             {
                 disposableBindingContext.Dispose();
                 BindingContext = null;
@@ -109,8 +112,8 @@ namespace Kit.Forms.Pages
             LockedOrientation = DeviceOrientation.Other;
             IsModalLocked = false;
             InitOrientationPage();
-            //IdentidadVisual.Inicializar(this);
         }
+
         public DeviceOrientation LockedOrientation { get; private set; }
         protected BasePage LockOrientation(DeviceOrientation Orientation)
         {
@@ -121,14 +124,14 @@ namespace Kit.Forms.Pages
             }
             return this;
         }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            //if (App.Current.MainPage is MainPage MP)
-            //{
-            //    MP.ActualizarSandwich(this);
-            //}
         }
+
+
+
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
