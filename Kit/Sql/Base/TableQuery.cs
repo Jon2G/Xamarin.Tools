@@ -428,7 +428,7 @@ namespace Kit.Sql.Base
                         }
                         else
                         {
-                            sqlCall = "( instr(" + obj.CommandText + "," + args[0].CommandText + ") >0 )";
+                            sqlCall = "(" + obj.CommandText + " LIKE '%'||" + args[0].CommandText + "||'%')";
                         }
                     }
                     else
