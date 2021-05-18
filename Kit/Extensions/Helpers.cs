@@ -16,6 +16,10 @@ namespace Kit.Extensions
     {
         public static byte[] GetByteArray(this Stream input)
         {
+            if (input is MemoryStream mem)
+            {
+                return mem.ToArray();
+            }
             byte[] buffer = new byte[16 * 1024];
             using (MemoryStream ms = new MemoryStream())
             {
@@ -26,6 +30,11 @@ namespace Kit.Extensions
                 }
                 return ms.ToArray();
             }
+        }
+
+        public static string ToImageString(this Stream stream)
+        {
+            return ToImageString(stream.GetByteArray());
         }
 
         public static string ToImageString(this byte[] bytes)
