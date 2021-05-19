@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using Kit.Sql.Enums;
 using Kit.Sql.Readers;
@@ -344,5 +345,8 @@ namespace Kit.Sql.Base
         public abstract int Update(object obj, Type objType, bool shouldnotify = true);
 
         public abstract void Dispose();
+
+        public abstract int Update<T>(T obj, Expression<Func<T, bool>> predicate, bool shouldnotify = true)
+            where T : new();
     }
 }

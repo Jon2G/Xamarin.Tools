@@ -31,7 +31,6 @@ namespace Kit.WPF
         public override void Init()
         {
             Init(
-                new Kit.WPF.Services.DeviceInfo(),
                 new CustomMessageBoxService(),
                 new SynchronizeInvoke(), new ScreenManagerService(),
                 new Kit.WPF.Controls.CrossImage.ImageExtensions(),

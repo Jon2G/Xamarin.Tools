@@ -265,7 +265,7 @@ namespace Kit.Sql.Base
 
         protected abstract CommandBase GenerateCommand(string selectionList);
 
-        protected class CompileResult
+        internal class CompileResult
         {
             public string CommandText { get; set; }
 
@@ -273,7 +273,7 @@ namespace Kit.Sql.Base
             public Condition CurrentCondition { get; set; }
         }
 
-        protected CompileResult CompileExpr(Expression expr, List<object> queryArgs, List<Condition> conditions)
+        internal CompileResult CompileExpr(Expression expr, List<object> queryArgs, List<Condition> conditions)
         {
             if (expr == null)
             {
@@ -699,7 +699,7 @@ namespace Kit.Sql.Base
         /// </summary>
         /// <param name="expression">The expression to compile</param>
         /// <param name="parameter">The non-null parameter</param>
-        protected string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter)
+        internal string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter)
         {
             if (expression.NodeType == ExpressionType.Equal)
             {

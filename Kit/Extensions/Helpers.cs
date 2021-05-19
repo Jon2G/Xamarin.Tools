@@ -39,7 +39,8 @@ namespace Kit.Extensions
 
         public static string ToImageString(this byte[] bytes)
         {
-            return string.Concat("data:image/png;base64,", Convert.ToBase64String(bytes, 0, bytes.Length));
+            string base64= string.Concat("data:image/png;base64,", Convert.ToBase64String(bytes, 0, bytes.Length));
+            return base64;
         }
 
         public static string EnLetra(this decimal Numero, string Leyenda, bool bolDecimales, string strMoneda = "")

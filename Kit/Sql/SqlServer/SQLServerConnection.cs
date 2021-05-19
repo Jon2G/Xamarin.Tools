@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -2772,6 +2773,90 @@ WHERE
                 //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=@{map.PK.Name}",
                 //    new SqlParameter(map.PK.Name, map.PK.GetValue(obj))));
                 OnTableChanged(map, NotifyTableChangedAction.Update);
+            }
+
+            return rowsAffected;
+        }
+        public override int Update<T>(T obj, Expression<Func<T, bool>> predExpr, bool shouldnotify = true)
+        {
+            if (obj == null)
+            {
+                return 0;
+            }
+            ////////////////////////
+
+            Expression pred = null;
+
+            if (predExpr != null && predExpr.NodeType == ExpressionType.Lambda)
+            {
+                var lambda = (LambdaExpression)predExpr;
+             
+                pred = Expression.AndAlso(lambda.Body, lambda.Body);
+            }
+
+            List<object> args = new List<object>();
+            SQLServerTableQuery<T> table = (SQLServerTableQuery<T>)this.Table(typeof(T));
+            List<BaseTableQuery.Condition> conditions = new List<BaseTableQuery.Condition>();
+
+            var w = table.CompileExpr(pred, args, conditions);
+            conditions.RemoveAll(x => x.Value is Kit.Sql.Base.TableMapping);
+            conditions.RemoveAll(x => !x.IsComplete);
+            conditions = conditions.DistinctBy(x => x.ColumnName).ToList();
+
+            object[] conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+            /// ///////////////////////77
+            ///
+            ///
+            var cols = from p in table.Table.Columns
+                       where p.Name != nameof(ISync.Guid)
+                       select p;
+            var vals = from c in cols
+                       where c.Name != nameof(ISync.Guid)
+                       select c.GetValue(obj);
+            var ps = new List<object>(vals);
+            if (ps.Count == 0)
+            {
+                // There is a PK but no accompanying data,
+                // so reset the PK to make the UPDATE work.
+                cols = table.Table.Columns;
+                vals = from c in cols
+                       select c.GetValue(obj);
+                ps = new List<object>(vals);
+            }
+            var q = string.Format("update \"{0}\" set {1} {2}",
+                table.Table.TableName, string.Join(",", (from c in cols
+                                                         select "\"" + c.Name + "\" = ? ").ToArray()), w.CommandText);
+            ///
+            int rowsAffected = 0;
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[ps.Count];
+                if (ps.Count > 0)
+                {
+                    for (int i = 0; i < ps.Count; i++)
+                    {
+                        Condition condition = (Condition)(ps[i]);
+                        if (condition.Value is null)
+                        {
+                            condition.SetValue(DBNull.Value);
+                            parameters[i] = new SqlParameter(condition.ColumnName, DBNull.Value);
+                            continue;
+                        }
+                        parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
+                    }
+                }
+                rowsAffected = Execute(q, parameters);
+            }
+            catch (SqlServerException ex)
+            {
+                throw ex;
+            }
+
+            if (shouldnotify && rowsAffected > 0)
+            {
+                //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
+                //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
+                OnTableChanged(table.Table, NotifyTableChangedAction.Update);
             }
 
             return rowsAffected;
