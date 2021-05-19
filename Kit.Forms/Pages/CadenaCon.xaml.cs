@@ -87,11 +87,11 @@ namespace Kit.Forms.Pages
         {
         }
 
-        public CadenaCon(SQLiteConnection DBConection, Exception exception) : this( DBConection, null, exception)
+        public CadenaCon(SQLiteConnection DBConection, Exception exception = null) : this(DBConection, null, exception)
         {
         }
 
-        public CadenaCon( SQLiteConnection DBConection, Configuracion Configuracion) : this( DBConection, Configuracion, null)
+        public CadenaCon(SQLiteConnection DBConection, Configuracion Configuracion) : this(DBConection, Configuracion, null)
         {
         }
 
@@ -100,7 +100,7 @@ namespace Kit.Forms.Pages
             try
             {
                 this.CancellationTokenSource = new CancellationTokenSource();
-                var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection,Daemon.Devices.Device.Current.DeviceId);
+                var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection, Daemon.Devices.Device.Current.DeviceId);
                 this.Model = new SetUpConnectionStringViewModelBase(DBConection, new SQLServerConnection(config.CadenaCon), config);
                 this.BindingContext = this.Model;
                 InitializeComponent();

@@ -13,12 +13,16 @@ namespace Kit.Forms.Pages
     public class BasePopUp : PopupPage
     {
         public ICommand ConfirmedCommand;
+
         [Obsolete("Use ConfirmedCommand")]
         public event EventHandler Confirmado;
+
         public ICommand ClosedCommad;
+
         [Obsolete("Use ClosedCommad")]
         public event EventHandler OnClosed;
-        private AutoResetEvent ShowDialogCallback;
+
+        private readonly AutoResetEvent ShowDialogCallback;
 
         public BasePopUp()
         {
@@ -28,12 +32,13 @@ namespace Kit.Forms.Pages
 
         private void BackgroundClicked()
         {
-
         }
+
         protected void InvokeConfirmado(object sender, EventArgs e)
         {
             Confirmado?.Invoke(sender, e);
         }
+
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -46,6 +51,7 @@ namespace Kit.Forms.Pages
             await Task.Run(() => this.ShowDialogCallback.WaitOne());
             return this;
         }
+
         public virtual async Task<BasePopUp> Show()
         {
             ScaleAnimation scaleAnimation = new ScaleAnimation
@@ -57,6 +63,7 @@ namespace Kit.Forms.Pages
             await PopupNavigation.Instance.PushAsync(this, true);
             return this;
         }
+
         public virtual async void Confirm(object obj = null, bool close = true)
         {
             ConfirmedCommand?.Execute(obj ?? this);
@@ -65,23 +72,29 @@ namespace Kit.Forms.Pages
                 await Close();
             }
         }
-        
+
         public virtual async Task<BasePopUp> Close()
         {
-            this.ShowDialogCallback.Set();
             Closing();
             await PopupNavigation.Instance.RemovePageAsync(this, true);
+            this.ShowDialogCallback.Set();
             OnClosed?.Invoke(this, EventArgs.Empty);
-            ClosedCommad?.Execute( this);
+            ClosedCommad?.Execute(this);
             return this;
         }
-        protected virtual void Closing() { }
+
+        protected virtual void Closing()
+        {
+        }
+
         private bool IsModalLocked { get; set; }
+
         public BasePopUp LockModal()
         {
             this.IsModalLocked = !this.IsModalLocked;
             return this;
         }
+
         protected override bool OnBackButtonPressed()
         {
             if (this.IsModalLocked)
@@ -93,6 +106,7 @@ namespace Kit.Forms.Pages
                 return false;
             }
         }
+
         public async void BackButtonPressed()
         {
             if (!OnBackButtonPressed())
