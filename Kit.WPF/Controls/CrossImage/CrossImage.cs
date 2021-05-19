@@ -1,4 +1,5 @@
 ﻿using Kit.Controls.CrossImage;
+using Kit.WPF.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ namespace Kit.WPF.Controls.CrossImage
         {
             if (Native is ImageSource wimage)
             {
-                return Extensions.Extensiones.ImageToBytes(wimage);
+                return wimage.ImageToBytes();
             }
             return null;
         }
