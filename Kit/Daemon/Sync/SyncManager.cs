@@ -21,7 +21,7 @@ using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using static Kit.Daemon.Helpers.Helper;
 using TableMapping = Kit.Sql.Base.TableMapping;
-using LinqKit;
+
 
 namespace Kit.Daemon.Sync
 {
