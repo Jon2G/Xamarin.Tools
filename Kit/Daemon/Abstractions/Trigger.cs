@@ -23,11 +23,11 @@ namespace Kit.Daemon.Abstractions
             {
                 string TriggerName = $"{Table.TableName}_TRIGGER";
 
+
                 SyncVersions version =
                     SyncVersions.GetVersion(Connection, TriggerName, SyncVersionObject.Trigger);
 
-
-                if (version.Version != DbVersion)
+                if (version.Version != DbVersion|| !Connection.TableExists(Table.TableName))
                 {
                     Connection.CreateTable(Table);
                     if (Connection.TriggerExists(TriggerName))
@@ -98,6 +98,7 @@ END", System.Data.CommandType.Text);
                     version.Save(Connection);
 
                 }
+
             }
             catch (Exception ex)
             {

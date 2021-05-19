@@ -21,9 +21,11 @@ using Kit.Sql.Helpers;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Readers;
 using Kit.Sql.Reflection;
+using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using SQLitePCL;
 using static Kit.Extensions.StringBuilderExtensions;
+using NotNullConstraintViolationException = Kit.Sql.Exceptions.NotNullConstraintViolationException;
 
 namespace Kit.Sql.Sqlite
 {
@@ -2238,6 +2240,88 @@ namespace Kit.Sql.Sqlite
             return Update(obj, Orm.GetType(obj));
         }
 
+        public override int Update<T>(T obj, Expression<Func<T, bool>> predExpr, bool shouldnotify = true)
+        
+        {
+            if (obj == null)
+            {
+                return 0;
+            }
+            ////////////////////////
+
+            Expression pred = null;
+
+            if (predExpr != null && predExpr.NodeType == ExpressionType.Lambda)
+            {
+                var lambda = (LambdaExpression)predExpr;
+
+                pred = Expression.AndAlso(lambda.Body, lambda.Body);
+            }
+
+
+            List<object> args = new List<object>();
+            SQLiteTableQuery<T> table = (SQLiteTableQuery<T>)this.Table<T>();
+            List<BaseTableQuery.Condition> conditions = new List<BaseTableQuery.Condition>();
+
+            var w =table.CompileExpr(pred, args, conditions);
+            conditions.RemoveAll(x => x.Value is Kit.Sql.Base.TableMapping);
+            conditions.RemoveAll(x => !x.IsComplete);
+            conditions = conditions.DistinctBy(x => x.ColumnName).ToList();
+
+            object[] conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+            /// ///////////////////////77
+            ///
+            ///
+            var cols = from p in table.Table.Columns
+                where p.Name != nameof(ISync.Guid)
+                select p;
+            var vals = from c in cols
+                where c.Name != nameof(ISync.Guid)
+                select c.GetValue(obj);
+            var ps = new List<object>(vals);
+            if (ps.Count == 0)
+            {
+                // There is a PK but no accompanying data,
+                // so reset the PK to make the UPDATE work.
+                cols = table.Table.Columns;
+                vals = from c in cols
+                    select c.GetValue(obj);
+                ps = new List<object>(vals);
+            }
+            ps.AddRange(conditions.Select(x=>x.Value));
+            var q = string.Format("update \"{0}\" set {1} WHERE {2}",
+                table.Table.TableName, string.Join(",", (from c in cols
+                select "\"" + c.Name + "\" = ? ").ToArray()), w.CommandText);
+            ///
+            int rowsAffected = 0;
+            try
+            {
+                if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
+                {
+                    partitioned.ToPartitionedDb(table.Table.TableName);
+                }
+                rowsAffected = Execute(q, ps.ToArray());
+            }
+            catch (SQLiteException ex)
+            {
+                if (ex.Result == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode(this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull)
+                {
+                    throw NotNullConstraintViolationException.New(ex, table.Table, obj);
+                }
+
+                throw ex;
+            }
+
+            if (shouldnotify && rowsAffected > 0)
+            {
+                //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
+                //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)table.Table, NotifyTableChangedAction.Update, obj);
+            }
+
+            return rowsAffected;
+        }
+
         /// <summary>
         /// Updates all of the columns of a table using the specified object
         /// except for its primary key.
@@ -2316,7 +2400,7 @@ namespace Kit.Sql.Sqlite
 
             return rowsAffected;
         }
-
+     
         /// <summary>
         /// Updates all specified objects.
         /// </summary>

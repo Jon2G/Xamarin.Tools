@@ -43,19 +43,19 @@ namespace Kit.Droid
                 // .Enrich.WithMemoryUsage()
                 //.Enrich.WithThreadId()
                 // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
-                .WriteTo.AndroidLog()
+                .WriteTo.Async(x=>x.AndroidLog())
                 // Create a custom logger in order to set another limit,
                 // particularly, any logs from Information level will also be written into a rolling file
-                .WriteTo.Logger(config =>
+                .WriteTo.Async(x=>x.Logger(config =>
                     config
                         .MinimumLevel.Information()
-                        .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
-                )
+                        .WriteTo.Async(x => x.File(Log.Current.LoggerPath, retainedFileCountLimit: 7))
+                )) 
                 // And create another logger so that logs at Fatal level will immediately send email
                 .WriteTo.Logger(config =>
                     config
                         .MinimumLevel.Fatal()
-                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
+                        .WriteTo.Async(x=>x.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1))
                 )).CreateLogger(), CriticalAlert);
         }
 
