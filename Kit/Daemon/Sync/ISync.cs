@@ -19,7 +19,7 @@ namespace Kit.Daemon.Sync
         /// This guid identifies the row where the change is made
         /// </summary>
         [Unique, NotNull, AutoIncrement, Column("SyncGuid")]
-        public Guid Guid { get; set; }
+        public virtual Guid Guid { get; set; }
 
         public virtual bool CustomUpload(SqlBase con, SqlBase targecon)
         {
