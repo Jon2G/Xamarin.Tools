@@ -11,9 +11,9 @@ using Kit.iOS.Services;
 [assembly: Dependency(typeof(PDFSaveAndOpen))]
 namespace Kit.iOS.Services
 {
-    public class PDFSaveAndOpen: IPDFSaveAndOpen
+    public class PDFSaveAndOpen
     {
-        public async Task SaveAndView(string fileName, MemoryStream stream, PDFOpenContext context = PDFOpenContext.InApp, string contentType = "application / pdf")
+        public async Task SaveAndView(string fileName, MemoryStream stream, string contentType = "application / pdf")
         {
             await Task.Yield();
             //Get the root path in iOS device.
