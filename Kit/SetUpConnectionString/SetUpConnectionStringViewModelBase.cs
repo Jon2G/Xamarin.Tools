@@ -3,8 +3,12 @@ using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Kit.Extensions;
 
 namespace Kit.CadenaConexion
 {
@@ -49,7 +53,16 @@ namespace Kit.CadenaConexion
             this.Configuration = Configuration ?? new Configuracion();
             Configuration.IdentificadorDispositivo = DeviceId;
             this.Empresas.ListarEmpresas();
+
+            this.ServerSuggestions = new ObservableCollection<string>();
+            this.PortSuggestions = new ObservableCollection<string>();
+            this.DatabaseSuggestions = new ObservableCollection<string>();
+            this.SuggestServerCommand = new Command(SuggestServer);
+            this.SuggestPortCommand = new Command(SuggestPort);
+            this.SuggestDatabaseCommand = new Command(SuggestDatabase);
         }
+
+
 
         public Exception TestConnection()
         {
@@ -84,6 +97,77 @@ namespace Kit.CadenaConexion
                 IdentificadorDispositivo = DeviceId
             };
             this.SqlServer = new SQLServerConnection(String.Empty);
+        }
+
+        public ObservableCollection<string> ServerSuggestions { get; set; }
+        public ObservableCollection<string> PortSuggestions { get; set; }
+        public ObservableCollection<string> DatabaseSuggestions { get; set; }
+   
+        public ICommand SuggestServerCommand { get; }
+        public ICommand SuggestPortCommand { get; }
+        public ICommand SuggestDatabaseCommand { get; }
+        private async void SuggestDatabase(object obj)
+        {
+            await Task.Yield();
+            if (!this.DatabaseSuggestions.Any())
+            {
+                try
+                {
+                    using (SQLServerConnection con=new SQLServerConnection(this.ConnectionString))
+                    {
+                     this.DatabaseSuggestions.AddRange(con.GetDatabasesNames());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Logger.Error(e,"Leyendo las bases de datos");
+                }
+            }
+        }
+        private void SuggestPort()
+        {
+            this.PortSuggestions.Clear();
+            this.PortSuggestions.Add("1433");
+            this.PortSuggestions.Add("53100");
+        }
+        private void SuggestServer()
+        {
+            string  value= this.Configuration.Servidor;
+            this.ServerSuggestions.Clear();
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }
+
+            if ("192.168".StartsWith(value))
+            {
+                this.ServerSuggestions.Add("192.168.");
+                value = "192.168.";
+            }
+
+            int last_dot = value.LastIndexOf('.');
+            if (last_dot <= 0)
+            {
+                last_dot = 0;
+            }
+
+            string number = value.Substring(last_dot, value.Length - last_dot);
+            int positions = 3-number.Length;
+
+            if (positions > 0)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    this.ServerSuggestions.Add($"{value}{j}");
+                }
+            }
+            else
+            {
+                this.ServerSuggestions.Add($"{value}\\SQLEXPRESS");
+                this.ServerSuggestions.Add($"{value}\\SQLEXPRESS01");
+            }
+            Raise(()=>ServerSuggestions);
+
         }
     }
 }

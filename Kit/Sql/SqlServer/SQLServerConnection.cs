@@ -37,6 +37,11 @@ namespace Kit.Sql.SqlServer
 
         #region SQLH
 
+        public List<string> GetDatabasesNames()
+        {
+            return Lista<string>("SELECT name FROM sys.databases;");
+            
+        }
         public string GetDbName()
         {
             return Single<string>("SELECT DB_NAME() AS [Current Database];");
