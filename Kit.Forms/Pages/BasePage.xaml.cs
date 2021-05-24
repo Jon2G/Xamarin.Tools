@@ -19,7 +19,7 @@ namespace Kit.Forms.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BasePage : ContentPage, INotifyPropertyChanged, IDisposable
     {
-  
+
         #region IDisposable
         public virtual void Dispose()
         {
@@ -84,24 +84,32 @@ namespace Kit.Forms.Pages
             _height = Height;
         }
 
-        protected override void OnSizeAllocated(double width, double height)
-        {
-            double oldWidth = _width;
-            const double sizenotallocated = -1;
+        //protected override void OnSizeAllocated(double width, double height)
+        //{
+        //    try
+        //    {
+        //        double oldWidth = _width;
+        //        const double sizenotallocated = -1;
 
-            base.OnSizeAllocated(width, height);
-            if (Equals(_width, width) && Equals(_height, height)) return;
+        //        base.OnSizeAllocated(width, height);
+        //        if (Equals(_width, width) && Equals(_height, height)) return;
 
-            _width = width;
-            _height = height;
+        //        _width = width;
+        //        _height = height;
 
-            // ignore if the previous height was size unallocated
-            if (Equals(oldWidth, sizenotallocated)) return;
+        //        // ignore if the previous height was size unallocated
+        //        if (Equals(oldWidth, sizenotallocated)) return;
 
-            // Has the device been rotated ?
-            if (!Equals(width, oldWidth))
-                OnOrientationChanged.Invoke(this, new PageOrientationEventArgs(width < height ? PageOrientation.Vertical : PageOrientation.Horizontal));
-        }
+        //        // Has the device been rotated ?
+        //        if (!Equals(width, oldWidth))
+        //            OnOrientationChanged.Invoke(this, new PageOrientationEventArgs(width < height ? PageOrientation.Vertical : PageOrientation.Horizontal));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Log.Logger.Error(e, nameof(OnSizeAllocated));
+        //    }
+
+        //}
         public PageOrientation ActualOrientation
         {
             get => Width < Height ? PageOrientation.Vertical : PageOrientation.Horizontal;

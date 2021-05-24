@@ -68,7 +68,12 @@ namespace Kit.Droid.Services
         //        }
         //    }
         //}
+        /// <summary>
+        /// ////////////////////////////////////////////////////////////
 
+        /// ////////////////////////////////////////////////////////////
+        /// </summary>
+        /// <param name="newConfig"></param>
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);

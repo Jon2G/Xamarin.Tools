@@ -1,11 +1,5 @@
-﻿using Acr.UserDialogs;
-using FFImageLoading.Forms.Platform;
-using FFImageLoading.Transformations;
+﻿using FFImageLoading.Transformations;
 using Foundation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UIKit;
 using Xamarin.Forms;
 
