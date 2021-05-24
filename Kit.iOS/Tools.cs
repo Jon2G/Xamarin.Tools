@@ -47,8 +47,8 @@ namespace Kit.iOS
 
                 UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
             }
+            BaseInit();
             return Kit.Tools.Instance;
         }
-
     }
 }

@@ -2241,7 +2241,7 @@ namespace Kit.Sql.Sqlite
         }
 
         public override int Update<T>(T obj, Expression<Func<T, bool>> predExpr, bool shouldnotify = true)
-        
+
         {
             if (obj == null)
             {
@@ -2258,12 +2258,11 @@ namespace Kit.Sql.Sqlite
                 pred = Expression.AndAlso(lambda.Body, lambda.Body);
             }
 
-
             List<object> args = new List<object>();
             SQLiteTableQuery<T> table = (SQLiteTableQuery<T>)this.Table<T>();
             List<BaseTableQuery.Condition> conditions = new List<BaseTableQuery.Condition>();
 
-            var w =table.CompileExpr(pred, args, conditions);
+            var w = table.CompileExpr(pred, args, conditions);
             conditions.RemoveAll(x => x.Value is Kit.Sql.Base.TableMapping);
             conditions.RemoveAll(x => !x.IsComplete);
             conditions = conditions.DistinctBy(x => x.ColumnName).ToList();
@@ -2273,11 +2272,11 @@ namespace Kit.Sql.Sqlite
             ///
             ///
             var cols = from p in table.Table.Columns
-                where p.Name != nameof(ISync.Guid)
-                select p;
+                       where p.Name != nameof(ISync.Guid)
+                       select p;
             var vals = from c in cols
-                where c.Name != nameof(ISync.Guid)
-                select c.GetValue(obj);
+                       where c.Name != nameof(ISync.Guid)
+                       select c.GetValue(obj);
             var ps = new List<object>(vals);
             if (ps.Count == 0)
             {
@@ -2285,13 +2284,13 @@ namespace Kit.Sql.Sqlite
                 // so reset the PK to make the UPDATE work.
                 cols = table.Table.Columns;
                 vals = from c in cols
-                    select c.GetValue(obj);
+                       select c.GetValue(obj);
                 ps = new List<object>(vals);
             }
-            ps.AddRange(conditions.Select(x=>x.Value));
+            ps.AddRange(conditions.Select(x => x.Value));
             var q = string.Format("update \"{0}\" set {1} WHERE {2}",
                 table.Table.TableName, string.Join(",", (from c in cols
-                select "\"" + c.Name + "\" = ? ").ToArray()), w.CommandText);
+                                                         select "\"" + c.Name + "\" = ? ").ToArray()), w.CommandText);
             ///
             int rowsAffected = 0;
             try
@@ -2348,10 +2347,10 @@ namespace Kit.Sql.Sqlite
 
             var pk = map.PK;
 
-            if (pk == null)
-            {
-                throw new NotSupportedException("Cannot update " + map.TableName + ": it has no PK");
-            }
+            //if (pk == null)
+            //{
+            //    throw new NotSupportedException("Cannot update " + map.TableName + ": it has no PK");
+            //}
 
             var cols = from p in map.Columns
                        where p != pk && p.Name != nameof(ISync.Guid)
@@ -2369,9 +2368,18 @@ namespace Kit.Sql.Sqlite
                        select c.GetValue(obj);
                 ps = new List<object>(vals);
             }
-            ps.Add(pk.GetValue(obj));
-            var q = string.Format("update \"{0}\" set {1} where {2} = ? ", map.TableName, string.Join(",", (from c in cols
+            string q = string.Empty;
+            if (pk is not null)
+            {
+                ps.Add(pk.GetValue(obj));
+                q = string.Format("update \"{0}\" set {1} where {2} = ? ", map.TableName, string.Join(",", (from c in cols
                                                                                                             select "\"" + c.Name + "\" = ? ").ToArray()), pk.Name);
+            }
+            else
+            {
+                q = string.Format("update \"{0}\" set {1}", map.TableName, string.Join(",", (from c in cols
+                                                                                             select "\"" + c.Name + "\" = ? ").ToArray()));
+            }
 
             try
             {
@@ -2400,7 +2408,7 @@ namespace Kit.Sql.Sqlite
 
             return rowsAffected;
         }
-     
+
         /// <summary>
         /// Updates all specified objects.
         /// </summary>

@@ -18,9 +18,6 @@ namespace Kit.Droid
 {
     public class Tools : Kit.Tools
     {
-        /// <summary>
-        /// Initialize android user dialogs
-        /// </summary>
         public static AbstractTools Init(MainActivity activity, Bundle bundle)
         {
             Xamarin.Essentials.Platform.Init(activity, bundle);
@@ -37,6 +34,7 @@ namespace Kit.Droid
             CrossCurrentActivity.Current.Init(activity, bundle);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
+            BaseInit();
             return Instance;
         }
         public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)
