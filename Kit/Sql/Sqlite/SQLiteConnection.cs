@@ -2082,7 +2082,10 @@ namespace Kit.Sql.Sqlite
             {
                 return 0;
             }
-            var map = GetMapping(objType);
+            return Insert(obj,extra, GetMapping(objType), shouldnotify);
+        }
+        public override int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true)
+        {
             if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
             {
                 partitioned.ToPartitionedDb(map.TableName);

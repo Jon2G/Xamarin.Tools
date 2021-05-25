@@ -40,8 +40,8 @@ namespace Kit.Sql.SqlServer
         public List<string> GetDatabasesNames()
         {
             return Lista<string>("SELECT name FROM sys.databases;");
-            
         }
+
         public string GetDbName()
         {
             return Single<string>("SELECT DB_NAME() AS [Current Database];");
@@ -2536,6 +2536,11 @@ WHERE
             }
 
             var map = GetMapping(objType);
+            return Insert(obj, extra, map, shouldnotify);
+        }
+
+        public override int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true)
+        {
             if (map.SyncDirection != SyncDirection.NoSync)
             {
             }
@@ -2782,6 +2787,7 @@ WHERE
 
             return rowsAffected;
         }
+
         public override int Update<T>(T obj, Expression<Func<T, bool>> predExpr, bool shouldnotify = true)
         {
             if (obj == null)
@@ -2795,7 +2801,7 @@ WHERE
             if (predExpr != null && predExpr.NodeType == ExpressionType.Lambda)
             {
                 var lambda = (LambdaExpression)predExpr;
-             
+
                 pred = Expression.AndAlso(lambda.Body, lambda.Body);
             }
 
