@@ -2082,8 +2082,9 @@ namespace Kit.Sql.Sqlite
             {
                 return 0;
             }
-            return Insert(obj,extra, GetMapping(objType), shouldnotify);
+            return Insert(obj, extra, GetMapping(objType), shouldnotify);
         }
+
         public override int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true)
         {
             if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
@@ -2658,7 +2659,7 @@ namespace Kit.Sql.Sqlite
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
             if (table.SyncDirection != SyncDirection.NoSync)
                 QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
-                    .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
+                    .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete, table.SyncMode.Order)));
         }
 
         public void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
@@ -2673,7 +2674,7 @@ namespace Kit.Sql.Sqlite
                 UpdateVersionControl(new ChangesHistory(
                     table.TableName
                     , guid
-                    , action));
+                    , action, table.SyncMode.Order));
             }
 
             if (obj is null)
@@ -2681,12 +2682,12 @@ namespace Kit.Sql.Sqlite
                 UpdateVersionControl(new ChangesHistory(
                     table.TableName
                     , Guid.Empty
-                    , action));
+                    , action, table.SyncMode.Order));
             }
             UpdateVersionControl(new ChangesHistory(
                 table.TableName
                 , (obj as ISync).Guid
-                , action));
+                , action, table.SyncMode.Order));
             var ev = TableChanged;
             if (ev != null)
                 ev(this, new NotifyTableChangedEventArgs(table, action));

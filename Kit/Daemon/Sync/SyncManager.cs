@@ -22,7 +22,6 @@ using Kit.Sql.Tables;
 using static Kit.Daemon.Helpers.Helper;
 using TableMapping = Kit.Sql.Base.TableMapping;
 
-
 namespace Kit.Daemon.Sync
 {
     public class SyncManager : ModelBase
@@ -121,21 +120,28 @@ namespace Kit.Daemon.Sync
 
         private string PrepareQuery(SqlBase source)
         {
+            string query = string.Empty;
             switch (source)
             {
                 case SQLServerConnection:
-                    string query = "SELECT ";
+                    query = "SELECT ";
                     if (PackageSize > 0)
                     {
                         query += $"TOP {this.PackageSize}";
                     }
-                    query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid)";
+                    query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
                     return query;
 
                 case SQLiteConnection:
-                    return $"select SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) limit {this.PackageSize}";
+                    query =
+                        $"select SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
+                    if (PackageSize > 0)
+                    {
+                        query += $" limit {this.PackageSize}";
+                    }
+                    return query;
             }
-            return string.Empty;
+            return query;
         }
 
         private bool GetPendings(SyncDirecction SyncTarget)

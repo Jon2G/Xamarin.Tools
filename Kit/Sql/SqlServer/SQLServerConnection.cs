@@ -3121,7 +3121,7 @@ WHERE
         {
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
             QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")
-                .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete)));
+                .ForEach(x => Insert(new ChangesHistory(table.TableName, x, NotifyTableChangedAction.Delete, table.SyncMode.Order)));
         }
 
         private void OnTableChanged(Base.TableMapping table, NotifyTableChangedAction action)
