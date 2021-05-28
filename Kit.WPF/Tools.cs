@@ -22,7 +22,7 @@ namespace Kit.WPF
         {
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
-            Kit.Tools.Set(new ToolsImplementation().SetLibraryPath(LibraryPath??Environment.CurrentDirectory));
+            Kit.Tools.Set(new ToolsImplementation());
             (Kit.Tools.Instance as ToolsImplementation).Init();
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
             Kit.Tools.Instance.Init();

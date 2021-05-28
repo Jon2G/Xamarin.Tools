@@ -508,7 +508,7 @@ namespace Kit.Daemon
                     }
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
             return false;
         }
 

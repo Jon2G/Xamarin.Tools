@@ -20,10 +20,10 @@ namespace Kit
         public IBarCodeBuilder BarCodeBuilder { get; private set; }
         public Kit.Controls.CrossImage.CrossImageExtensions ImageExtensions { get; private set; }
 
-        private string _LibraryPath;
 
-        public string LibraryPath => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        public string TemporalPath => Path.Combine(LibraryPath, "..", "tmp");
+
+        public virtual string LibraryPath => Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        public virtual string TemporalPath => Path.Combine(LibraryPath, "..", "tmp");
 
         protected AbstractTools()
         {
@@ -53,11 +53,6 @@ namespace Kit
             CustomMessageBox.ShowOK(sender.ToString(), "Alerta", "Entiendo");
         }
 
-        public AbstractTools SetLibraryPath(string LibraryPath)
-        {
-            _LibraryPath = LibraryPath;
-            return this;
-        }
 
         private static readonly Lazy<bool> _IsInDesingMode =
             new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);

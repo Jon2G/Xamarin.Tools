@@ -24,13 +24,13 @@
                               Tapped="TapGestureRecognizer_OnTapped"/>
     </ContentView.GestureRecognizers>-->
     <ContentView.Content>
-        <StackLayout>
+        <StackLayout >
             <Frame BindingContext="{x:Reference arrow}" Padding="5"
                    BackgroundColor="{Binding ColorBackground}"
                    xct:TouchEffect.NormalBackgroundColor="{Binding ColorBackground}"
                    xct:TouchEffect.PressedBackgroundColor="LightGray"
                    xct:TouchEffect.NativeAnimationColor="LightGray"
-                   xct:TouchEffect.PressedScale="0.99"
+                   xct:TouchEffect.PressedScale="0.99" VerticalOptions="FillAndExpand"
                    xct:TouchEffect.Command="{Binding TouchedCommand}"
                    xct:TouchEffect.NativeAnimation="True">
                 <Grid ColumnDefinitions="Auto,*,Auto" Margin="0">

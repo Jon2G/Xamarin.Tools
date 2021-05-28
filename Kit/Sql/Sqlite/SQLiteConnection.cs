@@ -852,7 +852,18 @@ namespace Kit.Sql.Sqlite
                     query += " without rowid";
                 }
 
+
+                var InitTableAttributetype = typeof(InitTableAttribute);
+                var InitMethod = map.MappedType.GetMethods()
+                      .Where(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()).FirstOrDefault();
+                if (InitMethod is not null && !InitMethod.IsStatic)
+                {
+                    throw new Exception($"Init table method must be static at {map.TableName}");
+                }
                 Execute(query);
+                InitMethod?.Invoke(null, null);
+
+
             }
             else
             {
@@ -1220,6 +1231,7 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public int Execute(string query, params object[] args)
         {
+
             var cmd = CreateCommand(query, args);
 
             if (TimeExecution)
@@ -1874,6 +1886,7 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
+
         public int InsertAll(System.Collections.IEnumerable objects, bool runInTransaction = true)
         {
             var c = 0;
@@ -1896,7 +1909,15 @@ namespace Kit.Sql.Sqlite
             }
             return c;
         }
-
+        public int InsertAll(params object[] objects)
+        {
+            var c = 0;
+            foreach (var r in objects)
+            {
+                c += Insert(r);
+            }
+            return c;
+        }
         /// <summary>
         /// Inserts all specified objects.
         /// </summary>

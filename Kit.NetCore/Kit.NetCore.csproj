@@ -17,16 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Imgs\logo.png" />
     <None Include="..\toolbox.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Include="Services\DeviceInfo.cs" />
   </ItemGroup>
 
 
@@ -40,11 +34,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kit\Kit.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <EmbeddedResource Include="Imgs\logo.png" />
   </ItemGroup>
 
 </Project>

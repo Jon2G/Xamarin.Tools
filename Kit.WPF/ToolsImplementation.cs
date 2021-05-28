@@ -26,6 +26,8 @@ namespace Kit.WPF
                 .OfType<AssemblyProductAttribute>()
                 .FirstOrDefault().Product;
         }
+
+        public override string LibraryPath => Environment.CurrentDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public static new Kit.WPF.ToolsImplementation Instance => Tools.Instance as Kit.WPF.ToolsImplementation;
         public override void Init()
