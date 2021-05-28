@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kit.Enums;
 using Kit.Sql.Enums;
 
 namespace Kit.Sql.Attributes
@@ -9,21 +10,23 @@ namespace Kit.Sql.Attributes
     {
         public SyncDirection Direction { get; private set; }
         public bool ReserveNewId { get; private set; }
+        public int Order { get; private set; }
 
         public SyncMode()
         {
             Direction = SyncDirection.NoSync;
+            Order = 0;
         }
 
-
-        public SyncMode(int Direction, bool ReserveNewId = true)
-        : this((SyncDirection)Direction, ReserveNewId)
+        public SyncMode(int Direction, int Order = 0, bool ReserveNewId = true)
+        : this((SyncDirection)Direction, Order, ReserveNewId)
         {
-
         }
-        public SyncMode(SyncDirection Direction, bool ReserveNewId = true)
+
+        public SyncMode(SyncDirection Direction, int Order = 0, bool ReserveNewId = true)
         {
             this.Direction = Direction;
+            this.Order = Order;
             this.ReserveNewId = ReserveNewId;
         }
     }

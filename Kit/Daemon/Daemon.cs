@@ -432,6 +432,7 @@ namespace Kit.Daemon
                                 //Asumir que no hay pendientes
                                 this.SyncManager.ToDo = false;
                                 this.IsAwake = true;
+
                                 //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
                                 if (!this.SyncManager.Upload() && !IsSleepRequested)
                                 {
@@ -519,9 +520,9 @@ namespace Kit.Daemon
         ///// <param name="TableName"></param>
         ///// <param name="PrimaryKeyValue"></param>
         ///// <param name="Accion"></param>
-        public void SqliteSync(SQLiteConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion)
+        public void SqliteSync(SQLiteConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion, int Priority)
         {
-            con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion));
+            con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion, Priority));
         }
     }
 }

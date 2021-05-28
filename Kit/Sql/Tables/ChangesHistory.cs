@@ -7,12 +7,12 @@ using Kit.Sql.Enums;
 
 namespace Kit.Sql.Tables
 {
+    [Preserve(AllMembers = true)]
     /// <summary>
     /// A table that keeps track of every change made on sqlite databate
     /// </summary>
-    public class ChangesHistory: ISync
+    public class ChangesHistory : ISync
     {
-
         /// <summary>
         /// Name of the table where te change has been made
         /// </summary>
@@ -22,17 +22,23 @@ namespace Kit.Sql.Tables
         /// Type of change
         /// </summary>
         public NotifyTableChangedAction Action { get; set; }
-        public ChangesHistory() { }
-        public ChangesHistory(string TableName, Guid SyncGuid, NotifyTableChangedAction Action)
+
+        public int Priority { get; set; }
+
+        public ChangesHistory()
+        {
+        }
+
+        public ChangesHistory(string TableName, Guid SyncGuid, NotifyTableChangedAction Action, int Priority)
         {
             this.TableName = TableName;
             this.Guid = SyncGuid;
             this.Action = Action;
+            this.Priority = Priority;
         }
 
         public void MarkAsSynced(SqlBase origin)
         {
-
             try
             {
                 SyncHistory syncHistory = new SyncHistory
@@ -41,7 +47,7 @@ namespace Kit.Sql.Tables
                     Guid = this.Guid
                 };
                 origin.Table<SyncHistory>().Delete(x => x.Guid == syncHistory.Guid);
-                origin.Insert(syncHistory,string.Empty);
+                origin.Insert(syncHistory, string.Empty);
 
                 //if (connection is SqlServer SQLH)
                 //{
@@ -59,8 +65,8 @@ namespace Kit.Sql.Tables
             {
                 Log.Logger.Error(ex, "Al marcar como finalizada la sincronización - [{0}]", this);
             }
-
         }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -71,12 +77,15 @@ namespace Kit.Sql.Tables
                     case NotifyTableChangedAction.Update:
                         sb.Append("Actualizando");
                         break;
+
                     case NotifyTableChangedAction.Insert:
                         sb.Append("Descargando");
                         break;
+
                     case NotifyTableChangedAction.Delete:
                         sb.Append("Eliminando");
                         break;
+
                     default:
                         sb.Append("NONE");
                         break;
@@ -87,15 +96,19 @@ namespace Kit.Sql.Tables
                     case "LINEAS":
                         sb.Append("lineas");
                         break;
+
                     case "PRODS":
                         sb.Append("productos");
                         break;
+
                     case "ALMACEN":
                         sb.Append("almacenes");
                         break;
+
                     case "CLAVESADD":
                         sb.Append("códigos de barras");
                         break;
+
                     default:
                         sb.Append(this.TableName);
                         break;

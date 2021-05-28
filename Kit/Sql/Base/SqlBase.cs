@@ -129,6 +129,7 @@ namespace Kit.Sql.Base
         /// The number of rows added to the table.
         /// </returns>
         public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify = false);
+        public abstract int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true);
 
         /// <summary>
         /// Deletes the given object from the database using its primary key.

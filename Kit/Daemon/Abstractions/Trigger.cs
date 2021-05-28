@@ -23,11 +23,10 @@ namespace Kit.Daemon.Abstractions
             {
                 string TriggerName = $"{Table.TableName}_TRIGGER";
 
-
                 SyncVersions version =
                     SyncVersions.GetVersion(Connection, TriggerName, SyncVersionObject.Trigger);
 
-                if (version.Version != DbVersion|| !Connection.TableExists(Table.TableName))
+                if (version.Version != DbVersion || !Connection.TableExists(Table.TableName))
                 {
                     Connection.CreateTable(Table);
                     if (Connection.TriggerExists(TriggerName))
@@ -41,7 +40,7 @@ namespace Kit.Daemon.Abstractions
                         Connection.EXEC($"DROP TRIGGER {Table.TableName}_Tablet");
                     }
 
-                    Connection.EXEC($@"CREATE TRIGGER dbo.{TriggerName} ON dbo.{Table.TableName} AFTER INSERT,DELETE,UPDATE AS 
+                    Connection.EXEC($@"CREATE TRIGGER dbo.{TriggerName} ON dbo.{Table.TableName} AFTER INSERT,DELETE,UPDATE AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
@@ -51,14 +50,14 @@ BEGIN
     SET @action = '{NotifyTableChangedAction.Insert}'; -- Set Action to Insert by default.
     IF EXISTS(SELECT * FROM DELETED)
     BEGIN
-        SET @action = 
+        SET @action =
             CASE
                 WHEN EXISTS(SELECT * FROM INSERTED) THEN '{NotifyTableChangedAction.Update}' -- Set Action to Updated.
-                ELSE '{NotifyTableChangedAction.Delete}' -- Set Action to Deleted.       
+                ELSE '{NotifyTableChangedAction.Delete}' -- Set Action to Deleted.
             END
     END
-    ELSE 
-        IF NOT EXISTS(SELECT * FROM INSERTED) 
+    ELSE
+        IF NOT EXISTS(SELECT * FROM INSERTED)
 		RETURN;
 
 IF @ACTION='{NotifyTableChangedAction.Insert}' OR @action='{NotifyTableChangedAction.Update}'
@@ -66,16 +65,16 @@ BEGIN
 DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 
-INSERT INTO ChangesHistory (Action,SyncGuid,TableName)
-SELECT @action,SyncGuid,'{Table.TableName}' FROM inserted
+INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
+SELECT @action,SyncGuid,'{Table.TableName}',{Table.SyncMode.Order} FROM inserted
 
 END ELSE
 BEGIN
 DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
-   
-INSERT INTO ChangesHistory (Action,SyncGuid,TableName)
-SELECT @action,SyncGuid,'{Table.TableName}' FROM deleted
+
+INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
+SELECT @action,SyncGuid,'{Table.TableName}',{Table.SyncMode.Order} FROM deleted
 
 END
 END", System.Data.CommandType.Text);
@@ -90,15 +89,13 @@ END", System.Data.CommandType.Text);
                             })
                             {
                                 con.Open();
-                               cmd.ExecuteNonQuery();
+                                cmd.ExecuteNonQuery();
                                 con.Close();
                             }
                         }
                     version.Version = DbVersion;
                     version.Save(Connection);
-
                 }
-
             }
             catch (Exception ex)
             {
