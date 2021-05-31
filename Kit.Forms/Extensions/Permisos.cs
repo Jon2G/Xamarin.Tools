@@ -53,10 +53,11 @@ namespace Kit.Forms.Extensions
                 {
                     return PermissionStatus.Granted;
                 }
-                else
-                {
-                    return await EnsurePermission<T>(RequestMessage, Permiso);
-                }
+                //else
+                //{
+                //    return await EnsurePermission<T>(RequestMessage, Permiso); 
+                    
+                //}
             }
             else if (await Permiso.CheckStatusAsync() == PermissionStatus.Denied &&
                      IsDisabled(Permiso))

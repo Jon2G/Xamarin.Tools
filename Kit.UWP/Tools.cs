@@ -18,12 +18,8 @@ namespace Kit.UWP
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
 
             Kit.Tools.Set(new ToolsImplementation());
-            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
 
-            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            StorageFolder file = storageFolder.CreateFolderAsync("KitData",
-                 Windows.Storage.CreationCollisionOption.OpenIfExists).GetAwaiter().GetResult();
-            Kit.Tools.Instance.SetLibraryPath(file.Path);
+
 
 
             //     ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();

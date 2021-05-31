@@ -38,7 +38,7 @@ namespace Kit.Security.Encryption
             return ToBytes(NewCadena);
         }
 
-        public override byte[] UnEncrypt(byte[] Array)
+        public override byte[] Decrypt(byte[] Array)
         {
             if (Array is null)
             {

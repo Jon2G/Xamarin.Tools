@@ -14,14 +14,14 @@ namespace Kit.Security.Encryption
         public abstract byte[] Encrypt(string Value);
         public virtual string UnEncrypt(string value)
         {
-            return ToString(UnEncrypt(ToBytes(value)));
+            return ToString(Decrypt(ToBytes(value)));
         }
         public virtual byte[] ToBytes(string Value)
         {
             return Encoding.GetBytes(Value);
 
         }
-        public abstract byte[] UnEncrypt(byte[] Array);
+        public abstract byte[] Decrypt(byte[] Array);
         public string ToString(byte[] Array)
         {
             if (Array is null)
