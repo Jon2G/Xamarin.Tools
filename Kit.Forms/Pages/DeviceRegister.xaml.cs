@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Kit.Dialogs;
 using Kit.License;
 using Kit.Services.Interfaces;
 using Xamarin.Essentials;
@@ -15,13 +16,14 @@ namespace Kit.Forms.Pages
     public partial class DeviceRegister
     {
         public DeviceRegisterModel Model { get; private set; }
-        public DeviceRegister(License.License Licence, ICustomMessageBox CustomMesaggeBox)
+
+        public DeviceRegister(License.License Licence, IDialogs Dialogs)
         {
-            this.Model = new DeviceRegisterModel(Licence, CustomMesaggeBox);
+            this.Model = new DeviceRegisterModel(Licence, Dialogs);
             InitializeComponent();
             this.LockModal();
-
         }
+
         private void MailChanged(object sender, EventArgs e)
         {
             if (Btn is null)
@@ -37,18 +39,22 @@ namespace Kit.Forms.Pages
                 this.Btn.TextColor = Color.White;
             }
         }
+
         private void PasswordChanged(object sender, EventArgs e)
         {
             MailChanged(sender, e);
         }
+
         private void Registrarse(object sender, EventArgs e)
         {
             Launcher.OpenAsync(new Uri(License.License.LoginSite));
         }
+
         protected override bool OnBackButtonPressed()
         {
             return true;
         }
+
         private async void LogIn(object sender, EventArgs e)
         {
             if (await this.Model.LogIn())

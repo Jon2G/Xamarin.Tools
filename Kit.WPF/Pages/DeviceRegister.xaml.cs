@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Kit.Dialogs;
 using Kit.License;
 using Kit.Services.Interfaces;
 
@@ -23,19 +24,21 @@ namespace Kit.WPF.Pages
     public partial class DeviceRegister : Window
     {
         public DeviceRegisterModel Model { get; private set; }
-        public DeviceRegister(License.License Licence, ICustomMessageBox CustomMesaggeBox)
-        {    
-            this.Model = new DeviceRegisterModel(Licence, CustomMesaggeBox);
+
+        public DeviceRegister(License.License Licence, IDialogs Dialogs)
+        {
+            this.Model = new DeviceRegisterModel(Licence, Dialogs);
             this.DataContext = this.Model;
             InitializeComponent();
             this.TxtUsuario.DataContext = this.Model;
-
         }
+
         private void Hyperlink_RequestNavigate(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo(License.License.LoginSite));
             e.Handled = true;
         }
+
         private async void LogIn(object sender, RoutedEventArgs e)
         {
             this.Model.Password = Pssword.Password;
@@ -44,6 +47,5 @@ namespace Kit.WPF.Pages
                 this.Close();
             }
         }
-
     }
 }

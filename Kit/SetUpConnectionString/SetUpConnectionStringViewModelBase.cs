@@ -62,8 +62,6 @@ namespace Kit.CadenaConexion
             this.SuggestDatabaseCommand = new Command(SuggestDatabase);
         }
 
-
-
         public Exception TestConnection()
         {
             SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);
@@ -102,37 +100,43 @@ namespace Kit.CadenaConexion
         public ObservableCollection<string> ServerSuggestions { get; set; }
         public ObservableCollection<string> PortSuggestions { get; set; }
         public ObservableCollection<string> DatabaseSuggestions { get; set; }
-   
+
         public ICommand SuggestServerCommand { get; }
         public ICommand SuggestPortCommand { get; }
         public ICommand SuggestDatabaseCommand { get; }
-        private async void SuggestDatabase(object obj)
+
+        private bool LoadingDatabases;
+        private async void SuggestDatabase()
         {
             await Task.Yield();
-            if (!this.DatabaseSuggestions.Any())
+            if (!this.DatabaseSuggestions.Any()&&!LoadingDatabases)
             {
                 try
                 {
-                    using (SQLServerConnection con=new SQLServerConnection(this.ConnectionString))
+                    LoadingDatabases = true;
+                    using (SQLServerConnection con = new SQLServerConnection(this.ConnectionString))
                     {
-                     this.DatabaseSuggestions.AddRange(con.GetDatabasesNames());
+                        this.DatabaseSuggestions.AddRange(con.GetDatabasesNames());
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Logger.Error(e,"Leyendo las bases de datos");
+                    Log.Logger.Error(e, "Leyendo las bases de datos");
                 }
+                finally { LoadingDatabases = false; }
             }
         }
+
         private void SuggestPort()
         {
             this.PortSuggestions.Clear();
             this.PortSuggestions.Add("1433");
             this.PortSuggestions.Add("53100");
         }
+
         private void SuggestServer()
         {
-            string  value= this.Configuration.Servidor;
+            string value = this.Configuration.Servidor;
             this.ServerSuggestions.Clear();
             if (string.IsNullOrEmpty(value))
             {
@@ -152,7 +156,7 @@ namespace Kit.CadenaConexion
             }
 
             string number = value.Substring(last_dot, value.Length - last_dot);
-            int positions = 3-number.Length;
+            int positions = 3 - number.Length;
 
             if (positions > 0)
             {
@@ -166,8 +170,7 @@ namespace Kit.CadenaConexion
                 this.ServerSuggestions.Add($"{value}\\SQLEXPRESS");
                 this.ServerSuggestions.Add($"{value}\\SQLEXPRESS01");
             }
-            Raise(()=>ServerSuggestions);
-
+            Raise(() => ServerSuggestions);
         }
     }
 }

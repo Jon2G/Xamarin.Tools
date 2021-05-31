@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kit.Enums;
 
-namespace Kit.Services.Interfaces
+namespace Kit.Dialogs
 {
     /// <summary>
     /// Displays a message box.
@@ -25,7 +25,6 @@ namespace Kit.Services.Interfaces
         /// <param name="caption">A System.String that specifies the title bar caption to display.</param>
         /// <returns>A System.Windows.Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
         public Task<CustomMessageBoxResult> Show(string messageBoxText, string caption);
-
 
         ///// <summary>
         ///// Displays a message box in front of the specified window. The message box displays a message and returns a result.
@@ -81,6 +80,7 @@ namespace Kit.Services.Interfaces
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
         public Task<CustomMessageBoxResult> ShowOK(string messageBoxText, string caption, string okButtonText, CustomMessageBoxImage icon);
+
         /// <summary>
         /// Displays a message box that has a message, caption, and OK/Cancel buttons with custom System.String values for the buttons' text;
         /// and that returns a result.
@@ -126,6 +126,7 @@ namespace Kit.Services.Interfaces
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
         public Task<CustomMessageBoxResult> ShowYesNo(string messageBoxText, string caption, string yesButtonText, string noButtonText, CustomMessageBoxImage icon);
+
         /// <summary>
         /// Displays a message box that has a message, caption, and Yes/No/Cancel buttons with custom System.String values for the buttons' text;
         /// and that returns a result.
@@ -150,7 +151,5 @@ namespace Kit.Services.Interfaces
         /// <param name="icon">A System.Windows.CustomMessageBoxImage value that specifies the icon to display.</param>
         /// <returns>A System.Windows.Task<CustomMessageBoxResult> value that specifies which message box button is clicked by the user.</returns>
         public Task<CustomMessageBoxResult> ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, CustomMessageBoxImage icon);
-
-
     }
 }

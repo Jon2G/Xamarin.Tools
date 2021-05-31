@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
 using System.Threading.Tasks;
-using Kit.Sql;
-using Kit.WPF.Services;
-using Kit.WPF.Services.ICustomMessageBox;
 
 namespace Kit.WPF
 {
@@ -18,7 +11,7 @@ namespace Kit.WPF
         /// <summary>
         /// Initialize android user dialogs
         /// </summary>
-        public static AbstractTools Init(string LibraryPath=null)
+        public static AbstractTools Init(string LibraryPath = null)
         {
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
@@ -28,10 +21,12 @@ namespace Kit.WPF
             Kit.Tools.Instance.Init();
             return Kit.Tools.Instance;
         }
+
         public static new ToolsImplementation Instance
         {
             get => (ToolsImplementation)Kit.Tools.Instance;
         }
+
         //static AbstractTools currentInstance;
         //public static AbstractTools Instance
         //{

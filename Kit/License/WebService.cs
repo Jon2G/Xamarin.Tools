@@ -17,11 +17,13 @@ namespace Kit.License
     {
         private readonly string DeviceId;
         private readonly string Url;
+
         public WebService(string DeviceId)
         {
             this.DeviceId = DeviceId;
             Url = "http://www.spika.mx:88/AppAuthentication";
         }
+
         public async Task<ProjectActivationState> RequestProjectAccess(string ProjectKey)
         {
             ProjectActivationState ProjectStatus = await IsDeviceAutenticated();
@@ -42,6 +44,7 @@ namespace Kit.License
                 return ProjectStatus;
             }
         }
+
         private async Task<ProjectActivationState> IsDeviceAutenticated()
         {
             ResponseResult result = await GET(Url, "IsDeviceAutenticated", DeviceId);
@@ -55,6 +58,7 @@ namespace Kit.License
             }
             return ProjectActivationState.LoginRequired;
         }
+
         private async Task<ProjectActivationState> IsDeviceEnrolled(string AppKey)
         {
             ResponseResult result = await GET(Url, "IsDeviceEnrolled", DeviceId, AppKey);
@@ -62,10 +66,13 @@ namespace Kit.License
             {
                 case "ERROR":
                     return ProjectActivationState.ConnectionFailed;
+
                 case "PROJECT_NOT_ENROLLED":
                     return ProjectActivationState.LoginRequired;
+
                 case "INVALID_REQUEST":
                     return ProjectActivationState.Denied;
+
                 case "ACTIVE":
                     return ProjectActivationState.Active;
             }
@@ -76,12 +83,14 @@ namespace Kit.License
         {
             public HttpStatusCode HttpStatusCode;
             public string Response;
+
             public ResponseResult(HttpStatusCode httpStatusCode, string response)
             {
                 HttpStatusCode = httpStatusCode;
                 Response = response;
             }
         }
+
         private static async Task<ResponseResult> GET(string url, string metodo, params string[] parameters)
         {
             ResponseResult result = new ResponseResult
@@ -116,8 +125,18 @@ namespace Kit.License
                     UseProxy = false
                 })
                 {
-                    handler.ServerCertificateCustomValidationCallback +=
-                        (arg1, arg2, arg3, arg4) => { return true; };
+                    //if (Kit.Tools.Instance.RuntimePlatform != RuntimePlatform.WPF)
+                    //{
+                    //    try
+                    //    {
+                    //        handler.ServerCertificateCustomValidationCallback +=
+                    //            (arg1, arg2, arg3, arg4) => { return true; };
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        Log.Logger.Error(ex);
+                    //    }
+                    //}
 
                     using (HttpClient client = new HttpClient(handler))
                     {
@@ -173,6 +192,5 @@ namespace Kit.License
                 return "ERROR";
             }
         }
-
     }
 }

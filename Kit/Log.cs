@@ -101,12 +101,14 @@ namespace Kit
         {
             Exception newExc = new Exception("TaskSchedulerOnUnobservedTaskException", unobservedTaskExceptionEventArgs.Exception);
             LogUnhandledException(newExc);
+            (Log.Logger as Serilog.Core.Logger)?.Dispose();
         }
 
         public static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             Exception newExc = new Exception("CurrentDomainOnUnhandledException", unhandledExceptionEventArgs.ExceptionObject as Exception);
             LogUnhandledException(newExc);
+            (Log.Logger as Serilog.Core.Logger)?.Dispose();
         }
 
         internal static void LogUnhandledException(Exception exception)
@@ -116,6 +118,7 @@ namespace Kit
                 string errorMessage = $"-->[{DateTime.Now}]Error: ►►{exception.ToString()}◄◄";
                 Console.WriteLine(errorMessage);
                 Logger.Fatal(exception, errorMessage);
+                (Log.Logger as Serilog.Core.Logger)?.Dispose();
             }
             catch
             {

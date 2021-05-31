@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Kit.Dialogs;
 using Kit.Enums;
-using Kit.Forms.Services;
-using Kit.Services.Interfaces;
+using Kit.Forms.Dialogs;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(CustomMessageBoxService))]
-namespace Kit.Forms.Services
+[assembly: Dependency(typeof(CustomMessageBox))]
+
+namespace Kit.Forms.Dialogs
 {
-    public class CustomMessageBoxService : ICustomMessageBox
+    public class CustomMessageBox : ICustomMessageBox
     {
         public async Task<CustomMessageBoxResult> Show(string messageBoxText)
         {
@@ -74,7 +75,6 @@ namespace Kit.Forms.Services
         {
             await Task.Yield();
             return CustomMessageBoxResult.None;
-
         }
 
         public async Task<CustomMessageBoxResult> ShowYesNoCancel(string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText)

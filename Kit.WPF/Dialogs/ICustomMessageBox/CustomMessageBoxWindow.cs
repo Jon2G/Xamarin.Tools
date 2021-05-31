@@ -7,46 +7,52 @@ using Kit.WPF;
 using Kit.Extensions;
 using Kit.WPF.Extensions;
 
-namespace Kit.WPF.Services.ICustomMessageBox
+namespace Kit.WPF.Dialogs.ICustomMessageBox
 {
     /// <summary>
     /// Interaction logic for ModalDialog.xaml
     /// </summary>
     public partial class CustomMessageBoxWindow : System.Windows.Window
     {
-
         internal string Caption
         {
             get => Title;
             set => Title = value;
         }
+
         internal string Message
         {
             get => TextBlock_Message.Text;
             set => TextBlock_Message.Text = value;
         }
+
         internal string OkButtonText
         {
             get => Label_Ok.Text.ToString();
             set => Label_Ok.Text = value;
         }
+
         internal string CancelButtonText
         {
             get => Label_Cancel.Text.ToString();
             set => Label_Cancel.Text = value;
             //.TryAddKeyboardAccellerator()
         }
+
         internal string YesButtonText
         {
             get => Label_Yes.Text.ToString();
             set => Label_Yes.Text = value;
         }
+
         internal string NoButtonText
         {
             get => Label_No.Text;
             set => Label_No.Text = value;
         }
+
         public CustomMessageBoxResult Result { get; set; }
+
         internal CustomMessageBoxWindow(string message)
         {
             InitializeComponent();
@@ -85,6 +91,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
             DisplayButtons(CustomMessageBoxButton.OK);
             VentanaModal();
         }
+
         internal CustomMessageBoxWindow(string message, string caption, CustomMessageBoxButton button, CustomMessageBoxImage image)
         {
             InitializeComponent();
@@ -100,7 +107,6 @@ namespace Kit.WPF.Services.ICustomMessageBox
         {
             try
             {
-
                 if (AbstractTools.IsInDesingMode)
                 {
                     return;
@@ -136,6 +142,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
                 Log.Logger.Error(ex, "Al mostrar un mensaje personalizadp desde VentanaModal();", true);
             }
         }
+
         private void DisplayButtons(CustomMessageBoxButton button)
         {
             switch (button)
@@ -149,6 +156,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
                     Button_Yes.Visibility = System.Windows.Visibility.Collapsed;
                     Button_No.Visibility = System.Windows.Visibility.Collapsed;
                     break;
+
                 case CustomMessageBoxButton.YesNo:
                     // Hide all but Yes, No
                     Button_Yes.Visibility = System.Windows.Visibility.Visible;
@@ -158,6 +166,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
                     Button_OK.Visibility = System.Windows.Visibility.Collapsed;
                     Button_Cancel.Visibility = System.Windows.Visibility.Collapsed;
                     break;
+
                 case CustomMessageBoxButton.YesNoCancel:
                     // Hide only OK
                     Button_Yes.Visibility = System.Windows.Visibility.Visible;
@@ -167,6 +176,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
 
                     Button_OK.Visibility = System.Windows.Visibility.Collapsed;
                     break;
+
                 default:
                     // Hide all but OK
                     Button_OK.Visibility = System.Windows.Visibility.Visible;
@@ -186,15 +196,19 @@ namespace Kit.WPF.Services.ICustomMessageBox
                 case CustomMessageBoxImage.Exclamation:       // Enumeration value 48 - also covers "Warning"
                     icon = SystemIcons.Exclamation;
                     break;
+
                 case CustomMessageBoxImage.Error:             // Enumeration value 16, also covers "Hand" and "Stop"
                     icon = SystemIcons.Hand;
                     break;
+
                 case CustomMessageBoxImage.Information:       // Enumeration value 64 - also covers "Asterisk"
                     icon = SystemIcons.Information;
                     break;
+
                 case CustomMessageBoxImage.Question:
                     icon = SystemIcons.Question;
                     break;
+
                 default:
                     icon = SystemIcons.Information;
                     break;
@@ -212,6 +226,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
             Result = CustomMessageBoxResult.OK;
             Close();
         }
+
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
         {
             if (!ClickHelper.EsValido())
@@ -221,6 +236,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
             Result = CustomMessageBoxResult.Cancel;
             Close();
         }
+
         private void Button_Yes_Click(object sender, RoutedEventArgs e)
         {
             if (!ClickHelper.EsValido())
@@ -230,6 +246,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
             Result = CustomMessageBoxResult.Yes;
             Close();
         }
+
         private void Button_No_Click(object sender, RoutedEventArgs e)
         {
             if (!ClickHelper.EsValido())
@@ -239,6 +256,7 @@ namespace Kit.WPF.Services.ICustomMessageBox
             Result = CustomMessageBoxResult.No;
             Close();
         }
+
         private void Button_OK_TouchDown(object sender, System.Windows.Input.TouchEventArgs e)
         {
             if (!ClickHelper.EsValido())

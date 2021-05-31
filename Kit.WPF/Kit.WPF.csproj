@@ -39,7 +39,7 @@
     <EmbeddedResource Remove="Controls\RangoFechas\DateRangeHorizontal.xaml" />
     <EmbeddedResource Remove="Pages\DeviceRegister.xaml" />
     <EmbeddedResource Remove="Pages\SplashScreen.xaml" />
-    <EmbeddedResource Remove="Services\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
+    <EmbeddedResource Remove="Dialogs\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="5.3.0">
@@ -109,5 +109,8 @@
     <Page Update="Controls\ColorBox\Themes\Generic.xaml">
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo.png" />
   </ItemGroup>
 </Project>

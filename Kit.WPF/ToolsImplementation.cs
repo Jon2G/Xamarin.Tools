@@ -1,17 +1,9 @@
-﻿using Kit.Services.Interfaces;
-using Kit.Sql;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using Kit.Enums;
-using Kit.Services;
 using Application = System.Windows.Application;
-using Kit.Sql.Helpers;
 using Kit.WPF.Services;
-using Kit.WPF.Services.ICustomMessageBox;
 using Serilog;
 using System.Reflection;
 
@@ -30,10 +22,11 @@ namespace Kit.WPF
         public override string LibraryPath => Environment.CurrentDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public static new Kit.WPF.ToolsImplementation Instance => Tools.Instance as Kit.WPF.ToolsImplementation;
+
         public override void Init()
         {
             Init(
-                new CustomMessageBoxService(),
+                new Kit.WPF.Dialogs.Dialogs(),
                 new SynchronizeInvoke(), new ScreenManagerService(),
                 new Kit.WPF.Controls.CrossImage.ImageExtensions(),
                 new BarCodeBuilder());
@@ -65,9 +58,8 @@ namespace Kit.WPF
             MessageBox.Show(sender.ToString(), "Alerta", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-
-
         #region UWP Especific
+
         public static ToolsImplementation UWPInstance
         {
             get => Kit.Tools.Instance as ToolsImplementation;
@@ -106,7 +98,6 @@ namespace Kit.WPF
             }
         }
 
-
-        #endregion
+        #endregion UWP Especific
     }
 }

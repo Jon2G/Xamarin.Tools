@@ -20,7 +20,6 @@ namespace Kit.Services.BarCode
     {
         public BarcodeDecoding()
         {
-
         }
 
         public async Task<Result> Decode(FileInfo file, BarcodeFormat format, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
@@ -37,7 +36,7 @@ namespace Kit.Services.BarCode
             return result;
         }
 
-        MultiFormatReader GetReader(BarcodeFormat? format, KeyValuePair<DecodeHintType, object>[] aditionalHints)
+        private MultiFormatReader GetReader(BarcodeFormat? format, KeyValuePair<DecodeHintType, object>[] aditionalHints)
         {
             var reader = new MultiFormatReader();
 
@@ -65,9 +64,7 @@ namespace Kit.Services.BarCode
             BinaryBitmap bBitmap = null;
             try
             {
-
-                var png = new Hjg.Pngcs.Chunks.PngChunkIHDR(new Hjg.Pngcs.ImageInfo(10,10,8,true));
-
+                var png = new Hjg.Pngcs.Chunks.PngChunkIHDR(new Hjg.Pngcs.ImageInfo(10, 10, 8, true));
 
                 using (var stream = fileName.OpenRead())
                 {
@@ -96,10 +93,11 @@ namespace Kit.Services.BarCode
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "BarcodeDecoding.GetImage");
-                await Tools.Instance.CustomMessageBox.Show(ex.Message);
+                await Tools.Instance.Dialogs.CustomMessageBox.Show(ex.Message);
             }
             return bBitmap;
         }
+
         private byte[] GetRgbBytes(Image<Pixel> image)
         {
             var rgbBytes = new List<byte>();

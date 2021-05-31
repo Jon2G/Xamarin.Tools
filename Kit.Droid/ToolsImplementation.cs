@@ -16,7 +16,6 @@ using Android.Telephony;
 using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
 
-
 namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
@@ -30,11 +29,12 @@ namespace Kit.Droid
             this.MainActivity = MainActivity;
             Init();
         }
+
         public override void Init()
         {
-            Init(new CustomMessageBoxService(),
-                new SynchronizeInvoke(),new ScreenManagerService(),
-                new ImageExtensions(),new BarCodeBuilder());
+            Init(new Kit.Forms.Dialogs.Dialogs(),
+                new SynchronizeInvoke(), new ScreenManagerService(),
+                new ImageExtensions(), new BarCodeBuilder());
 
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
@@ -43,19 +43,19 @@ namespace Kit.Droid
                 // .Enrich.WithMemoryUsage()
                 //.Enrich.WithThreadId()
                 // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
-                .WriteTo.Async(x=>x.AndroidLog())
+                .WriteTo.Async(x => x.AndroidLog())
                 // Create a custom logger in order to set another limit,
                 // particularly, any logs from Information level will also be written into a rolling file
-                .WriteTo.Async(x=>x.Logger(config =>
-                    config
-                        .MinimumLevel.Information()
-                        .WriteTo.Async(x => x.File(Log.Current.LoggerPath, retainedFileCountLimit: 7))
-                )) 
+                .WriteTo.Async(x => x.Logger(config =>
+                      config
+                          .MinimumLevel.Information()
+                          .WriteTo.Async(x => x.File(Log.Current.LoggerPath, retainedFileCountLimit: 7))
+                ))
                 // And create another logger so that logs at Fatal level will immediately send email
                 .WriteTo.Logger(config =>
                     config
                         .MinimumLevel.Fatal()
-                        .WriteTo.Async(x=>x.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1))
+                        .WriteTo.Async(x => x.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1))
                 )).CreateLogger(), CriticalAlert);
         }
 
@@ -63,7 +63,5 @@ namespace Kit.Droid
         {
             Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
         }
-
-
     }
 }

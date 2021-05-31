@@ -22,9 +22,9 @@ using Kit.Sql.Helpers;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.WPF.Controls;
+using Kit.WPF.Dialogs.ICustomMessageBox;
 using Kit.WPF.Extensions;
 using Kit.WPF.Services;
-using Kit.WPF.Services.ICustomMessageBox;
 using Microsoft.Win32;
 using ZXing;
 
@@ -146,7 +146,7 @@ namespace Kit.WPF.Pages
                 }
                 else
                 {
-                    Kit.WPF.Services.ICustomMessageBox.CustomMessageBox
+                    CustomMessageBox
                         .Show("Formato Qr incorrecto", "Incorrecto", CustomMessageBoxButton.OK, CustomMessageBoxImage.Error);
                 }
             }

@@ -23,7 +23,7 @@ namespace Kit.iOS
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
         public override void Init()
         {
-            Init(new CustomMessageBoxService(), new SynchronizeInvoke(), new ScreenManagerService(), new ImageExtensions(), new BarCodeBuilder());
+            Init(new CustomMessageBox(), new SynchronizeInvoke(), new ScreenManagerService(), new ImageExtensions(), new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()

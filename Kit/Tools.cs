@@ -33,7 +33,14 @@ namespace Kit
             set => currentInstance = value;
         }
 
-        public static bool Debugging => Debugger.IsAttached;
+        private static bool? _Debugging = null;
+        public static bool Debugging => _Debugging ?? Debugger.IsAttached;
+
+        public static bool SetDebugging(bool? debugging = null)
+        {
+            Tools._Debugging = debugging;
+            return Debugging;
+        }
 
         protected static void BaseInit()
         {
