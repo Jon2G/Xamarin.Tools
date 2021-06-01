@@ -16,7 +16,7 @@ namespace Kit.Forms.Controls.CrossImage
         {
             if (Native is ImageSource ximage)
             {
-                return Extensions.Helpers.ImageToByte(ximage);
+                return Extensions.ImageExtensions.ImageToByte(ximage);
             }
             return null;
         }

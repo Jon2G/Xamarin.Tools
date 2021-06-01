@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Kit.Controls.CrossImage
 {
-   public abstract class CrossImageExtensions
+    public abstract class CrossImageExtensions
     {
         public abstract CrossImage FromStream(Func<Stream> stream);
 
         public abstract CrossImage FromFile(FileInfo fileInfo);
 
-        public CrossImage ByteToImage(byte[] imagen)
+        public abstract Task<byte[]> GetByteArray(CrossImage CrossImage);
+
+        public virtual CrossImage ByteToImage(byte[] imagen)
         {
             return FromStream(() => new MemoryStream(imagen));
         }

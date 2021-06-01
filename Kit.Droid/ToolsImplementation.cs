@@ -15,6 +15,7 @@ using Serilog;
 using Android.Telephony;
 using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
+using Kit.Forms.Extensions;
 
 namespace Kit.Droid
 {
@@ -34,7 +35,7 @@ namespace Kit.Droid
         {
             Init(new Kit.Forms.Dialogs.Dialogs(),
                 new SynchronizeInvoke(), new ScreenManagerService(),
-                new ImageExtensions(), new BarCodeBuilder());
+                new Kit.Forms.Controls.CrossImage.CrossImageExtensions(), new BarCodeBuilder());
 
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
