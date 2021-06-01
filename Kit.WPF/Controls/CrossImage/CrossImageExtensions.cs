@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace Kit.WPF.Controls.CrossImage
 {
-    public class ImageExtensions : Kit.Controls.CrossImage.CrossImageExtensions
+    public class CrossImageExtensions : Kit.Controls.CrossImage.CrossImageExtensions
     {
         public override Kit.Controls.CrossImage.CrossImage FromFile(FileInfo fileInfo)
         {
@@ -36,6 +36,11 @@ namespace Kit.WPF.Controls.CrossImage
             //w.Content = wimage;
             //w.ShowDialog();
             return image;
+        }
+
+        public override Task<byte[]> GetByteArray(Kit.Controls.CrossImage.CrossImage CrossImage)
+        {
+            throw new NotImplementedException();
         }
     }
 }
