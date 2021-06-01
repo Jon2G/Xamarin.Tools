@@ -28,7 +28,7 @@ namespace Kit.WPF
             Init(
                 new Kit.WPF.Dialogs.Dialogs(),
                 new SynchronizeInvoke(), new ScreenManagerService(),
-                new Kit.WPF.Controls.CrossImage.ImageExtensions(),
+                new Kit.WPF.Controls.CrossImage.CrossImageExtensions(),
                 new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
