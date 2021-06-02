@@ -14,7 +14,7 @@ namespace Kit.Extensions
 {
     public static partial class Helpers
     {
-        public static byte[] GetByteArray(this Stream input)
+        public static async Task<byte[]> GetByteArray(this Stream input)
         {
             if (input is MemoryStream mem)
             {
@@ -24,7 +24,7 @@ namespace Kit.Extensions
             using (MemoryStream ms = new MemoryStream())
             {
                 int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                while ((read =await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
                     ms.Write(buffer, 0, read);
                 }
@@ -32,9 +32,9 @@ namespace Kit.Extensions
             }
         }
 
-        public static string ToImageString(this Stream stream)
+        public static async Task<string> ToImageString(this Stream stream)
         {
-            return ToImageString(stream.GetByteArray());
+            return ToImageString(await stream.GetByteArray());
         }
 
         public static string ToImageString(this byte[] bytes)

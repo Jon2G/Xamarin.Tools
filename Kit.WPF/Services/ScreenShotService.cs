@@ -54,7 +54,7 @@ namespace Kit.WPF.Services
             using (Stream fileStream = new MemoryStream())
             {
                 pngImage.Save(fileStream);
-                buffer = Kit.Extensions.Helpers.GetByteArray(fileStream);
+                buffer =await Kit.Extensions.Helpers.GetByteArray(fileStream);
             }
 
             return buffer;

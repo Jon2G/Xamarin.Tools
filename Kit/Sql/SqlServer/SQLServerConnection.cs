@@ -354,6 +354,7 @@ namespace Kit.Sql.SqlServer
             catch (Exception ex)
             {
                 Log.AlertOnDBConnectionError(ex);
+                Log.Logger.Error(ex,sql);
             }
 
             return result;
