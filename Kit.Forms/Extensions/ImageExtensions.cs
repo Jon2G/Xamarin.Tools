@@ -15,7 +15,7 @@ namespace Kit.Forms.Extensions
         public static async Task<byte[]> GetByteArray(StreamImageSource streamImageSource)
         {
             Stream stream = await streamImageSource.Stream.Invoke(System.Threading.CancellationToken.None);
-            return stream.GetByteArray();
+            return await stream.GetByteArray();
         }
 
         public static byte[] ImageToByte(this ImageSource ImageSource)

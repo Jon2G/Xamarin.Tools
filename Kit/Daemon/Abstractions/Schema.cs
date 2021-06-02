@@ -49,19 +49,26 @@ namespace Kit.Daemon.Abstractions
                     Log.Logger.Warning("SyncDirection is not defined");
                     directionAttribute = new SyncMode(SyncDirection.Download);
                 }
-                this.DownloadTables.Add(
-                    Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
-                    , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                this.DownloadTables.Add(
-                    Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                    , Daemon.Current.DaemonConfig.Local.GetMapping(type));
 
-                this.UploadTables.Add(
+                if (directionAttribute.Direction == SyncDirection.Download || directionAttribute.Direction == SyncDirection.TwoWay)
+                {
+                    this.DownloadTables.Add(
+                        Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
+                        , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                    this.DownloadTables.Add(
+                        Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                        , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                }
+
+                if (directionAttribute.Direction == SyncDirection.Upload || directionAttribute.Direction == SyncDirection.TwoWay)
+                {
+                    this.UploadTables.Add(
                     Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
                     , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                this.UploadTables.Add(
-                    Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                    , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                    this.UploadTables.Add(
+                        Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
+                        , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                }
 
                 //switch (directionAttribute.Direction)
                 //{
@@ -145,7 +152,7 @@ namespace Kit.Daemon.Abstractions
 
         internal bool CheckTriggers(SQLServerConnection Connection)
         {
-            foreach (var table in this.DownloadTables.Where(x=>x.Value is Kit.Sql.SqlServer.TableMapping))
+            foreach (var table in this.DownloadTables.Where(x => x.Value is Kit.Sql.SqlServer.TableMapping))
             {
                 //if (IsSleepRequested || OffLine)
                 //{

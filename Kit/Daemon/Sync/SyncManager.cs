@@ -291,6 +291,8 @@ namespace Kit.Daemon.Sync
                     else
                     {
                         Log.Logger.Error("[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{0}'", this.CurrentPackage.TableName);
+                        CurrentPackage.MarkAsSynced(source_con);
+                        Processed++;
                     }
                 }
                 catch (Exception ex)
