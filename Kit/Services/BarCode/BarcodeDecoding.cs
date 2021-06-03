@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using ImageProcessing.JPEGCodec;
 using ImageProcessing.PNGCodec;
@@ -22,11 +21,28 @@ namespace Kit.Services.BarCode
         {
         }
 
-        public async Task<Result> Decode(FileInfo file, BarcodeFormat format, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
+        public Result Decode(BinaryBitmap image, BarcodeFormat format, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
+        {
+            MultiFormatReader r = GetReader(format, aditionalHints);
+            Result result = r.decode(image);
+            return result;
+        }
+
+        public Result Decode(Stream stream, BarcodeFormat format, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
+        {
+            BinaryBitmap image = GetImage(stream);
+            if (image is null)
+            {
+                return null;
+            }
+            return Decode(image, format, aditionalHints);
+        }
+
+        public Result Decode(FileInfo file, BarcodeFormat format, KeyValuePair<DecodeHintType, object>[] aditionalHints = null)
         {
             MultiFormatReader r = GetReader(format, aditionalHints);
 
-            BinaryBitmap image = await GetImage(file);
+            BinaryBitmap image = GetImage(file);
             if (image is null)
             {
                 return null;
@@ -59,29 +75,43 @@ namespace Kit.Services.BarCode
             return reader;
         }
 
-        private async Task<BinaryBitmap> GetImage(FileInfo fileName)
+        private BinaryBitmap GetImage(FileInfo fileName)
         {
+            try
+            {
+                using (var stream = fileName.OpenRead())
+                {
+                    return GetImage(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "BarcodeDecoding.GetImage");
+                Tools.Instance.Dialogs.CustomMessageBox.Show(ex.Message);
+            }
+            return null;
+        }
+
+        private BinaryBitmap GetImage(Stream mstream)
+        {
+            PngCodec.Register();
+            JPEGCodec.Register();
+            var png = new Hjg.Pngcs.Chunks.PngChunkIHDR(new Hjg.Pngcs.ImageInfo(10, 10, 8, true));
             BinaryBitmap bBitmap = null;
             try
             {
-                var png = new Hjg.Pngcs.Chunks.PngChunkIHDR(new Hjg.Pngcs.ImageInfo(10, 10, 8, true));
-
-                using (var stream = fileName.OpenRead())
+                using (Stream stream = mstream)
                 {
+                    stream.Position = 0;
                     Image<Pixel> result;
-                    using (var memory = new MemoryStream())
-                    {
-                        await stream.CopyToAsync(memory);
-                        memory.Position = 0;
 
-                        BitmapFactory factory = new BitmapFactory();
-                        factory.AddCodec(new BitmapCodec());
-                        factory.AddCodec(new PngCodec());
-                        factory.AddCodec(new JPEGCodec());
-                        factory.AddCodec(new TGACodec());
-                        result = factory.Decode(memory);
-                        result = result.GetBitmap(0, 0, result.Width, result.Height);
-                    }
+                    BitmapFactory factory = new BitmapFactory();
+                    factory.AddCodec(new BitmapCodec());
+                    factory.AddCodec(new PngCodec());
+                    factory.AddCodec(new JPEGCodec());
+                    factory.AddCodec(new TGACodec());
+                    result = factory.Decode(stream);
+                    result = result.GetBitmap(0, 0, result.Width, result.Height);
 
                     byte[] rgbBytes = GetRgbBytes(result);
                     var bin = new HybridBinarizer(new RGBLuminanceSource(rgbBytes, result.Width, result.Height));
@@ -93,7 +123,7 @@ namespace Kit.Services.BarCode
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "BarcodeDecoding.GetImage");
-                await Tools.Instance.Dialogs.CustomMessageBox.Show(ex.Message);
+                Tools.Instance.Dialogs.CustomMessageBox.Show(ex.Message);
             }
             return bBitmap;
         }

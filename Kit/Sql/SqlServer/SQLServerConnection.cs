@@ -354,7 +354,7 @@ namespace Kit.Sql.SqlServer
             catch (Exception ex)
             {
                 Log.AlertOnDBConnectionError(ex);
-                Log.Logger.Error(ex,sql);
+                Log.Logger.Error(ex, sql);
             }
 
             return result;
@@ -1001,6 +1001,27 @@ namespace Kit.Sql.SqlServer
             this.Port = Port;
             this.User = User;
             this.Password = Password;
+        }
+
+        public override SqlBase CheckTables(int DBVersion, params Type[] Tables)
+        {
+            CreateTable<SyncVersions>();
+            CreateTable<ChangesHistory>();
+            CreateTable<SyncHistory>();
+            CreateTable<SyncDevicesInfo>();
+            CreateTable<DeviceInformation>();
+            foreach (Type table in Tables)
+            {
+                var map = this.GetMapping(table);
+                SyncVersions version = SyncVersions.GetVersion(this, map);
+                if (version.Version != DBVersion)
+                {
+                    this.CreateTable(map);
+                    version.Version = DBVersion;
+                    version.Save(this);
+                }
+            }
+            return this;
         }
 
         private static SqlConnectionStringBuilder BuildConnectionString
@@ -2705,6 +2726,82 @@ WHERE
             return Update(obj, Orm.GetType(obj));
         }
 
+        public override int Update(object obj, string Condition, bool shouldnotify = true, params BaseTableQuery.Condition[] pconditions)
+        {
+            if (obj == null)
+            {
+                return 0;
+            }
+            ////////////////////////
+            ///
+            List<BaseTableQuery.Condition> conditions = new List<BaseTableQuery.Condition>(pconditions);
+            List<object> args = new List<object>(conditions.Select(x => x.Value));
+
+            object[] conditions_array = (this is SQLServerConnection ? conditions.ToArray() : args.ToArray());
+
+            var Table = this.Table(obj.GetType()).Table;
+
+            var cols = from p in Table.Columns
+                       where p.Name != nameof(ISync.Guid)
+                       select p;
+            var vals = from c in cols
+                       where c.Name != nameof(ISync.Guid)
+                       select c.GetValue(obj);
+            var ps = new List<object>(vals);
+            if (ps.Count == 0)
+            {
+                // There is a PK but no accompanying data,
+                // so reset the PK to make the UPDATE work.
+                cols = Table.Columns;
+                vals = from c in cols
+                       select c.GetValue(obj);
+                ps = new List<object>(vals);
+            }
+            ps.AddRange(conditions.Select(x => x.Value));
+            var q = string.Format("update \"{0}\" set {1} WHERE {2}",
+                Table.TableName, string.Join(",", (from c in cols
+                                                   select "\"" + c.Name + "\" = ? ").ToArray()), Condition);
+            ///
+            int rowsAffected = 0;
+            try
+            {
+                rowsAffected = Execute(q, GetParameters(ps));
+            }
+            catch (SqlServerException ex)
+            {
+                throw ex;
+            }
+
+            if (shouldnotify && rowsAffected > 0)
+            {
+                //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
+                //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
+                OnTableChanged((Kit.Sql.SqlServer.TableMapping)Table, NotifyTableChangedAction.Update);
+            }
+
+            return rowsAffected;
+        }
+
+        private SqlParameter[] GetParameters(List<object> ps)
+        {
+            SqlParameter[] parameters = new SqlParameter[ps.Count];
+            if (ps.Count > 0)
+            {
+                for (int i = 0; i < ps.Count; i++)
+                {
+                    Condition condition = (Condition)(ps[i]);
+                    if (condition.Value is null)
+                    {
+                        condition.SetValue(DBNull.Value);
+                        parameters[i] = new SqlParameter(condition.ColumnName, DBNull.Value);
+                        continue;
+                    }
+                    parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
+                }
+            }
+            return parameters;
+        }
+
         /// <summary>
         /// Updates all of the columns of a table using the specified object
         /// except for its primary key.
@@ -2842,22 +2939,7 @@ WHERE
             int rowsAffected = 0;
             try
             {
-                SqlParameter[] parameters = new SqlParameter[ps.Count];
-                if (ps.Count > 0)
-                {
-                    for (int i = 0; i < ps.Count; i++)
-                    {
-                        Condition condition = (Condition)(ps[i]);
-                        if (condition.Value is null)
-                        {
-                            condition.SetValue(DBNull.Value);
-                            parameters[i] = new SqlParameter(condition.ColumnName, DBNull.Value);
-                            continue;
-                        }
-                        parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
-                    }
-                }
-                rowsAffected = Execute(q, parameters);
+                rowsAffected = Execute(q, GetParameters(ps));
             }
             catch (SqlServerException ex)
             {

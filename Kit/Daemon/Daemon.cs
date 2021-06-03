@@ -204,32 +204,6 @@ namespace Kit.Daemon
         }
 
         /// <summary>
-        /// Comprueba que las tablas de versión coincidan con la versión de este servicio, las crea ó renueva según sea el caso
-        /// </summary>
-        public Daemon SetUp(SQLServerConnection Connection)
-        {
-            var versionTable = Connection.Table<SyncVersions>();
-            foreach (var type in new[] {
-                typeof(SyncVersions), typeof(SyncDevicesInfo)
-                , typeof(ChangesHistory), typeof(SyncHistory)})
-            {
-                TableMapping table = Connection.GetMapping(type);
-                CreateTableResult result = CreateTableResult.None;
-                SyncVersions version = SyncVersions.GetVersion(Connection, table);
-                if (version.Version != DaemonConfig.DbVersion)
-                {
-                    result = Connection.CreateTable(table);
-                }
-                if (result != CreateTableResult.None)
-                {
-                    version.Version = DaemonConfig.DbVersion;
-                    Connection.Update(version);
-                }
-            }
-            return this;
-        }
-
-        /// <summary>
         /// Despierta al demonio en caso de que este dormido,si no esta presente lo invoca,
         /// si esta ocupado le indica que busque por cambios nuevos
         /// </summary>
@@ -298,29 +272,16 @@ namespace Kit.Daemon
                 }
 
                 SQLServerConnection SQLH = DaemonConfig.GetSqlServerConnection();
-                CheckSyncTables(SQLH);
                 SQLH.SetCacheIdentity(false);
                 if (!Device.Current.EnsureDeviceIsRegistred(SQLH))
                 {
                     return;
                 }
-
+                SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll().Select(x => x.Value.MappedType));
                 Schema.CheckTriggers(SQLH);
 
-                //
-                //SQLHLite.CreateTable<SyncHistory>();
-                //IVersionControlTable controlTable = new VersionControlTable(SQLHLite);
-                //if (!SQLHLite.TableExists(controlTable.TableName))
-                //{
-                //    controlTable.CreateTable();
-                //}
-                SetUp(SQLH);
-
                 SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
-                var types = new List<Type>(this.Schema.DownloadTables.Select(x => x.Value.MappedType));
-                types.AddRange(this.Schema.DownloadTables.Select(x => x.Value.MappedType));
-                SQLHLite.CheckTables(types.ToArray());
-
+                SQLHLite.CheckTables(Schema.DownloadTables.Select(x => x.Value.MappedType));
                 if (OnInicializate != null)
                 {
                     if (!OnInicializate.Invoke())
@@ -342,33 +303,11 @@ namespace Kit.Daemon
                     SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
                     SQLHLite.Update(device);
                 }
-                //Log.OnConecctionLost += Log_OnConecctionLost;
                 IsInited = true;
             }
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "Al inicializar el demonio");
-            }
-        }
-
-        private void CheckSyncTables(SQLServerConnection con)
-        {
-            foreach (BaseTableQuery table in
-                new BaseTableQuery[]{
-                    con.Table<SyncVersions>(),
-                    con.Table<SyncDevicesInfo>(),
-                    con.Table<ChangesHistory>(),
-                    con.Table<SyncHistory>()
-            })
-            {
-                SyncVersions version = SyncVersions.GetVersion(con, table);
-                if (version.Version != DaemonConfig.DbVersion)
-                {
-                    con.DropTable(table.Table);
-                    con.CreateTable(table.Table);
-                    version.Version = DaemonConfig.DbVersion;
-                    version.Save(con);
-                }
             }
         }
 

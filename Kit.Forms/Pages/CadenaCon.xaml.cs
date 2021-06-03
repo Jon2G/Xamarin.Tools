@@ -28,6 +28,7 @@ using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using ZXing;
 using System.Windows.Input;
+using FFImageLoading.Forms;
 
 namespace Kit.Forms.Pages
 {
@@ -36,38 +37,10 @@ namespace Kit.Forms.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CadenaCon : BasePage
     {
-        public static readonly BindableProperty LogoProperty = BindableProperty.Create(
-            propertyName: nameof(Logo), returnType: typeof(ImageSource), declaringType: typeof(CadenaCon), defaultValue: null);
-
-        [TypeConverter(typeof(Converters.MyImageSourceConverter))]
-        public ImageSource Logo
-        {
-            get { return (ImageSource)GetValue(LogoProperty); }
-            set
-            {
-                SetValue(LogoProperty, value);
-                Raise(() => LogoProperty);
-            }
-        }
-
-        public static readonly BindableProperty IsLogoVisibleProperty = BindableProperty.Create(
-            propertyName: nameof(IsLogoVisible), returnType: typeof(bool), declaringType: typeof(CadenaCon), defaultValue: false);
-
-        public bool IsLogoVisible
-        {
-            get { return (bool)GetValue(IsLogoVisibleProperty); }
-            set
-            {
-                SetValue(IsLogoVisibleProperty, value);
-                Raise(() => IsLogoVisible);
-            }
-        }
-
         public Lector Leector { get; set; }
 
         public event EventHandler Confirmado;
 
-        public bool ShouldSetUpDaemon { get; set; }
         public SetUpConnectionStringViewModelBase Model { get; set; }
 
         public static bool IsActive()
@@ -182,11 +155,6 @@ namespace Kit.Forms.Pages
                 else
                 {
                     this.Model.Save();
-
-                    if (this.ShouldSetUpDaemon)
-                    {
-                        Daemon.Daemon.Current.SetUp(this.Model.SqlServer);
-                    }
 
                     if (this.Navigation.ModalStack.Count > 0)
                     {
@@ -305,8 +273,8 @@ namespace Kit.Forms.Pages
                 Cancel = new ActionSheetOption("Cancelar"),
                 Options = new List<ActionSheetOption>()
                 {
-                    new ActionSheetOption( "Usar camara",FromCamera),
-                    new ActionSheetOption("Seleccionar desde la galería",FromGallery)
+                    new ActionSheetOption( "Usar camara",()=>Task.Run(FromCamera)),
+                    new ActionSheetOption("Seleccionar desde la galería",()=>Task.Run(FromGallery))
                 },
                 UseBottomSheet = true
             };
@@ -323,13 +291,24 @@ namespace Kit.Forms.Pages
             {
                 return;
             }
-            BarcodeDecoding reader = new BarcodeDecoding();
-            SharedZXingNet::ZXing.Result
-             result = await reader.Decode(new FileInfo(qr.FullPath), SharedZXingNet::ZXing.BarcodeFormat.QR_CODE
-                , new[]
+            SharedZXingNet::ZXing.Result result = null;
+            var qr_file = await qr.LoadPhotoAsync();
+
+            using (MemoryStream memory = new MemoryStream())
+            {
+                using (FileStream file = new FileStream(qr_file.FullName, FileMode.Open, FileAccess.Read))
                 {
+                    await file.CopyToAsync(memory);
+                }
+                BarcodeDecoding reader = new BarcodeDecoding();
+
+                result = reader.Decode(memory, SharedZXingNet::ZXing.BarcodeFormat.QR_CODE
+                   , new[]
+                   {
                     new KeyValuePair<SharedZXingNet::ZXing.DecodeHintType, object>(SharedZXingNet::ZXing.DecodeHintType.TRY_HARDER,null)
-                });
+                   });
+            }
+
             Deserialize(result?.Text);
         }
 

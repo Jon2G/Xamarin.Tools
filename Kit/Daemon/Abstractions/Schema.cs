@@ -29,7 +29,7 @@ namespace Kit.Daemon.Abstractions
             this.HasDownloadTables = this.DownloadTables.Any();
             this.HasUploadTables = this.UploadTables.Any();
         }
-
+        public Dictionary<string, TableMapping> GetAll() => this.DownloadTables.Merge(this.UploadTables);
         private void BuildSchema(params Type[] tables)
         {
             foreach (Type type in tables)
