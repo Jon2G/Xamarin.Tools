@@ -115,8 +115,12 @@ namespace Kit.Sql.SqlServer
 
         public object Single(string sql, params SqlParameter[] parameters)
         {
+            return Single(sql, CommandType.Text, parameters);
+        }
+        public object Single(string sql,CommandType type ,params SqlParameter[] parameters)
+        {
             object result = default;
-            using (IReader reader = Read(sql, CommandType.Text, parameters))
+            using (IReader reader = Read(sql, type, parameters))
             {
                 if (reader.Read())
                 {
@@ -140,6 +144,10 @@ namespace Kit.Sql.SqlServer
             return Single(sql, null);
         }
 
+        public T Single<T>(string sql,CommandType type, params SqlParameter[] parameters) where T : IConvertible
+        {
+            return Sqlh.Parse<T>(Single(sql,type, parameters));
+        }
         public T Single<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
         {
             return Sqlh.Parse<T>(Single(sql, parameters));
