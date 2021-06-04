@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Kit.Sql.Enums;
@@ -129,6 +130,7 @@ namespace Kit.Sql.Base
         /// The number of rows added to the table.
         /// </returns>
         public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify = false);
+
         public abstract int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true);
 
         /// <summary>
@@ -141,6 +143,21 @@ namespace Kit.Sql.Base
         /// The number of rows deleted.
         /// </returns>
         public abstract int Delete(object objectToDelete);
+
+        /// <summary>
+        /// Comprueba que la base de datos exista y que sea la versión mas reciente
+        /// de lo contrario crea una nueva base de datos
+        /// </summary>
+        public SqlBase CheckTables(int DBVersion, IEnumerable<Type> Tables)
+        {
+            return CheckTables(DBVersion, Tables.ToArray());
+        }
+
+        /// <summary>
+        /// Comprueba que la base de datos exista y que sea la versión mas reciente
+        /// de lo contrario crea una nueva base de datos
+        /// </summary>
+        public abstract SqlBase CheckTables(int DBVersion, params Type[] Tables);
 
         protected SqlBase()
         {
@@ -328,6 +345,8 @@ namespace Kit.Sql.Base
         public abstract IReader Read(string sql);
 
         public abstract int Update(object obj);
+
+        public abstract int Update(object obj, string Condition, bool shouldnotify = true, params BaseTableQuery.Condition[] pconditions);
 
         /// <summary>
         /// Updates all of the columns of a table using the specified object

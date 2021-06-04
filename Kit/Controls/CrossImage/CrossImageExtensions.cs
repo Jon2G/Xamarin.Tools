@@ -15,7 +15,7 @@ namespace Kit.Controls.CrossImage
 
         public abstract Task<byte[]> GetByteArray(CrossImage CrossImage);
 
-        public virtual CrossImage ByteToImage(byte[] imagen)
+        public virtual CrossImage FromByteArray(byte[] imagen)
         {
             return FromStream(() => new MemoryStream(imagen));
         }

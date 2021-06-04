@@ -74,11 +74,17 @@ namespace Kit.Sql.Sqlite
             return new Kit.Sql.Sqlite.TableMapping(type, createFlags);
         }
 
-        /// <summary>
-        /// Comprueba que la base de datos exista y que sea la versión mas reciente
-        /// de lo contrario crea una nueva base de datos
-        /// </summary>
+        public SQLiteConnection CheckTables(IEnumerable<Type> Tables)
+        {
+            return (SQLiteConnection)CheckTables(DBVersion, Tables);
+        }
+
         public SQLiteConnection CheckTables(params Type[] Tables)
+        {
+            return (SQLiteConnection)CheckTables(DBVersion, Tables);
+        }
+
+        public override SqlBase CheckTables(int DBVersion, params Type[] Tables)
         {
             CreateTable<DatabaseVersion>();
             DatabaseVersion Version = Table<DatabaseVersion>().FirstOrDefault();
@@ -90,7 +96,7 @@ namespace Kit.Sql.Sqlite
                 File.Delete(DatabasePath);
                 RenewConnection();
                 CreateSchema();
-                return CheckTables(Tables);
+                return CheckTables(DBVersion, Tables);
             }
             CreateTable<ChangesHistory>();
             CreateTable<SyncHistory>();
@@ -852,7 +858,6 @@ namespace Kit.Sql.Sqlite
                     query += " without rowid";
                 }
 
-
                 var InitTableAttributetype = typeof(InitTableAttribute);
                 var InitMethod = map.MappedType.GetMethods()
                       .Where(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()).FirstOrDefault();
@@ -862,8 +867,6 @@ namespace Kit.Sql.Sqlite
                 }
                 Execute(query);
                 InitMethod?.Invoke(null, null);
-
-
             }
             else
             {
@@ -1231,7 +1234,6 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public int Execute(string query, params object[] args)
         {
-
             var cmd = CreateCommand(query, args);
 
             if (TimeExecution)
@@ -1440,9 +1442,10 @@ namespace Kit.Sql.Sqlite
 
         public override BaseTableQuery Table(Type Type)
         {
-            var queryType = typeof(SQLiteTableQuery<dynamic>);
-            queryType.MakeGenericType(Type);
-            return (BaseTableQuery)Activator.CreateInstance(queryType, new object[] { });
+            var queryType = typeof(SQLiteTableQuery<>);
+            queryType = queryType.MakeGenericType(Type);
+
+            return (BaseTableQuery)Activator.CreateInstance(queryType, new object[] { this });
         }
 
         /// <summary>
@@ -1909,6 +1912,7 @@ namespace Kit.Sql.Sqlite
             }
             return c;
         }
+
         public int InsertAll(params object[] objects)
         {
             var c = 0;
@@ -1918,6 +1922,7 @@ namespace Kit.Sql.Sqlite
             }
             return c;
         }
+
         /// <summary>
         /// Inserts all specified objects.
         /// </summary>
@@ -2263,6 +2268,71 @@ namespace Kit.Sql.Sqlite
                 return 0;
             }
             return Update(obj, Orm.GetType(obj));
+        }
+
+        public override int Update(object obj, string Condition, bool shouldnotify = true, params BaseTableQuery.Condition[] pconditions)
+        {
+            if (obj == null)
+            {
+                return 0;
+            }
+            ////////////////////////
+            ///
+            List<BaseTableQuery.Condition> conditions = new List<BaseTableQuery.Condition>(pconditions);
+            List<object> args = new List<object>(conditions.Select(x => x.Value));
+
+            object[] conditions_array = (this is SQLiteConnection ? conditions.ToArray() : args.ToArray());
+
+            var Table = this.Table(obj.GetType()).Table;
+
+            var cols = from p in Table.Columns
+                       where p.Name != nameof(ISync.Guid)
+                       select p;
+            var vals = from c in cols
+                       where c.Name != nameof(ISync.Guid)
+                       select c.GetValue(obj);
+            var ps = new List<object>(vals);
+            if (ps.Count == 0)
+            {
+                // There is a PK but no accompanying data,
+                // so reset the PK to make the UPDATE work.
+                cols = Table.Columns;
+                vals = from c in cols
+                       select c.GetValue(obj);
+                ps = new List<object>(vals);
+            }
+            ps.AddRange(conditions.Select(x => x.Value));
+            var q = string.Format("update \"{0}\" set {1} WHERE {2}",
+                Table.TableName, string.Join(",", (from c in cols
+                                                   select "\"" + c.Name + "\" = ? ").ToArray()), Condition);
+            ///
+            int rowsAffected = 0;
+            try
+            {
+                if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
+                {
+                    partitioned.ToPartitionedDb(Table.TableName);
+                }
+                rowsAffected = Execute(q, ps.ToArray());
+            }
+            catch (SQLiteException ex)
+            {
+                if (ex.Result == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode(this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull)
+                {
+                    throw NotNullConstraintViolationException.New(ex, Table, obj);
+                }
+
+                throw ex;
+            }
+
+            if (shouldnotify && rowsAffected > 0)
+            {
+                //map.SyncGuid.SetValue(obj, ExecuteScalar<Guid>(
+                //    $"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", map.PK.GetValue(obj)));
+                OnTableChanged((Kit.Sql.Sqlite.TableMapping)Table, NotifyTableChangedAction.Update, obj);
+            }
+
+            return rowsAffected;
         }
 
         public override int Update<T>(T obj, Expression<Func<T, bool>> predExpr, bool shouldnotify = true)

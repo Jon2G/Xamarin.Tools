@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using Kit.Daemon.Enums;
 using Kit.Model;
@@ -7,6 +9,7 @@ using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
 using Kit.Sql.Interfaces;
+using Kit.Sql.Sqlite;
 using Kit.Sql.Tables;
 
 namespace Kit.Daemon.Sync
@@ -193,6 +196,23 @@ namespace Kit.Daemon.Sync
                     OnUploaded(action);
                     break;
             }
+        }
+        public virtual ISync GetBySyncGuid(SqlBase con, Guid syncguid)
+        {
+            var table = con.Table(this.GetType()).Table;
+            string selection_list = table.SelectionList;
+            string condition = (con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
+            CommandBase command = con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
+             new BaseTableQuery.Condition("SyncGuid", syncguid));
+
+            MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(Kit.Sql.Base.TableMapping) });
+            method = method.MakeGenericMethod(table.MappedType);
+            IEnumerable<dynamic> result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table });
+
+            dynamic i_result = result.FirstOrDefault();
+            ISync read = Convert.ChangeType(i_result, typeof(ISync));
+
+            return read;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Kit.Forms.Controls.CrossImage
             return image;
         }
 
-        public override Kit.Controls.CrossImage.CrossImage ByteToImage(byte[] imagen)
+        public override Kit.Controls.CrossImage.CrossImage FromByteArray(byte[] imagen)
         {
             Kit.Forms.Controls.CrossImage.CrossImage image = new Kit.Forms.Controls.CrossImage.CrossImage();
             image.Native = ImageSource.FromStream(() => new MemoryStream(imagen));

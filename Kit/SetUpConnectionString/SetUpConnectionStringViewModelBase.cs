@@ -106,25 +106,26 @@ namespace Kit.CadenaConexion
         public ICommand SuggestDatabaseCommand { get; }
 
         private bool LoadingDatabases;
+
         private async void SuggestDatabase()
         {
-            await Task.Yield();
-            if (!this.DatabaseSuggestions.Any()&&!LoadingDatabases)
-            {
-                try
-                {
-                    LoadingDatabases = true;
-                    using (SQLServerConnection con = new SQLServerConnection(this.ConnectionString))
-                    {
-                        this.DatabaseSuggestions.AddRange(con.GetDatabasesNames());
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Logger.Error(e, "Leyendo las bases de datos");
-                }
-                finally { LoadingDatabases = false; }
-            }
+            //await Task.Yield();
+            //if (!this.DatabaseSuggestions.Any()&&!LoadingDatabases)
+            //{
+            //    try
+            //    {
+            //        LoadingDatabases = true;
+            //        using (SQLServerConnection con = new SQLServerConnection(this.ConnectionString))
+            //        {
+            //            this.DatabaseSuggestions.AddRange(con.GetDatabasesNames());
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Log.Logger.Error(e, "Leyendo las bases de datos");
+            //    }
+            //    finally { LoadingDatabases = false; }
+            //}
         }
 
         private void SuggestPort()

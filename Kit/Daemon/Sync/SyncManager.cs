@@ -230,67 +230,72 @@ namespace Kit.Daemon.Sync
                         if (Daemon.Current.IsSleepRequested) { return false; }
                         dynamic i_result = result.FirstOrDefault();
                         ISync read = Convert.ChangeType(i_result, typeof(ISync));
-                        switch (CurrentPackage.Action)
+                        if (read != null)
                         {
-                            case NotifyTableChangedAction.Insert:
-                            case NotifyTableChangedAction.Update:
+                            switch (CurrentPackage.Action)
+                            {
+                                case NotifyTableChangedAction.Insert:
+                                case NotifyTableChangedAction.Update:
 
-                                if (read != null && (direccion == SyncDirecction.Local || read.ShouldSync(source_con, target_con)))
-                                {
-                                    CanDo = true;
-                                    object old_pk = null;
+                                    if (direccion == SyncDirecction.Local || read.ShouldSync(source_con, target_con))
+                                    {
+                                        CanDo = true;
+                                        object old_pk = null;
 
-                                    if (table.PK != null)
-                                    {
-                                        old_pk = read.GetPk();
-                                    }
+                                        if (table.PK != null)
+                                        {
+                                            old_pk = read.GetPk();
+                                        }
 
-                                    if (read.CustomUpload(source_con, target_con))
-                                    {
-                                        CurrentPackage.MarkAsSynced(source_con);
-                                        Processed++;
-                                        read.OnSynced(direccion, action);
-                                        return true;
-                                    }
-
-                                    if (target_con is SQLiteConnection)
-                                    {
-                                        target_con.InsertOrReplace(read, false);
-                                    }
-                                    else
-                                    {
-                                        target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
-                                        target_con.Insert(read, String.Empty, read.GetType(), false);
-                                    }
-
-                                    if (source_con is SQLiteConnection lite)
-                                    {
-                                        if (read.Affects(lite, old_pk))
+                                        if (read.CustomUpload(source_con, target_con))
                                         {
                                             CurrentPackage.MarkAsSynced(source_con);
                                             Processed++;
                                             read.OnSynced(direccion, action);
                                             return true;
                                         }
-                                    }
 
+                                        if (target_con is SQLiteConnection)
+                                        {
+                                            target_con.InsertOrReplace(read, false);
+                                        }
+                                        else
+                                        {
+                                            target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
+                                            target_con.Insert(read, String.Empty, read.GetType(), false);
+                                        }
+
+                                        if (source_con is SQLiteConnection lite)
+                                        {
+                                            if (read.Affects(lite, old_pk))
+                                            {
+                                                CurrentPackage.MarkAsSynced(source_con);
+                                                Processed++;
+                                                read.OnSynced(direccion, action);
+                                                return true;
+                                            }
+                                        }
+
+                                        CurrentPackage.MarkAsSynced(source_con);
+                                        Processed++;
+                                        read.OnSynced(direccion, action);
+                                    }
+                                    break;
+
+                                case NotifyTableChangedAction.Delete:
+                                    target_con.Delete(read);
+                                    read.OnSynced(direccion, action);
                                     CurrentPackage.MarkAsSynced(source_con);
                                     Processed++;
-                                    read.OnSynced(direccion, action);
-                                }
-                                break;
-
-                            case NotifyTableChangedAction.Delete:
-                                target_con.Delete(read);
-                                read.OnSynced(direccion, action);
-                                CurrentPackage.MarkAsSynced(source_con);
-                                Processed++;
-                                break;
+                                    break;
+                            }
                         }
                     }
                     else
                     {
                         Log.Logger.Error("[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{0}'", this.CurrentPackage.TableName);
+                        CurrentPackage.MarkAsSynced(source_con);
+                        Processed++;
                     }
                 }
                 catch (Exception ex)
