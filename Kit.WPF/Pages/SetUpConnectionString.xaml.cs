@@ -123,7 +123,7 @@ namespace Kit.WPF.Pages
             {
                 var qr = new FileInfo(abrir.FileName);
                 BarcodeDecoding reader = new BarcodeDecoding();
-                Result result = await reader.Decode(qr, BarcodeFormat.QR_CODE
+                Result result =  reader.Decode(qr, BarcodeFormat.QR_CODE
                     , new[]
                     {
                         new KeyValuePair<DecodeHintType, object>(DecodeHintType.TRY_HARDER,null)
