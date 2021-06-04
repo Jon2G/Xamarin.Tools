@@ -115,7 +115,7 @@ namespace Kit.WPF.Pages
             this.Model.FromEmpresa(this.Model.Empresas.Seleccionada);
         }
 
-        private async void ImportarCadena(object sender, RoutedEventArgs e)
+        private void ImportarCadena(object sender, RoutedEventArgs e)
         {
             OpenFileDialog abrir = new OpenFileDialog();
             abrir.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";

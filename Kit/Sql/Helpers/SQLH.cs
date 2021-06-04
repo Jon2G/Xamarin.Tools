@@ -140,6 +140,8 @@ namespace Kit.Sql.Helpers
                         return Convert.ToInt32(obj);
                     case "Int64":
                         return Convert.ToInt64(obj);
+                    case "Boolean":
+                        return Convert.ToBoolean(obj);
                     default:
                         if (obj is IConvertible)
                         {
