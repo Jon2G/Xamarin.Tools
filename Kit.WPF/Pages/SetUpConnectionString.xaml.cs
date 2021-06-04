@@ -43,6 +43,7 @@ namespace Kit.WPF.Pages
             InitializeComponent();
             TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
+
         public SetUpConnectionString(Exception ex, Configuracion Configuration, SQLiteConnection SqLite = null) :
             this(ex, null, SqLite, Configuration)
         {
@@ -61,11 +62,11 @@ namespace Kit.WPF.Pages
             {
                 if (string.IsNullOrEmpty(this.Model.Configuration.Empresa))
                 {
-                    CustomMessageBox.Show("Debe indicar un nombre para esta cadena.","La conexión no es valida",CustomMessageBoxButton.OK, CustomMessageBoxImage.Warning);
+                    CustomMessageBox.Show("Debe indicar un nombre para esta cadena.", "La conexión no es valida", CustomMessageBoxButton.OK, CustomMessageBoxImage.Warning);
                     return;
                 }
 
-                    var SqlServer = new SQLServerConnection(this.Model.ConnectionString);
+                var SqlServer = new SQLServerConnection(this.Model.ConnectionString);
                 SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Model.ConnectionString);
                 if (SqlServer.TestConnection(this.Model.ConnectionString) is Exception ex)
                 {
@@ -115,7 +116,7 @@ namespace Kit.WPF.Pages
             this.Model.FromEmpresa(this.Model.Empresas.Seleccionada);
         }
 
-        private async void ImportarCadena(object sender, RoutedEventArgs e)
+        private void ImportarCadena(object sender, RoutedEventArgs e)
         {
             OpenFileDialog abrir = new OpenFileDialog();
             abrir.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
@@ -123,7 +124,7 @@ namespace Kit.WPF.Pages
             {
                 var qr = new FileInfo(abrir.FileName);
                 BarcodeDecoding reader = new BarcodeDecoding();
-                Result result = await reader.Decode(qr, BarcodeFormat.QR_CODE
+                Result result = reader.Decode(qr, BarcodeFormat.QR_CODE
                     , new[]
                     {
                         new KeyValuePair<DecodeHintType, object>(DecodeHintType.TRY_HARDER,null)
@@ -131,6 +132,7 @@ namespace Kit.WPF.Pages
                 Deserialize(result?.Text);
             }
         }
+
         private void Deserialize(string json)
         {
             if (!string.IsNullOrEmpty(json))
@@ -165,5 +167,4 @@ namespace Kit.WPF.Pages
             }
         }
     }
-
 }
