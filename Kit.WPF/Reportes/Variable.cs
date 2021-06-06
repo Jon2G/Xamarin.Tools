@@ -9,7 +9,7 @@ namespace Kit.WPF.Reportes
 {
     public struct Variable
     {
-        public object Data { get; private set; }
+        public object Data { get;private set; }
         public string Nombre { get; private set; }
         public Variable(string Nombre, object Data)
         {

@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Kit.WPF.Reportes
 {
@@ -36,7 +37,8 @@ namespace Kit.WPF.Reportes
             if (RutaReportes[0] == '\\')
             {
                 string directorio = RutaReportes.Substring(1);
-                string path = $"{Kit.Tools.Instance.LibraryPath}{directorio}";
+                string scape = Kit.Tools.Instance.LibraryPath.EndsWith("\\") ? "" : "\\";
+                string path = $"{Kit.Tools.Instance.LibraryPath}{scape}{directorio}";
                 this.RutaReportes = path;
             }
         }
@@ -435,7 +437,8 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(ex.ToString());
+                Log.Logger.Error(ex,"Loading repport");
             }
             return this;
         }

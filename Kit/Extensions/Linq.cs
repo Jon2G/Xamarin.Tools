@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Kit
 {
@@ -114,9 +116,64 @@ namespace Kit
                 ts.Add(elemento);
             }
         }
+        public static object XmlDeserializeFromString(this string objectData, Type type)
+        {
+            var serializer = new XmlSerializer(type);
+            object result;
 
+            using (TextReader reader = new StringReader(objectData))
+            {
+                result = serializer.Deserialize(reader);
+            }
+
+            return result;
+        }
+        public static T XmlDeserializeFromString<T>(this string objectData)
+        {
+            return (T)XmlDeserializeFromString(objectData, typeof(T));
+        }
+        public static string SerializeObject<T>(this T toSerialize)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
+
+            using (StringWriter textWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(textWriter, toSerialize);
+                return textWriter.ToString();
+            }
+        }
+        public static bool IsPrimitive(this Type t)
+        {
+            return (t.IsPrimitive || t == typeof(Decimal) || t == typeof(String) || t.IsEnum || t == typeof(DateTime) ||
+                    t == typeof(TimeSpan) || t == typeof(DateTimeOffset));
+        }
 #if NETSTANDARD1_0 || NETSTANDARD2_0 || NET462
 
+        public static DataTable ToTable<T>(this T obj)
+        {
+            DataTable data = null;
+            //if (lista?.Count <= 0)
+            //{
+            //    return data;
+            //}
+            Type tipo = typeof(T);
+            data = new DataTable(tipo.Name);
+            List<object> values = new List<object>();
+            foreach (PropertyInfo p in tipo.GetProperties().Where(x=>x.PropertyType.IsPrimitive()))
+            {
+                if (p.PropertyType.IsEnum)
+                {
+                    data.Columns.Add(p.Name, typeof(string));
+                }
+                else
+                {
+                    data.Columns.Add(p.Name, p.PropertyType);
+                }
+                values.Add(p.GetValue(obj));
+            }
+            data.Rows.Add(values.ToArray());
+            return data;
+        }
         public static DataTable ToTable<T>(this List<T> lista)
         {
             DataTable data = null;
@@ -126,7 +183,7 @@ namespace Kit
             //}
             Type tipo = typeof(T);
             data = new DataTable(tipo.Name);
-            foreach (PropertyInfo p in tipo.GetProperties())
+            foreach (PropertyInfo p in tipo.GetProperties().Where(x=>x.PropertyType.IsPrimitive()))
             {
                 if (p.PropertyType.IsEnum)
                 {

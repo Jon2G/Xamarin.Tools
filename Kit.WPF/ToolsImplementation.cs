@@ -11,6 +11,10 @@ namespace Kit.WPF
 {
     public class ToolsImplementation : AbstractTools
     {
+        public ToolsImplementation(string LibraryPath = null)
+        {
+            this._LibraryPath = LibraryPath;
+        }
         public string ProductName()
         {
             return Assembly.GetEntryAssembly()
@@ -19,7 +23,8 @@ namespace Kit.WPF
                 .FirstOrDefault().Product;
         }
 
-        public override string LibraryPath => Environment.CurrentDirectory;
+        private string _LibraryPath;
+        public override string LibraryPath => _LibraryPath??Environment.CurrentDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public static new Kit.WPF.ToolsImplementation Instance => Tools.Instance as Kit.WPF.ToolsImplementation;
 

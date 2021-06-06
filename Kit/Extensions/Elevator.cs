@@ -1,14 +1,17 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Serialization;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Kit.Extensions
 {
     public static class Elevator
     {
+
         public static T Elevate<T>(this object Lower)
             where T : new()
         {
