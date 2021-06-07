@@ -436,7 +436,7 @@ namespace Kit.Sql.SqlServer
             return ListaTupla<T, Q>(sql, CommandType.Text, parameters);
         }
 
-        public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, bool Reportar = true, params SqlParameter[] parameters)
+        public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, params SqlParameter[] parameters)
         {
             DataTable result = new DataTable(TableName);
             if (IsClosed)
@@ -458,19 +458,11 @@ namespace Kit.Sql.SqlServer
                         Log.Logger.Error(ex, "");
                         throw ex;
                     }
-                    if (Reportar)
-                        ReportaTransaccion(cmd);
                 }
                 con.Close();
             }
             return result;
         }
-
-        public DataTable DataTable(string Querry, string TableName = null, params SqlParameter[] parameters)
-        {
-            return DataTable(Querry, CommandType.Text, TableName, false, parameters);
-        }
-
         public override IReader Read(string sql)
         {
             return Read(sql, CommandType.Text);
