@@ -2118,9 +2118,9 @@ namespace Kit.Sql.Sqlite
                 partitioned.ToPartitionedDb(map.TableName);
             }
 
-            if (map.PK != null && map.PK.IsAutoGuid)
+            if (map.PK != null && map.HasAutoIncPK)
             {
-                if (map.PK.GetValue(obj).Equals(Guid.Empty))
+                if (map.PK.ColumnType == typeof(Guid) && map.PK.GetValue(obj).Equals(Guid.Empty))
                 {
                     map.PK.SetValue(obj, Guid.NewGuid());
                 }
@@ -2148,6 +2148,10 @@ namespace Kit.Sql.Sqlite
             for (var i = 0; i < vals.Length; i++)
             {
                 vals[i] = cols[i].GetValue(obj);
+                if (vals[i] is Guid guid_c && guid_c == Guid.Empty)
+                {
+                    vals[i] = Guid.NewGuid();
+                }
             }
             int count;
 

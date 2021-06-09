@@ -117,7 +117,8 @@ namespace Kit.Sql.SqlServer
         {
             return Single(sql, CommandType.Text, parameters);
         }
-        public object Single(string sql,CommandType type ,params SqlParameter[] parameters)
+
+        public object Single(string sql, CommandType type, params SqlParameter[] parameters)
         {
             object result = default;
             using (IReader reader = Read(sql, type, parameters))
@@ -144,10 +145,11 @@ namespace Kit.Sql.SqlServer
             return Single(sql, null);
         }
 
-        public T Single<T>(string sql,CommandType type, params SqlParameter[] parameters) where T : IConvertible
+        public T Single<T>(string sql, CommandType type, params SqlParameter[] parameters) where T : IConvertible
         {
-            return Sqlh.Parse<T>(Single(sql,type, parameters));
+            return Sqlh.Parse<T>(Single(sql, type, parameters));
         }
+
         public T Single<T>(string sql, params SqlParameter[] parameters) where T : IConvertible
         {
             return Sqlh.Parse<T>(Single(sql, parameters));
@@ -436,6 +438,11 @@ namespace Kit.Sql.SqlServer
             return ListaTupla<T, Q>(sql, CommandType.Text, parameters);
         }
 
+        public DataTable DataTable(string Querry, string TableName = null, params SqlParameter[] parameters)
+        {
+            return DataTable(Querry, CommandType.Text, TableName, parameters);
+        }
+
         public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, params SqlParameter[] parameters)
         {
             DataTable result = new DataTable(TableName);
@@ -463,6 +470,7 @@ namespace Kit.Sql.SqlServer
             }
             return result;
         }
+
         public override IReader Read(string sql)
         {
             return Read(sql, CommandType.Text);
