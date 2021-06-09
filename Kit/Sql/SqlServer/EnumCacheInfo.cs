@@ -6,7 +6,7 @@ using Kit.Sql.Attributes;
 
 namespace Kit.Sql.SqlServer
 {
-    class EnumCacheInfo
+    internal class EnumCacheInfo
     {
         public EnumCacheInfo(Type type)
         {

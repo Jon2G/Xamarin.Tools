@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Kit.Forms.Pages.PinView
 {
-    class DivideConverter : IValueConverter
+    internal class DivideConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

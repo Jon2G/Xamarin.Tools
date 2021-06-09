@@ -11,8 +11,8 @@ namespace Kit.Sql.Readers
     {
         public FakeReader()
         {
-
         }
+
         public override object this[int ordinal] => null;
 
         public override object this[string name] => null;

@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace Kit.Forms.Pages.PinView
 {
-    class LengthToListConverter : IValueConverter
+    internal class LengthToListConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

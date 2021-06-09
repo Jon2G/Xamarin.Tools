@@ -3,21 +3,23 @@ using System.Collections.Generic;
 
 namespace Kit.Sql.Sqlite
 {
-    static class EnumCache
+    internal static class EnumCache
     {
-        static readonly Dictionary<Type, EnumCacheInfo> Cache = new Dictionary<Type, EnumCacheInfo> ();
+        private static readonly Dictionary<Type, EnumCacheInfo> Cache = new Dictionary<Type, EnumCacheInfo>();
 
-        public static EnumCacheInfo GetInfo<T> ()
+        public static EnumCacheInfo GetInfo<T>()
         {
-            return GetInfo (typeof (T));
+            return GetInfo(typeof(T));
         }
 
-        public static EnumCacheInfo GetInfo (Type type)
+        public static EnumCacheInfo GetInfo(Type type)
         {
-            lock (Cache) {
+            lock (Cache)
+            {
                 EnumCacheInfo info = null;
-                if (!Cache.TryGetValue (type, out info)) {
-                    info = new EnumCacheInfo (type);
+                if (!Cache.TryGetValue(type, out info))
+                {
+                    info = new EnumCacheInfo(type);
                     Cache[type] = info;
                 }
 

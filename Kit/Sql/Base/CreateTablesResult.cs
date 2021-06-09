@@ -8,9 +8,9 @@ namespace Kit.Sql.Base
     {
         public Dictionary<Type, CreateTableResult> Results { get; private set; }
 
-        public CreateTablesResult ()
+        public CreateTablesResult()
         {
-            Results = new Dictionary<Type, CreateTableResult> ();
+            Results = new Dictionary<Type, CreateTableResult>();
         }
     }
 }

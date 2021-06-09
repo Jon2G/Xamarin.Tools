@@ -12,7 +12,7 @@ namespace Kit.Sql.Sqlite
 {
     public partial class SQLiteCommand : CommandBase
     {
-        SQLiteConnection _conn;
+        private SQLiteConnection _conn;
         private List<Binding> _bindings;
 
         public string CommandText { get; set; }
@@ -127,9 +127,8 @@ namespace Kit.Sql.Sqlite
 
                         if (fastColumnSetters[i] != null)
                         {
-                            if(obj is not T)
+                            if (obj is not T)
                             {
-
                             }
                             fastColumnSetters[i].Invoke((T)obj, stmt, i);
                         }
@@ -266,19 +265,19 @@ namespace Kit.Sql.Sqlite
             this._conn?.Close();
         }
 
-        sqlite3_stmt Prepare()
+        private sqlite3_stmt Prepare()
         {
             var stmt = SQLite3.Prepare2(_conn.Handle, CommandText);
             BindAll(stmt);
             return stmt;
         }
 
-        void Finalize(sqlite3_stmt stmt)
+        private void Finalize(sqlite3_stmt stmt)
         {
             SQLite3.Finalize(stmt);
         }
 
-        void BindAll(sqlite3_stmt stmt)
+        private void BindAll(sqlite3_stmt stmt)
         {
             int nextIdx = 1;
             foreach (var b in _bindings)
@@ -296,7 +295,7 @@ namespace Kit.Sql.Sqlite
             }
         }
 
-        static IntPtr NegativePointer = new IntPtr(-1);
+        private static IntPtr NegativePointer = new IntPtr(-1);
 
         internal static void BindParameter(sqlite3_stmt stmt, int index, object value, bool storeDateTimeAsTicks, string dateTimeStringFormat, bool storeTimeSpanAsTicks)
         {
@@ -401,7 +400,7 @@ namespace Kit.Sql.Sqlite
             }
         }
 
-        class Binding
+        private class Binding
         {
             public string Name { get; set; }
 
@@ -410,7 +409,7 @@ namespace Kit.Sql.Sqlite
             public int Index { get; set; }
         }
 
-        object ReadCol(sqlite3_stmt stmt, int index, SQLite3.ColType type, Type clrType)
+        private object ReadCol(sqlite3_stmt stmt, int index, SQLite3.ColType type, Type clrType)
         {
             if (type == SQLite3.ColType.Null)
             {

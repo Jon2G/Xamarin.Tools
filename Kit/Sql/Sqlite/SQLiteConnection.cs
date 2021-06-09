@@ -24,7 +24,6 @@ using Kit.Sql.Reflection;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using SQLitePCL;
-using static Kit.Extensions.StringBuilderExtensions;
 using NotNullConstraintViolationException = Kit.Sql.Exceptions.NotNullConstraintViolationException;
 
 namespace Kit.Sql.Sqlite
@@ -2148,10 +2147,6 @@ namespace Kit.Sql.Sqlite
             for (var i = 0; i < vals.Length; i++)
             {
                 vals[i] = cols[i].GetValue(obj);
-                if (vals[i] is Guid guid_c && guid_c == Guid.Empty)
-                {
-                    vals[i] = Guid.NewGuid();
-                }
             }
             int count;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class StringBuilderExtensions
     {
@@ -21,6 +21,7 @@ namespace Kit.Extensions
             }
             return sb;
         }
+
         public static bool EndsWith(this StringBuilder sb, string test)
         {
             if (sb.Length < test.Length)

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Kit.Sql.SqlServer
 {
-    static class EnumCache
+    internal static class EnumCache
     {
-        static readonly Dictionary<Type, EnumCacheInfo> Cache = new Dictionary<Type, EnumCacheInfo>();
+        private static readonly Dictionary<Type, EnumCacheInfo> Cache = new Dictionary<Type, EnumCacheInfo>();
 
         public static EnumCacheInfo GetInfo<T>()
         {

@@ -16,6 +16,7 @@ namespace Kit.Sql.Partitioned
     public class SQLiteConnection : Kit.Sql.Sqlite.SQLiteConnection
     {
         private readonly DirectoryInfo SchemaDirectory;
+
         public SQLiteConnection(DirectoryInfo SchemaDirectory, int DBVersion) :
             base(Path.Combine(SchemaDirectory.FullName, "Schema", "root.db"), DBVersion)
         {
@@ -85,37 +86,37 @@ namespace Kit.Sql.Partitioned
             throw new NotImplementedException();
         }
 
-        public T Single<T>(string sql,string Schema) where T:IConvertible
+        public T Single<T>(string sql, string Schema) where T : IConvertible
         {
             ToPartitionedDb(Schema);
             return Single<T>(sql);
         }
+
         public override T Single<T>(string sql)
         {
             return base.Single<T>(sql);
         }
-        public object Single(string sql, string Schema) 
+
+        public object Single(string sql, string Schema)
         {
             ToPartitionedDb(Schema);
             return Single(sql);
         }
+
         public override object Single(string sql)
         {
             return base.Single(sql);
         }
 
-        public IReader Read(string sql,string Schema)
+        public IReader Read(string sql, string Schema)
         {
             ToPartitionedDb(Schema);
             return Read(sql);
         }
+
         public override IReader Read(string sql)
         {
             return base.Read(sql);
         }
-
-
-
-
     }
 }

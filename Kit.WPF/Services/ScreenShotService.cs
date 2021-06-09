@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -10,12 +9,11 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Kit.Services.Interfaces;
-using static Kit.Extensions.Helpers;
+
 namespace Kit.WPF.Services
 {
     public class ScreenShotService : IScreenshot
     {
-
         public async Task<byte[]> Capture()
         {
             await Task.Yield();
@@ -37,6 +35,7 @@ namespace Kit.WPF.Services
                 }
             }
         }
+
         public async Task<byte[]> Capture(Window Window)
         {
             await Task.Yield();
@@ -54,11 +53,10 @@ namespace Kit.WPF.Services
             using (Stream fileStream = new MemoryStream())
             {
                 pngImage.Save(fileStream);
-                buffer =await Kit.Extensions.Helpers.GetByteArray(fileStream);
+                buffer = await fileStream.GetByteArray();
             }
 
             return buffer;
         }
-
     }
 }

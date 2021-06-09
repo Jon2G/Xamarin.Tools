@@ -30,10 +30,10 @@ namespace Kit.Droid.Services
     )]
     public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-
         // Field, property, and method for Picture Picker
         //public static readonly int PickImageId = 1000;
         public static MainActivity Instance;
+
         //public TaskCompletionSource<Tuple<byte[], ImageSource>> PickImageTaskCompletionSource { set; get; }
         //protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         //{
@@ -78,6 +78,7 @@ namespace Kit.Droid.Services
         {
             base.OnConfigurationChanged(newConfig);
         }
+
         public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
         {
             if (!e.Flags.HasFlag(Android.Views.KeyEventFlags.SoftKeyboard) || keyCode == Keycode.Back)
@@ -91,6 +92,7 @@ namespace Kit.Droid.Services
             }
             return base.OnKeyUp(keyCode, e);
         }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -119,11 +121,13 @@ namespace Kit.Droid.Services
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
         protected override void OnDestroy()
         {
             Serilog.Log.CloseAndFlush();
             base.OnDestroy();
         }
+
         protected bool IsServiceRunning(Type serviceClass)
         {
             var service_class = Java.Lang.Class.FromType(serviceClass);
@@ -139,6 +143,7 @@ namespace Kit.Droid.Services
             }
             return false;
         }
+
         public static Context GetAppContext()
         {
             return Android.App.Application.Context;

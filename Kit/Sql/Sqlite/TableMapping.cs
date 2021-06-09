@@ -12,10 +12,7 @@ namespace Kit.Sql.Sqlite
     {
         public TableMapping(Type type, CreateFlags createFlags = CreateFlags.None) : base(type, createFlags)
         {
-
         }
-
-
 
         protected override string _GetByPrimaryKeySql()
         {

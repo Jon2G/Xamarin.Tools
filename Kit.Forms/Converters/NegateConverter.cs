@@ -8,7 +8,7 @@ namespace Kit.Forms.Converters
     public class NegateConverter : IValueConverter
     {
         /// <summary>Returns false if string is null or empty
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>

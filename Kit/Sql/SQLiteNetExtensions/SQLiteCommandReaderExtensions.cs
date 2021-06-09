@@ -154,9 +154,8 @@ namespace Kit.Sql.SQLiteNetExtensions
             sqlite3_stmt stmt = Prepare(connection, sqliteCommand.CommandText);
             try
             {
-                // We need to manage columns dynamically in order to create columns 
+                // We need to manage columns dynamically in order to create columns
                 ColumnLite[] cols = new ColumnLite[SQLite3.ColumnCount(stmt)];
-
 
                 while (SQLite3.Step(stmt) == SQLite3.Result.Row)
                 {
@@ -165,7 +164,7 @@ namespace Kit.Sql.SQLiteNetExtensions
                     {
                         if (cols[i] == null)
                         {
-                            // We try to create column mapping if it's not already created : 
+                            // We try to create column mapping if it's not already created :
                             string name = SQLite3.ColumnName16(stmt, i);
                             cols[i] = new ColumnLite(name, SQLite3.ColumnType(stmt, i).ToType());
                         }
@@ -182,24 +181,27 @@ namespace Kit.Sql.SQLiteNetExtensions
             }
         }
 
-        /// <summary> 
-        /// Get a typeof() element from ColType enumeration. 
-        /// </summary> 
-        /// <param name="colType"></param> 
-        /// <returns></returns> 
+        /// <summary>
+        /// Get a typeof() element from ColType enumeration.
+        /// </summary>
+        /// <param name="colType"></param>
+        /// <returns></returns>
         private static Type ToType(this SQLite3.ColType colType)
         {
-            // Prepare evolution where column can be nullable 
+            // Prepare evolution where column can be nullable
             bool nullable = false;
 
             switch (colType)
             {
                 case SQLite3.ColType.Blob:
                     return typeof(byte[]);
+
                 case SQLite3.ColType.Float:
                     return nullable ? typeof(double?) : typeof(double);
+
                 case SQLite3.ColType.Integer:
                     return nullable ? typeof(long?) : typeof(long);
+
                 default:
                     return typeof(string);
             }

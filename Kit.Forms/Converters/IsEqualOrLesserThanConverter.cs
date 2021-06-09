@@ -10,7 +10,7 @@ namespace Kit.Forms.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double intValue =System.Convert.ToDouble(value);
+            double intValue = System.Convert.ToDouble(value);
             double compareToValue = System.Convert.ToDouble(parameter);
 
             return intValue <= compareToValue;

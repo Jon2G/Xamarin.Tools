@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class Password
     {
         private static readonly char[] Punctuations = "!@#$%^&*()_-+=[{]};:>|./?".ToCharArray();
+
         public static string GenerateNoSpecialCharacters(int length, int numberOfNonAlphanumericCharacters)
         {
             if (length < 1 || length > 128)
@@ -75,6 +76,7 @@ namespace Kit.Extensions
                 return new string(characterBuffer);
             }
         }
+
         public static string Generate(int length, int numberOfNonAlphanumericCharacters)
         {
             if (length < 1 || length > 128)
@@ -142,7 +144,8 @@ namespace Kit.Extensions
                 return new string(characterBuffer);
             }
         }
-        public static string Generate(int length, int numberOfNonAlphanumericCharacters,bool UseEspecialCharacters=true)
+
+        public static string Generate(int length, int numberOfNonAlphanumericCharacters, bool UseEspecialCharacters = true)
         {
             if (UseEspecialCharacters)
             {

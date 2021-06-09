@@ -291,6 +291,15 @@ namespace Kit.Forms.Pages
             {
                 return;
             }
+            await Task.Delay(500);
+            using (Acr.UserDialogs.UserDialogs.Instance.Loading("Leyendo qr..."))
+            {
+               await ReadFromGallery(qr);
+            
+            }
+        }
+        private async Task ReadFromGallery(FileResult qr)
+        {
             SharedZXingNet::ZXing.Result result = null;
             var qr_file = await qr.LoadPhotoAsync();
 
@@ -311,7 +320,6 @@ namespace Kit.Forms.Pages
 
             Deserialize(result?.Text);
         }
-
         private void FromCamera()
         {
             if (this.Leector is null)

@@ -10,11 +10,11 @@ namespace Kit.Sql.SQLiteNetExtensions
 
         public Type ColumnType { get; private set; }
 
-        /// <summary> 
-        /// Internal constructor used for Dynamic queries that returns IDictionary 
-        /// </summary> 
-        /// <param name="name"></param> 
-        /// <param name="columnType"></param> 
+        /// <summary>
+        /// Internal constructor used for Dynamic queries that returns IDictionary
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="columnType"></param>
         internal ColumnLite(string name, Type columnType)
         {
             Name = name;

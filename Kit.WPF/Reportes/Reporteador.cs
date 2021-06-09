@@ -25,27 +25,34 @@ namespace Kit.WPF.Reportes
         private StiReport StiReport;
         private readonly string RutaLogo;
         private readonly string RutaReportes;
-        public Reporteador(string RutaLogo=null, string RutaReportes = "\\mrt")
+
+        public Reporteador(string RutaLogo = "\\logo.png", string RutaReportes = "\\mrt")
         {
-            this.RutaLogo = RutaLogo;
             //Importante para evitar 'Error al registrar DragDrop.'
             StiOptions.Designer.PreviewReportVisible = true;
             StiOptions.Designer.AllowUseWinControl = true;
             StiOptions.Viewer.AllowUseDragDrop =
             StiOptions.Designer.AllowUseDragDrop = false;
+            this.RutaLogo = RutaLogo;
             this.RutaReportes = RutaReportes;
-            if (RutaReportes[0] == '\\')
+            if (this.RutaReportes[0] == '\\')
             {
-                string directorio = RutaReportes.Substring(1);
+                string directorio = this.RutaReportes.Substring(1);
                 string scape = Kit.Tools.Instance.LibraryPath.EndsWith("\\") ? "" : "\\";
                 string path = $"{Kit.Tools.Instance.LibraryPath}{scape}{directorio}";
                 this.RutaReportes = path;
             }
+            if (this.RutaLogo[0] == '\\')
+            {
+                this.RutaLogo = $"{this.RutaReportes}{this.RutaLogo}";
+            }
         }
+
         public StiReport GetStiReportObject()
         {
             return this.StiReport;
         }
+
         /// <summary>
         /// Carga el diccionario,compila y muestra un reporte
         /// </summary>
@@ -54,7 +61,7 @@ namespace Kit.WPF.Reportes
         /// <returns></returns>
         public Reporteador MostrarReporte(string archivo_mrt, params Variable[] diccionario)
         {
-            FileInfo mrt = new FileInfo(this.RutaReportes+"\\"+archivo_mrt);
+            FileInfo mrt = new FileInfo(this.RutaReportes + "\\" + archivo_mrt);
             if (!mrt.Exists)
             {
                 throw new FileNotFoundException($"No se econtro el reporte en:{mrt.FullName}");
@@ -96,12 +103,11 @@ namespace Kit.WPF.Reportes
             }
             return this;
         }
+
         public Reporteador MostrarReporte(Reporteador reporte)
         {
-
             try
             {
-
                 if (this.StiReport.IsRendered)
                 {
                     this.StiReport.ShowWithRibbonGUI(true);
@@ -120,6 +126,7 @@ namespace Kit.WPF.Reportes
             }
             return this;
         }
+
         /// <summary>
         /// Guarda un reporte mrt en formato pdf y lo abre al finalizar
         /// </summary>
@@ -199,7 +206,7 @@ namespace Kit.WPF.Reportes
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex,"?");
+                        Log.Logger.Error(ex, "?");
                     }
                 }
 
@@ -211,6 +218,7 @@ namespace Kit.WPF.Reportes
                 return null;
             }
         }
+
         /// <summary>
         /// Guarda un reporte mrt en formato excel y lo abre al finalizar
         /// </summary>
@@ -290,7 +298,7 @@ namespace Kit.WPF.Reportes
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex,"?");
+                        Log.Logger.Error(ex, "?");
                     }
                 }
 
@@ -302,8 +310,9 @@ namespace Kit.WPF.Reportes
                 return null;
             }
         }
+
         /// <summary>
-        /// Imprime un reporte mrt en la impresora en caso de no poder imprimirlo lo muestra en pantalla 
+        /// Imprime un reporte mrt en la impresora en caso de no poder imprimirlo lo muestra en pantalla
         /// </summary>
         /// <param name="nombre">Nombre sin extension</param>
         /// <param name="report">Reporte (es indiferente si esta compilado y renderizado o no)</param>
@@ -322,7 +331,6 @@ namespace Kit.WPF.Reportes
                 }
                 else
                 {
-
                 }
                 //////////////////////
                 if (!IniciarAlFinalizar)
@@ -335,7 +343,6 @@ namespace Kit.WPF.Reportes
                             PrinterName = impresora,
                             PrintToFile = false,
                             //Copies = 1
-
                         });
                     }
                 }
@@ -358,6 +365,7 @@ namespace Kit.WPF.Reportes
 
             return this;
         }
+
         public string NuevoReporte(string nombre, bool Disenando = false, bool EspacioDeTrabajo = false, FormatoReporte Formato = FormatoReporte.PDF, params Variable[] variables)
         {
             this.StiReport =
@@ -367,13 +375,15 @@ namespace Kit.WPF.Reportes
             {
                 case FormatoReporte.EXCEL:
                     return GuardaReporteExcel($"{Kit.Tools.Instance.LibraryPath}\\HojasDeCalculo", nombre, this, EspacioDeTrabajo);
+
                 default:
                 case FormatoReporte.PDF:
                     return GuardaReporte($"{Kit.Tools.Instance.LibraryPath}\\Reportes", nombre, this, EspacioDeTrabajo);
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="archivo_mrt">Nombre del archivo con extension</param>
         /// <param name="diccionario"></param>
@@ -438,10 +448,11 @@ namespace Kit.WPF.Reportes
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-                Log.Logger.Error(ex,"Loading repport");
+                Log.Logger.Error(ex, "Loading repport");
             }
             return this;
         }
+
         public static void CrearNuevoMrt(string ruta)
         {
             FileInfo file = new FileInfo(ruta);
@@ -455,4 +466,3 @@ namespace Kit.WPF.Reportes
         }
     }
 }
-

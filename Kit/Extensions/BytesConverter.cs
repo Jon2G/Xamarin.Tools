@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class BytesConverter
     {

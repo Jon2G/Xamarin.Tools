@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Kit.Extensions;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static partial class Helpers
     {
@@ -24,7 +24,7 @@ namespace Kit.Extensions
             using (MemoryStream ms = new MemoryStream())
             {
                 int read;
-                while ((read =await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
                     ms.Write(buffer, 0, read);
                 }
@@ -39,7 +39,7 @@ namespace Kit.Extensions
 
         public static string ToImageString(this byte[] bytes)
         {
-            string base64= string.Concat("data:image/png;base64,", Convert.ToBase64String(bytes, 0, bytes.Length));
+            string base64 = string.Concat("data:image/png;base64,", Convert.ToBase64String(bytes, 0, bytes.Length));
             return base64;
         }
 
@@ -170,7 +170,7 @@ namespace Kit.Extensions
             }
         }
 
-        public static string Mes(int Mes)
+        public static string Mes(this int Mes)
         {
             switch (Mes)
             {
@@ -215,7 +215,7 @@ namespace Kit.Extensions
             }
         }
 
-        public static string ExtractInitialsFromName(string name, int length = 2)
+        public static string ExtractInitialsFromName(this string name, int length = 2)
         {
             if (string.IsNullOrEmpty(name))
             {

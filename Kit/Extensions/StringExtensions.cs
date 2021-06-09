@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class StringExtensions
     {
@@ -15,6 +15,7 @@ namespace Kit.Extensions
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
+
         public static string ToBase64Decode(this string base64EncodedData)
         {
             if (string.IsNullOrEmpty(base64EncodedData))

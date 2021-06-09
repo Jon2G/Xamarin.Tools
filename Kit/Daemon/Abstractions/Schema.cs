@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -21,6 +20,7 @@ namespace Kit.Daemon.Abstractions
         private HashSet<string> DeniedTables;
         public readonly bool HasDownloadTables;
         public readonly bool HasUploadTables;
+
         public Schema(params Type[] tables)
         {
             this.UploadTables = new Dictionary<string, TableMapping>();
@@ -29,7 +29,9 @@ namespace Kit.Daemon.Abstractions
             this.HasDownloadTables = this.DownloadTables.Any();
             this.HasUploadTables = this.UploadTables.Any();
         }
+
         public Dictionary<string, TableMapping> GetAll() => this.DownloadTables.Merge(this.UploadTables);
+
         private void BuildSchema(params Type[] tables)
         {
             foreach (Type type in tables)
@@ -99,6 +101,7 @@ namespace Kit.Daemon.Abstractions
                 Log.Logger.Information("BUILDED SCHEMA [{0}] - [{1}]", type.FullName, directionAttribute.Direction);
             }
         }
+
         public TableMapping this[string TableName, SyncDirecction direcction]
         {
             get
@@ -115,6 +118,7 @@ namespace Kit.Daemon.Abstractions
                         if (this.DownloadTables.ContainsKey(key))
                             return this.DownloadTables[key];
                         break;
+
                     case SyncDirecction.Remote:
                         if (this.DownloadTables.ContainsKey(key))
                             return this.UploadTables[key];
@@ -133,6 +137,7 @@ namespace Kit.Daemon.Abstractions
                 return null;
             }
         }
+
         private bool IsValidDirection(TableDirection TableDirection, SyncDirecction UseDirection)
         {
             if (TableDirection == TableDirection.TWO_WAY)

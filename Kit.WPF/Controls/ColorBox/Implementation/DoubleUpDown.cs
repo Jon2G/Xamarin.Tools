@@ -5,7 +5,7 @@
    Copyright (C) 2007-2013 Xceed Software Inc.
 
    This program is provided to you under the terms of the Microsoft Public
-   License (Ms-PL) as published at http://wpftoolkit.codeplex.com/license 
+   License (Ms-PL) as published at http://wpftoolkit.codeplex.com/license
 
    For more features, controls, and fast professional support,
    pick up the Plus Edition at http://xceed.com/wpf_toolkit
@@ -20,9 +20,10 @@ using System.Windows;
 
 namespace Kit.WPF.Controls.ColorBox.Implementation
 {
-    class DoubleUpDown : UpDownBase
+    internal class DoubleUpDown : UpDownBase
     {
         protected delegate double FromText(string s, NumberStyles style, IFormatProvider provider);
+
         protected delegate double FromDecimal(decimal d);
 
         private readonly FromText _fromText;
@@ -91,7 +92,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         }
 
         private void ValidateDefaultMinMax(double? value)
-        {           
+        {
             if (object.Equals(value, DefaultValue))
                 return;
 
@@ -139,7 +140,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
             string currentValueText = ConvertValueToText();
             if (object.Equals(currentValueText, text))
                 return this.Value;
-    
+
             result = FormatString.Contains("P")
               ? _fromDecimal(ParsePercent(text, CultureInfo))
               : _fromText(text, this.ParsingNumberStyle, CultureInfo);
@@ -152,7 +153,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         protected override void SetValidSpinDirection()
         {
             ValidSpinDirections validDirections = ValidSpinDirections.None;
-            
+
             if ((this.Increment != null) && !IsReadOnly)
             {
                 if (IsLowerThan(Value, Maximum) || !Value.HasValue)
@@ -166,7 +167,7 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
                 Spinner.ValidSpinDirection = validDirections;
         }
 
-        #endregion
+        #endregion Base Class Overrides
 
         #region Constructors
 
@@ -178,9 +179,9 @@ namespace Kit.WPF.Controls.ColorBox.Implementation
         public DoubleUpDown()
             : this(Double.Parse, Decimal.ToDouble, (v1, v2) => v1 < v2, (v1, v2) => v1 > v2)
         {
-
         }
 
-        #endregion       
+        #endregion Constructors
+
     }
 }

@@ -8,8 +8,9 @@ namespace Kit.Forms.Converters
     public class StringNullOrEmptyBoolConverter : IValueConverter
     {
         public bool IsReversed { get; set; }
+
         /// <summary>Returns false if string is null or empty
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -19,7 +20,7 @@ namespace Kit.Forms.Converters
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var s = value as string;
-            bool result= string.IsNullOrEmpty(s?.Trim());
+            bool result = string.IsNullOrEmpty(s?.Trim());
             if (IsReversed)
             {
                 result = !result;

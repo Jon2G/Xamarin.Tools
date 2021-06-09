@@ -7,11 +7,10 @@ using System.Text.Json;
 using System.Xml.Serialization;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class Elevator
     {
-
         public static T Elevate<T>(this object Lower)
             where T : new()
         {

@@ -142,12 +142,6 @@ namespace Kit.Sql.Sqlite
             return p.CustomAttributes.Any(x => x.AttributeType == typeof(AutoIncrementAttribute));
         }
 
-
-
-
-
-
-
         public static IEnumerable<IndexedAttribute> GetIndices(MemberInfo p)
         {
 #if ENABLE_IL2CPP

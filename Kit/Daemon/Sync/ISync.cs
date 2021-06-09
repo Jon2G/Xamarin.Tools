@@ -197,6 +197,7 @@ namespace Kit.Daemon.Sync
                     break;
             }
         }
+
         public virtual ISync GetBySyncGuid(SqlBase con, Guid syncguid)
         {
             var table = con.Table(this.GetType()).Table;

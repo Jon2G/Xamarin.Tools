@@ -16,7 +16,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Xamarin.Forms;
 using Key = Kit.Forms.Security.RSA.Key;
-using static Kit.Extensions.StringExtensions;
+
 [assembly: Dependency(typeof(RSAService))]
 
 namespace RSAVault.Droid.Services
@@ -33,18 +33,21 @@ namespace RSAVault.Droid.Services
             byte[] encryptedMessageBytes = encryptCipher.DoFinal(message);
             return encryptedMessageBytes;
         }
+
         private IPublicKey GetPublicKey(Key key)
         {
             var factory = KeyFactory.GetInstance(Algorithm);
             IKeySpec keySpec = new X509EncodedKeySpec(Convert.FromBase64String(key.PublicKey));
             return factory.GeneratePublic(keySpec);
         }
+
         private IPrivateKey GetPrivateKey(Key key)
         {
             KeyFactory kf = KeyFactory.GetInstance(Algorithm);
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Convert.FromBase64String(key.PrivateKey));
             return kf.GeneratePrivate(keySpec);
         }
+
         public Key MakeKey(string name)
         {
             KeyPairGenerator generator = KeyPairGenerator.GetInstance(Algorithm);
@@ -58,7 +61,6 @@ namespace RSAVault.Droid.Services
                 Convert.ToBase64String(privateKey.GetEncoded()),
                 Convert.ToBase64String(publicKey.GetEncoded())
                 );
-
         }
 
         public byte[] Encrypt(Key key, byte[] message) =>
@@ -76,7 +78,6 @@ namespace RSAVault.Droid.Services
             return System.Convert.ToBase64String(Cipher(key, System.Text.Encoding.UTF8.GetBytes(message), Javax.Crypto.CipherMode.EncryptMode));
         }
 
-
         public string DecryptToString(Key key, string message)
         {
             if (string.IsNullOrEmpty(message))
@@ -86,14 +87,10 @@ namespace RSAVault.Droid.Services
             return System.Text.Encoding.UTF8.GetString(Cipher(key, Convert.FromBase64String(message), Javax.Crypto.CipherMode.DecryptMode));
         }
 
-
-
         public bool TestKey(Key key, string TestString = "This is a test")
         {
             byte[] original = System.Text.Encoding.UTF8.GetBytes(TestString);
             byte[] crypted = Encrypt(key, original);
-
-
 
             string encrypted = EncryptToString(key, TestString);
             string s_crypted = System.Convert.ToBase64String(crypted);
@@ -103,7 +100,6 @@ namespace RSAVault.Droid.Services
                 return TestString == decrypted;
             }
             return false;
-
         }
     }
 }

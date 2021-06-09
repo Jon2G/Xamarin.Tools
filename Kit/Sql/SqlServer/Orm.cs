@@ -78,7 +78,6 @@ namespace Kit.Sql.SqlServer
                 //	});
                 //}
 
-
                 //foreach (var indexName in indexes.Keys) {
                 //	var index = indexes[indexName];
                 //	var columns = index.Columns.OrderBy (i => i.Order).Select (i => i.ColumnName).ToArray ();
@@ -134,7 +133,7 @@ namespace Kit.Sql.SqlServer
                     return "integer";
             }
             else if (clrType == typeof(byte[]))
-            {          
+            {
                 return "VARBINARY(MAX)";
             }
             else if (clrType == typeof(Guid))

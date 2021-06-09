@@ -13,10 +13,11 @@ namespace Kit.Sql.Reflection
         private Assembly Dll;
         private Type Type;
         private PropertyInfo Property;
+
         public ReflectionCaller()
         {
-
         }
+
         public ReflectionCaller(string AssemblyName)
         {
             string Library = Tools.Instance.LibraryPath;
@@ -26,6 +27,7 @@ namespace Kit.Sql.Reflection
                 Dll = Assembly.LoadFile($"{Library}\\{AssemblyName}");
             }
         }
+
         private Assembly SearchAssembly(string AssemblyName)
         {
             Assembly[] LoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -39,36 +41,42 @@ namespace Kit.Sql.Reflection
             return null;
         }
 
-        public  static ReflectionCaller FromAssembly<T>()
+        public static ReflectionCaller FromAssembly<T>()
         {
             return new ReflectionCaller().GetAssembly<T>();
         }
+
         public ReflectionCaller GetAssembly<T>()
         {
             return GetAssembly(typeof(T));
         }
+
         public ReflectionCaller GetAssembly(Type type)
         {
             Type = type;
             Dll = type.Assembly;
             return this;
         }
+
         public ReflectionCaller SetType(string TypeName)
         {
             Type = Dll.GetType(TypeName);
             return this;
         }
+
         public ReflectionCaller SetType(PropertyInfo propertyInfo)
         {
             Type = propertyInfo.GetType();
             return this;
         }
+
         public ReflectionCaller SetProperty(string PropertyName)
         {
             Property = Type.GetProperty(PropertyName);
             Type = Property.PropertyType;
             return this;
         }
+
         public object CallMethod(string MethodName, params object[] Parameters)
         {
             object result = null;
@@ -85,6 +93,7 @@ namespace Kit.Sql.Reflection
             }
             return result;
         }
+
         public object CallMethodOf(object Instance, string MethodName, params object[] Parameters)
         {
             object result = null;
@@ -100,6 +109,7 @@ namespace Kit.Sql.Reflection
             }
             return result;
         }
+
         public Stream GetResource(string ResourceName)
         {
             string fullname = Dll.GetManifestResourceNames().FirstOrDefault(x => x.EndsWith(ResourceName));
@@ -109,10 +119,12 @@ namespace Kit.Sql.Reflection
             }
             return Dll.GetManifestResourceStream(fullname);
         }
+
         public List<string> FindResources(Func<string, bool> condition)
         {
             return Dll.GetManifestResourceNames().Where(condition).ToList();
         }
+
         public object Instance()
         {
             return Activator.CreateInstance(Type);
@@ -132,6 +144,7 @@ namespace Kit.Sql.Reflection
             stream.Close();
             return text;
         }
+
         public override string ToString()
         {
             return base.ToString();
@@ -143,7 +156,6 @@ namespace Kit.Sql.Reflection
             Property = null;
             Dll = null;
         }
-
 
         public List<T> GetInheritedClasses<T>(bool SearchInAllAssemblies = false, params object[] constructorArgs) where T : IComparable<T>
         {
@@ -166,7 +178,6 @@ namespace Kit.Sql.Reflection
             objects.Sort();
             return objects;
         }
-
 
         public List<Type> GetStaticInheritedTypes<T>(bool SearchInAllAssemblies = false, params object[] constructorArgs)
         {

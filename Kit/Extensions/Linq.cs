@@ -24,6 +24,7 @@ namespace Kit
                 }
             }
         }
+
         public static List<T>[] Divide<T>(this IEnumerable<T> lista, int dividir)
         {
             if (dividir <= 0)
@@ -56,6 +57,7 @@ namespace Kit
             }
             return resultado;
         }
+
         public static IEnumerable<T> GetRange<T>(this IEnumerable<T> input, int start, int end)
         {
             int i = 0;
@@ -69,6 +71,7 @@ namespace Kit
                 i++;
             }
         }
+
         public static List<T> Unir<T>(this List<T> lista, params List<T>[] listas)
         {
             foreach (List<T> l in listas)
@@ -77,6 +80,7 @@ namespace Kit
             }
             return lista;
         }
+
         public static int FindIndexOf<T>(this ObservableCollection<T> modificadoresSeleccionados, Func<T, bool> p)
         {
             for (int i = 0; i < modificadoresSeleccionados.Count; i++)
@@ -89,14 +93,17 @@ namespace Kit
             }
             return -1;
         }
+
         public static int FindIndex<T>(this ObservableCollection<T> ts, Predicate<T> match)
         {
             return ts.FindIndex(0, ts.Count, match);
         }
+
         public static int FindIndex<T>(this ObservableCollection<T> ts, int startIndex, Predicate<T> match)
         {
             return ts.FindIndex(startIndex, ts.Count, match);
         }
+
         public static int FindIndex<T>(this ObservableCollection<T> ts, int startIndex, int count, Predicate<T> match)
         {
             if (startIndex < 0) startIndex = 0;
@@ -109,6 +116,7 @@ namespace Kit
 
             return -1;
         }
+
         public static void AddRange<T>(this ObservableCollection<T> ts, IEnumerable<T> elementos)
         {
             foreach (T elemento in elementos)
@@ -116,6 +124,7 @@ namespace Kit
                 ts.Add(elemento);
             }
         }
+
         public static object XmlDeserializeFromString(this string objectData, Type type)
         {
             var serializer = new XmlSerializer(type);
@@ -128,10 +137,12 @@ namespace Kit
 
             return result;
         }
+
         public static T XmlDeserializeFromString<T>(this string objectData)
         {
             return (T)XmlDeserializeFromString(objectData, typeof(T));
         }
+
         public static string SerializeObject<T>(this T toSerialize)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
@@ -142,11 +153,7 @@ namespace Kit
                 return textWriter.ToString();
             }
         }
-        public static bool IsPrimitive(this Type t)
-        {
-            return (t.IsPrimitive || t == typeof(Decimal) || t == typeof(String) || t.IsEnum || t == typeof(DateTime) ||
-                    t == typeof(TimeSpan) || t == typeof(DateTimeOffset));
-        }
+
 #if NETSTANDARD1_0 || NETSTANDARD2_0 || NET462
 
         public static DataTable ToTable<T>(this T obj)
@@ -159,7 +166,7 @@ namespace Kit
             Type tipo = typeof(T);
             data = new DataTable(tipo.Name);
             List<object> values = new List<object>();
-            foreach (PropertyInfo p in tipo.GetProperties().Where(x=>x.PropertyType.IsPrimitive()))
+            foreach (PropertyInfo p in tipo.GetProperties().Where(x => x.PropertyType.IsPrimitive()))
             {
                 if (p.PropertyType.IsEnum)
                 {
@@ -174,6 +181,7 @@ namespace Kit
             data.Rows.Add(values.ToArray());
             return data;
         }
+
         public static DataTable ToTable<T>(this List<T> lista)
         {
             DataTable data = null;
@@ -183,7 +191,7 @@ namespace Kit
             //}
             Type tipo = typeof(T);
             data = new DataTable(tipo.Name);
-            foreach (PropertyInfo p in tipo.GetProperties().Where(x=>x.PropertyType.IsPrimitive()))
+            foreach (PropertyInfo p in tipo.GetProperties().Where(x => x.PropertyType.IsPrimitive()))
             {
                 if (p.PropertyType.IsEnum)
                 {
@@ -206,6 +214,7 @@ namespace Kit
             });
             return data;
         }
+
         public static DataTable ToTable<T>(this IEnumerable<T> lista)
         {
             return lista.ToList().ToTable();
@@ -255,6 +264,7 @@ namespace Kit
             }
             return lista;
         }
+
         public static void InsertRow(this DataTable tabla, int index, DataRow fila)
         {
             DataRow dr = tabla.NewRow(); //Create New Row
@@ -267,6 +277,7 @@ namespace Kit
         }
 
 #endif
+
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
         {
             T[] elements = source.ToArray();
@@ -280,6 +291,7 @@ namespace Kit
                 elements[swapIndex] = elements[i];
             }
         }
+
         public static Dictionary<Key, Value> Merge<Key, Value>(this Dictionary<Key, Value> left, Dictionary<Key, Value> right)
         {
             if (left == null)

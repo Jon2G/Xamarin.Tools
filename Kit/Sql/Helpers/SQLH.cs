@@ -27,7 +27,6 @@ namespace Kit.Sql.Helpers
         //    this.Debugging = Debugging;
         //}
 
-
         //public static Sqlh Init(string LibraryPath, bool Debugging)
         //{
         //    Set(new Sqlh(LibraryPath, Debugging));
@@ -41,11 +40,11 @@ namespace Kit.Sql.Helpers
         //private static Sqlh _Instance;
         //public static Sqlh Instance => _Instance;
 
-
         public static string FormatTime(TimeSpan TimeSpan)
         {
             return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
         }
+
         public static string FormatTime(DateTime TimeSpan)
         {
             //using (SQLiteConnection lite = Conecction())
@@ -75,12 +74,15 @@ namespace Kit.Sql.Helpers
                 case short:
                 case int:
                     return Convert.ToInt32(valor) == 1;
+
                 case bool boleano:
                     return boleano;
+
                 default:
                     return _default;
             }
         }
+
         public static bool? ToBool(object valor, bool? _default = null)
         {
             if (IsNull(valor))
@@ -92,8 +94,10 @@ namespace Kit.Sql.Helpers
                 case short:
                 case int:
                     return Convert.ToInt32(valor) == 1;
+
                 case bool boleano:
                     return boleano;
+
                 default:
                     return _default;
             }
@@ -103,12 +107,13 @@ namespace Kit.Sql.Helpers
         {
             return value == DBNull.Value || value == null;
         }
+
         public static object IfNull(object value, object ifnull)
         {
             return IsNull(value) ? ifnull : value;
         }
 
-        public static T Parse<T>(object obj,T ifnull) 
+        public static T Parse<T>(object obj, T ifnull)
         {
             if (IsNull(obj))
             {
@@ -118,11 +123,10 @@ namespace Kit.Sql.Helpers
             return Parse<T>(obj);
         }
 
-        public static object Parse(Type type,object obj)
+        public static object Parse(Type type, object obj)
         {
             try
             {
-
                 if (type.IsEnum)
                 {
                     return Enum.Parse(type, obj.ToString(), true);
@@ -132,16 +136,22 @@ namespace Kit.Sql.Helpers
                 {
                     case "Guid":
                         return Guid.Parse(obj.ToString());
+
                     case "String":
                         return Convert.ToString(obj);
+
                     case "Single":
                         return Convert.ToSingle(obj);
+
                     case "Int32":
                         return Convert.ToInt32(obj);
+
                     case "Int64":
                         return Convert.ToInt64(obj);
+
                     case "Boolean":
                         return Convert.ToBoolean(obj);
+
                     default:
                         if (obj is IConvertible)
                         {
@@ -157,15 +167,13 @@ namespace Kit.Sql.Helpers
                 Log.Logger.Error(ex, $"Al convertir un dato desde Parse<T> el tipo de dato: {type.Name}=>{obj}");
             }
 
-            return null;
+            return type.GetDefault();
         }
-        public static T Parse<T>(object obj) 
+
+        public static T Parse<T>(object obj)
         {
             var type = typeof(T);
             return (T)Parse(type, obj);
         }
-
-
-
     }
 }
