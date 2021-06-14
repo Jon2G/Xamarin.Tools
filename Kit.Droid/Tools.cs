@@ -37,10 +37,7 @@ namespace Kit.Droid
             BaseInit();
             return Instance;
         }
-        public static AbstractTools InitLoaded(Application app, Activity activity, Bundle bundle)
-        {
-            return Kit.Tools.Instance;
-        }
+   
         private static void OrientationServices(Activity activity)
         {
             MessagingCenter.Subscribe<Page>(activity, nameof(DeviceOrientation.Landscape), sender =>

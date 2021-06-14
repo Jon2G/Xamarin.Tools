@@ -2600,9 +2600,16 @@ namespace Kit.Sql.Sqlite
                 throw new NotSupportedException("Cannot delete " + map.TableName + ": it has no PK");
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
-            var guid_key = ExecuteScalar<Guid>($"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?", primaryKey);
+
+            Guid guid_key;
+            if (map.SyncMode.Direction != SyncDirection.NoSync)
+            {
+                guid_key = ExecuteScalar<Guid>($"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?",
+                   primaryKey);
+            }
+
             var count = Execute(q, primaryKey);
-            if (count > 0)
+            if (count > 0 && map.SyncMode.Direction != SyncDirection.NoSync)
                 OnTableChanged(map, NotifyTableChangedAction.Delete, guid_key);
             return count;
         }
