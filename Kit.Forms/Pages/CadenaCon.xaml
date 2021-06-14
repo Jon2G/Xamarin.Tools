@@ -23,40 +23,36 @@
 
                         <Label TextColor="Black" FontSize="Subtitle"
                                Text="Servidor" />
-                        <controls:AutoCompleteEntry 
+                        <controls:AutoCompleteEntry
                                            VerticalOptions="Start" HorizontalOptions="FillAndExpand"
                                            Placeholder="###.###.###\SERVER"
-                                           TextColor="Black" 
-                                           Text="{Binding Configuration.Servidor}" 
+                                           TextColor="Black"
+                                           Text="{Binding Configuration.Servidor}"
                                            ItemsSource="{Binding ServerSuggestions}"
-                                           TextChangedCommand="{Binding SuggestServerCommand}"/>
+                                           TextChangedCommand="{Binding SuggestServerCommand}" />
 
                         <Label TextColor="Black" FontSize="Subtitle" Text="Puerto del servidor:" />
 
-                        <controls:AutoCompleteEntry 
+                        <controls:AutoCompleteEntry
                             VerticalOptions="Start" HorizontalOptions="FillAndExpand"
                             Placeholder="####"
-                            TextColor="Black" 
-                            Text="{Binding Configuration.Puerto}" 
+                            TextColor="Black"
+                            Text="{Binding Configuration.Puerto}"
                             ItemsSource="{Binding PortSuggestions}"
-                            TextChangedCommand="{Binding SuggestPortCommand}"/>
+                            TextChangedCommand="{Binding SuggestPortCommand}" />
 
-                      
                         <Label TextColor="Black" FontSize="Subtitle" Text="Usuario" />
                         <Entry TextColor="Black" FontSize="Subtitle" Text="{Binding Configuration.Usuario}" />
                         <Label TextColor="Black" FontSize="Subtitle" Text="Contraseña" />
                         <Entry TextColor="Black" FontSize="Subtitle"  Text="{Binding Configuration.Password}" />
 
-
                         <Label TextColor="Black" FontSize="Subtitle" Text="Base de Datos:" />
-                      
-                        <controls:AutoCompleteEntry 
+
+                        <Entry
                             VerticalOptions="Start" HorizontalOptions="FillAndExpand"
                             Placeholder="Database"
-                            TextColor="Black" 
-                            Text="{Binding Configuration.NombreDB}" 
-                            ItemsSource="{Binding DatabaseSuggestions}"
-                            TextChangedCommand="{Binding SuggestDatabaseCommand}"/>
+                            TextColor="Black"
+                            Text="{Binding Configuration.NombreDB}" />
 
                         <Grid BackgroundColor="White"  Margin="0,5" VerticalOptions="FillAndExpand">
                             <Frame BackgroundColor="White" BorderColor="Black" Padding="1">

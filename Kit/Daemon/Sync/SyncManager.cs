@@ -247,7 +247,7 @@ namespace Kit.Daemon.Sync
                                             old_pk = read.GetPk();
                                         }
 
-                                        if (read.CustomUpload(source_con, target_con))
+                                        if (read.CustomUpload(source_con, target_con, table))
                                         {
                                             CurrentPackage.MarkAsSynced(source_con);
                                             Processed++;

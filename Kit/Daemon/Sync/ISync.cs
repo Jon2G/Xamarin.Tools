@@ -24,7 +24,7 @@ namespace Kit.Daemon.Sync
         [Unique, NotNull, AutoIncrement, Column("SyncGuid")]
         public virtual Guid Guid { get; set; }
 
-        public virtual bool CustomUpload(SqlBase con, SqlBase targecon)
+        public virtual bool CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)
         {
             return false;
         }
