@@ -152,6 +152,9 @@ namespace Kit.Sql.Helpers
                     case "Boolean":
                         return Convert.ToBoolean(obj);
 
+                    case "Double":
+                        return Convert.ToDouble(obj);
+
                     default:
                         if (obj is IConvertible)
                         {

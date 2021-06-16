@@ -126,7 +126,7 @@ namespace Kit.Daemon
             return this;
         }
 
-        public SyncDirecction DireccionActual
+        public SyncTarget DireccionActual
         {
             get;
             private set;
@@ -151,7 +151,7 @@ namespace Kit.Daemon
 
         private Daemon()
         {
-            this.DireccionActual = SyncDirecction.INVALID;
+            this.DireccionActual = SyncTarget.INVALID;
             this.IsInited = false;
             this.SyncManager = new SyncManager();
             this.Schema = new Schema();

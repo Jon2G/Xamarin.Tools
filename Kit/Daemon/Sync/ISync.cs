@@ -184,15 +184,15 @@ namespace Kit.Daemon.Sync
             throw new InvalidCastException();
         }
 
-        internal void OnSynced(SyncDirecction direccion, NotifyTableChangedAction action)
+        internal void OnSynced(SyncTarget direccion, NotifyTableChangedAction action)
         {
             switch (direccion)
             {
-                case SyncDirecction.Local:
+                case SyncTarget.Local:
                     OnDownloaded(action);
                     break;
 
-                case SyncDirecction.Remote:
+                case SyncTarget.Remote:
                     OnUploaded(action);
                     break;
             }

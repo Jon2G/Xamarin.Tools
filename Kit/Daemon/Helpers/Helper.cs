@@ -7,16 +7,16 @@ namespace Kit.Daemon.Helpers
 {
     public static class Helper
     {
-        public static SyncDirecction InvertDirection(this SyncDirecction Direccion)
+        public static SyncTarget InvertDirection(this SyncTarget Direccion)
         {
             switch (Direccion)
             {
-                case SyncDirecction.Remote:
-                    return SyncDirecction.Local;
-                case SyncDirecction.Local:
-                    return SyncDirecction.Remote;
+                case SyncTarget.Remote:
+                    return SyncTarget.Local;
+                case SyncTarget.Local:
+                    return SyncTarget.Remote;
             }
-            return SyncDirecction.INVALID;
+            return SyncTarget.INVALID;
         }
     }
 }

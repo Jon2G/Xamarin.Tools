@@ -102,7 +102,7 @@ namespace Kit.Daemon.Abstractions
             }
         }
 
-        public TableMapping this[string TableName, SyncDirecction direcction]
+        public TableMapping this[string TableName, SyncTarget direcction]
         {
             get
             {
@@ -114,12 +114,12 @@ namespace Kit.Daemon.Abstractions
                 string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableName);
                 switch (direcction)
                 {
-                    case SyncDirecction.Local:
+                    case SyncTarget.Local:
                         if (this.DownloadTables.ContainsKey(key))
                             return this.DownloadTables[key];
                         break;
 
-                    case SyncDirecction.Remote:
+                    case SyncTarget.Remote:
                         if (this.DownloadTables.ContainsKey(key))
                             return this.UploadTables[key];
                         break;
@@ -138,17 +138,17 @@ namespace Kit.Daemon.Abstractions
             }
         }
 
-        private bool IsValidDirection(TableDirection TableDirection, SyncDirecction UseDirection)
+        private bool IsValidDirection(TableDirection TableDirection, SyncTarget UseDirection)
         {
             if (TableDirection == TableDirection.TWO_WAY)
             {
                 return true;
             }
-            if (TableDirection == TableDirection.UPLOAD && UseDirection == SyncDirecction.Remote)
+            if (TableDirection == TableDirection.UPLOAD && UseDirection == SyncTarget.Remote)
             {
                 return true;
             }
-            if (TableDirection == TableDirection.DOWNLOAD && UseDirection == SyncDirecction.Local)
+            if (TableDirection == TableDirection.DOWNLOAD && UseDirection == SyncTarget.Local)
             {
                 return true;
             }

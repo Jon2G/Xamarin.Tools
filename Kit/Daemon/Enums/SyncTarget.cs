@@ -4,5 +4,5 @@ using System.Text;
 
 namespace Kit.Daemon.Enums
 {
-    public enum SyncDirecction { Local, Remote, INVALID };
+    public enum SyncTarget { Local, Remote, INVALID };
 }

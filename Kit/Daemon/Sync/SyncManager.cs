@@ -102,20 +102,20 @@ namespace Kit.Daemon.Sync
         {
             if (DownloadQuery is null)
             {
-                DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncDirecction.Remote]);
+                DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Remote]);
                 Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
             }
-            return GetPendings(SyncDirecction.Local);
+            return GetPendings(SyncTarget.Local);
         }
 
         public bool Upload()
         {
             if (UploadQuery is null)
             {
-                UploadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncDirecction.Local]);
+                UploadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Local]);
                 Log.Logger.Information("Prepared {0} Upload Query - [{1}]", "DAEMON", UploadQuery);
             }
-            return GetPendings(SyncDirecction.Remote);
+            return GetPendings(SyncTarget.Remote);
         }
 
         private string PrepareQuery(SqlBase source)
@@ -144,7 +144,7 @@ namespace Kit.Daemon.Sync
             return query;
         }
 
-        private bool GetPendings(SyncDirecction SyncTarget)
+        private bool GetPendings(SyncTarget SyncTarget)
         {
             try
             {
@@ -157,11 +157,11 @@ namespace Kit.Daemon.Sync
                 string query = string.Empty;
                 switch (SyncTarget)
                 {
-                    case SyncDirecction.Local:
+                    case SyncTarget.Local:
                         query = DownloadQuery;
                         break;
 
-                    case SyncDirecction.Remote:
+                    case SyncTarget.Remote:
                         query = UploadQuery;
                         break;
                 }
@@ -193,12 +193,12 @@ namespace Kit.Daemon.Sync
             return false;
         }
 
-        private bool ProcesarAcciones(SyncDirecction direccion)
+        private bool ProcesarAcciones(SyncTarget direccion)
         {
             Processed = 0;
             CurrentPackage = null;
             TableMapping table = null;
-            SyncDirecction source = direccion.InvertDirection();
+            SyncTarget source = direccion.InvertDirection();
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
             SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
             string condition = (source_con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
@@ -219,6 +219,25 @@ namespace Kit.Daemon.Sync
                     table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
                     if (table != null)
                     {
+                        switch (table.SyncDirection)
+                        {
+                            case SyncDirection.TwoWay:
+                                break;
+
+                            case SyncDirection.Upload:
+                                if (direccion != SyncTarget.Remote)
+                                {
+                                    continue;
+                                }
+                                break;
+
+                            case SyncDirection.Download:
+                                if (direccion != SyncTarget.Local)
+                                {
+                                    continue;
+                                }
+                                break;
+                        }
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
                         var action = CurrentPackage.Action;
                         string selection_list = table.SelectionList;
@@ -237,7 +256,7 @@ namespace Kit.Daemon.Sync
                                 case NotifyTableChangedAction.Insert:
                                 case NotifyTableChangedAction.Update:
 
-                                    if (direccion == SyncDirecction.Local || read.ShouldSync(source_con, target_con))
+                                    if (direccion == SyncTarget.Local || read.ShouldSync(source_con, target_con))
                                     {
                                         CanDo = true;
                                         object old_pk = null;

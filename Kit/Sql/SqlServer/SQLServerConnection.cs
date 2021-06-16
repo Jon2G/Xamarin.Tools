@@ -2750,30 +2750,27 @@ WHERE
             var Table = this.Table(obj.GetType()).Table;
 
             var cols = from p in Table.Columns
-                       where p.Name != nameof(ISync.Guid)
+                       where p.Name != nameof(ISync.Guid) && !p.IsPK
                        select p;
             var vals = from c in cols
-                       where c.Name != nameof(ISync.Guid)
+                       where c.Name != nameof(ISync.Guid) && !c.IsPK
                        select c.GetValue(obj);
-            var ps = new List<object>(vals);
-            if (ps.Count == 0)
+            var ps = new List<SqlParameter>(vals.Count());
+            for (int i = 0; i < vals.Count(); i++)
             {
-                // There is a PK but no accompanying data,
-                // so reset the PK to make the UPDATE work.
-                cols = Table.Columns;
-                vals = from c in cols
-                       select c.GetValue(obj);
-                ps = new List<object>(vals);
+                object val = vals.ElementAt(i);
+                ps.Add(new SqlParameter(cols.ElementAt(i).Name, val ?? DBNull.Value));
             }
-            ps.AddRange(conditions.Select(x => x.Value));
+
+            ps.AddRange(conditions.Select(x => new SqlParameter(x.ColumnName, x.Value)));
             var q = string.Format("update \"{0}\" set {1} WHERE {2}",
                 Table.TableName, string.Join(",", (from c in cols
-                                                   select "\"" + c.Name + "\" = ? ").ToArray()), Condition);
+                                                   select "\"" + c.Name + "\" =@" + c.Name).ToArray()), Condition);
             ///
             int rowsAffected = 0;
             try
             {
-                rowsAffected = Execute(q, GetParameters(ps));
+                rowsAffected = Execute(q, ps.DistinctBy(x => x.ParameterName).ToArray());
             }
             catch (SqlServerException ex)
             {

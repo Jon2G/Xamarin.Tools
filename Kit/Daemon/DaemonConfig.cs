@@ -28,15 +28,15 @@ namespace Kit.Daemon
             this.Remote = Remote;
             this.MaxSleep = MaxSleep;
         }
-        public SqlBase this[SyncDirecction direcction]
+        public SqlBase this[SyncTarget direcction]
         {
             get
             {
                 switch (direcction)
                 {
-                    case SyncDirecction.Remote:
+                    case SyncTarget.Remote:
                         return Remote;
-                    case SyncDirecction.Local:
+                    case SyncTarget.Local:
                         return Local;
                 }
                 return null;

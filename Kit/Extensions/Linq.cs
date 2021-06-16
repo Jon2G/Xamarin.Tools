@@ -117,7 +117,12 @@ namespace Kit
             return -1;
         }
 
-        public static void AddRange<T>(this ObservableCollection<T> ts, IEnumerable<T> elementos)
+        public static void AddRange<T>(this ICollection<T> ts, params T[] pelementos)
+        {
+            ts.AddRange<T>(elementos: pelementos);
+        }
+
+        public static void AddRange<T>(this ICollection<T> ts, IEnumerable<T> elementos)
         {
             foreach (T elemento in elementos)
             {
