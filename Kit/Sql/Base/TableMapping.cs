@@ -127,8 +127,8 @@ namespace Kit.Sql.Base
 
             Columns = cols.ToArray();
 
-            _insertColumns = Columns.Where(c => !c.IsAutoInc).ToArray();
-            _insertOrReplaceColumns = Columns.ToArray();
+            _insertColumns = Columns.Where(c => !c.IsAutoInc && !c.IsAutomatic).ToArray();
+            _insertOrReplaceColumns = Columns.Where(c => !c.IsAutomatic).ToArray();
         }
 
         protected static TypeInfo GetTypeInfo(Type type)
@@ -236,6 +236,7 @@ namespace Kit.Sql.Base
 
             public bool IsAutoInc { get; private set; }
             public bool IsAutoGuid { get; protected set; }
+            public bool IsAutomatic { get; protected set; }
 
             public bool IsPK { get; protected set; }
 
@@ -275,6 +276,7 @@ namespace Kit.Sql.Base
                 var isAuto = Orm.IsAutoInc(prop) || (IsPK && ((createFlags & CreateFlags.AutoIncPK) == CreateFlags.AutoIncPK));
                 IsAutoGuid = isAuto && ColumnType == typeof(Guid);
                 IsAutoInc = isAuto && !IsAutoGuid;
+                IsAutomatic = Orm.IsAutomatic(prop);
 
                 Indices = Orm.GetIndices(prop);
                 if (!Indices.Any()

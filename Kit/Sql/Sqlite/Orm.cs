@@ -120,6 +120,11 @@ namespace Kit.Sql.Sqlite
             return p.CustomAttributes.Any(x => x.AttributeType == typeof(PrimaryKeyAttribute));
         }
 
+        public static bool IsAutomatic(MemberInfo p)
+        {
+            return p.CustomAttributes.Any(x => x.AttributeType == typeof(AutomaticAttribute));
+        }
+
         public static string Collation(MemberInfo p)
         {
 #if ENABLE_IL2CPP

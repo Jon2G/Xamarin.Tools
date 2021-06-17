@@ -2575,7 +2575,7 @@ WHERE
             {
             }
 
-            if (map.PK != null && map.PK.IsAutoGuid)
+            if (map.PK != null && map.PK.IsAutomatic)
             {
                 if (map.PK.GetValue(obj).Equals(Guid.Empty))
                 {

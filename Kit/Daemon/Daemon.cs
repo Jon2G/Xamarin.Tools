@@ -277,7 +277,7 @@ namespace Kit.Daemon
                 {
                     return;
                 }
-                SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll().Select(x => x.Value.MappedType));
+                SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll().DistinctBy(x=>x.Value.MappedType).Select(x => x.Value.MappedType));
                 Schema.CheckTriggers(SQLH);
 
                 SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();

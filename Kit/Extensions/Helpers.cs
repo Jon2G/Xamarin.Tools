@@ -232,5 +232,12 @@ namespace Kit
 
             return name;
         }
+        public static  void RunAsync(this Task task)
+        {
+            task.ContinueWith(t =>
+            {
+                Log.Logger.Error("Unexpected Error", t.Exception);
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
     }
 }

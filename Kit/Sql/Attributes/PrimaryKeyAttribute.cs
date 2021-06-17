@@ -2,7 +2,7 @@
 
 namespace Kit.Sql.Attributes
 {
-    [AttributeUsage (AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property)]
     public class PrimaryKeyAttribute : Attribute
     {
     }
