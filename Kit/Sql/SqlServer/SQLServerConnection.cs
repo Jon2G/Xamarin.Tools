@@ -2750,10 +2750,10 @@ WHERE
             var Table = this.Table(obj.GetType()).Table;
 
             var cols = from p in Table.Columns
-                       where p.Name != nameof(ISync.Guid) && !p.IsPK
+                       where p.Name != nameof(ISync.Guid) && !p.IsPK &&!p.IsAutomatic
                        select p;
             var vals = from c in cols
-                       where c.Name != nameof(ISync.Guid) && !c.IsPK
+                       where c.Name != nameof(ISync.Guid) && !c.IsPK && !c.IsAutomatic
                        select c.GetValue(obj);
             var ps = new List<SqlParameter>(vals.Count());
             for (int i = 0; i < vals.Count(); i++)

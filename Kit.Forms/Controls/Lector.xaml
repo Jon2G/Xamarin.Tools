@@ -9,7 +9,7 @@
   <ContentView.Content>
         <Label x:Name="ImgCamera" BindingContext="{Binding CodigoDeBarras}" HorizontalOptions="CenterAndExpand"
                VerticalOptions="CenterAndExpand" HeightRequest="25" 
-               Text="{x:Static fonts:FontelloIcons.Camera}" TextColor="Black"
+               Text="{x:Static fonts:FontelloIcons.Camera}" 
                FontFamily="{x:Static fonts:FontelloIcons.Font}" FontSize="25"/>
     </ContentView.Content>
 </ContentView>

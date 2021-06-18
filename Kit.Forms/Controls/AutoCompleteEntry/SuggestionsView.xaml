@@ -9,21 +9,14 @@
                BackgroundInputTransparent="False" x:DataType="controls:SuggestionsView"
                BackgroundColor="Transparent" InputTransparent="False" HasKeyboardOffset="False"
                x:Class="Kit.Forms.Controls.SuggestionsView" >
-    <pages:PopupPage.Resources>
-        <Style x:Key="card" TargetType="pancakeView:PancakeView">
-            <Setter Property="BackgroundColor" Value="#ffffff" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Shadow" Value="{pancakeView:ShadowMarkup BlurRadius=8, Opacity=0.2, Offset='4,4'}" />
-        </Style>
-    </pages:PopupPage.Resources>
-    <pancakeView:PancakeView Style="{StaticResource card}" VerticalOptions="Start" 
+
+    <pancakeView:PancakeView VerticalOptions="Start" 
                              x:Name="PancakeView">
         <ScrollView HeightRequest="80">
             <StackLayout BindableLayout.ItemsSource="{Binding ItemsSource}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="x:String">
-                        <ContentView  xct:TouchEffect.NormalBackgroundColor="White"
-                                      xct:TouchEffect.PressedBackgroundColor="LightGray"
+                        <ContentView xct:TouchEffect.PressedBackgroundColor="LightGray"
                                       xct:TouchEffect.NativeAnimationColor="LightGray"
                                       xct:TouchEffect.PressedScale="0.99"
                                       xct:TouchEffect.NativeAnimation="True">
@@ -31,7 +24,7 @@
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
                             </ContentView.GestureRecognizers>
                             <StackLayout Spacing="0">
-                            <Label TextColor="Black" Text="{Binding .}" FontSize="20"/>
+                            <Label Text="{Binding .}" FontSize="20"/>
                             <BoxView Color="DarkGray" HeightRequest="1"/>
                             </StackLayout>
                     </ContentView>

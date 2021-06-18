@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Kit.Forms.Extensions;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.CrossImage
@@ -27,7 +28,11 @@ namespace Kit.Forms.Controls.CrossImage
             {
                 return await simage.Stream.Invoke(CancellationToken.None);
             }
-            else if (Native is ImageSource ximage)
+            if (Native is FileImageSource fimage)
+            {
+                return await Task.FromResult<Stream>(fimage.ImageToStream());
+            }
+            if (Native is ImageSource ximage)
             {
                 Stream stream = (Stream)new MemoryStream(this.ToArray());
                 return await Task.FromResult(stream);

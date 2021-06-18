@@ -316,7 +316,7 @@ namespace Kit.Daemon
             Daemon.OffLine = true;
         }
 
-        private void Start()
+        private async void Start()
         {
             try
             {
@@ -373,11 +373,11 @@ namespace Kit.Daemon
                                 this.IsAwake = true;
 
                                 //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
-                                if (!this.SyncManager.Upload() && !IsSleepRequested)
+                                if (!await this.SyncManager.Upload() && !IsSleepRequested)
                                 {
                                     this.IsAwake = true;
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                    this.SyncManager.Download();
+                                   await this.SyncManager.Download();
                                 }
                             }
                             catch (Exception ex)

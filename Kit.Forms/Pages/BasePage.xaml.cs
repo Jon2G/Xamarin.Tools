@@ -117,6 +117,7 @@ namespace Kit.Forms.Pages
 
         public BasePage()
         {
+            InitializeComponent();
             LockedOrientation = DeviceOrientation.Other;
             IsModalLocked = false;
             InitOrientationPage();

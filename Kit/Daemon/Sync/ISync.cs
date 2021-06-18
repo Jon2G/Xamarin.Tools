@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Kit.Daemon.Enums;
 using Kit.Model;
 using Kit.Sql.Attributes;
@@ -21,22 +22,22 @@ namespace Kit.Daemon.Sync
         /// <summary>
         /// This guid identifies the row where the change is made
         /// </summary>
-        [Unique, NotNull, AutoIncrement, Column("SyncGuid")]
+        [Unique,  AutoIncrement, Column("SyncGuid")]
         public virtual Guid Guid { get; set; }
 
-        public virtual bool CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)
+        public virtual Task<bool> CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
-        public virtual bool Affects(Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
+        public virtual Task<bool> Affects(Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
-        public virtual bool ShouldSync(SqlBase source_con, SqlBase target_con)
+        public virtual Task<bool> ShouldSync(SqlBase source_con, SqlBase target_con)
         {
-            return true;
+            return Task.FromResult(true);
         }
 
         public virtual void OnDownloaded(NotifyTableChangedAction action)

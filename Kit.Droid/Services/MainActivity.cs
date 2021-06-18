@@ -128,21 +128,6 @@ namespace Kit.Droid.Services
             base.OnDestroy();
         }
 
-        protected bool IsServiceRunning(Type serviceClass)
-        {
-            var service_class = Java.Lang.Class.FromType(serviceClass);
-            ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
-#pragma warning disable CS0618 // Type or member is obsolete
-            foreach (var service in manager.GetRunningServices(Integer.MaxValue))
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                if (service_class.Name == service.Service.ClassName)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         public static Context GetAppContext()
         {
