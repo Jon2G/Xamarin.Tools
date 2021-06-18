@@ -150,6 +150,10 @@ namespace Kit.Sql.Helpers
                         return Convert.ToInt64(obj);
 
                     case "Boolean":
+                        if(obj is string sb)
+                        {
+                            return sb == "1";
+                        }
                         return Convert.ToBoolean(obj);
 
                     case "Double":
