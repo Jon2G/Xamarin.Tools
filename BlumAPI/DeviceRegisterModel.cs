@@ -30,10 +30,10 @@ namespace Kit.License
             }
         }
 
-        public License Licence { get; set; }
+        public BlumAPI.License Licence { get; set; }
         private readonly IDialogs Dialogs;
 
-        public DeviceRegisterModel(License licence, IDialogs Dialogs)
+        public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs)
         {
             this.Dialogs = Dialogs;
             this.Licence = licence;

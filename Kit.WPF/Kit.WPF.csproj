@@ -114,6 +114,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
     <ProjectReference Include="..\Kit\Kit.csproj" />
   </ItemGroup>
   <ItemGroup>

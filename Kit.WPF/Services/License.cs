@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Kit.WPF.Pages;
-using BaseLicense = Kit.License.License;
+using BaseLicense = BlumAPI.License;
 
 namespace Kit.WPF.Services
 {

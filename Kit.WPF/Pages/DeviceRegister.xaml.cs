@@ -25,7 +25,7 @@ namespace Kit.WPF.Pages
     {
         public DeviceRegisterModel Model { get; private set; }
 
-        public DeviceRegister(License.License Licence, IDialogs Dialogs)
+        public DeviceRegister(BlumAPI.License Licence, IDialogs Dialogs)
         {
             this.Model = new DeviceRegisterModel(Licence, Dialogs);
             this.DataContext = this.Model;
@@ -35,7 +35,7 @@ namespace Kit.WPF.Pages
 
         private void Hyperlink_RequestNavigate(object sender, RoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(License.License.LoginSite));
+            Process.Start(new ProcessStartInfo(BlumAPI.License.LoginSite));
             e.Handled = true;
         }
 

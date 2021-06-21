@@ -385,6 +385,30 @@ namespace Kit.Sql.SqlServer
             return Lista<T>(sql, CommandType.Text, 0);
         }
 
+        public Tuple<T, Q> Tuple<T, Q>(string sql, CommandType type = CommandType.Text,
+            params SqlParameter[] parameters)
+            where T : IConvertible
+            where Q : IConvertible
+        {
+            Tuple<T, Q> result = new Tuple<T, Q>(default(T),default(Q));
+            if (IsClosed)
+                RenewConnection();
+            using (SqlConnection con = Connection)
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
+                {
+                    cmd.Parameters.AddRange(parameters);
+                    using SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        result = new Tuple<T, Q>(Sqlh.Parse<T>(reader[0]), Sqlh.Parse<Q>(reader[1]));
+                    }
+                }
+                con.Close();
+            }
+            return result;
+        }
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.Text, params SqlParameter[] parameters)
             where T : IConvertible
             where Q : IConvertible
@@ -2659,7 +2683,7 @@ WHERE
         {
             PreparedSqlServerInsertCommand prepCmd;
 
-            var key = Tuple.Create(map.MappedType.FullName, extra);
+            var key =System.Tuple.Create(map.MappedType.FullName, extra);
 
             lock (_insertCommandMap)
             {
@@ -2750,7 +2774,7 @@ WHERE
             var Table = this.Table(obj.GetType()).Table;
 
             var cols = from p in Table.Columns
-                       where p.Name != nameof(ISync.Guid) && !p.IsPK &&!p.IsAutomatic
+                       where p.Name != nameof(ISync.Guid) && !p.IsPK && !p.IsAutomatic
                        select p;
             var vals = from c in cols
                        where c.Name != nameof(ISync.Guid) && !c.IsPK && !c.IsAutomatic

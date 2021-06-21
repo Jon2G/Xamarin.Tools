@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Xamarin.Forms;
-using BaseLicense = Kit.License.License;
+using BaseLicense =BlumAPI.License;
 
 namespace Kit.Forms.Services
 {

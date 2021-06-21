@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using BlumAPI.Enums;
+using Kit;
 using Kit.Daemon.Devices;
 using Kit.Enums;
-using Kit.Services.Interfaces;
-using Kit.Sql;
+using Kit.Services.Web;
 using Kit.Sql.Base;
 using Kit.Sql.Tables;
 
-namespace Kit.License
+namespace BlumAPI
 {
     public abstract class License
     {
         public const string LoginSite = "https://ecommerce.blumitech.com.mx/";
         private readonly Dictionary<string, string> AppKeys;
-        private readonly WebService WebService;
+        private readonly APICaller APICaller;
         private DeviceInformation DeviceInformation;
         private readonly string AppName;
         private string AppKey;
@@ -39,7 +39,7 @@ namespace Kit.License
             {
                 DeviceId = Device.Current.DeviceId
             };
-            WebService = new WebService(Device.Current.DeviceId);
+            APICaller = new APICaller(Device.Current.DeviceId);
         }
 
         private string GetDeviceBrand()
@@ -173,7 +173,7 @@ namespace Kit.License
             string Platform = GetDevicePlatform();
             string Name = GetDeviceName();
             string Model = GetDeviceModel();
-            switch (await WebService.EnrollDevice(DeviceBrand, Platform, Name, Model, AppKey, userName, password))
+            switch (await APICaller.EnrollDevice(DeviceBrand, Platform, Name, Model, AppKey, userName, password))
             {
                 case "NO_DEVICES_LEFT":
 
@@ -204,7 +204,7 @@ namespace Kit.License
 
         private async Task<int> GetDevicesLeft(string AppKey, string UserName)
         {
-            string response = await WebService.DevicesLeft(AppKey, UserName);
+            string response = await APICaller.DevicesLeft(AppKey, UserName);
             switch (response)
             {
                 case "ERROR":
@@ -229,7 +229,7 @@ namespace Kit.License
 
         public async Task<bool> Login(string UserName, string Password)
         {
-            return await WebService.LogIn(UserName, Password) == "OK";
+            return await APICaller.LogIn(UserName, Password) == "OK";
         }
 
         private async Task<ProjectActivationState> Autheticate(string AppKey)
@@ -239,7 +239,7 @@ namespace Kit.License
                 return ProjectActivationState.Denied;
             }
             this.AppKey = AppKeys[AppKey];
-            return await WebService.RequestProjectAccess(this.AppKey);
+            return await APICaller.RequestProjectAccess(this.AppKey);
         }
     }
 }

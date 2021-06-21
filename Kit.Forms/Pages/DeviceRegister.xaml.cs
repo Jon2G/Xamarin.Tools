@@ -17,7 +17,7 @@ namespace Kit.Forms.Pages
     {
         public DeviceRegisterModel Model { get; private set; }
 
-        public DeviceRegister(License.License Licence, IDialogs Dialogs)
+        public DeviceRegister(BlumAPI.License Licence, IDialogs Dialogs)
         {
             this.Model = new DeviceRegisterModel(Licence, Dialogs);
             InitializeComponent();
@@ -47,7 +47,7 @@ namespace Kit.Forms.Pages
 
         private void Registrarse(object sender, EventArgs e)
         {
-            Launcher.OpenAsync(new Uri(License.License.LoginSite));
+            Launcher.OpenAsync(new Uri(BlumAPI.License.LoginSite));
         }
 
         protected override bool OnBackButtonPressed()
