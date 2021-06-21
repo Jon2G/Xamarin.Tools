@@ -40,7 +40,7 @@ namespace Kit.Sql.SqlServer
                 decl += "not null ";
             }
 
-            if (p.IsAutomatic)
+            if (p.IsAutoGuid)
             {
                 decl += "DEFAULT NEWID() ";
             }
