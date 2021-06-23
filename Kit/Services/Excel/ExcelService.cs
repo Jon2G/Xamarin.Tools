@@ -1,5 +1,5 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Kit.Services.Excel;
 using System;
@@ -8,15 +8,15 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Formula = DocumentFormat.OpenXml.Spreadsheet.Formula;
+
 namespace Kit.Services
 {
     public class ExcelService : IDisposable
     {
         public string FilePath { get; private set; }
-        public SpreadsheetDocument Document { get; private set; }
+        public ClosedXML.Excel.XLWorkbook Document { get; private set; }
 
-        private ExcelService(string FilePath, SpreadsheetDocument Document)
+        private ExcelService(string FilePath, ClosedXML.Excel.XLWorkbook Document)
         {
             this.FilePath = FilePath;
             this.Document = Document;
@@ -26,7 +26,8 @@ namespace Kit.Services
         {
             // Creating the SpreadsheetDocument in the indicated FilePath
             string FilePath = Path.Combine(Kit.Tools.Instance.LibraryPath, fileName);
-            return new(FilePath, SpreadsheetDocument.Create(FilePath, SpreadsheetDocumentType.Workbook, true));
+            ExcelService xls = new(FilePath, new XLWorkbook());
+            return xls;
         }
 
         public Cell ConstructCell(object value)
@@ -83,200 +84,26 @@ namespace Kit.Services
                  InnerXml = formula
              };
 
-        public ExcelService AddWorkbook(string Name = null, uint SheetId = 0)
+        public ExcelService AddWorkSheet(string Name = null, int SheetId = 0)
         {
-            var wbPart = this.Document.AddWorkbookPart();
-            wbPart.Workbook = new Workbook();
-
-            var part = wbPart.AddNewPart<WorksheetPart>();
-            part.Worksheet = new Worksheet(new SheetData());
-            if (SheetId <= 0)
-            {
-                SheetId = (uint)(wbPart.Workbook.Sheets?.ChildElements?.Count ?? 0) + (uint)1;
-            }
             if (string.IsNullOrEmpty(Name))
             {
-                Name = $"Sheet{SheetId}";
+                Name = $"Sheet{(Document.Worksheets?.Count ?? 0) + 1}";
             }
-            //  Here are created the sheets, you can add all the child sheets that you need.
-            var sheets = wbPart.Workbook.AppendChild
-                (
-                   new Sheets(
-                            new Sheet()
-                            {
-                                Id = wbPart.GetIdOfPart(part),
-                                SheetId = SheetId,
-                                Name = Name
-                            }
-                        )
-                );
-            return this;
-        }
-
-        private ExcelService SetStylesheet(ExcelStructure structure)
-        {
-            WorkbookStylesPart stylesheet = Document.WorkbookPart
-                .AddNewPart<WorkbookStylesPart>();
-
-            Stylesheet workbookstylesheet = new Stylesheet();
-            //    <Fonts>
-            Font font0 = new Font(); // Default font
-
-            Font font1 = new Font(); // Bold font
-            Bold bold = new Bold();
-            font1.Append(bold);
-
-            Fonts fonts = new Fonts(); // <APENDING Fonts>
-            fonts.Append(font0);
-            fonts.Append(font1);
-
-            // <Fills>
-            Fill fill0 = new Fill(); // Default fill
-
-            Fills fills = new Fills(); // <APENDING Fills>
-            fills.Append(fill0);
-            //header fill
-            fills.Append(new Fill() 
-            {
-                PatternFill = new PatternFill()
-                {
-                    PatternType = PatternValues.Solid,
-                    BackgroundColor = new BackgroundColor() { Rgb = new HexBinaryValue(structure.HeaderColor) }
-                }
-            });
-
-            // <Borders>
-            Border border0 = new Border(); // Defualt border
-
-            Borders borders = new Borders(); // <APENDING Borders>
-            borders.Append(border0);
-            borders.Append(new Border(
-                    new LeftBorder(
-                        new Color() { Auto = true }
-                    )
-                    { Style = BorderStyleValues.Thin },
-                    new RightBorder(
-                        new Color() { Auto = true }
-                    )
-                    { Style = BorderStyleValues.Thin },
-                    new TopBorder(
-                        new Color() { Auto = true }
-                    )
-                    { Style = BorderStyleValues.Thin },
-                    new BottomBorder(
-                        new Color() { Auto = true }
-                    )
-                    { Style = BorderStyleValues.Thin },
-                    new DiagonalBorder()));
-
-            // <CellFormats>
-            CellFormat cellformat0 = new CellFormat()
-            {
-                FormatId = 0,
-                FillId = 0,
-                BorderId = 1
-            };
-
-            Alignment alignment = new Alignment()
-            {
-                Horizontal = HorizontalAlignmentValues.Center,
-                Vertical = VerticalAlignmentValues.Center
-            };
-
-            CellFormat cellformat1 = new CellFormat(alignment)
-            {
-                FontId = 1,
-                BorderId = 1,
-                FillId = 1
-            };
-
-            // <APENDING CellFormats>
-            CellFormats cellformats = new CellFormats();
-            cellformats.Append(cellformat0);
-            cellformats.Append(cellformat1);
-
-            // Append FONTS, FILLS , BORDERS & CellFormats to stylesheet <Preserve the ORDER>
-            workbookstylesheet.Append(fonts);
-            workbookstylesheet.Append(fills);
-            workbookstylesheet.Append(borders);
-            workbookstylesheet.Append(cellformats);
-
-            stylesheet.Stylesheet = workbookstylesheet;
-            stylesheet.Stylesheet.Save();
-
+            var worksheet = Document.Worksheets.Add(Name, SheetId);
             return this;
         }
 
         public ExcelService InsertDataIntoSheet(string sheetName, ExcelStructureDataTable data)
         {
+            Document.Worksheets.Add(data.Table, sheetName);
             var table = data.Table;
-
-            var wbPart = this.Document.WorkbookPart;
-            var sheets = wbPart.Workbook.GetFirstChild<Sheets>().
-                         Elements<Sheet>().FirstOrDefault().
-                         Name = sheetName;
-            SetStylesheet(data);
-            var part = wbPart.WorksheetParts.First();
-            var sheetData = part.Worksheet.Elements<SheetData>().First();
-
-            Row row = null;
-            if (data.MakeHeader)
-            {
-                row = sheetData.AppendChild(new Row());
-                for (int i = 0; i < table.Columns.Count; i++)
-                {
-                    Cell cell = ConstructCell(table.Columns[i].ColumnName, CellValues.String);
-                    cell.StyleIndex = 1U;
-                    row.Append(cell);
-                }
-            }
-
-            for (int r = 0; r < table.Rows.Count; r++)
-            {
-                row = sheetData.AppendChild(new Row());
-                for (int c = 0; c < table.Columns.Count; c++)
-                {
-                    object obj = table.Rows[r][c];
-                    row.Append(ConstructCell(obj));
-                }
-            }
-
             return this;
         }
 
-        //public void InsertDataIntoSheet(string sheetName, ExcelListStructure data)
-        //{
-        //    var wbPart = this.Document.WorkbookPart;
-        //    var sheets = wbPart.Workbook.GetFirstChild<Sheets>().
-        //                 Elements<Sheet>().FirstOrDefault().
-        //                 Name = sheetName;
-
-        //    var part = wbPart.WorksheetParts.First();
-        //    var sheetData = part.Worksheet.Elements<SheetData>().First();
-
-        //    var row = sheetData.AppendChild(new Row());
-
-        //    foreach (var header in data.Headers)
-        //    {
-        //        row.Append(ConstructCell(header, CellValues.String));
-        //    }
-
-        //    foreach (var value in data.Values)
-        //    {
-        //        var dataRow = sheetData.AppendChild(new Row());
-
-        //        foreach (var dataElement in value)
-        //        {
-        //            dataRow.Append(ConstructCell(dataElement, CellValues.String));
-        //        }
-        //    }
-        //    wbPart.Workbook.Save();
-        //}
-
         public void Dispose()
         {
-            this.Document.Save();
-            this.Document.Close();
+            Document.SaveAs(FilePath);
             this.Document.Dispose();
         }
     }
