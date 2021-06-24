@@ -4,37 +4,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kit.WPF.Controls.RangoFechas
+namespace Kit.Controls.DateRange
 {
     public class ModeloRango : Rango
     {
         private DateTime _MinDate;
         private DateTime _InicioMaxDate;
+
         public DateTime InicioMaxDate
         {
-            set { 
-                _InicioMaxDate = value; 
-                Raise(()=>InicioMaxDate);
+            set
+            {
+                _InicioMaxDate = value;
+                Raise(() => InicioMaxDate);
             }
             get => _InicioMaxDate;
         }
+
         private DateTime _FinMaxDate;
+
         public DateTime FinMaxDate
         {
-            set { 
-                _FinMaxDate = value; 
-                Raise(()=>FinMaxDate);
+            set
+            {
+                _FinMaxDate = value;
+                Raise(() => FinMaxDate);
             }
             get => _FinMaxDate;
         }
+
         public DateTime MinDate
         {
-            set {
+            set
+            {
                 _MinDate = value;
-                Raise(()=>MinDate);
+                Raise(() => MinDate);
             }
             get => _MinDate;
         }
+
         public ModeloRango() : base()
         {
             FinMaxDate =
@@ -58,6 +66,7 @@ namespace Kit.WPF.Controls.RangoFechas
                         MinDate = (DateTime)Inicio;
                     }
                     break;
+
                 case nameof(Fin):
                     if (Inicio != null)
                     {

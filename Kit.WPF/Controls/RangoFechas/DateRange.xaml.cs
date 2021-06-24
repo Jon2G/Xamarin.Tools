@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kit.Controls.DateRange;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,19 +22,23 @@ namespace Kit.WPF.Controls.RangoFechas
     public partial class DateRange : ObservableUserControl
     {
         #region Rango
+
         private ModeloRango _Rango;
+
         public ModeloRango Rango
         {
             get => _Rango;
             set
             {
                 _Rango = value;
-                Raise(()=>Rango);
+                Raise(() => Rango);
             }
         }
-        #endregion
+
+        #endregion Rango
 
         public Rango Fechas { get => (Rango)Rango; }
+
         public DateRange()
         {
             this.Rango = new ModeloRango();

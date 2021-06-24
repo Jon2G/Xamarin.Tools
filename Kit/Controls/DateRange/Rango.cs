@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Kit.Model;
 
-namespace Kit.WPF.Controls.RangoFechas
+namespace Kit.Controls.DateRange
 {
     public class Rango : ModelBase
     {
         private DateTime? _Inicio;
+
         public DateTime? Inicio
         {
             get => _Inicio;
@@ -18,12 +19,14 @@ namespace Kit.WPF.Controls.RangoFechas
                 if (_Inicio != value)
                 {
                     _Inicio = value;
-                    Raise(()=>Inicio);
+                    Raise(() => Inicio);
                     OnDateChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
+
         private DateTime? _Fin;
+
         public DateTime? Fin
         {
             get => _Fin;
@@ -32,11 +35,12 @@ namespace Kit.WPF.Controls.RangoFechas
                 if (_Fin != value)
                 {
                     _Fin = value;
-                    Raise(()=>Fin);
+                    Raise(() => Fin);
                     OnDateChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
+
         public bool? TodasLasFechasNull
         {
             get => _TodasLasFechas;
@@ -46,28 +50,31 @@ namespace Kit.WPF.Controls.RangoFechas
                 {
                     this.TodasLasFechas = b;
                 }
-
             }
         }
+
         private bool _SeleccionaFecha;
+
         public bool SeleccionaFecha
         {
             get => _SeleccionaFecha;
             set
             {
                 _SeleccionaFecha = value;
-                Raise(()=>SeleccionaFecha);
+                Raise(() => SeleccionaFecha);
             }
         }
+
         private bool _TodasLasFechas;
+
         public bool TodasLasFechas
         {
             get => _TodasLasFechas;
             set
             {
                 _TodasLasFechas = value;
-                Raise(()=>TodasLasFechas);
-                Raise(()=>TodasLasFechasNull);
+                Raise(() => TodasLasFechas);
+                Raise(() => TodasLasFechasNull);
 
                 OnDateChanged?.Invoke(this, EventArgs.Empty);
                 SeleccionaFecha = !TodasLasFechas;
@@ -83,9 +90,12 @@ namespace Kit.WPF.Controls.RangoFechas
                 //}
             }
         }
+
         public bool Cancelado { get; set; }
         public bool Excel { get; set; }
+
         public event EventHandler OnDateChanged;
+
         public Rango()
         {
             Excel = false;
