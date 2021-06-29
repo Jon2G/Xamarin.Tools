@@ -2671,9 +2671,10 @@ WHERE
                     throw ex;
                 }
             }
-            if (shouldnotify && count > 0)
-                OnTableChanged(map, NotifyTableChangedAction.Insert);
-
+            if (!shouldnotify && obj is ISync isync)
+            {
+                Table<ChangesHistory>().Delete(x => x.Guid == isync.Guid);
+            }
             return count;
         }
 

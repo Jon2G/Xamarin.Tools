@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Kit.Sql.Attributes;
+using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kit.Model
@@ -71,6 +73,123 @@ namespace Kit.Model
         }
 
         #endregion PerfomanceHelpers
+
+        protected async Task RunTask(Task task,
+            bool handleException = true, bool lockNavigation = true,
+            CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
+        {
+            if (token != null && token.IsCancellationRequested || (lockNavigation && IsBusy))
+                return;
+
+            Exception exception = null;
+
+            try
+            {
+                UpdateIsBusy(true, lockNavigation);
+
+                await task;
+
+                UpdateIsBusy(false, !lockNavigation);
+            }
+            catch (TaskCanceledException)
+            {
+                Log.Logger.Information($"{caller} Task Cancelled");
+            }
+            catch (AggregateException e)
+            {
+                var ex = e.InnerException;
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+
+                exception = ex;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                Log.Logger.Error($"{caller}  Error", exception);
+            }
+            finally
+            {
+                if (exception is not null && !handleException)
+                {
+                    throw exception;
+                }
+                UpdateIsBusy(false);
+            }
+        }
+
+        protected void RunTask(Action task,
+    bool handleException = true, bool lockNavigation = true,
+    CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
+        {
+            if (token != null && token.IsCancellationRequested || (lockNavigation && IsBusy))
+                return;
+
+            Exception exception = null;
+
+            try
+            {
+                UpdateIsBusy(true, lockNavigation);
+                task.Invoke();
+            }
+            catch (TaskCanceledException)
+            {
+                Log.Logger.Information($"{caller} Task Cancelled");
+            }
+            catch (AggregateException e)
+            {
+                var ex = e.InnerException;
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+
+                exception = ex;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                Log.Logger.Error($"{caller}  Error", exception);
+            }
+            finally
+            {
+                if (!handleException)
+                {
+                    throw exception;
+                }
+                UpdateIsBusy(false);
+            }
+        }
+
+        private bool _isBusy;
+
+        [Ignore]
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _canNavigate = true;
+
+        [Ignore]
+        public bool CanNavigate
+        {
+            get { return _canNavigate; }
+            set
+            {
+                _canNavigate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void UpdateIsBusy(bool isBusy, bool lockNavigation = true)
+        {
+            IsBusy = isBusy;
+            CanNavigate = !lockNavigation;
+        }
 
         public virtual void Dispose()
         {

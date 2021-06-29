@@ -2761,7 +2761,7 @@ namespace Kit.Sql.Sqlite
 
         public void OnTableChanged(TableMapping table, NotifyTableChangedAction action, object obj)
         {
-            if (table.SyncDirection == SyncDirection.NoSync)
+            if (table.SyncDirection == SyncDirection.NoSync || table.SyncDirection == SyncDirection.Download)
             {
                 return;
             }

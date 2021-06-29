@@ -181,7 +181,7 @@ namespace Kit.Daemon.Sync
                 ToDo = TotalPendientes > 0;
                 if (ToDo && !Daemon.Current.IsSleepRequested)
                 {
-                    ToDo =await ProcesarAcciones(SyncTarget);
+                    ToDo = await ProcesarAcciones(SyncTarget);
                     return true;
                 }
                 return false;
@@ -240,7 +240,7 @@ namespace Kit.Daemon.Sync
                                 break;
                         }
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
-                        var action = CurrentPackage.Action;
+                        NotifyTableChangedAction action = CurrentPackage.Action;
                         string selection_list = table.SelectionList;
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
@@ -250,6 +250,19 @@ namespace Kit.Daemon.Sync
                         if (Daemon.Current.IsSleepRequested) { return false; }
                         dynamic i_result = result.FirstOrDefault();
                         ISync read = Convert.ChangeType(i_result, typeof(ISync));
+                        if (read is null && action == NotifyTableChangedAction.Delete)
+                        {
+                            if (target_con is SQLiteConnection lite)
+                            {
+                                lite.EXEC($"DELETE FROM {table.TableName} where SyncGuid=?", CurrentPackage.Guid);
+                            }
+                            else if (target_con is SQLServerConnection con)
+                            {
+                                con.EXEC($"DELETE FROM {table.TableName} where SyncGuid=@SyncGuid", new System.Data.SqlClient.SqlParameter("SyncGuid", CurrentPackage.Guid));
+                            }
+                            CurrentPackage.MarkAsSynced(source_con);
+                            continue;
+                        }
                         if (read != null)
                         {
                             switch (CurrentPackage.Action)
@@ -257,7 +270,7 @@ namespace Kit.Daemon.Sync
                                 case NotifyTableChangedAction.Insert:
                                 case NotifyTableChangedAction.Update:
 
-                                    if (direccion == SyncTarget.Local ||await read.ShouldSync(source_con, target_con))
+                                    if (direccion == SyncTarget.Local || await read.ShouldSync(source_con, target_con))
                                     {
                                         CanDo = true;
                                         object old_pk = null;

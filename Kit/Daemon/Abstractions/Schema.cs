@@ -106,12 +106,11 @@ namespace Kit.Daemon.Abstractions
         {
             get
             {
-                if (DeniedTables != null && DeniedTables.Contains(TableName))
+                string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableName);
+                if (DeniedTables != null && DeniedTables.Contains(key))
                 {
                     return null;
                 }
-
-                string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableName);
                 switch (direcction)
                 {
                     case SyncTarget.Local:
@@ -120,7 +119,7 @@ namespace Kit.Daemon.Abstractions
                         break;
 
                     case SyncTarget.Remote:
-                        if (this.DownloadTables.ContainsKey(key))
+                        if (this.UploadTables.ContainsKey(key))
                             return this.UploadTables[key];
                         break;
                 }
@@ -128,7 +127,7 @@ namespace Kit.Daemon.Abstractions
                 {
                     this.DeniedTables = new HashSet<string>();
                 }
-                DeniedTables.Add(TableName);
+                DeniedTables.Add(key);
 
                 //if (!IsValidDirection(table.TableDirection, direcction))
                 //{
@@ -161,7 +160,6 @@ namespace Kit.Daemon.Abstractions
                 this.DownloadTables.Where(x => x.Value is Kit.Sql.SqlServer.TableMapping
                 && (x.Value.SyncDirection == SyncDirection.Download || x.Value.SyncDirection == SyncDirection.TwoWay)))
             {
-
                 Trigger.CheckTrigger(Connection, table.Value, Daemon.Current.DaemonConfig.DbVersion);
             }
 
