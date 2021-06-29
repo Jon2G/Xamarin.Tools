@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
@@ -108,6 +109,7 @@ namespace Kit.Droid.Services
             Kit.Droid.Tools.Init(this, savedInstanceState);
             Forms9Patch.Droid.Settings.Initialize(this);
             Instance = this; //ImagePicker
+            ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
         }
 
         //public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

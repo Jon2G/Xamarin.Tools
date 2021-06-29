@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,39 +16,46 @@ namespace Kit.Services.Web
         {
             this.Url = Url;
         }
-       
-        public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters)
+
+        public Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters) => GET(metodo, null, parameters);
+
+        public async Task<Kit.Services.Web.ResponseResult> GET(string metodo,Dictionary<string,string> query, params string[] parameters)
         {
             Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
             {
                 HttpStatusCode = HttpStatusCode.Unused
             };
-            string parametersText;
+
+            StringBuilder sb = new StringBuilder("/");
             if (parameters != null && parameters.Length > 0)
             {
-                StringBuilder sb = new StringBuilder("/");
-                foreach (string oneParameter in parameters)
+                foreach (string oneParameter in parameters.Where(x=>x is not null))
                 {
                     sb.AppendFormat("{0}/", Uri.EscapeDataString(oneParameter));
                 }
-                parametersText = sb.ToString();
-                if (parametersText.Last() == '/')
+                if (sb.Last() == '/')
                 {
-                    parametersText = parametersText.Substring(0, parametersText.Length - 1);
+                    sb=sb.Remove(sb.Length - 1, 1);
                 }
             }
-            else
+
+            if (query != null && query.Any())
             {
-                parametersText = "";
+                foreach (KeyValuePair<string, string> oneParameter in query)
+                {
+                    sb.AppendFormat("?{0}={1}", oneParameter.Key, Uri.EscapeDataString(oneParameter.Value));
+                }
             }
-            string GetUrl = string.Format("{0}/{1}{2}", this.Url, metodo, parametersText);
+
+            string GetUrl = string.Format("{0}/{1}{2}", this.Url, metodo, sb.ToString());
             string responseText = string.Empty;
             try
             {
                 using (HttpClientHandler handler = new HttpClientHandler()
                 {
                     Proxy = null,
-                    UseProxy = false
+                    UseProxy = false,
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 })
                 {
                     //if (Kit.Tools.Instance.RuntimePlatform != RuntimePlatform.WPF)
@@ -65,6 +73,7 @@ namespace Kit.Services.Web
 
                     using (HttpClient client = new HttpClient(handler))
                     {
+                        client.DefaultRequestHeaders.Add("Accept", "application/json");
                         result.Response = await client.GetStringAsync(GetUrl);
                         result.HttpStatusCode = HttpStatusCode.OK;
                     }
@@ -86,7 +95,7 @@ namespace Kit.Services.Web
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, $"GET: {this.Url}");
+                Log.Logger.Error(ex, $"GET: {GetUrl}");
                 result.Response = "ERROR";
             }
             return result;

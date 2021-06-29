@@ -130,34 +130,6 @@ namespace Kit
             }
         }
 
-        public static object XmlDeserializeFromString(this string objectData, Type type)
-        {
-            var serializer = new XmlSerializer(type);
-            object result;
-
-            using (TextReader reader = new StringReader(objectData))
-            {
-                result = serializer.Deserialize(reader);
-            }
-
-            return result;
-        }
-
-        public static T XmlDeserializeFromString<T>(this string objectData)
-        {
-            return (T)XmlDeserializeFromString(objectData, typeof(T));
-        }
-
-        public static string SerializeObject<T>(this T toSerialize)
-        {
-            XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
-
-            using (StringWriter textWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(textWriter, toSerialize);
-                return textWriter.ToString();
-            }
-        }
 
 #if NETSTANDARD1_0 || NETSTANDARD2_0 || NET462
 

@@ -57,7 +57,7 @@
     <PackageReference Include="MoyskleyTech.ImageProcessing.JPEGCodec" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.PNGCodec" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.TGACodec" Version="1.0.1" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.11" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.12" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="Xam.Plugins.Forms.ProgressRing" Version="0.1.2" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="1.1.0" />
@@ -122,6 +122,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Controls\ActionSheet\ActionSheet.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Controls\ArrowButton.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

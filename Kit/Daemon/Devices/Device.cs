@@ -31,7 +31,62 @@ namespace Kit.Daemon.Devices
         {
             Current = new Device();
         }
-
+        public string GetDeviceBrand()
+        {
+            string brand = "GENERIC";
+            try
+            {
+                brand = Device.Current.IDeviceInfo.Manufacturer;
+                if (brand.ToLower() == "unknown")
+                {
+                    brand = "GENERIC";
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Obtaining device brand");
+            }
+            return brand;
+        }
+        public string GetDeviceName()
+        {
+            string DeviceName = "GENERIC";
+            try
+            {
+                DeviceName = Device.Current.IDeviceInfo.DeviceName;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Obtaining device name");
+            }
+            return DeviceName;
+        }
+        public string GetDeviceModel()
+        {
+            string Model = "GENERIC";
+            try
+            {
+                Model = Device.Current.IDeviceInfo.Model;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Obtaining device model");
+            }
+            return Model;
+        }
+        public string GetDevicePlatform()
+        {
+            string brand = "GENERIC";
+            try
+            {
+                return Device.Current.IDeviceInfo.Platform.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Obtaining device platform");
+            }
+            return brand;
+        }
         private void EnsureTableExists(SQLServerConnection SQLH)
         {
             if (!SQLH.TableExists<SyncDevicesInfo>())

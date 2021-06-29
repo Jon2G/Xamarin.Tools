@@ -92,6 +92,7 @@ namespace Kit.Forms.Pages
         public BasePopUp LockModal()
         {
             this.IsModalLocked = !this.IsModalLocked;
+            this.CloseWhenBackgroundIsClicked = !this.IsModalLocked;
             return this;
         }
 
