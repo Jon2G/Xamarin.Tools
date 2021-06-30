@@ -22,7 +22,7 @@ namespace Kit.Daemon.Sync
         /// <summary>
         /// This guid identifies the row where the change is made
         /// </summary>
-        [Unique,  AutoIncrement, Column("SyncGuid")]
+        [AutoIncrement, Column("SyncGuid")]
         public virtual Guid Guid { get; set; }
 
         public virtual Task<bool> CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)

@@ -117,6 +117,12 @@ namespace Kit.WPF.Extensions
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteObject([In] IntPtr hObject);
 
+        public static Image ToImage(this byte[] bytes) => (new MemoryStream(bytes)).ToImage();
+
+        public static Image ToImage(this Stream stream) => Image.FromStream(stream);
+
+        public static ImageSource ImageSourceFromBitmap(this BitmapImage bmp) => ImageSourceFromBitmap(bmp.BitmapImage2Bitmap());
+
         public static ImageSource ImageSourceFromBitmap(this Bitmap bmp)
         {
             if (bmp is null)
@@ -167,6 +173,9 @@ namespace Kit.WPF.Extensions
             encoderParams.Param[0] = qualityParam;
             img.Save(path, jpegCodec, encoderParams);
         }
+
+        public static MemoryStream CompressAsJpeg(this FileInfo file, int quality) => Image.FromFile(file.FullName).CompressAsJpeg(quality);
+
         /// <summary>
         /// Saves an image as a jpeg image, with the given quality
         /// </summary>

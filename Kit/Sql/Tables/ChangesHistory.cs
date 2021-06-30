@@ -4,6 +4,7 @@ using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
+using Kit.Sql.Sqlite;
 
 namespace Kit.Sql.Tables
 {
@@ -13,6 +14,9 @@ namespace Kit.Sql.Tables
     /// </summary>
     public class ChangesHistory : ISync
     {
+        [PrimaryKey, AutoIncrement, Column("SyncGuid")]
+        public override Guid Guid { get; set; }
+
         /// <summary>
         /// Name of the table where te change has been made
         /// </summary>
@@ -36,7 +40,10 @@ namespace Kit.Sql.Tables
             this.Action = Action;
             this.Priority = Priority;
         }
-
+        public void Save(SQLiteConnection con)
+        {
+            con.InsertOrReplace(this);
+        }
         public void MarkAsSynced(SqlBase origin)
         {
             try
