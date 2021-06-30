@@ -57,20 +57,7 @@ namespace Kit.Services.Web
                     UseProxy = false,
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 })
-                {
-                    //if (Kit.Tools.Instance.RuntimePlatform != RuntimePlatform.WPF)
-                    //{
-                    //    try
-                    //    {
-                    //        handler.ServerCertificateCustomValidationCallback +=
-                    //            (arg1, arg2, arg3, arg4) => { return true; };
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Log.Logger.Error(ex);
-                    //    }
-                    //}
-
+                { 
                     using (HttpClient client = new HttpClient(handler))
                     {
                         client.DefaultRequestHeaders.Add("Accept", "application/json");

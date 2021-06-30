@@ -48,6 +48,7 @@ namespace BlumAPI
         private async Task<ProjectActivationState> IsDeviceAutenticated()
         {
             ResponseResult result = await WebService.GET( "IsDeviceAutenticated", DeviceId);
+            result.Response=result.Response.Replace("\"", string.Empty);
             if (result.Response == "ERROR")
             {
                 return ProjectActivationState.ConnectionFailed;
@@ -62,6 +63,7 @@ namespace BlumAPI
         private async Task<ProjectActivationState> IsDeviceEnrolled(string AppKey)
         {
             ResponseResult result = await WebService.GET( "IsDeviceEnrolled", DeviceId, AppKey);
+            result.Response= result.Response.Replace("\"", string.Empty);
             switch (result.Response)
             {
                 case "ERROR":
@@ -83,7 +85,7 @@ namespace BlumAPI
         internal async Task<string> EnrollDevice(string DeviceBrand, string Platform, string Name, string Model, string AppKey, string UserName, string Password)
         {
             ResponseResult response = await WebService.GET("EnrollDevice", this.DeviceId, DeviceBrand, Platform, Name, Model, AppKey, UserName, Password);
-            return response.Response;
+            return response.Response.Replace("\"",string.Empty);
         }
 
         internal async Task<string> DevicesLeft(string appKey, string userName)

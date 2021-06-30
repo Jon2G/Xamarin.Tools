@@ -42,7 +42,7 @@ namespace Kit.WPF.Reportes
                 string path = $"{Kit.Tools.Instance.LibraryPath}{scape}{directorio}";
                 this.RutaReportes = path;
             }
-            if (this.RutaLogo[0] == '\\')
+            if (string.IsNullOrEmpty(RutaLogo) || this.RutaLogo[0] == '\\')
             {
                 this.RutaLogo = $"{this.RutaReportes}{this.RutaLogo}";
             }

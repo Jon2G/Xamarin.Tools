@@ -54,7 +54,8 @@ namespace Kit.WPF
                 .WriteTo.Logger(config =>
                     config
                         .MinimumLevel.Fatal()
-                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
+                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1, 
+                            flushToDiskInterval: TimeSpan.FromMilliseconds(500))
                 )).CreateLogger(), CriticalAlert);
         }
 

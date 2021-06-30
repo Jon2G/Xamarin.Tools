@@ -229,7 +229,8 @@ namespace BlumAPI
 
         public async Task<bool> Login(string UserName, string Password)
         {
-            return await APICaller.LogIn(UserName, Password) == "OK";
+            string reult = await APICaller.LogIn(UserName, Password);
+            return reult.Contains("OK");
         }
 
         private async Task<ProjectActivationState> Autheticate(string AppKey)
