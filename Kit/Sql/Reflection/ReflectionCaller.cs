@@ -10,7 +10,7 @@ namespace Kit.Sql.Reflection
 {
     public class ReflectionCaller : IDisposable
     {
-        private Assembly Dll;
+        public Assembly Dll { get; private set; }
         private Type Type;
         private PropertyInfo Property;
 
@@ -28,8 +28,17 @@ namespace Kit.Sql.Reflection
             }
         }
 
+        public Type GetType(string TypeName)
+        {
+            return Dll.GetType(TypeName,true,true);
+        }
+
         private Assembly SearchAssembly(string AssemblyName)
         {
+            if (!AssemblyName.EndsWith(".dll"))
+            {
+                AssemblyName += ".dll";
+            }
             Assembly[] LoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly assembly in LoadedAssemblies)
             {

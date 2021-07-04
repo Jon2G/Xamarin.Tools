@@ -15,6 +15,8 @@ using Kit.Services.Interfaces;
 using Serilog;
 using Kit.Enums;
 using Kit.Forms.Controls.CrossImage;
+using Kit.Forms.Dialogs;
+using Kit.Forms.Extensions;
 
 namespace Kit.iOS
 {
@@ -23,7 +25,8 @@ namespace Kit.iOS
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
         public override void Init()
         {
-            Init(new CustomMessageBox(), new SynchronizeInvoke(), new ScreenManagerService(), new ImageExtensions(), new BarCodeBuilder());
+            Init(new Forms.Dialogs.Dialogs(), new SynchronizeInvoke(), new ScreenManagerService(),
+                new CrossImageExtensions(), new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()

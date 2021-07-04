@@ -1,5 +1,6 @@
 ﻿using FFImageLoading.Transformations;
 using Foundation;
+using Kit.Forms.Services.Interfaces;
 using UIKit;
 using Xamarin.Forms;
 
@@ -29,6 +30,11 @@ namespace Kit.iOS.Services
             Kit.iOS.Tools.Init();
             LoadApplication(GetApp);
             return base.FinishedLaunching(app, options);
+        }
+
+        public void UpdateWidget(string AppWidgetProviderClassName)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
