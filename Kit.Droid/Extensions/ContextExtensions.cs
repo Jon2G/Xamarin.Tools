@@ -10,6 +10,12 @@ namespace Kit.Droid
 {
     public static class ContextExtensions
     {
+        public static bool IsDarkMode(this Context context)
+        {
+            var nightModeFlags = context.Resources?.Configuration?.UiMode ?? Android.Content.Res.UiMode.TypeNormal
+                & Android.Content.Res.UiMode.NightMask;
+           return nightModeFlags.HasFlag(Android.Content.Res.UiMode.NightYes);
+        }
         public static bool IsServiceRunning(this Context context, Type serviceClass)
         {
             var service_class = Java.Lang.Class.FromType(serviceClass);
