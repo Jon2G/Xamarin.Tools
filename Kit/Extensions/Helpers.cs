@@ -43,7 +43,7 @@ namespace Kit
             return base64;
         }
 
-        public static string EnLetra(this decimal Numero, string Leyenda, bool bolDecimales, string strMoneda = "")
+        public static string EnLetra(this decimal Numero, string Leyenda="M.N.",string strMoneda = "PESOS CON")
         {
             string dec;
 

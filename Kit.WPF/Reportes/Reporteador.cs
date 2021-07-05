@@ -24,8 +24,8 @@ namespace Kit.WPF.Reportes
     {
         private StiReport StiReport;
         private readonly string RutaLogo;
-        private readonly string RutaReportes;
-
+        public readonly string RutaReportes;
+        public const string PdfPrinter = "Microsoft Print to PDF";
         public Reporteador(string RutaLogo = "\\logo.png", string RutaReportes = "\\mrt")
         {
             //Importante para evitar 'Error al registrar DragDrop.'
@@ -318,7 +318,7 @@ namespace Kit.WPF.Reportes
         /// <param name="report">Reporte (es indiferente si esta compilado y renderizado o no)</param>
         public Reporteador ImprimeReporte(string nombre, string impresora, short VecesTicket = 1)
         {
-            bool IniciarAlFinalizar = (impresora == "Microsoft Print to PDF");
+            bool IniciarAlFinalizar = (impresora == PdfPrinter);
             try
             {
                 if (!this.StiReport.IsRendered)

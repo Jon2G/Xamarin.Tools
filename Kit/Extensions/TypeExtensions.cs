@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Kit
@@ -13,6 +14,16 @@ namespace Kit
                 return Activator.CreateInstance(type);
             }
             return null;
+        }
+
+        public static bool IsOverriden(this PropertyInfo property)
+        {
+            var getMethod = property.GetGetMethod(false);
+            if (getMethod.GetBaseDefinition().DeclaringType == getMethod.DeclaringType)
+            {
+                return false;
+            }
+            return true;
         }
 
         public static bool IsPrimitive(this Type t)

@@ -50,13 +50,19 @@ namespace Kit.Droid
                 .WriteTo.Async(x => x.Logger(config =>
                       config
                           .MinimumLevel.Information()
-                          .WriteTo.Async(x => x.File(Log.Current.LoggerPath, retainedFileCountLimit: 7))
+                          .WriteTo.Async(x => x.File(
+                              path: Log.Current.LoggerPath,
+                              retainedFileCountLimit: 7,
+                              flushToDiskInterval: TimeSpan.FromMilliseconds(500)))
                 ))
                 // And create another logger so that logs at Fatal level will immediately send email
                 .WriteTo.Logger(config =>
                     config
                         .MinimumLevel.Fatal()
-                        .WriteTo.Async(x => x.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1))
+                        .WriteTo.Async(x => x.File(
+                            path: Log.Current.CriticalLoggerPath,
+                            retainedFileCountLimit: 1,
+                             flushToDiskInterval: TimeSpan.FromMilliseconds(500)))
                 )).CreateLogger(), CriticalAlert);
         }
 

@@ -69,6 +69,7 @@ namespace Kit.Sql.Base
                     from p in ti.DeclaredProperties
                     where
                         !propNames.Contains(p.Name) &&
+                        !props.Any(x => x.Name == p.Name) &&
                         p.CanRead && p.CanWrite &&
                         (p.GetMethod != null) && (p.SetMethod != null) &&
                         (p.GetMethod.IsPublic && p.SetMethod.IsPublic) &&
@@ -308,6 +309,11 @@ namespace Kit.Sql.Base
             public virtual object GetValue(object obj)
             {
                 return _prop.GetValue(obj, null);
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}-{PropertyInfo}";
             }
         }
     }

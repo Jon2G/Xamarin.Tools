@@ -75,21 +75,17 @@ namespace Kit.Model
         #endregion PerfomanceHelpers
 
         protected async Task RunTask(Task task,
-            bool handleException = true, bool lockNavigation = true,
+            bool handleException = true,
             CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
         {
-            if (token != null && token.IsCancellationRequested || (lockNavigation && IsBusy))
+            if (token != null && token.IsCancellationRequested)
                 return;
 
             Exception exception = null;
 
             try
             {
-                UpdateIsBusy(true, lockNavigation);
-
                 await task;
-
-                UpdateIsBusy(false, !lockNavigation);
             }
             catch (TaskCanceledException)
             {
@@ -114,22 +110,20 @@ namespace Kit.Model
                 {
                     throw exception;
                 }
-                UpdateIsBusy(false);
             }
         }
 
         protected void RunTask(Action task,
-    bool handleException = true, bool lockNavigation = true,
+    bool handleException = true,
     CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
         {
-            if (token != null && token.IsCancellationRequested || (lockNavigation && IsBusy))
+            if (token != null && token.IsCancellationRequested)
                 return;
 
             Exception exception = null;
 
             try
             {
-                UpdateIsBusy(true, lockNavigation);
                 task.Invoke();
             }
             catch (TaskCanceledException)
@@ -155,40 +149,7 @@ namespace Kit.Model
                 {
                     throw exception;
                 }
-                UpdateIsBusy(false);
             }
-        }
-
-        private bool _isBusy;
-
-        [Ignore]
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set
-            {
-                _isBusy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _canNavigate = true;
-
-        [Ignore]
-        public bool CanNavigate
-        {
-            get { return _canNavigate; }
-            set
-            {
-                _canNavigate = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public void UpdateIsBusy(bool isBusy, bool lockNavigation = true)
-        {
-            IsBusy = isBusy;
-            CanNavigate = !lockNavigation;
         }
 
         public virtual void Dispose()

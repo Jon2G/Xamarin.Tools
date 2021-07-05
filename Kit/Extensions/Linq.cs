@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kit.Sql.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -130,62 +131,50 @@ namespace Kit
             }
         }
 
-
 #if NETSTANDARD1_0 || NETSTANDARD2_0 || NET462
 
         public static DataTable ToTable<T>(this T obj)
         {
-            DataTable data = null;
-            //if (lista?.Count <= 0)
-            //{
-            //    return data;
-            //}
-            Type tipo = typeof(T);
-            data = new DataTable(tipo.Name);
-            List<object> values = new List<object>();
-            foreach (PropertyInfo p in tipo.GetProperties().Where(x => x.PropertyType.IsPrimitive()))
+            TableMapping map = new Kit.Sql.Sqlite.TableMapping(typeof(T));
+            DataTable data = new DataTable(map.TableName);
+            foreach (var col in map.Columns)
             {
-                if (p.PropertyType.IsEnum)
-                {
-                    data.Columns.Add(p.Name, typeof(string));
-                }
-                else
-                {
-                    data.Columns.Add(p.Name, p.PropertyType);
-                }
-                values.Add(p.GetValue(obj));
+                data.Columns.Add(col.Name, col.ColumnType);
             }
-            data.Rows.Add(values.ToArray());
+
+            List<object> valores = new List<object>();
+            foreach (var column in map.Columns)
+            {
+                valores.Add(column.GetValue(obj));
+            }
+            data.Rows.Add(valores.ToArray());
+
             return data;
         }
 
         public static DataTable ToTable<T>(this List<T> lista)
         {
-            DataTable data = null;
-            //if (lista?.Count <= 0)
-            //{
-            //    return data;
-            //}
-            Type tipo = typeof(T);
-            data = new DataTable(tipo.Name);
-            foreach (PropertyInfo p in tipo.GetProperties().Where(x => x.PropertyType.IsPrimitive()))
+            Type type = null;
+            if (lista.Any())
             {
-                if (p.PropertyType.IsEnum)
-                {
-                    data.Columns.Add(p.Name, typeof(string));
-                }
-                else
-                {
-                    data.Columns.Add(p.Name, p.PropertyType);
-                }
+                type = lista.First().GetType();
             }
-
+            else
+            {
+                type = typeof(T);
+            }
+            TableMapping map = new Kit.Sql.Sqlite.TableMapping(type);
+            DataTable data = new DataTable(map.TableName);
+            foreach (TableMapping.Column col in map.Columns)
+            {
+                data.Columns.Add(col.Name, col.ColumnType);
+            }
             lista.ForEach(v =>
             {
                 List<object> valores = new List<object>();
-                foreach (DataColumn column in data.Columns)
+                foreach (var column in map.Columns)
                 {
-                    valores.Add(tipo.GetProperty(column.ColumnName).GetValue(v));
+                    valores.Add(column.GetValue(v));
                 }
                 data.Rows.Add(valores.ToArray());
             });
@@ -193,6 +182,16 @@ namespace Kit
         }
 
         public static DataTable ToTable<T>(this IEnumerable<T> lista)
+        {
+            return lista.ToList().ToTable();
+        }
+
+        public static DataTable ToTable<T>(this ObservableCollection<T> lista)
+        {
+            return lista.ToList().ToTable();
+        }
+
+        public static DataTable ToTable<T>(this Collection<T> lista)
         {
             return lista.ToList().ToTable();
         }

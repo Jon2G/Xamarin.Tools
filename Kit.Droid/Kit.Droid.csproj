@@ -94,6 +94,7 @@
   <ItemGroup>
     <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.Xamarin" Version="0.2.0.64" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.0.4" />
     <PackageReference Include="Microsoft.CSharp">
