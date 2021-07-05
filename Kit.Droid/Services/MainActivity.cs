@@ -13,13 +13,12 @@ using Kit.Forms.Services;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Java.Lang;
+using Kit.Droid.Services;
+using Kit.Forms.Services.Interfaces;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
-//[assembly: UsesFeature("android.hardware.camera.autofocus", Required = false)]
-//[assembly: UsesPermission("android.permission.READ_PHONE_STATE")]
-//[assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
-//[assembly: UsesPermission("android.permission.BLUETOOTH")]
-
+[assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
+[assembly: Dependency(typeof(MainActivity))]
 namespace Kit.Droid.Services
 {
     [MetaData(name: "android.support.FILE_PROVIDER_PATH", Resource = "@xml/paths")]
@@ -31,50 +30,8 @@ namespace Kit.Droid.Services
     )]
     public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        // Field, property, and method for Picture Picker
-        //public static readonly int PickImageId = 1000;
         public static MainActivity Instance;
 
-        //public TaskCompletionSource<Tuple<byte[], ImageSource>> PickImageTaskCompletionSource { set; get; }
-        //protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
-        //{
-        //    base.OnActivityResult(requestCode, resultCode, intent);
-
-        //    if (requestCode == PickImageId)
-        //    {
-        //        if ((resultCode == Result.Ok) && (intent != null))
-        //        {
-        //            Android.Net.Uri uri = intent.Data;
-        //            Stream stream = ContentResolver.OpenInputStream(uri);
-        //            byte[] bits = null;
-        //            try
-        //            {
-        //                using (MemoryStream memoryStream = new MemoryStream())
-        //                {
-        //                    stream.CopyTo(memoryStream);
-        //                    bits = memoryStream.ToArray();
-        //                }
-        //                Tuple<byte[], ImageSource> tuple = new Tuple<byte[], ImageSource>(bits,
-        //                    ImageSource.FromStream(() => new MemoryStream(bits)));
-        //                PickImageTaskCompletionSource.SetResult(tuple);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Log.Logger.Error(ex, "Al obtener la imagen despues de ser abierta");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            PickImageTaskCompletionSource.SetResult(null);
-        //        }
-        //    }
-        //}
-        /// <summary>
-        /// ////////////////////////////////////////////////////////////
-
-        /// ////////////////////////////////////////////////////////////
-        /// </summary>
-        /// <param name="newConfig"></param>
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
@@ -110,14 +67,10 @@ namespace Kit.Droid.Services
             Forms9Patch.Droid.Settings.Initialize(this);
             Instance = this; //ImagePicker
             ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
+
+            
         }
 
-        //public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-        //{
-        //    Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        //    base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        //}
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -129,11 +82,11 @@ namespace Kit.Droid.Services
             Serilog.Log.CloseAndFlush();
             base.OnDestroy();
         }
-
-
         public static Context GetAppContext()
         {
             return Android.App.Application.Context;
         }
+
+
     }
 }

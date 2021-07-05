@@ -14,6 +14,7 @@ namespace Kit
 {
     public abstract class AbstractTools
     {
+
         public Kit.Services.Interfaces.ISynchronizeInvoke SynchronizeInvoke { get; private set; }
         public Kit.Services.Interfaces.IScreenManager ScreenManager { get; private set; }
         public IBarCodeBuilder BarCodeBuilder { get; private set; }

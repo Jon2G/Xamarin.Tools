@@ -16,13 +16,15 @@ using Android.Telephony;
 using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
 using Kit.Forms.Extensions;
+using Kit.Forms.Services.Interfaces;
 
 namespace Kit.Droid
 {
-    public class ToolsImplementation : AbstractTools
+    public class ToolsImplementation :AbstractTools
     {
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.Android;
         public MainActivity MainActivity { get; private set; }
+     
         public static Kit.Droid.ToolsImplementation Instance => Tools.Instance as Kit.Droid.ToolsImplementation;
 
         public void Init(MainActivity MainActivity)
