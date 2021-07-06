@@ -15,6 +15,7 @@ namespace Kit.WPF
         {
             this._LibraryPath = LibraryPath;
         }
+
         public string ProductName()
         {
             return Assembly.GetEntryAssembly()
@@ -24,7 +25,7 @@ namespace Kit.WPF
         }
 
         private string _LibraryPath;
-        public override string LibraryPath => _LibraryPath??Environment.CurrentDirectory;
+        public override string LibraryPath => _LibraryPath ?? Environment.CurrentDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public static new Kit.WPF.ToolsImplementation Instance => Tools.Instance as Kit.WPF.ToolsImplementation;
 
@@ -48,13 +49,14 @@ namespace Kit.WPF
                 .WriteTo.Logger(config =>
                 config
                         .MinimumLevel.Information()
-                        .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
+                        .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7,
+                            flushToDiskInterval: TimeSpan.FromMilliseconds(500))
                 )
                 // And create another logger so that logs at Fatal level will immediately send email
                 .WriteTo.Logger(config =>
                     config
                         .MinimumLevel.Fatal()
-                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1, 
+                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1,
                             flushToDiskInterval: TimeSpan.FromMilliseconds(500))
                 )).CreateLogger(), CriticalAlert);
         }
