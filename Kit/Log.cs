@@ -11,7 +11,7 @@ namespace Kit
 {
     public class Log
     {
-        private static DirectoryInfo LogDirectory => new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
+        public static DirectoryInfo LogDirectory => new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
 
         public static ILogger Logger
         {
