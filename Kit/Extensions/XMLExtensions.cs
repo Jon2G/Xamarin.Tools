@@ -4,10 +4,11 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Kit
 {
-   public static class XMLExtensions
+    public static class XMLExtensions
     {
         public static object XmlDeserializeFromString(this string objectData, Type type)
         {
@@ -35,6 +36,19 @@ namespace Kit
                 xmlSerializer.Serialize(textWriter, toSerialize);
                 return textWriter.ToString();
             }
+        }
+        public static string JsonSerializeObject<T>(this T toSerialize)
+        {
+            JsonSerializer xmlSerializer = JsonSerializer.Create();
+            StringBuilder sb = new StringBuilder();
+            using (StringWriter sw = new StringWriter(sb))
+            {
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    xmlSerializer.Serialize(jsonWriter: writer, value: toSerialize, typeof(T));
+                }
+            }
+            return sb.ToString();
         }
         public static T ConvertNode<T>(this XmlNode node) where T : class
         {
