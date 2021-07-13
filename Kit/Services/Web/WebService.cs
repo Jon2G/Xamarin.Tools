@@ -128,5 +128,51 @@ namespace Kit.Services.Web
                 return result;
             }
         }
+        public Task<Stream> DownloadFile(string metodo, params string[] parameters) => DownloadFile(metodo, null, parameters);
+
+        public async Task<Stream> DownloadFile(string method, Dictionary<string, string> query, params string[] parameters)
+        {
+            Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
+            {
+                HttpStatusCode = HttpStatusCode.Unused
+            };
+            string geturl = String.Empty;
+            try
+            {
+                geturl = BuildUrl(method, query, parameters);
+                using (HttpClientHandler handler = new HttpClientHandler()
+                {
+                    Proxy = null,
+                    UseProxy = false,
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                })
+                {
+                    using (HttpClient client = new HttpClient(handler))
+                    {
+                        using (var httpResponse = await client.GetAsync(geturl))
+                        {
+                            if (httpResponse.StatusCode == HttpStatusCode.OK)
+                            {
+                                return new MemoryStream(await httpResponse.Content.ReadAsByteArrayAsync());
+                            }
+                            else
+                            {
+                                //Url is Invalid
+                                return null;
+                            }
+                        }
+                        //client.DefaultRequestHeaders.Add("Accept", "application/json");
+                        //result.Response = await client.GetStringAsync(GetUrl);
+                        //result.HttpStatusCode = HttpStatusCode.OK;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, $"GET: {geturl}");
+                result.Response = "ERROR";
+                return null;
+            }
+        }
     }
 }
