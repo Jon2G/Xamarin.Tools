@@ -290,6 +290,11 @@ namespace Kit.Sql.SqlServer
                         {
                             if (o is ISync isync)
                             {
+                                if (reader[i] == DBNull.Value)
+                                {
+                                    isync.Guid = Guid.Empty;
+                                    return;
+                                }
                                 isync.Guid = (Guid)reader[i];
                                 return;
                             }

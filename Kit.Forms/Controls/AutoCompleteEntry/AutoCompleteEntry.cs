@@ -19,7 +19,6 @@ namespace Kit.Forms.Controls
             set { SetValue(TextChangedCommandProperty, value); }
         }
 
-
         public static readonly BindableProperty ItemsSourceProperty =
             BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable<string>),
                 typeof(AutoCompleteEntry), null
@@ -41,6 +40,7 @@ namespace Kit.Forms.Controls
 
         private readonly IKeyboardService KeyboardService;
         private readonly SuggestionsView SuggestionsView;
+
         public AutoCompleteEntry()
         {
             this.KeyboardService = DependencyService.Get<IKeyboardService>();
@@ -74,8 +74,7 @@ namespace Kit.Forms.Controls
             }
             TextChangedCommand?.Execute(this.Text);
             this.Focus();
-            this.KeyboardService.Show();
+            //this.KeyboardService.Show();
         }
-
     }
 }

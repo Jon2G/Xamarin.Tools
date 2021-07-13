@@ -32,6 +32,7 @@ namespace Kit.Daemon.Sync
         public bool NothingToDo { get => !ToDo; }
         private Queue<ChangesHistory> Pendings;
         private int TotalPendientes;
+        public SyncTarget CurrentDirection { get; private set; }
 
         public float Progress
         {
@@ -90,23 +91,28 @@ namespace Kit.Daemon.Sync
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
             this.PackageSize = RegularPackageSize;
+            this.DownloadQuery = string.Empty;
+            this.CurrentDirection = SyncTarget.INVALID;
         }
 
         public void SetPackageSize(int PackageSize = RegularPackageSize)
         {
             this.PackageSize = PackageSize;
             UploadQuery = null;
-            DownloadQuery = null;
+            DownloadQuery = string.Empty;
         }
 
         public Task<bool> Download()
         {
-            if (DownloadQuery is null)
+            lock (DownloadQuery)
             {
-                DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Remote]);
-                Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
+                if (string.IsNullOrEmpty(DownloadQuery))
+                {
+                    DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Remote]);
+                    Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
+                }
+                return GetPendings(SyncTarget.Local);
             }
-            return GetPendings(SyncTarget.Local);
         }
 
         public Task<bool> Upload()
@@ -174,14 +180,15 @@ namespace Kit.Daemon.Sync
                         return false;
                     }
                     this.Pendings = new Queue<ChangesHistory>(Daemon.Current.DaemonConfig[source].RenewConnection()
-                        .CreateCommand(query)
-                        .ExecuteDeferredQuery<ChangesHistory>());
+                        .DeferredQuery<ChangesHistory>(query).ToList());
                 }
                 TotalPendientes = Pendings.Count;
                 ToDo = TotalPendientes > 0;
+                this.CurrentDirection = SyncTarget;
                 if (ToDo && !Daemon.Current.IsSleepRequested)
                 {
                     ToDo = await ProcesarAcciones(SyncTarget);
+                    this.CurrentDirection = SyncTarget.INVALID;
                     return true;
                 }
                 return false;

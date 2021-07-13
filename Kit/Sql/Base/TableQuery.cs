@@ -319,13 +319,12 @@ namespace Kit.Sql.Base
                 string text;
                 if (leftr.CommandText == "?" && leftr.Value == null)
                 {
-                    text = CompileNullBinaryExpression(bin, leftr);
-                    conditions.Insert(0, leftr.CurrentCondition);
+                    text = CompileNullBinaryExpression(bin, leftr, conditions);
+                    //conditions.Insert(0, leftr.CurrentCondition);
                 }
                 else if (rightr.CommandText == "?" && rightr.Value == null)
                 {
-                    text = CompileNullBinaryExpression(bin, leftr);
-                    conditions.Insert(0, leftr.CurrentCondition);
+                    text = CompileNullBinaryExpression(bin, leftr, conditions);
                 }
                 else
                 {
@@ -376,8 +375,11 @@ namespace Kit.Sql.Base
                     {
                         opr.CommandText = opr.CommandText.Replace("=1", "");
                     }
-
-                    Condition condition = new Condition(opr.CommandText, val);
+                    Condition condition = null;
+                    if (val is not null)
+                    {
+                        condition = new Condition(opr.CommandText, val);
+                    }
                     return new CompileResult
                     {
                         CommandText = "(" + opr.CommandText + "=0)",
@@ -554,6 +556,15 @@ namespace Kit.Sql.Base
                         }
                     }
                 }
+                if ((ty == typeof(Guid) || ty == typeof(Guid?)) && truvalue is null)
+                {
+                    return new CompileResult
+                    {
+                        CommandText = valr.CommandText,
+                        Value = null,
+                        CurrentCondition = new Condition(valr.CommandText)
+                    };
+                }
                 return new CompileResult
                 {
                     CommandText = valr.CommandText,
@@ -699,18 +710,26 @@ namespace Kit.Sql.Base
         /// </summary>
         /// <param name="expression">The expression to compile</param>
         /// <param name="parameter">The non-null parameter</param>
-        internal string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter)
+        internal string CompileNullBinaryExpression(BinaryExpression expression, CompileResult parameter, List<Condition> conditions)
         {
             if (expression.NodeType == ExpressionType.Equal)
             {
+                conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName);
                 if (this.Connection is SQLServerConnection)
                 {
-                    return $"(@{parameter.CurrentCondition.ColumnName} is NULL)";
+                    return $"({parameter.CurrentCondition.ColumnName} is NULL)";
                 }
                 return "(" + parameter.CommandText + " is ?)";
             }
             else if (expression.NodeType == ExpressionType.NotEqual)
+            {
+                conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName);
+                if (this.Connection is SQLServerConnection)
+                {
+                    return $"({parameter.CurrentCondition.ColumnName} is NOT NULL)";
+                }
                 return "(" + parameter.CommandText + " is not ?)";
+            }
             else if (expression.NodeType == ExpressionType.GreaterThan
                      || expression.NodeType == ExpressionType.GreaterThanOrEqual
                      || expression.NodeType == ExpressionType.LessThan

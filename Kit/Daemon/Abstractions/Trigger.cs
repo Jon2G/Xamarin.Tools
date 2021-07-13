@@ -23,13 +23,21 @@ namespace Kit.Daemon.Abstractions
             {
                 string TriggerName = $"{Table.TableName}_TRIGGER";
 
-                SyncVersions version =
-                    SyncVersions.GetVersion(Connection, TriggerName, SyncVersionObject.Trigger);
+                bool exists = Connection.TriggerExists(TriggerName);
 
-                if (version.Version != DbVersion || !Connection.TableExists(Table.TableName))
+                SyncVersions version =
+                    exists ?
+                    SyncVersions.GetVersion(Connection, TriggerName, SyncVersionObject.Trigger) :
+                    new SyncVersions()
+                    {
+                        Name = TriggerName,
+                        SyncVersionObject = SyncVersionObject.Trigger
+                    };
+
+                if (!exists || !Connection.TableExists(Table.TableName) || version.Version != DbVersion)
                 {
                     Connection.CreateTable(Table);
-                    if (Connection.TriggerExists(TriggerName))
+                    if (exists)
                     {
                         Connection.EXEC($"DROP TRIGGER {TriggerName}", System.Data.CommandType.Text);
                     }

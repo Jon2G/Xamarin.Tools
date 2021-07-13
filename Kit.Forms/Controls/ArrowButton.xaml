@@ -17,19 +17,12 @@
     <ContentView.Resources>
         <converters:StringNullOrEmptyBoolConverter x:Key="StringNullOrEmptyBoolConverter" IsReversed="True"/>
     </ContentView.Resources>
-    <!--<ContentView.GestureRecognizers>
-        <TapGestureRecognizer 
-            Command="{Binding Command}"
-                              CommandParameter="{Binding CommandParameter}"
-                              Tapped="TapGestureRecognizer_OnTapped"/>
-    </ContentView.GestureRecognizers>-->
     <ContentView.Content>
         <StackLayout >
             <Frame BindingContext="{x:Reference arrow}" Padding="5"
                    BackgroundColor="{Binding ColorBackground}"
                    xct:TouchEffect.NormalBackgroundColor="{Binding ColorBackground}"
                    xct:TouchEffect.PressedBackgroundColor="LightGray"
-                   xct:TouchEffect.NativeAnimationColor="LightGray"
                    xct:TouchEffect.PressedScale="0.99" VerticalOptions="FillAndExpand"
                    xct:TouchEffect.Command="{Binding TouchedCommand}"
                    xct:TouchEffect.NativeAnimation="True">

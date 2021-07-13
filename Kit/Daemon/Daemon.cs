@@ -91,9 +91,7 @@ namespace Kit.Daemon
             get;
             set;
         }
-
         private SyncManager _SyncManager;
-
         public SyncManager SyncManager
         {
             get => _SyncManager;
@@ -126,12 +124,7 @@ namespace Kit.Daemon
             return this;
         }
 
-        public SyncTarget DireccionActual
-        {
-            get;
-            private set;
-        }
-
+  
         private static Daemon Born()
         {
             Daemon demon = new Daemon()
@@ -151,7 +144,6 @@ namespace Kit.Daemon
 
         private Daemon()
         {
-            this.DireccionActual = SyncTarget.INVALID;
             this.IsInited = false;
             this.SyncManager = new SyncManager();
             this.Schema = new Schema();
@@ -277,7 +269,7 @@ namespace Kit.Daemon
                 {
                     return;
                 }
-                SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll().DistinctBy(x=>x.Value.MappedType).Select(x => x.Value.MappedType));
+                SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll().DistinctBy(x => x.Value.MappedType).Select(x => x.Value.MappedType));
                 Schema.CheckTriggers(SQLH);
 
                 SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
@@ -377,7 +369,7 @@ namespace Kit.Daemon
                                 {
                                     this.IsAwake = true;
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                   await this.SyncManager.Download();
+                                    await this.SyncManager.Download();
                                 }
                             }
                             catch (Exception ex)

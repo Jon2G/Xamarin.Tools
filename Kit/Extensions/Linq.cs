@@ -254,6 +254,18 @@ namespace Kit
 
 #endif
 
+        public static void Remove<T>(this ICollection<T> source, Func<T, bool> p)
+        {
+            for (int i=0;i<source.Count;i++)
+            {
+                T item = source.ElementAt(i);
+                if (p.Invoke(item))
+                {
+                    source.Remove(item: item);
+                }
+            }
+        }
+
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
         {
             T[] elements = source.ToArray();
