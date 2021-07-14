@@ -22,23 +22,15 @@
 
                         <Label  FontSize="Subtitle"
                                Text="Servidor" />
-                        <controls:AutoCompleteEntry
-                                           VerticalOptions="Start" HorizontalOptions="FillAndExpand"
+                        <Entry VerticalOptions="Start" HorizontalOptions="FillAndExpand"
                                            Placeholder="###.###.###\SERVER"
-                                           
-                                           Text="{Binding Configuration.Servidor}"
-                                           ItemsSource="{Binding ServerSuggestions}"
-                                           TextChangedCommand="{Binding SuggestServerCommand}" />
+                            Text="{Binding Configuration.Servidor}" />
 
                         <Label  FontSize="Subtitle" Text="Puerto del servidor:" />
 
-                        <controls:AutoCompleteEntry
+                        <Entry
                             VerticalOptions="Start" HorizontalOptions="FillAndExpand"
-                            Placeholder="####"
-                            
-                            Text="{Binding Configuration.Puerto}"
-                            ItemsSource="{Binding PortSuggestions}"
-                            TextChangedCommand="{Binding SuggestPortCommand}" />
+                            Placeholder="####" Text="{Binding Configuration.Puerto}" />
 
                         <Label  FontSize="Subtitle" Text="Usuario" />
                         <Entry  FontSize="Subtitle" Text="{Binding Configuration.Usuario}" />
@@ -50,7 +42,7 @@
                         <Entry
                             VerticalOptions="Start" HorizontalOptions="FillAndExpand"
                             Placeholder="Database"
-                            
+
                             Text="{Binding Configuration.NombreDB}" />
 
                         <Grid Margin="0,5" VerticalOptions="FillAndExpand">
@@ -74,7 +66,7 @@
                     </StackLayout>
                 </ScrollView>
             </Grid>
-            <Frame VerticalOptions="EndAndExpand" Padding="3" 
+            <Frame VerticalOptions="EndAndExpand" Padding="3"
                    CornerRadius="5" MinimumHeightRequest="40"
                    Margin="5">
                 <Frame.GestureRecognizers>

@@ -26,6 +26,7 @@ namespace Kit.WPF.Reportes
         private readonly string RutaLogo;
         public readonly string RutaReportes;
         public const string PdfPrinter = "Microsoft Print to PDF";
+
         public Reporteador(string RutaLogo = "\\logo.png", string RutaReportes = "\\mrt")
         {
             //Importante para evitar 'Error al registrar DragDrop.'
@@ -316,9 +317,9 @@ namespace Kit.WPF.Reportes
         /// </summary>
         /// <param name="nombre">Nombre sin extension</param>
         /// <param name="report">Reporte (es indiferente si esta compilado y renderizado o no)</param>
-        public Reporteador ImprimeReporte(string nombre, string impresora, short VecesTicket = 1)
+        public Reporteador ImprimeReporte(string nombre, PrintOptions options)
         {
-            bool IniciarAlFinalizar = (impresora == PdfPrinter);
+            bool IniciarAlFinalizar = (options.Impresora == PdfPrinter);
             try
             {
                 if (!this.StiReport.IsRendered)
@@ -336,11 +337,11 @@ namespace Kit.WPF.Reportes
                 if (!IniciarAlFinalizar)
                 {
                     StiPrintProvider stiPrintReport = new Stimulsoft.Report.Print.StiPrintProvider();
-                    for (int i = 0; i < VecesTicket; i++)
+                    for (int i = 0; i < options.VecesTicket; i++)
                     {
-                        this.StiReport.Print(false, 0, 1, 1, new PrinterSettings()
+                        this.StiReport.Print(false, options.FromPage, options.ToPage, 1, new PrinterSettings()
                         {
-                            PrinterName = impresora,
+                            PrinterName = options.Impresora,
                             PrintToFile = false,
                             //Copies = 1
                         });
