@@ -116,7 +116,7 @@ namespace Kit.Daemon
         }
 
         public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);
-        private bool IsInited;
+        public bool IsInited { get; private set; }
 
         public Daemon SetPackageSize(int PackageSize = Sync.SyncManager.RegularPackageSize)
         {
@@ -124,7 +124,7 @@ namespace Kit.Daemon
             return this;
         }
 
-  
+
         private static Daemon Born()
         {
             Daemon demon = new Daemon()
@@ -369,7 +369,10 @@ namespace Kit.Daemon
                                 {
                                     this.IsAwake = true;
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                    await this.SyncManager.Download();
+                                    if(!await this.SyncManager.Download())
+                                    {
+                                        this.SyncManager.CurrentDirection = SyncTarget.NOT_SET;
+                                    }
                                 }
                             }
                             catch (Exception ex)

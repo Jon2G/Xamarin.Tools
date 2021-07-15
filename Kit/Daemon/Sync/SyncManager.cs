@@ -32,7 +32,7 @@ namespace Kit.Daemon.Sync
         public bool NothingToDo { get => !ToDo; }
         private Queue<ChangesHistory> Pendings;
         private int TotalPendientes;
-        public SyncTarget CurrentDirection { get; private set; }
+        public SyncTarget CurrentDirection { get; internal set; }
 
         public float Progress
         {
@@ -92,7 +92,7 @@ namespace Kit.Daemon.Sync
             this.Processed = 0;
             this.PackageSize = RegularPackageSize;
             this.DownloadQuery = string.Empty;
-            this.CurrentDirection = SyncTarget.INVALID;
+            this.CurrentDirection = SyncTarget.NOT_SET;
         }
 
         public void SetPackageSize(int PackageSize = RegularPackageSize)
@@ -188,7 +188,6 @@ namespace Kit.Daemon.Sync
                 if (ToDo && !Daemon.Current.IsSleepRequested)
                 {
                     ToDo = await ProcesarAcciones(SyncTarget);
-                    this.CurrentDirection = SyncTarget.INVALID;
                     return true;
                 }
                 return false;
@@ -270,6 +269,12 @@ namespace Kit.Daemon.Sync
                             CurrentPackage.MarkAsSynced(source_con);
                             continue;
                         }
+                        if(read is null)
+                        {
+                            Log.Logger.Warning("READ RESULTO EN NULL '{0}'", this.CurrentPackage.TableName);
+                            CurrentPackage.MarkAsSynced(source_con);
+                            continue;
+                        }
                         if (read != null)
                         {
                             switch (CurrentPackage.Action)
@@ -333,7 +338,7 @@ namespace Kit.Daemon.Sync
                     }
                     else
                     {
-                        Log.Logger.Error("[WARNING] TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{0}'", this.CurrentPackage.TableName);
+                        Log.Logger.Warning("TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{0}'", this.CurrentPackage.TableName);
                         CurrentPackage.MarkAsSynced(source_con);
                         Processed++;
                     }

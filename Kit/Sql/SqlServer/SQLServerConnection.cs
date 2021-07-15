@@ -390,7 +390,7 @@ namespace Kit.Sql.SqlServer
             where T : IConvertible
             where Q : IConvertible
         {
-            Tuple<T, Q> result = new Tuple<T, Q>(default(T),default(Q));
+            Tuple<T, Q> result = new Tuple<T, Q>(default(T), default(Q));
             if (IsClosed)
                 RenewConnection();
             using (SqlConnection con = Connection)
@@ -409,6 +409,7 @@ namespace Kit.Sql.SqlServer
             }
             return result;
         }
+
         public List<Tuple<T, Q>> ListaTupla<T, Q>(string sql, CommandType type = CommandType.Text, params SqlParameter[] parameters)
             where T : IConvertible
             where Q : IConvertible
@@ -2684,7 +2685,7 @@ WHERE
         {
             PreparedSqlServerInsertCommand prepCmd;
 
-            var key =System.Tuple.Create(map.MappedType.FullName, extra);
+            var key = System.Tuple.Create(map.MappedType.FullName, extra);
 
             lock (_insertCommandMap)
             {

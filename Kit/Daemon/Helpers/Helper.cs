@@ -13,10 +13,11 @@ namespace Kit.Daemon.Helpers
             {
                 case SyncTarget.Remote:
                     return SyncTarget.Local;
+
                 case SyncTarget.Local:
                     return SyncTarget.Remote;
             }
-            return SyncTarget.INVALID;
+            return SyncTarget.NOT_SET;
         }
     }
 }
