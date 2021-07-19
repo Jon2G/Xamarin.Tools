@@ -123,10 +123,6 @@ namespace Kit.Forms.Pages
         {
             this.CancellationTokenSource.Cancel();
             base.OnDisappearing();
-            if (this.Leector != null)
-            {
-                this.Leector.CodigoEntrante -= Leector_CodigoEntrante;
-            }
         }
 
         private async void Guardar(object sender, EventArgs e)
@@ -294,10 +290,10 @@ namespace Kit.Forms.Pages
             await Task.Delay(500);
             using (Acr.UserDialogs.UserDialogs.Instance.Loading("Leyendo qr..."))
             {
-               await ReadFromGallery(qr);
-            
+                await ReadFromGallery(qr);
             }
         }
+
         private async Task ReadFromGallery(FileResult qr)
         {
             SharedZXingNet::ZXing.Result result = null;
@@ -320,22 +316,16 @@ namespace Kit.Forms.Pages
 
             Deserialize(result?.Text);
         }
+
         private void FromCamera()
         {
             if (this.Leector is null)
             {
-                this.Leector = new Lector(BarcodeFormat.QR_CODE);
-                this.Leector.CodigoEntrante += Leector_CodigoEntrante;
-            }
-            this.Leector.Abrir();
-        }
-
-        private void Leector_CodigoEntrante(object sender, EventArgs e)
-        {
-            if (sender is Lector leector)
-            {
-                leector.CodigoEntrante -= Leector_CodigoEntrante;
-                Deserialize(leector.CodigoBarras);
+                this.Leector = new Lector(BarcodeFormat.QR_CODE)
+                {
+                    OnCodeReadCommand = new Command<string>(Deserialize)
+                };
+                this.Leector.Abrir();
             }
         }
 
