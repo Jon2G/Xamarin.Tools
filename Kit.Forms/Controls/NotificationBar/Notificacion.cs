@@ -1,5 +1,4 @@
-﻿
-using Kit.Extensions;
+﻿using Kit;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +11,7 @@ namespace Kit.Forms.Controls.NotificationBar
     public class Notificacion : ModelBase
     {
         public ImageSource _Imagen;
+
         [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Imagen
         {
@@ -19,15 +19,17 @@ namespace Kit.Forms.Controls.NotificationBar
             set
             {
                 _Imagen = value;
-                Raise(()=>Imagen);
+                Raise(() => Imagen);
             }
         }
 
         public string Color { get; private set; }
         private string _Texto;
-        public string Texto { get => _Texto; set { _Texto = value;Raise(()=>Texto); } }
+        public string Texto { get => _Texto; set { _Texto = value; Raise(() => Texto); } }
         public ICommand Command { get; private set; }
+
         public event EventHandler OnTapped;
+
         public Notificacion(string Icono, string Color, string Texto)
         {
             this.Imagen = Icono;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using Kit.Extensions;
+using Kit;
 using Kit.Sql.Base;
 
 namespace Kit.Sql.SqlServer

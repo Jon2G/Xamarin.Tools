@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
-using Kit.CadenaConexion;
 using Kit.Forms.Controls;
 using Kit.Daemon;
 using Kit.Forms.Fonts;
@@ -29,6 +28,7 @@ using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using ZXing;
 using System.Windows.Input;
 using FFImageLoading.Forms;
+using Kit.SetUpConnectionString;
 
 namespace Kit.Forms.Pages
 {
@@ -323,7 +323,7 @@ namespace Kit.Forms.Pages
             {
                 this.Leector = new Lector(BarcodeFormat.QR_CODE)
                 {
-                    OnCodeReadCommand = new Command<string>(Deserialize)
+                    OnCodeReadCommand = new Xamarin.Forms.Command<string>(Deserialize)
                 };
                 this.Leector.Abrir();
             }

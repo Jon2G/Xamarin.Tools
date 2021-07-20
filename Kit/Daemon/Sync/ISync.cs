@@ -17,12 +17,14 @@ namespace Kit.Daemon.Sync
 {
     public abstract class ISync : ModelBase, IConvertible, IGuid
     {
+        public const string SyncGuidColumnName = "SyncGuid";
+
         //[Ignore]
         //public Guid SyncGuid { get => Guid; set => Guid = value; }
         /// <summary>
         /// This guid identifies the row where the change is made
         /// </summary>
-        [AutoIncrement, Column("SyncGuid")]
+        [AutoIncrement, Column(SyncGuidColumnName)]
         public virtual Guid Guid { get; set; }
 
         public virtual Task<bool> CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)

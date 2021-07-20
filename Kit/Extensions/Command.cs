@@ -4,11 +4,10 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Input;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public class Command<T> : Command
     {
-        
         public Command(Action<T> execute)
             : base(o =>
             {
@@ -39,7 +38,7 @@ namespace Kit.Extensions
                 throw new ArgumentNullException(nameof(canExecute));
         }
 
-        static bool IsValidParameter(object o)
+        private static bool IsValidParameter(object o)
         {
             if (o != null)
             {
@@ -62,8 +61,8 @@ namespace Kit.Extensions
 
     public class Command : ICommand
     {
-        readonly Func<object, bool> _canExecute;
-        readonly Action<object> _execute;
+        private readonly Func<object, bool> _canExecute;
+        private readonly Action<object> _execute;
         private ICommand extractForApp;
 
         private event EventHandler _weakEventManager;

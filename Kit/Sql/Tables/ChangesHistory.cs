@@ -40,10 +40,25 @@ namespace Kit.Sql.Tables
             this.Action = Action;
             this.Priority = Priority;
         }
+
         public void Save(SQLiteConnection con)
         {
             con.InsertOrReplace(this);
         }
+
+        public static void MarkAsSynced(SqlBase origin, Guid SyncGuid)
+        {
+            SyncHistory syncHistory = new SyncHistory
+            {
+                DeviceId = Daemon.Devices.Device.Current.DeviceId,
+                Guid = SyncGuid
+            };
+            origin.Table<SyncHistory>().Delete(x => x.Guid == syncHistory.Guid);
+            origin.Insert(syncHistory, string.Empty);
+        }
+
+        public static void MarkAsSynced(SqlBase origin, ISync ISync) => MarkAsSynced(origin, ISync.Guid);
+
         public void MarkAsSynced(SqlBase origin)
         {
             try

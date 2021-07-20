@@ -115,7 +115,10 @@ namespace Kit.Sql.SqlServer
                 using (var con = _conn.Connection)
                 {
                     con.Open();
-                    using (var cmd = new SqlCommand(this.CommandText, con))
+                    using (var cmd = new SqlCommand(this.CommandText, con)
+                    {
+                        CommandTimeout=_conn.CommandTimeout
+                    })
                     {
                         if (this.Parameters.Any())
                         {

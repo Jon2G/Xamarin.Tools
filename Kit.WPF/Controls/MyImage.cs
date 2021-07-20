@@ -1,5 +1,4 @@
-﻿
-using Kit.Sql;
+﻿using Kit.Sql;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Kit.Extensions;
+using Kit;
 using Kit.WPF.Extensions;
 
 namespace Kit.WPF.Controls
@@ -17,6 +16,7 @@ namespace Kit.WPF.Controls
     public class MyImage : System.Windows.Controls.Image
     {
         #region MySource
+
         public static readonly DependencyProperty MySourceProperty =
             DependencyProperty.Register(
                 "MySource", typeof(string), typeof(MyImage),
@@ -33,6 +33,7 @@ namespace Kit.WPF.Controls
                 UpdateImage();
             });
         }
+
         public string MySource
         {
             get => (string)GetValue(MySourceProperty);
@@ -62,7 +63,6 @@ namespace Kit.WPF.Controls
                     null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     (o, e) => ((MyImage)o).CurrentImage = (Kit.Controls.CrossImage.CrossImage)e.NewValue));
-
 
         private Kit.Controls.CrossImage.CrossImage _CurrentImage;
 
@@ -132,6 +132,7 @@ namespace Kit.WPF.Controls
             // then generate quality preview
             //this.CurrentImage = await Generate(file, 1920);
         }
+
         public static Task<CrossImage.CrossImage> Generate(string file, int scale)
         {
             return Task.Run(() =>
@@ -163,6 +164,7 @@ namespace Kit.WPF.Controls
                 }
             });
         }
+
         private void ImagenCambio()
         {
             try
@@ -179,11 +181,11 @@ namespace Kit.WPF.Controls
                 Log.Logger.Error(ex, "En MyImage cambio");
             }
         }
-        #endregion
+
+        #endregion MySource
 
         public MyImage() : base()
         {
-
         }
 
         ~MyImage()

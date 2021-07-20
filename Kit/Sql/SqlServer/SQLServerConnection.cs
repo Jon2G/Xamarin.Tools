@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kit.Daemon.Sync;
-using Kit.Extensions;
+using Kit;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -74,6 +74,21 @@ namespace Kit.Sql.SqlServer
             }
 
             return listacolumnas;
+        }
+
+        internal bool ExistsClusteredIndex(string tableName, string index_name)
+        {
+            return Exists($"SELECT * FROM sys.indexes WHERE name = '{index_name}' AND object_id = OBJECT_ID('dbo.{tableName}')");
+        }
+
+        internal int CreateClusteredIndex(string tableName, string column_name)
+        {
+            return CreateClusteredIndex(tableName, column_name, $"IX_{tableName}_{column_name}");
+        }
+
+        internal int CreateClusteredIndex(string tableName, string column_name, string index_name)
+        {
+            return EXEC($"create NONCLUSTERED INDEX {index_name} ON {tableName}({column_name})");
         }
 
         public string TipoDato(string Tabla, string Campo)
@@ -512,7 +527,7 @@ namespace Kit.Sql.SqlServer
             try
             {
                 //con.Open();
-                SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType };
+                SqlCommand cmd = new SqlCommand(sql, Con()) { CommandType = commandType, CommandTimeout = this.CommandTimeout };
                 if (parameters != null)
                 {
                     cmd.Parameters.AddRange(parameters);
@@ -1021,6 +1036,7 @@ namespace Kit.Sql.SqlServer
 
         public SqlConnection Connection { get; private set; }
 
+        public int CommandTimeout { get; set; } = 30;
         public string DataBaseName { get; private set; }
         public string Server { get; private set; }
         public string Port { get; private set; }

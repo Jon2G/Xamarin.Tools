@@ -8,13 +8,14 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using Kit.Extensions;
+using Kit;
 
 namespace Kit.Services.Web
 {
     public sealed class WebService
     {
         private readonly string Url;
+
         public WebService(string Url)
         {
             this.Url = Url;
@@ -44,6 +45,7 @@ namespace Kit.Services.Web
             StringBuilder sb = new StringBuilder(this.Url).Append('/').Append(metodo).Append(sb_parameters);
             return sb.ToString();
         }
+
         public Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters) => GET(metodo, null, parameters);
 
         public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, Dictionary<string, string> query, params string[] parameters)
@@ -92,7 +94,9 @@ namespace Kit.Services.Web
             }
             return result;
         }
+
         public Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PostAsBody(byteArray, metodo, null, parameters);
+
         public async Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string method, Dictionary<string, string> query, params string[] parameters)
         {
             Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
@@ -129,6 +133,7 @@ namespace Kit.Services.Web
                 return result;
             }
         }
+
         public Task<Stream> DownloadFile(string metodo, params string[] parameters) => DownloadFile(metodo, null, parameters);
 
         public async Task<Stream> DownloadFile(string method, Dictionary<string, string> query, params string[] parameters)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Text;
-using Kit.Extensions;
+using Kit;
 
 namespace Kit.Sql.Helpers
 {
@@ -151,7 +151,7 @@ namespace Kit.Sql.Helpers
                         return Convert.ToInt64(obj);
 
                     case "Boolean":
-                        if(obj is string sb)
+                        if (obj is string sb)
                         {
                             return sb == "1";
                         }

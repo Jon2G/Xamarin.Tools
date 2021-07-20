@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Kit.Controls.CrossBrush;
-using Kit.Extensions;
+using Kit;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.Brush
@@ -24,26 +24,28 @@ namespace Kit.Forms.Controls.Brush
                     }
 
                     return native;
+
                 case BrushType.Radial:
                     native = new RadialGradientBrush()
                     {
                         Radius = (new List<double>() { RadiusX, RadiusY }).Max()
                     };
                     break;
+
                 case BrushType.Linear:
                     native = new LinearGradientBrush();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             if (native is GradientBrush g)
             {
-                CopyStops(g,this.Stops);
+                CopyStops(g, this.Stops);
             }
             return native;
         }
-
 
         private void CopyStops(GradientBrush native, GradientStopCollection<Color> stops)
         {
@@ -83,13 +85,13 @@ namespace Kit.Forms.Controls.Brush
                     case LinearGradientBrush:
                         this.BrushType = BrushType.Linear;
                         break;
+
                     case RadialGradientBrush r:
                         this.RadiusX = r.Radius;
                         this.RadiusY = r.Radius;
                         this.BrushType = BrushType.Radial;
                         break;
                 }
-
             }
             return;
         }

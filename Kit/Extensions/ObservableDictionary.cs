@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     /// <summary>
     /// Provides a dictionary for use with data binding.
@@ -17,7 +17,7 @@ namespace Kit.Extensions
         ICollection<KeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>,
         INotifyCollectionChanged, INotifyPropertyChanged
     {
-        readonly IDictionary<TKey, TValue> dictionary;
+        private readonly IDictionary<TKey, TValue> dictionary;
 
         /// <summary>Event raised when the collection changes.</summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged = (sender, args) => { };
@@ -34,7 +34,7 @@ namespace Kit.Extensions
         }
 
         /// <summary>
-        /// Initializes an instance of the class using another dictionary as 
+        /// Initializes an instance of the class using another dictionary as
         /// the key/value store.
         /// </summary>
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
@@ -42,12 +42,12 @@ namespace Kit.Extensions
             this.dictionary = dictionary;
         }
 
-        void AddWithNotification(KeyValuePair<TKey, TValue> item)
+        private void AddWithNotification(KeyValuePair<TKey, TValue> item)
         {
             AddWithNotification(item.Key, item.Value);
         }
 
-        void AddWithNotification(TKey key, TValue value)
+        private void AddWithNotification(TKey key, TValue value)
         {
             dictionary.Add(key, value);
 
@@ -58,7 +58,7 @@ namespace Kit.Extensions
             PropertyChanged(this, new PropertyChangedEventArgs("Values"));
         }
 
-        bool RemoveWithNotification(TKey key)
+        private bool RemoveWithNotification(TKey key)
         {
             TValue value;
             if (dictionary.TryGetValue(key, out value) && dictionary.Remove(key))
@@ -75,7 +75,7 @@ namespace Kit.Extensions
             return false;
         }
 
-        void UpdateWithNotification(TKey key, TValue value)
+        private void UpdateWithNotification(TKey key, TValue value)
         {
             TValue existing;
             if (dictionary.TryGetValue(key, out existing))
@@ -179,7 +179,7 @@ namespace Kit.Extensions
             set { UpdateWithNotification(key, value); }
         }
 
-        #endregion
+        #endregion IDictionary<TKey,TValue> Members
 
         #region ICollection<KeyValuePair<TKey,TValue>> Members
 
@@ -187,12 +187,14 @@ namespace Kit.Extensions
         {
             AddWithNotification(item);
         }
+
         /// <summary>Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</summary>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.</exception>
         public void Clear()
         {
             ((ICollection<KeyValuePair<TKey, TValue>>)this).Clear();
         }
+
         void ICollection<KeyValuePair<TKey, TValue>>.Clear()
         {
             ((ICollection<KeyValuePair<TKey, TValue>>)dictionary).Clear();
@@ -230,7 +232,7 @@ namespace Kit.Extensions
             return RemoveWithNotification(item.Key);
         }
 
-        #endregion
+        #endregion ICollection<KeyValuePair<TKey,TValue>> Members
 
         #region IEnumerable<KeyValuePair<TKey,TValue>> Members
 
@@ -244,6 +246,6 @@ namespace Kit.Extensions
             return ((ICollection<KeyValuePair<TKey, TValue>>)dictionary).GetEnumerator();
         }
 
-        #endregion
+        #endregion IEnumerable<KeyValuePair<TKey,TValue>> Members
     }
 }

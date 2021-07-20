@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Kit.Sql.Base;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class Linq
     {
@@ -253,7 +253,7 @@ namespace Kit.Extensions
 
         public static void Remove<T>(this ICollection<T> source, Func<T, bool> p)
         {
-            for (int i=0;i<source.Count;i++)
+            for (int i = 0; i < source.Count; i++)
             {
                 T item = source.ElementAt(i);
                 if (p.Invoke(item))

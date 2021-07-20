@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static partial class Helpers
     {
@@ -24,16 +24,19 @@ namespace Kit.Extensions
                 return ms.ToArray();
             }
         }
+
         public static async Task<string> ToImageString(this Stream stream)
         {
             return ToImageString(await stream.GetByteArray());
         }
+
         public static string ToImageString(this byte[] bytes)
         {
             string base64 = string.Concat("data:image/png;base64,", Convert.ToBase64String(bytes, 0, bytes.Length));
             return base64;
         }
-        public static string EnLetra(this decimal Numero, string Leyenda="M.N.",string strMoneda = "PESOS CON")
+
+        public static string EnLetra(this decimal Numero, string Leyenda = "M.N.", string strMoneda = "PESOS CON")
         {
             string dec;
 
@@ -53,6 +56,7 @@ namespace Kit.Extensions
             string res = NumeroALetras(Convert.ToDouble(entero)) + dec;
             return $"{res} {Leyenda}";
         }
+
         private static string NumeroALetras(double value)
         {
             string num2Text; value = Math.Truncate(value);
@@ -146,7 +150,8 @@ namespace Kit.Extensions
 
             return name;
         }
-        public static  void RunAsync(this Task task)
+
+        public static void RunAsync(this Task task)
         {
             task.ContinueWith(t =>
             {

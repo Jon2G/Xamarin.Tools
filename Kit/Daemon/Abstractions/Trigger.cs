@@ -19,14 +19,18 @@ namespace Kit.Daemon.Abstractions
     {
         public static void CheckTrigger(SQLServerConnection Connection, TableMapping Table, int DbVersion)
         {
+            int Timeout = 30;
             try
             {
+                Timeout = Connection.CommandTimeout;
+                Connection.CommandTimeout = (int)TimeSpan.FromMinutes(9).TotalMinutes;
+
                 string TriggerName = $"{Table.TableName}_TRIGGER";
 
-                bool exists = Connection.TriggerExists(TriggerName);
+                bool TriggerExists = Connection.TriggerExists(TriggerName);
 
                 SyncVersions version =
-                    exists ?
+                    TriggerExists ?
                     SyncVersions.GetVersion(Connection, TriggerName, SyncVersionObject.Trigger) :
                     new SyncVersions()
                     {
@@ -34,12 +38,18 @@ namespace Kit.Daemon.Abstractions
                         SyncVersionObject = SyncVersionObject.Trigger
                     };
 
-                if (!exists || !Connection.TableExists(Table.TableName) || version.Version != DbVersion)
+                if (!TriggerExists || !Connection.TableExists(Table.TableName) || version.Version != DbVersion)
                 {
                     Connection.CreateTable(Table);
-                    if (exists)
+                    if (TriggerExists)
                     {
                         Connection.EXEC($"DROP TRIGGER {TriggerName}", System.Data.CommandType.Text);
+                    }
+
+                    string clustered_index_name = $"IX_{Table.TableName}_{ISync.SyncGuidColumnName}";
+                    if (!Connection.ExistsClusteredIndex(Table.TableName, clustered_index_name))
+                    {
+                        Connection.CreateClusteredIndex(Table.TableName, ISync.SyncGuidColumnName, clustered_index_name);
                     }
 
                     //REMOVE OLD TRIGGERS
@@ -108,6 +118,10 @@ END", System.Data.CommandType.Text);
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, $"Al revisar el trigger de {Table.TableName}");
+            }
+            finally
+            {
+                Connection.CommandTimeout = Timeout;
             }
         }
     }

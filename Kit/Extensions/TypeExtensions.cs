@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class TypeExtensions
     {

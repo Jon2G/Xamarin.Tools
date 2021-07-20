@@ -12,7 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Kit.Daemon.Sync;
-using Kit.Extensions;
+using Kit;
 using Kit.SetUpConnectionString;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
@@ -2286,11 +2286,11 @@ namespace Kit.Sql.Sqlite
             var Table = this.Table(obj.GetType()).Table;
 
             var cols = from p in Table.Columns
-                       where p.Name != nameof(ISync.Guid)&& 
+                       where p.Name != nameof(ISync.Guid) &&
                        !p.IsAutoInc
                        select p;
             var vals = from c in cols
-                       where c.Name != nameof(ISync.Guid) 
+                       where c.Name != nameof(ISync.Guid)
                        select c.GetValue(obj);
             var ps = new List<object>(vals);
             if (ps.Count == 0)

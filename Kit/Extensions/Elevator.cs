@@ -1,7 +1,7 @@
 ﻿using System;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class Elevator
     {

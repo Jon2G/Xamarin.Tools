@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class XMLExtensions
     {
@@ -26,6 +26,7 @@ namespace Kit.Extensions
         {
             return (T)XmlDeserializeFromString(objectData, typeof(T));
         }
+
         public static string SerializeObject<T>(this T toSerialize)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
@@ -36,6 +37,7 @@ namespace Kit.Extensions
                 return textWriter.ToString();
             }
         }
+
         public static string JsonSerializeObject<T>(this T toSerialize)
         {
             JsonSerializer xmlSerializer = JsonSerializer.Create();
@@ -49,6 +51,7 @@ namespace Kit.Extensions
             }
             return sb.ToString();
         }
+
         public static T ConvertNode<T>(this XmlNode node) where T : class
         {
             MemoryStream stm = new MemoryStream();

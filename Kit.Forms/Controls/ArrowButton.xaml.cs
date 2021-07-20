@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using FFImageLoading;
 using Forms9Patch;
-using Kit.Extensions;
+using Kit;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -39,6 +39,7 @@ namespace Kit.Forms.Controls
             get => ColorBackground;
             set => ColorBackground = value;
         }
+
         public Color ColorBackground
         {
             get => (Color)GetValue(ColorBackgroundProperty);
@@ -80,9 +81,6 @@ namespace Kit.Forms.Controls
                 OnPropertyChanged();
             }
         }
-
-
-
 
         public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
             propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Accent);
@@ -290,6 +288,7 @@ namespace Kit.Forms.Controls
                 OnPropertyChanged();
             }
         }
+
         public ICommand TouchedCommand { get; }
 
         public ArrowButton()

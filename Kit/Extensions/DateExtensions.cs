@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Kit.Extensions
+namespace Kit
 {
-   public static class DateExtensions
+    public static class DateExtensions
     {
         public static DateTime GetNearest(this DayOfWeek day)
         {
@@ -21,6 +21,7 @@ namespace Kit.Extensions
 
             return date;
         }
+
         public static string Dia(this DayOfWeek day)
         {
             switch (day)
@@ -50,6 +51,7 @@ namespace Kit.Extensions
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         public static string Mes(this int Mes)
         {
             switch (Mes)

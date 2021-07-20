@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class BytesConverter
     {

@@ -4,7 +4,7 @@ using System.Windows;
 using Kit.Enums;
 using Kit.Sql;
 using Kit.WPF;
-using Kit.Extensions;
+using Kit;
 using Kit.WPF.Extensions;
 
 namespace Kit.WPF.Dialogs.ICustomMessageBox

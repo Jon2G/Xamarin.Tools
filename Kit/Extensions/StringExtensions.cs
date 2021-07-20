@@ -1,4 +1,4 @@
-﻿namespace Kit.Extensions
+﻿namespace Kit
 {
     public static class StringExtensions
     {

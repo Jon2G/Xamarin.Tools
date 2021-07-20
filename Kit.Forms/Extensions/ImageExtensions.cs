@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Kit.Extensions;
+using Kit;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Extensions

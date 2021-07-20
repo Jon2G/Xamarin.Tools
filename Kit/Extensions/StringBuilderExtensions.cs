@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class StringBuilderExtensions
     {
@@ -24,6 +24,7 @@ namespace Kit.Extensions
         {
             return sb.ToString(sb.Length - 1, 1)[0];
         }
+
         public static bool EndsWith(this StringBuilder sb, string test)
         {
             if (sb.Length < test.Length)

@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Kit.Extensions;
+using Kit;
 using Kit.Forms.Controls;
 using Kit.Forms.Extensions;
 using Xamarin.Essentials;
