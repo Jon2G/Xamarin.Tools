@@ -92,7 +92,9 @@ namespace Kit.Daemon
             get;
             set;
         }
+
         private SyncManager _SyncManager;
+
         public SyncManager SyncManager
         {
             get => _SyncManager;
@@ -124,7 +126,6 @@ namespace Kit.Daemon
             this.SyncManager.SetPackageSize(PackageSize);
             return this;
         }
-
 
         private static Daemon Born()
         {
@@ -370,7 +371,7 @@ namespace Kit.Daemon
                                 {
                                     this.IsAwake = true;
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                    if(!await this.SyncManager.Download())
+                                    if (!await this.SyncManager.Download())
                                     {
                                         this.SyncManager.CurrentDirection = SyncTarget.NOT_SET;
                                     }

@@ -59,6 +59,7 @@ namespace Kit.Sql.SqlServer
                 {
                     var w = CompileExpr(_where, args, conditions);
                     conditions.RemoveAll(x => x.Value is Kit.Sql.Base.TableMapping);
+                    conditions.RemoveAll(x => x.ColumnName == "?");
                     conditions.RemoveAll(x => !x.IsComplete);
                     conditions = conditions.DistinctBy(x => x.ColumnName).ToList();
                     cmdText += " where " + w.CommandText;
