@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Text;
 
-namespace Kit
+namespace Kit.Extensions
 {
     public static class Password
     {

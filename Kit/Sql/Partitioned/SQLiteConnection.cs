@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Kit.CadenaConexion;
+using Kit.SetUpConnectionString;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
 using Kit.Sql.Readers;

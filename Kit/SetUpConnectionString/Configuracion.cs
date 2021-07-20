@@ -1,20 +1,14 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
+using Newtonsoft.Json;
 
-namespace Kit.CadenaConexion
+namespace Kit.SetUpConnectionString
 {
     [Preserve(AllMembers = true), Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
     public class Configuracion : ModelBase

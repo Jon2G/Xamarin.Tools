@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Daemon.Enums;
+using Kit.Extensions;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.SqlServer;

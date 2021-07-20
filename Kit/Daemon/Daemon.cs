@@ -27,6 +27,7 @@ using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using TableMapping = Kit.Sql.Base.TableMapping;
 using System.Windows.Input;
+using Kit.Extensions;
 
 namespace Kit.Daemon
 {

@@ -1,15 +1,12 @@
-﻿using Kit.Sql.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Xml.Serialization;
+using Kit.Sql.Base;
 
-namespace Kit
+namespace Kit.Extensions
 {
     public static class Linq
     {

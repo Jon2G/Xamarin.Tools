@@ -1,16 +1,10 @@
-﻿using Kit.Model;
+﻿using System;
+using System.Linq;
+using Kit.Model;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Kit.Extensions;
 
-namespace Kit.CadenaConexion
+namespace Kit.SetUpConnectionString
 {
     public class SetUpConnectionStringViewModelBase : ModelBase
     {

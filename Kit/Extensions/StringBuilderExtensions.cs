@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace Kit
+namespace Kit.Extensions
 {
     public static class StringBuilderExtensions
     {

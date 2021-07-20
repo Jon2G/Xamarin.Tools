@@ -1,14 +1,10 @@
-﻿using Kit.Sql;
-using Kit.Sql.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using Kit.Sql.Sqlite;
 using Kit.Model;
+using Kit.Sql.Sqlite;
 
-namespace Kit.CadenaConexion
+namespace Kit.SetUpConnectionString
 {
     public class Empresas : ModelBase
     {

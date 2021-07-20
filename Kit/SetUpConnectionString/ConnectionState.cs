@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.CadenaConexion
+﻿namespace Kit.SetUpConnectionString
 {
     public enum ConnectionState
     {

@@ -1,15 +1,10 @@
-﻿using ClosedXML.Excel;
+﻿using System;
+using System.IO;
+using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Kit.Services.Excel;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace Kit.Services
+namespace Kit.Services.Excel
 {
     public class ExcelService : IDisposable
     {
