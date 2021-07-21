@@ -2783,10 +2783,13 @@ namespace Kit.Sql.Sqlite
                     , Guid.Empty
                     , action, table.SyncMode.Order));
             }
-            UpdateVersionControl(new ChangesHistory(
-                table.TableName
-                , (obj as ISync).Guid
-                , action, table.SyncMode.Order));
+            if (obj is ISync isync)
+            {
+                UpdateVersionControl(new ChangesHistory(
+                    table.TableName
+                    , (obj as ISync).Guid
+                    , action, table.SyncMode.Order));
+            }
             var ev = TableChanged;
             if (ev != null)
                 ev(this, new NotifyTableChangedEventArgs(table, action));
@@ -2794,8 +2797,8 @@ namespace Kit.Sql.Sqlite
 
         public void UpdateVersionControl(ChangesHistory VersionControl)
         {
-            Table<ChangesHistory>()
-                .Delete(x => x.Guid == VersionControl.Guid, false);
+            Table<ChangesHistory>().Delete(x => x.Guid == VersionControl.Guid, false);
+            Table<SyncHistory>().Delete(x => x.Guid == VersionControl.Guid, false);
             Insert(VersionControl);
         }
     }
