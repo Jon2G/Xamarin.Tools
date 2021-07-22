@@ -6,6 +6,7 @@ using System.Text;
 using Kit.Sql.Enums;
 using Kit.Sql.Readers;
 using Kit.Sql.Sqlite;
+using static Kit.Sql.Base.BaseTableQuery;
 
 namespace Kit.Sql.Base
 {
@@ -132,6 +133,7 @@ namespace Kit.Sql.Base
         public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify = false);
 
         public abstract int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true);
+        public abstract bool Exists(string sql, params Condition[] parametros);
 
         /// <summary>
         /// Deletes the given object from the database using its primary key.

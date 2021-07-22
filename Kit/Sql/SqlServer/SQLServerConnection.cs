@@ -605,6 +605,10 @@ namespace Kit.Sql.SqlServer
             return AsyncLeector(sql, CommandType.Text, false, parameters);
         }
 
+        public override bool Exists(string sql, params Condition[] parametros)
+        {
+            return Exists(sql, GetParameters(parametros));
+        }
         public bool Exists(string sql, params SqlParameter[] parametros)
         {
             bool result = false;
@@ -2830,6 +2834,25 @@ WHERE
             return rowsAffected;
         }
 
+        private SqlParameter[] GetParameters(Condition[] ps)
+        {
+            SqlParameter[] parameters = new SqlParameter[ps.Length];
+            if (ps.Length > 0)
+            {
+                for (int i = 0; i < ps.Length; i++)
+                {
+                    Condition condition = (Condition)(ps[i]);
+                    if (condition.Value is null)
+                    {
+                        condition.SetValue(DBNull.Value);
+                        parameters[i] = new SqlParameter(condition.ColumnName, DBNull.Value);
+                        continue;
+                    }
+                    parameters[i] = new SqlParameter(condition.ColumnName, condition.Value);
+                }
+            }
+            return parameters;
+        }
         private SqlParameter[] GetParameters(List<object> ps)
         {
             SqlParameter[] parameters = new SqlParameter[ps.Count];

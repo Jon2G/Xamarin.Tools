@@ -26,6 +26,7 @@ using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using SQLitePCL;
 using NotNullConstraintViolationException = Kit.Sql.Exceptions.NotNullConstraintViolationException;
+using static Kit.Sql.Base.BaseTableQuery;
 
 namespace Kit.Sql.Sqlite
 {
@@ -419,7 +420,12 @@ namespace Kit.Sql.Sqlite
             }
         }
 
-        public bool Exists(string sql)
+        public override bool Exists(string sql, params Condition[] parametros)
+        {
+            return Exists(sql, parametros.Select(x => x.Value));
+        }
+
+        public bool Exists(string sql, params object[] parameters)
         {
             using (IReader reader = Read(sql))
             {
