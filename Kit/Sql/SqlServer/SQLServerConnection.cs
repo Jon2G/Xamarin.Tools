@@ -535,7 +535,7 @@ namespace Kit.Sql.SqlServer
                 if (cmd.Connection.State != ConnectionState.Open)
                     cmd.Connection.Open();
                 ReportaTransaccion(cmd);
-                return new Reader(cmd);
+                return new Reader(cmd,this);
             }
             catch (Exception ex)
             {

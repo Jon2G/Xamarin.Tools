@@ -12,7 +12,7 @@ namespace Kit.Sql.Base
 {
     public abstract class SqlBase : IDisposable
     {
-        public Exception LastException { get; protected set; }
+        public Exception LastException { get; set; }
 
         public event EventHandler OnConnectionStringChanged;
 

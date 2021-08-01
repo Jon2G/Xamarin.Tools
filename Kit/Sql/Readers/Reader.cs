@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Kit.Sql.SqlServer;
 
 namespace Kit.Sql.Readers
 {
@@ -16,7 +17,7 @@ namespace Kit.Sql.Readers
         private SqlCommand Cmd { get; set; }
         private SqlConnection Connection { get; set; }
         public int FieldCount { get => _Reader.FieldCount; }
-        public Reader(SqlCommand Cmd)
+        public Reader(SqlCommand Cmd,SQLServerConnection connection)
         {
             try
             {
@@ -28,6 +29,7 @@ namespace Kit.Sql.Readers
             }
             catch (Exception ex)
             {
+                connection.LastException = ex;
                 Log.AlertOnDBConnectionError(ex);
                 Log.Logger.Error(ex, "");
                 _Reader = new FakeReader();
