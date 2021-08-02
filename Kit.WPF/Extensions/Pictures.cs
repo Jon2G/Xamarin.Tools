@@ -8,7 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Kit.WPF.Extensions
+namespace Kit
 {
     public static class Pictures
     {

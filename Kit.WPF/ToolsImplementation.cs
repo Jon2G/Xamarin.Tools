@@ -48,7 +48,7 @@ namespace Kit.WPF
                 // particularly, any logs from Information level will also be written into a rolling file
                 .WriteTo.Logger(config =>
                 config
-                        .MinimumLevel.Information()
+                        .MinimumLevel.Debug()
                         .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7,
                             flushToDiskInterval: TimeSpan.FromMilliseconds(500))
                 )

@@ -1,7 +1,7 @@
 ﻿using System;
 using Kit;
 
-namespace Kit.WPF.Extensions
+namespace Kit
 {
     public class TouchControlCommand : TouchControlCommand<object>
     {

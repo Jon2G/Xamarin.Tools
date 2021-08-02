@@ -1,21 +1,21 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Kit.WPF.Extensions
+namespace Kit
 {
     public static class ClickHelper
     {
         private static ulong Ultimo { get; set; }
 
         [DllImport("kernel32")]
-        extern static ulong GetTickCount64();
+        private static extern ulong GetTickCount64();
 
         static ClickHelper()
         {
             Ultimo = 0;
         }
+
         public static bool EsValido()
         {
-
             ulong Actual = GetTickCount64();// Environment.TickCount;
             //Log.LogMe($"Actual:{Actual},Utlimo:{Ultimo}");
 

@@ -23,7 +23,7 @@ using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.WPF.Controls;
 using Kit.WPF.Dialogs.ICustomMessageBox;
-using Kit.WPF.Extensions;
+using Kit;
 using Kit.WPF.Services;
 using Microsoft.Win32;
 using ZXing;

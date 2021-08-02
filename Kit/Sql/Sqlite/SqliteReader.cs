@@ -39,7 +39,7 @@ namespace Kit.Sql.Sqlite
 
                 if (this._Reader is null)
                 {
-                    var reader = this.Command.ExecuteReader();
+                    //var reader = this.Command.ExecuteReader();
 
                     this._Reader = this.Connection.ExecuteReader(Query).ToList();
                     this.Fila = 0;

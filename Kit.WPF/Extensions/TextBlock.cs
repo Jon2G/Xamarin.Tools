@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Kit.WPF.Extensions
+namespace Kit
 {
     public static class TextBlock
     {
@@ -23,7 +23,6 @@ namespace Kit.WPF.Extensions
             new PropertyMetadata(default(string), OnTextProxyChanged));
 
         private static readonly PropertyPath TextPropertyPath = new PropertyPath("Text");
-
 
         public static void SetCharacterCasing(DependencyObject element, CharacterCasing value)
         {
@@ -69,10 +68,13 @@ namespace Kit.WPF.Extensions
                 {
                     case CharacterCasing.Normal:
                         return text;
+
                     case CharacterCasing.Lower:
                         return text.ToLower();
+
                     case CharacterCasing.Upper:
                         return text.ToUpper();
+
                     default:
                         throw new ArgumentOutOfRangeException(nameof(casing), casing, null);
                 }

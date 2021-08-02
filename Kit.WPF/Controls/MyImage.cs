@@ -9,7 +9,8 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Kit;
-using Kit.WPF.Extensions;
+
+using Kit;
 
 namespace Kit.WPF.Controls
 {

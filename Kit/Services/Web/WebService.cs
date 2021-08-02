@@ -61,10 +61,14 @@ namespace Kit.Services.Web
                 using (HttpClientHandler handler = new HttpClientHandler()
                 {
                     Proxy = null,
-                    UseProxy = false,
-                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                    UseProxy = false
                 })
                 {
+                    if (Tools.Instance.RuntimePlatform != Enums.RuntimePlatform.WPF)
+                    {
+                        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                    }
+
                     using (HttpClient client = new HttpClient(handler))
                     {
                         client.DefaultRequestHeaders.Add("Accept", "application/json");

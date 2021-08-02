@@ -133,6 +133,7 @@ namespace Kit.Sql.Base
         public abstract int Insert(object obj, string extra, Type objType, bool shouldnotify = false);
 
         public abstract int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true);
+
         public abstract bool Exists(string sql, params Condition[] parametros);
 
         /// <summary>

@@ -29,6 +29,7 @@ using ZXing;
 using System.Windows.Input;
 using FFImageLoading.Forms;
 using Kit.SetUpConnectionString;
+using AsyncAwaitBestPractices.MVVM;
 
 namespace Kit.Forms.Pages
 {
@@ -323,14 +324,15 @@ namespace Kit.Forms.Pages
             {
                 this.Leector = new Lector(BarcodeFormat.QR_CODE)
                 {
-                    OnCodeReadCommand = new Xamarin.Forms.Command<string>(Deserialize)
+                    OnCodeReadCommand = new AsyncCommand<string>(Deserialize)
                 };
                 this.Leector.Abrir();
             }
         }
 
-        private void Deserialize(string json)
+        private async Task Deserialize(string json)
         {
+            await Task.Yield();
             if (!string.IsNullOrEmpty(json))
             {
                 Configuracion configuracion_qr = Configuracion.DeSerialize(json);

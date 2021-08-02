@@ -1,5 +1,5 @@
 ﻿using Kit.Controls.CrossImage;
-using Kit.WPF.Extensions;
+using Kit;
 using System;
 using System.Collections.Generic;
 using System.IO;

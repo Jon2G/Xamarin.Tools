@@ -10,7 +10,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Kit.WPF.Extensions
+namespace Kit
 {
     public static class Extensiones
     {
@@ -19,11 +19,13 @@ namespace Kit.WPF.Extensions
             Action<IEnumerable<T>> addMethod = collection.AddRange;
             return Application.Current.Dispatcher.BeginInvoke(addMethod, pendiente);
         }
+
         public static System.Windows.Threading.DispatcherOperation InsertAsync<T>(this Collection<T> collection, T pendiente, int index = 0)
         {
             Action<int, T> addMethod = collection.Insert;
             return Application.Current.Dispatcher.BeginInvoke(addMethod, index, pendiente);
         }
+
         public static System.Windows.Threading.DispatcherOperation AddAsync<T>(this Collection<T> collection, T pendiente)
         {
             Action<T> addMethod = collection.Add;

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Kit.WPF.Extensions
+namespace Kit
 {
     public class EnterKeyTraversal
     {
@@ -16,7 +16,7 @@ namespace Kit.WPF.Extensions
             obj.SetValue(IsEnabledProperty, value);
         }
 
-        static void ue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private static void ue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             FrameworkElement ue = e.OriginalSource as FrameworkElement;
 
@@ -36,10 +36,10 @@ namespace Kit.WPF.Extensions
             {
                 case TextBox txt:
                     return;
+
                 case ComboBox combo:
                     //combo.IsDropDownOpen = true;
                     return;
-
             }
         }
 
@@ -57,10 +57,11 @@ namespace Kit.WPF.Extensions
 
             typeof(EnterKeyTraversal), new UIPropertyMetadata(false, IsEnabledChanged));
 
-        static void IsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void IsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Atach(d, (bool)e.NewValue);
         }
+
         private static void Atach(DependencyObject d, bool NewValue)
         {
             FrameworkElement ue = d as FrameworkElement;
@@ -83,7 +84,7 @@ namespace Kit.WPF.Extensions
 
         private static void Ue_Loaded(object sender, RoutedEventArgs e)
         {
-            Atach(sender as DependencyObject,true);
+            Atach(sender as DependencyObject, true);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Kit.Dialogs;
 using Kit.Model;
 using Kit.Services.Interfaces;
@@ -32,6 +33,9 @@ namespace Kit.License
 
         public BlumAPI.License Licence { get; set; }
         private readonly IDialogs Dialogs;
+
+        private ICommand _LogInCommand;
+        public ICommand LogInCommand => _LogInCommand ?? new Command(() => LogIn());
 
         public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs)
         {

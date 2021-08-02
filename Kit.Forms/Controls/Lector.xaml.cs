@@ -18,6 +18,8 @@ using System.Windows.Input;
 using Command = Xamarin.Forms.Command;
 using ZXing.Mobile;
 using ZXing.Net.Mobile.Forms;
+using AsyncAwaitBestPractices.MVVM;
+using AsyncAwaitBestPractices;
 
 namespace Kit.Forms.Controls
 {
@@ -41,14 +43,15 @@ namespace Kit.Forms.Controls
         public static readonly BindableProperty OnCodeReadCommandProperty =
             BindableProperty.Create(
               propertyName: nameof(OnCodeReadCommand),
-              returnType: typeof(Xamarin.Forms.Command<string>),
+              returnType: typeof(AsyncCommand<string>),
               declaringType: typeof(Lector),
-              defaultValue: new Xamarin.Forms.Command<string>((x) => Log.Logger.Debug("Código leido:{0}", x)),
+              //defaultValue: new Xamarin.Forms.Command<string>(
+              //    (x) => Log.Logger.Debug("Código leido:{0}", x)),
               defaultBindingMode: BindingMode.OneWay);
 
-        public Xamarin.Forms.Command<string> OnCodeReadCommand
+        public AsyncCommand<string> OnCodeReadCommand
         {
-            get => (Xamarin.Forms.Command<string>)this.GetValue(Lector.OnCodeReadCommandProperty);
+            get => (AsyncCommand<string>)this.GetValue(Lector.OnCodeReadCommandProperty);
             set
             {
                 SetValue(Lector.OnCodeReadCommandProperty, value);
@@ -151,7 +154,7 @@ namespace Kit.Forms.Controls
                     {
                         Barcode = result.Text;
                     }
-                    OnCodeReadCommand?.Execute(Barcode);
+                    OnCodeReadCommand?.ExecuteAsync(Barcode).SafeFireAndForget();
                 });
             };
             Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
