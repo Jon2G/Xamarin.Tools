@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AsyncAwaitBestPractices.MVVM;
 using Kit.Dialogs;
+using Kit.Extensions;
 using Kit.Model;
 using Kit.Services.Interfaces;
 
@@ -35,7 +37,7 @@ namespace Kit.License
         private readonly IDialogs Dialogs;
 
         private ICommand _LogInCommand;
-        public ICommand LogInCommand => _LogInCommand ?? new Command(() => LogIn());
+        public ICommand LogInCommand => _LogInCommand ?? new AsyncCommand(LogIn);
 
         public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs)
         {
