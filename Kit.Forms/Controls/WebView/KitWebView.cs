@@ -92,7 +92,7 @@ namespace Kit.Forms.Controls.WebView
         public async Task GoTo(string url)
         {
             string navigateUrl = url;
-            if (url != HomePage)
+            if (!url.StartsWith(HomePage))
             {
                 navigateUrl = HomePage;
                 if (!navigateUrl.EndsWith("/"))
