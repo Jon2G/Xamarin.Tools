@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Windows.Input;
 
-namespace Kit
+namespace Kit.Extensions
 {
     public class Command<T> : Command
     {

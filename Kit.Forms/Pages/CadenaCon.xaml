@@ -8,8 +8,8 @@
                  xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
                  xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
                  xmlns:controls="clr-namespace:Kit.Forms.Controls;assembly=Kit.Forms"
-                 xmlns:cadenaconexion="clr-namespace:Kit.SetUpConnectionString;assembly=Kit"
-                 x:DataType="cadenaconexion:SetUpConnectionStringViewModelBase"
+                 xmlns:setUpConnectionString="clr-namespace:Kit.SetUpConnectionString;assembly=Kit"
+                 x:DataType="setUpConnectionString:SetUpConnectionStringViewModelBase"
                  x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="0" Padding="0" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">

@@ -79,7 +79,7 @@ namespace Kit.Sql.SqlServer
         {
             var cmd = new SqlCommand(this.CommandText, this._conn.Con());
             cmd.Parameters.AddRange(this.Parameters.ToArray());
-            var reader = new Reader(cmd);
+            var reader = new Reader(cmd,this._conn);
             return reader;
         }
 

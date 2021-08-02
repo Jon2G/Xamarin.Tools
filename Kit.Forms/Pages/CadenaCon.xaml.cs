@@ -54,7 +54,7 @@ namespace Kit.Forms.Pages
             return false;
         }
 
-        private Command<CadenaCon> OnAppearingCommand;
+        private Kit.Extensions.Command<CadenaCon> OnAppearingCommand;
         private readonly CancellationTokenSource CancellationTokenSource;
 
         public CadenaCon(SQLiteConnection DBConection) : this(DBConection, null, null)
@@ -106,7 +106,7 @@ namespace Kit.Forms.Pages
             }
         }
 
-        public async Task ShowAndExecute(Command<CadenaCon> Command)
+        public async Task ShowAndExecute(Kit.Extensions.Command<CadenaCon> Command)
         {
             this.OnAppearingCommand = Command;
             await Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync(this);

@@ -113,7 +113,7 @@ namespace Kit.Forms.Controls
 
         public void Init(params BarcodeFormat[] BarcodeFormats)
         {
-            this.OpenCameraCommand = new Command(OpenCamera);
+            this.OpenCameraCommand = new Kit.Extensions.Command(OpenCamera);
             this.BarcodeFormats = new List<BarcodeFormat>(BarcodeFormats);
             if (this.BarcodeFormats.Count <= 0)
             {
