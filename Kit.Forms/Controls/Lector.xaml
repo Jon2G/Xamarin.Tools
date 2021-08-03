@@ -14,7 +14,8 @@
         <Image.Source>
             <FontImageSource Color="{Binding Color,Source={x:Reference Me}}"
                                  Glyph="{x:Static fonts:FontelloIcons.Camera}"
-                                 FontFamily="{x:Static fonts:FontelloIcons.Font}" />
+                                 FontFamily="{x:Static fonts:FontelloIcons.Font}"
+                             Size="{Binding FontSize,Source={x:Reference Me}}"/>
         </Image.Source>
     </Image>
 </ContentView>

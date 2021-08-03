@@ -6,7 +6,7 @@ using Kit.Sql;
 using Kit.WPF;
 using Kit;
 
-using Kit;
+using Kit.Extensions;
 
 namespace Kit.WPF.Dialogs.ICustomMessageBox
 {

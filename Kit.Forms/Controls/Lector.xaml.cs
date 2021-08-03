@@ -40,6 +40,21 @@ namespace Kit.Forms.Controls
             }
         }
 
+        public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
+            propertyName: nameof(FontSize),
+            returnType: typeof(double), declaringType: typeof(Lector), defaultValue: 14d);
+
+        [Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
+        public double FontSize
+        {
+            get => (double)GetValue(FontSizeProperty);
+            set
+            {
+                SetValue(FontSizeProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
         public static readonly BindableProperty OnCodeReadCommandProperty =
             BindableProperty.Create(
               propertyName: nameof(OnCodeReadCommand),
@@ -47,7 +62,7 @@ namespace Kit.Forms.Controls
               declaringType: typeof(Lector),
               //defaultValue: new Xamarin.Forms.Command<string>(
               //    (x) => Log.Logger.Debug("Código leido:{0}", x)),
-              defaultBindingMode: BindingMode.OneWay);
+              defaultBindingMode: BindingMode.TwoWay);
 
         public AsyncCommand<string> OnCodeReadCommand
         {
@@ -55,6 +70,7 @@ namespace Kit.Forms.Controls
             set
             {
                 SetValue(Lector.OnCodeReadCommandProperty, value);
+                OnPropertyChanged();
             }
         }
 
