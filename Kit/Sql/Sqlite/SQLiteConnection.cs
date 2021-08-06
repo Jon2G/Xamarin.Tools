@@ -2609,7 +2609,7 @@ namespace Kit.Sql.Sqlite
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
 
-            Guid guid_key;
+            Guid guid_key=Guid.Empty;
             if (map.SyncMode.Direction != SyncDirection.NoSync)
             {
                 guid_key = ExecuteScalar<Guid>($"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?",

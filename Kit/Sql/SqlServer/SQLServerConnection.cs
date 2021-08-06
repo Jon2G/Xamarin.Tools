@@ -636,7 +636,7 @@ namespace Kit.Sql.SqlServer
         public void ReportaTransaccion(SqlCommand cmd)
         {
             string sql = GetCommandText(cmd);
-            Log.Logger.Debug("Executing:[{0}]", sql);
+            Log.Logger?.Debug("Executing:[{0}]", sql);
         }
 
         private string GetCommandText(SqlCommand sqc)
@@ -998,7 +998,7 @@ namespace Kit.Sql.SqlServer
         /// <summary>
         /// Gets or sets the database path used by this connection.
         /// </summary>
-        public SqlConnectionStringBuilder ConnectionString { get; set; }
+        public new SqlConnectionStringBuilder ConnectionString { get; set; }
 
         /// <summary>
         /// Whether Trace lines should be written that show the execution time of queries.
