@@ -1,5 +1,6 @@
 ﻿using System;
 using Kit;
+using Kit.Extensions;
 
 namespace Kit
 {
