@@ -229,6 +229,7 @@ namespace Kit.Daemon
         /// <summary>
         /// Duerme al demonio hasta que se vuelva a despertar
         /// </summary>
+        /// </summary>
         public async Task<Daemon> Sleep()
         {
             Log.Logger.Debug("DAEMON COMMANDED TO SLEEP ACTUALLY IS =>{0}", this.IsAwake);

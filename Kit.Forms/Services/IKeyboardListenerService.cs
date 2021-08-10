@@ -110,17 +110,15 @@ namespace Kit.Forms.Services
             RecievedText.Append(character);
             CountDown.Restart();
         }
-
-        //private void ReleaseUnmanagedResources()
-        //{
-        //}
-        //o
-        //public void Dispose()
-        //{
-        //    UnSuscribe();
-        //    CountDown?.Stop();
-        //    CountDown = null;
-        //    ReciveCode = null;
-        //}
+        public override void Dispose()
+        {
+            base.Dispose();
+            OnReciveCharacter = null;
+            OnReciveCode = null;
+            RecievedText?.Clear();
+            RecievedText = null;
+            CountDown = null;
+            Current = null;
+        }
     }
 }
