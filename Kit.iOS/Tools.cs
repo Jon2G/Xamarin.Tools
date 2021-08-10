@@ -29,6 +29,7 @@ namespace Kit.iOS
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += Log.TaskSchedulerOnUnobservedTaskException;
             Set(new ToolsImplementation());
+            (Instance as ToolsImplementation).Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))

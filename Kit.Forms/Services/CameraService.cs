@@ -42,9 +42,9 @@ namespace Kit.Forms.Services
                 return null;
             }
             // save the file into local storage
-            var newFile = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-            using (var stream = await photo.OpenReadAsync())
-            using (var newStream = File.OpenWrite(newFile))
+            string newFile = Path.Combine(Tools.Instance.TemporalPath, photo.FileName);
+            using (Stream stream = await photo.OpenReadAsync())
+            using (FileStream newStream = File.OpenWrite(newFile))
                 await stream.CopyToAsync(newStream);
 
             return new FileInfo(newFile);
