@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:otgcodebarsacnnerdetector="clr-namespace:Kit.Forms.Pages.OtgCodeBarSacnnerDetector"
+             x:Class="Kit.Forms.Pages.OtgCodeBarScannerDetectorPage">
+    <ContentPage.BindingContext>
+        <otgcodebarsacnnerdetector:OtgCodeBarScannerDetectorPageViewModel x:Name="Model" />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+        <Label Text="Configrando el scanner"
+                VerticalOptions="CenterAndExpand" FontAttributes="Bold"
+                HorizontalOptions="CenterAndExpand" TextColor="White" FontSize="20" />
+
+        <Label Text="Tome una lectura con el scanner ..."
+                VerticalOptions="CenterAndExpand" FontAttributes="Bold"
+                HorizontalOptions="CenterAndExpand" TextColor="White" FontSize="18" />
+
+        <Label Text=""
+                VerticalOptions="CenterAndExpand" FontAttributes="Bold"
+                HorizontalOptions="CenterAndExpand" TextColor="White" FontSize="18" />
+
+        <StackLayout>
+            <BoxView HeightRequest="35" HorizontalOptions="StartAndExpand" Color="{StaticResource PrimaryDarkColor}" />
+            <BoxView HeightRequest="35" HorizontalOptions="CenterAndExpand" Color="{StaticResource PrimaryDarkColor}" x:Name="EnterView" />
+            <BoxView HeightRequest="35" HorizontalOptions="EndAndExpand" Color="{StaticResource PrimaryDarkColor}" />
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

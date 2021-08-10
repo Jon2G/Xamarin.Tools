@@ -10,10 +10,14 @@ namespace Kit.Forms.Services
 {
     public class IKeyboardListenerService : ModelBase, IDisposable
     {
-        public const string Message = "IKeyboardListenerService.OnKeyUp";
+        public static IKeyboardListenerService Current { get; private set; }
         private StringBuilder RecievedText;
+        public string Code => RecievedText?.ToString();
         private MyTimer CountDown { get; set; }
-        private Action<string> ReciveCode;
+
+        public event EventHandler<string> OnReciveCode;
+
+        public event EventHandler<string> OnReciveCharacter;
 
         private bool _IsEnabled;
 
@@ -25,40 +29,51 @@ namespace Kit.Forms.Services
                 if (_IsEnabled != value)
                 {
                     _IsEnabled = value;
-                    if (IsEnabled)
-                    {
-                        Suscribe();
-                    }
-                    else
-                    {
-                        UnSuscribe();
-                    }
                     Raise(() => IsEnabled);
                     Raise(() => IsDisabled);
                 }
             }
         }
 
+
+        private bool _IsKeyboardPluggedIn;
+
+        public bool IsKeyboardPluggedIn
+        {
+            get => _IsEnabled;
+            set
+            {
+                if (_IsKeyboardPluggedIn != value)
+                {
+                    _IsKeyboardPluggedIn = value;
+                    if (!value)
+                    {
+                        IsEnabled = false;
+                    }
+                }
+            }
+        }
+
+
+        
+
         public bool IsDisabled => !IsEnabled;
 
-        private void UnSuscribe()
+        public IKeyboardListenerService(EventHandler<string> ReciveCode = null, EventHandler<string> ReviceCharacter = null, bool IsEnabled = true)
         {
-            MessagingCenter.Unsubscribe<object, char>(this, Message);
-        }
-
-        private void Suscribe()
-        {
-            MessagingCenter.Subscribe<object, char>(this, Message, OnKeyUp);
-        }
-
-        public IKeyboardListenerService(Action<string> ReciveCode, bool IsEnabled = true)
-        {
+            Current = this;
             this.IsEnabled = IsEnabled;
-            this.ReciveCode = ReciveCode;
-            if (this.ReciveCode is null)
+            this.OnReciveCharacter += ReviceCharacter;
+            this.OnReciveCode += ReciveCode;
+            if (this.OnReciveCode is null && this.OnReciveCharacter is null)
             {
                 this.IsEnabled = false;
             }
+        }
+
+        public void SetIsKeyboardPluggedIn(bool isPluggedIn)
+        {
+            this.IsKeyboardPluggedIn = isPluggedIn;
         }
 
         ~IKeyboardListenerService()
@@ -76,11 +91,11 @@ namespace Kit.Forms.Services
         private void Confirm()
         {
             this.CountDown.Stop();
-            ReciveCode?.Invoke(RecievedText?.ToString()?.Trim());
+            OnReciveCode?.Invoke(this, RecievedText?.ToString()?.Trim());
             this.RecievedText = new StringBuilder();
         }
 
-        public void OnKeyUp(object sender, char character)
+        public void OnKeyUp(char character)
         {
             if (!IsEnabled)
             {
@@ -96,16 +111,16 @@ namespace Kit.Forms.Services
             CountDown.Restart();
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-        }
-
-        public void Dispose()
-        {
-            UnSuscribe();
-            CountDown?.Stop();
-            CountDown = null;
-            ReciveCode = null;
-        }
+        //private void ReleaseUnmanagedResources()
+        //{
+        //}
+        //o
+        //public void Dispose()
+        //{
+        //    UnSuscribe();
+        //    CountDown?.Stop();
+        //    CountDown = null;
+        //    ReciveCode = null;
+        //}
     }
 }

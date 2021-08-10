@@ -14,7 +14,7 @@
     <yummy:PancakeView VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Margin="10">
         <StackLayout Spacing="0" Padding="0">
             <StackLayout HeightRequest="50" BackgroundColor="{Binding TitleBackground}">
-                <Label Text="{Binding Title}"  VerticalOptions="Center"
+                <Label Text="{Binding Title}"  VerticalOptions="Center" VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand"
                        FontAttributes="Bold" FontSize="18" TextColor="White"  />
             </StackLayout>

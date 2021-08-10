@@ -19,6 +19,7 @@ using Kit.Forms.Services.Interfaces;
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
 [assembly: Dependency(typeof(MainActivity))]
+
 namespace Kit.Droid.Services
 {
     [MetaData(name: "android.support.FILE_PROVIDER_PATH", Resource = "@xml/paths")]
@@ -35,6 +36,12 @@ namespace Kit.Droid.Services
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
+            IKeyboardListenerService.Current?.SetIsKeyboardPluggedIn(IsKeyboardPluggedIn());
+        }
+
+        public bool IsKeyboardPluggedIn()
+        {
+            return this.Resources.Configuration.Keyboard != Android.Content.Res.KeyboardType.Nokeys;
         }
 
         public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
@@ -42,11 +49,11 @@ namespace Kit.Droid.Services
             if (!e.Flags.HasFlag(Android.Views.KeyEventFlags.SoftKeyboard) || keyCode == Keycode.Back)
             {
                 char character = ((char)e.GetUnicodeChar(e.MetaState));
+                IKeyboardListenerService.Current?.OnKeyUp(character);
                 if (Kit.Tools.Debugging)
                 {
                     Log.Logger.Debug("Keyboard:{0}", character);
                 }
-                MessagingCenter.Send<object, char>(this, IKeyboardListenerService.Message, character);
             }
             return base.OnKeyUp(keyCode, e);
         }
@@ -67,8 +74,6 @@ namespace Kit.Droid.Services
             Forms9Patch.Droid.Settings.Initialize(this);
             Instance = this; //ImagePicker
             ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
-
-            
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -82,11 +87,10 @@ namespace Kit.Droid.Services
             Serilog.Log.CloseAndFlush();
             base.OnDestroy();
         }
+
         public static Context GetAppContext()
         {
             return Android.App.Application.Context;
         }
-
-
     }
 }
