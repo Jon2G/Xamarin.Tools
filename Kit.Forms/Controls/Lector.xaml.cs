@@ -117,6 +117,10 @@ namespace Kit.Forms.Controls
             }
         }
 
+        private ZXingScannerPage Page;
+        private ICommand _CloseCommand;
+        private ICommand CloseCommand => _CloseCommand ??= new Command(Close);
+
         public Lector() : this(AllFormats)
         {
         }
@@ -139,41 +143,56 @@ namespace Kit.Forms.Controls
             }
         }
 
+        private void Close()
+        {
+            if (Shell.Current is not null)
+            {
+                Shell.Current.Navigation.PopAsync();
+            }
+            else
+            {
+                Application.Current.MainPage.Navigation.PopModalAsync();
+            }
+        }
+
         private void OpenCamera()
         {
             MobileBarcodeScanningOptions options = new MobileBarcodeScanningOptions();
             options.PossibleFormats = this.BarcodeFormats;
-
-            ZXingScannerPage page = new ZXingScannerPage(options) { Title = "Leector de codigos de barras" };
-            ToolbarItem closeItem = new ToolbarItem { Text = "Cerrar" };
-            closeItem.Clicked += (sender, e) =>
+            this.Page = new ZXingScannerPage(options) { Title = "Leector de codigos de barras" };
+            Page.ToolbarItems.Add(new ToolbarItem
             {
-                page.IsScanning = false;
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    Application.Current.MainPage.Navigation.PopModalAsync();
-                });
-            };
-            page.ToolbarItems.Add(closeItem);
-            page.OnScanResult += (result) =>
+                Text = "Cerrar",
+                Command = CloseCommand
+            });
+            Page.OnScanResult += OnScanResult;
+            if (Shell.Current is not null)
             {
-                page.IsScanning = false;
+                Shell.Current.Navigation.PushAsync(Page);
+            }
+            else
+            {
+                Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
+            }
+        }
 
-                Device.BeginInvokeOnMainThread(() =>
+        private void OnScanResult(Result result)
+        {
+            this.Page.IsScanning = false;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                CloseCommand.Execute(this);
+
+                if (string.IsNullOrEmpty(result.Text))
                 {
-                    Application.Current.MainPage.Navigation.PopModalAsync();
-                    if (string.IsNullOrEmpty(result.Text))
-                    {
-                        Barcode = null;
-                    }
-                    else
-                    {
-                        Barcode = result.Text;
-                    }
-                    OnCodeReadCommand?.ExecuteAsync(Barcode).SafeFireAndForget();
-                });
-            };
-            Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
+                    Barcode = null;
+                }
+                else
+                {
+                    Barcode = result.Text;
+                }
+                OnCodeReadCommand?.ExecuteAsync(Barcode).SafeFireAndForget();
+            });
         }
 
         public async void Abrir()
