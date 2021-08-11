@@ -1,12 +1,23 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Kit;
+using Kit.Forms.Services.Interfaces;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Extensions
 {
     public static partial class ImageExtensions
     {
+        public static async Task<FileImageSource> ResizeImage(this FileImageSource imageData, float width, float height)
+        {
+            await Task.Yield();
+            FileStream file = ResizeImage(imageData.ImageToStream(), width, height);
+            return (FileImageSource)FileImageSource.FromFile(file.Name);
+        }
+        public static FileStream ResizeImage(Stream imageData, float width, float height)
+        {
+            return DependencyService.Get<IImageResizer>().ResizeImage(imageData, width, height);
+        }
         public static ImageSource ByteToImage(this byte[] ByteArray)
         {
             return ImageSource.FromStream(() => new MemoryStream(ByteArray));

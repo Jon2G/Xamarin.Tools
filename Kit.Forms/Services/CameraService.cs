@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Kit.Enums;
 using Kit.Forms.Services.Interfaces;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Kit.Forms.Services
 {
@@ -35,19 +37,34 @@ namespace Kit.Forms.Services
 
         public static async Task<FileInfo> LoadPhotoAsync(this FileResult photo)
         {
+            await Task.Yield();
             // canceled
             if (photo == null)
             {
-                await Task.Yield();
                 return null;
             }
             // save the file into local storage
-            string newFile = Path.Combine(Tools.Instance.TemporalPath, photo.FileName);
-            using (Stream stream = await photo.OpenReadAsync())
-            using (FileStream newStream = File.OpenWrite(newFile))
-                await stream.CopyToAsync(newStream);
+            DirectoryInfo tmpDir = new DirectoryInfo(Tools.Instance.TemporalPath);
+            if (!tmpDir.Exists)
+            {
+                tmpDir.Create();
+            }
+            string newFile = Path.Combine(tmpDir.FullName, photo.FileName);
+            FileInfo file = new FileInfo(newFile);
+            if (Tools.Instance.RuntimePlatform==RuntimePlatform.iOS&&file.Exists)
+            {
+                return file;
+            }
+            using (Stream stream= await photo.OpenReadAsync())
+            {
+                using (FileStream newStream = new FileStream(file.FullName, FileMode.OpenOrCreate))
+                {
+                    await stream.CopyToAsync(newStream);
+                }
+            }
 
-            return new FileInfo(newFile);
+            file.Refresh();
+            return file;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Forms9Patch;
 using Kit.Forms.Extensions;
 using Kit.Model;
 using Xamarin.Forms;
@@ -18,6 +19,7 @@ namespace Kit.Forms.Services
         public event EventHandler<string> OnReciveCode;
 
         public event EventHandler<string> OnReciveCharacter;
+        public event EventHandler OnKeyboardPluggedInChanged;
 
         private bool _IsEnabled;
 
@@ -40,12 +42,13 @@ namespace Kit.Forms.Services
 
         public bool IsKeyboardPluggedIn
         {
-            get => _IsEnabled;
+            get => _IsKeyboardPluggedIn;
             set
             {
                 if (_IsKeyboardPluggedIn != value)
                 {
                     _IsKeyboardPluggedIn = value;
+                    OnKeyboardPluggedInChanged?.Invoke(this, EventArgs.Empty);
                     if (!value)
                     {
                         IsEnabled = false;
@@ -55,13 +58,14 @@ namespace Kit.Forms.Services
         }
 
 
-        
+
 
         public bool IsDisabled => !IsEnabled;
 
         public IKeyboardListenerService(EventHandler<string> ReciveCode = null, EventHandler<string> ReviceCharacter = null, bool IsEnabled = true)
         {
             Current = this;
+            RecievedText = new StringBuilder();
             this.IsEnabled = IsEnabled;
             this.OnReciveCharacter += ReviceCharacter;
             this.OnReciveCode += ReciveCode;
@@ -69,6 +73,7 @@ namespace Kit.Forms.Services
             {
                 this.IsEnabled = false;
             }
+            this.IsKeyboardPluggedIn = KeyboardService.IsHardwareKeyboardActive;
         }
 
         public void SetIsKeyboardPluggedIn(bool isPluggedIn)
@@ -107,8 +112,19 @@ namespace Kit.Forms.Services
             {
                 return;
             }
-            RecievedText.Append(character);
-            CountDown.Restart();
+
+            if (text == "\n")
+            {
+                OnReciveCode?.Invoke(this, Code);
+                RecievedText = new StringBuilder();
+            }
+            else
+            {
+                this.OnReciveCharacter?.Invoke(this, text);
+                RecievedText.Append(character);
+            }
+            CountDown?.Restart();
+            Raise(() => Code);
         }
 
         //private void ReleaseUnmanagedResources()

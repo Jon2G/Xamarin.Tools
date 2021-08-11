@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Forms9Patch;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
@@ -22,31 +23,59 @@ namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
                 Raise(() => Code);
             }
         }
-        private View EnterView { get; set; }
 
-        internal void Init(View EnterView)
+        private string _Status;
+
+        public string Status
         {
-            this.EnterView = EnterView;
-            Services.IKeyboardListenerService listenerService = new Services.IKeyboardListenerService(ReadCode, ReadCharacter, IsEnabled: true);
+            get => _Status;
+            set
+            {
+                _Status = value;
+                Raise(() => Status);
+            }
         }
 
-        private void ReadCode(object sender, string Code)
+        private Services.IKeyboardListenerService IKeyboardListenerService;
+        private View BeginView { get; set; }
+        private View CenterView { get; set; }
+        private View EndView { get; set; }
+
+        internal void Init(View BeginView, View CenterView, View EndView)
+        {
+            this.BeginView = BeginView;
+            this.CenterView = CenterView;
+            this.EndView = EndView;
+            IKeyboardListenerService = new Services.IKeyboardListenerService(ReadCode, ReadCharacter, IsEnabled: true);
+            IKeyboardListenerService.OnKeyboardPluggedInChanged += this.ListenerService_OnKeyboardPluggedInChanged;
+            ListenerService_OnKeyboardPluggedInChanged(IKeyboardListenerService, EventArgs.Empty);
+        }
+
+        private void ListenerService_OnKeyboardPluggedInChanged(object sender, EventArgs e)
+        {
+            Status = IKeyboardListenerService.IsKeyboardPluggedIn ?
+                "Tome una lectura" :
+                "Por favor conecte su lector de código de barras";
+        }
+
+        private async void ReadCode(object sender, string Code)
         {
             this.Code = Code;
-            this.Jump().SafeFireAndForget();
+            this.CenterView.TranslateTo(0, 50).SafeFireAndForget();
+            this.CenterView.TranslateTo(0, 0).SafeFireAndForget();
         }
 
-        private async Task Jump()
-        {
-            await Task.Yield();
-            await this.EnterView.TranslateTo(0, 50, 250);
-            await this.EnterView.TranslateTo(0, 0, 250);
-        }
+
 
         private void ReadCharacter(object sender, string character)
         {
             IKeyboardListenerService service = (IKeyboardListenerService)sender;
             this.Code = service.Code;
+
+            this.BeginView.TranslateTo(0, 50).SafeFireAndForget();
+            this.EndView.TranslateTo(0, 50).SafeFireAndForget();
+            this.BeginView.TranslateTo(0, 0).SafeFireAndForget();
+            this.EndView.TranslateTo(0, 0).SafeFireAndForget();
         }
     }
 }

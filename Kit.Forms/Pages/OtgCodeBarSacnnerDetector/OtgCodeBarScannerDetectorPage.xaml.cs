@@ -20,7 +20,7 @@ namespace Kit.Forms.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            this.Model.Init(this.EnterView);
+            this.Model.Init(BeginView,CenterView,EndView);
         }
     }
 }
