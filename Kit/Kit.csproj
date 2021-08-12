@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Version>1.1.2.0</Version>
     <Authors>Jonathan Eduardo García García</Authors>
@@ -82,8 +82,8 @@
     <PackageReference Include="ZXing.Net" Version="0.16.6">
       <Aliases>SharedZXingNet</Aliases>
     </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.4" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.4" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.0" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.0" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.4" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
