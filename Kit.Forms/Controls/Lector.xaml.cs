@@ -118,6 +118,8 @@ namespace Kit.Forms.Controls
         }
 
         private ZXingScannerPage Page;
+        private INavigation Navigation;
+        private bool IsShell;
         private ICommand _CloseCommand;
         private ICommand CloseCommand => _CloseCommand ??= new Command(Close);
 
@@ -145,34 +147,60 @@ namespace Kit.Forms.Controls
 
         private void Close()
         {
-            if (Shell.Current is not null)
+            if (IsShell)
             {
-                Shell.Current.Navigation.PopAsync();
+                Navigation.PopAsync();
             }
             else
             {
-                Application.Current.MainPage.Navigation.PopModalAsync();
+                Navigation.PopModalAsync();
             }
+           
         }
 
-        private void OpenCamera()
+        private void OnDisappearing(object sender, EventArgs e)
         {
-            MobileBarcodeScanningOptions options = new MobileBarcodeScanningOptions();
-            options.PossibleFormats = this.BarcodeFormats;
-            this.Page = new ZXingScannerPage(options) { Title = "Leector de codigos de barras" };
-            Page.ToolbarItems.Add(new ToolbarItem
+            Page.OnScanResult -= OnScanResult;
+            Page.Disappearing -= OnDisappearing;
+            this.Page.ToolbarItems?.Clear();
+            this.Page = null;
+        }
+        private ZXingScannerPage BuildPage()
+        {
+            this.Page = new ZXingScannerPage(new MobileBarcodeScanningOptions()
+            {
+                PossibleFormats = this.BarcodeFormats
+            })
+            {
+                Title = "Leector de codigos de barras",
+            };
+            this.Page.ToolbarItems.Add(new ToolbarItem()
             {
                 Text = "Cerrar",
                 Command = CloseCommand
             });
             Page.OnScanResult += OnScanResult;
-            if (Shell.Current is not null)
+            Page.Disappearing += OnDisappearing;
+            return this.Page;
+        }
+
+
+        private void OpenCamera()
+        {
+            if (this.Page is not null)
             {
-                Shell.Current.Navigation.PushAsync(Page);
+                return;
+            }
+            this.IsShell = (Shell.Current is not null);
+            this.Navigation = IsShell ? Shell.Current.Navigation : Application.Current.MainPage.Navigation;
+            BuildPage();
+            if (this.IsShell)
+            {
+                this.Navigation.PushAsync(Page);
             }
             else
             {
-                Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
+                this.Navigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
             }
         }
 
@@ -182,7 +210,6 @@ namespace Kit.Forms.Controls
             Device.BeginInvokeOnMainThread(() =>
             {
                 CloseCommand.Execute(this);
-
                 if (string.IsNullOrEmpty(result.Text))
                 {
                     Barcode = null;

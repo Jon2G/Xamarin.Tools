@@ -207,11 +207,11 @@ namespace Kit
             }
             if (desconexion)
             {
-                Log.Logger.Warning($"-->[WARNING!!!] DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
+                Log.Logger.Warning($"DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
             }
             else
             {
-                Log.Logger.Warning($"-->[WARNING!!!] FAKE ERROR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
+                Log.Logger.Warning($"FAKE ERROR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
             }
             return desconexion;
         }

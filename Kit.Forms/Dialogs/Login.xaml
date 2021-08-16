@@ -16,9 +16,8 @@
             <StackLayout HeightRequest="50" BackgroundColor="{Binding TitleBackground}">
                 <Label Text="{Binding Title}"  VerticalOptions="Center" VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand"
-                       FontAttributes="Bold" FontSize="18" TextColor="White"  />
+                       FontAttributes="Bold" FontSize="18" TextColor="White" />
             </StackLayout>
-
 
             <StackLayout Padding="10" Margin="0">
 
@@ -29,8 +28,8 @@
                 <Entry IsPassword="True" Placeholder="{Binding PasswordPlaceholder}" Text="{Binding Password}" />
 
                 <StackLayout Margin="3" Padding="0" Orientation="Horizontal">
-                    <Button Text="{Binding OkText}" HorizontalOptions="FillAndExpand" Clicked="OnOk" Margin="0,5" />
                     <Button Text="{Binding CancelText}" HorizontalOptions="FillAndExpand" Clicked="Cancel" Margin="0,5" />
+                    <Button Text="{Binding OkText}" HorizontalOptions="FillAndExpand" Clicked="OnOk" Margin="0,5" />
                 </StackLayout>
             </StackLayout>
         </StackLayout>
