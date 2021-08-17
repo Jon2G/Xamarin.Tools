@@ -314,8 +314,7 @@ namespace Kit.Forms.Pages
                     new KeyValuePair<SharedZXingNet::ZXing.DecodeHintType, object>(SharedZXingNet::ZXing.DecodeHintType.TRY_HARDER,null)
                    });
             }
-
-            Deserialize(result?.Text);
+            await Deserialize(result?.Text);
         }
 
         private void FromCamera()
@@ -326,8 +325,8 @@ namespace Kit.Forms.Pages
                 {
                     OnCodeReadCommand = new AsyncCommand<string>(Deserialize)
                 };
-                this.Leector.Abrir();
             }
+            this.Leector.Abrir();
         }
 
         private async Task Deserialize(string json)

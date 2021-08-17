@@ -194,14 +194,18 @@ namespace Kit.Forms.Controls
             this.IsShell = (Shell.Current is not null);
             this.Navigation = IsShell ? Shell.Current.Navigation : Application.Current.MainPage.Navigation;
             BuildPage();
-            if (this.IsShell)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                this.Navigation.PushAsync(Page);
-            }
-            else
-            {
-                this.Navigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
-            }
+                if (this.IsShell)
+                {
+                    this.Navigation.PushAsync(Page);
+                }
+                else
+                {
+                    this.Navigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
+                }
+
+            });
         }
 
         private void OnScanResult(Result result)
