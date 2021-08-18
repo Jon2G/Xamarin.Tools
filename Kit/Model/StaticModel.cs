@@ -9,13 +9,16 @@ namespace Kit.Model
     public class StaticModel<T> : ModelBase
     {
         #region GlobalPropertyChanged
-        protected static event PropertyChangedEventHandler GlobalPropertyChanged = delegate { };
+
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+
         protected static void OnGlobalPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            GlobalPropertyChanged(
-                typeof(T),
+            StaticPropertyChanged?.Invoke(
+                null,
                 new PropertyChangedEventArgs(propertyName));
         }
-        #endregion
+
+        #endregion GlobalPropertyChanged
     }
 }

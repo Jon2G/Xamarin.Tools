@@ -149,7 +149,11 @@ namespace Kit
             return data;
         }
 
-        public static DataTable ToTable<T>(this List<T> lista)
+        public static DataTable ToTable<T>(this List<T> lista) => ToTable<T>((IEnumerable<T>)lista);
+
+        public static DataTable ToTable<T>(this IOrderedEnumerable<T> lista) => ToTable<T>((IEnumerable<T>)lista);
+
+        public static DataTable ToTable<T>(this IEnumerable<T> lista)
         {
             Type type = null;
             if (lista.Any())
@@ -166,7 +170,7 @@ namespace Kit
             {
                 data.Columns.Add(col.Name, col.ColumnType);
             }
-            lista.ForEach(v =>
+            foreach (T v in lista)
             {
                 List<object> valores = new List<object>();
                 foreach (var column in map.Columns)
@@ -174,13 +178,8 @@ namespace Kit
                     valores.Add(column.GetValue(v));
                 }
                 data.Rows.Add(valores.ToArray());
-            });
+            }
             return data;
-        }
-
-        public static DataTable ToTable<T>(this IEnumerable<T> lista)
-        {
-            return lista.ToList().ToTable();
         }
 
         public static DataTable ToTable<T>(this ObservableCollection<T> lista)

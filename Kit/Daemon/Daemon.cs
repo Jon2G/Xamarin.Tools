@@ -90,7 +90,7 @@ namespace Kit.Daemon
         internal bool IsSleepRequested
         {
             get;
-            set;
+            private set;
         }
 
         private SyncManager _SyncManager;
