@@ -49,6 +49,7 @@
     <Compile Include="Services\AppDelegate.cs" />
     <Compile Include="Services\BrightnessService.cs" />
     <Compile Include="Services\FolderPermissions.cs" />
+    <Compile Include="Services\ImageCompressService.cs" />
     <Compile Include="Services\ImageResizerService.cs" />
     <Compile Include="Services\PDFSaveAndOpen.cs" />
     <Compile Include="Services\IBarCodeBuilder.cs" />
