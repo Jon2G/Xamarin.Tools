@@ -18,6 +18,29 @@ namespace Kit.Forms.Extensions
         {
             return DependencyService.Get<IImageResizer>().ResizeImage(imageData, width, height);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="imageData"></param>
+        /// <param name="Quality">From 0 to 100</param>
+        /// <returns></returns>
+        public static async Task<FileImageSource> CompressImage(this FileImageSource imageData, int Quality)
+        {
+            await Task.Yield();
+            FileStream file =await CompressImage(imageData.ImageToStream(), Quality);
+            return (FileImageSource)FileImageSource.FromFile(file.Name);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="imageData"></param>
+        /// <param name="Quality">From 0 to 100</param>
+        /// <returns></returns>
+        public static Task<FileStream> CompressImage(Stream imageData, int Quality)
+        {
+            return DependencyService.Get<IImageCompressService>().CompressImage(imageData, Quality);
+        }
         public static ImageSource ByteToImage(this byte[] ByteArray)
         {
             return ImageSource.FromStream(() => new MemoryStream(ByteArray));
