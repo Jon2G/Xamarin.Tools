@@ -109,9 +109,13 @@ namespace Kit.Sql.Helpers
             return value == DBNull.Value || value == null;
         }
 
+        public static T IfNull<T>(object value, T ifnull)
+        {
+            return (T)(IsNull(value) ? ifnull : value);
+        }
         public static object IfNull(object value, object ifnull)
         {
-            return IsNull(value) ? ifnull : value;
+            return IfNull<object>(value, ifnull);
         }
 
         public static T Parse<T>(object obj, T ifnull)
@@ -120,7 +124,6 @@ namespace Kit.Sql.Helpers
             {
                 return ifnull;
             }
-
             return Parse<T>(obj);
         }
 

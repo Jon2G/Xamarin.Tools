@@ -4,6 +4,22 @@ namespace Kit
 {
     public static class DateExtensions
     {
+        public static DateTime MexicoCityCurrentDateTime()
+        {
+            return DateTime.UtcNow.AddHours(-5);
+        }
+
+        /// <summary>
+        /// Gets current time of a time zone no matter if its on a server
+        /// </summary>
+        /// <param name="tzi"></param>
+        /// <returns></returns>
+        public static DateTime CurrentTimeOf(this TimeZoneInfo tzi)
+        {
+            DateTime utcTime = DateTime.UtcNow;
+            return TimeZoneInfo.ConvertTimeFromUtc(utcTime, tzi); // convert from utc to local
+        }
+
         public static DateTime GetNearest(this DayOfWeek day)
         {
             DateTime date = DateTime.Today;

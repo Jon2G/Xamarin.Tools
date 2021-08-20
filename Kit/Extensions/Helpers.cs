@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Kit.Controls.CrossImage;
 
 namespace Kit
 {
@@ -25,6 +26,11 @@ namespace Kit
             }
         }
 
+        public static async Task<string> ToImageString(this CrossImage crossImage)
+        {
+            Stream stream = await crossImage.ToStream();
+            return await stream.ToImageString();
+        }
         public static async Task<string> ToImageString(this Stream stream)
         {
             return ToImageString(await stream.GetByteArray());

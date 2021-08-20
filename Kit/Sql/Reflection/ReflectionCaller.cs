@@ -11,7 +11,7 @@ namespace Kit.Sql.Reflection
     public class ReflectionCaller : IDisposable
     {
         public Assembly Dll { get; private set; }
-        private Type Type;
+        public Type Type { get; private set; }
         private PropertyInfo Property;
 
         public ReflectionCaller()
@@ -67,6 +67,17 @@ namespace Kit.Sql.Reflection
             return this;
         }
 
+        public ReflectionCaller FindType(string TypeName)
+        {
+            foreach (Type type in Dll.GetTypes())
+            {
+                if (type.Name.EndsWith(TypeName))
+                {
+                    Type = type;
+                }
+            }
+            return this;
+        }
         public ReflectionCaller SetType(string TypeName)
         {
             Type = Dll.GetType(TypeName);
