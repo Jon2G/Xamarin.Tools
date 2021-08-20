@@ -79,7 +79,7 @@ namespace Kit.Sql.SqlServer
         {
             var cmd = new SqlCommand(this.CommandText, this._conn.Con());
             cmd.Parameters.AddRange(this.Parameters.ToArray());
-            var reader = new Reader(cmd,this._conn);
+            var reader = new Reader(cmd, this._conn);
             return reader;
         }
 
@@ -117,7 +117,7 @@ namespace Kit.Sql.SqlServer
                     con.Open();
                     using (var cmd = new SqlCommand(this.CommandText, con)
                     {
-                        CommandTimeout=_conn.CommandTimeout
+                        CommandTimeout = _conn.CommandTimeout
                     })
                     {
                         if (this.Parameters.Any())
@@ -169,7 +169,7 @@ namespace Kit.Sql.SqlServer
             {
                 if (Log.IsDBConnectionError(ex))
                 {
-                    Daemon.Daemon.OffLine = false;
+                    Daemon.Daemon.OffLine = true;
                 }
             }
             return result;
