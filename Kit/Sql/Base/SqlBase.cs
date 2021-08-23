@@ -256,6 +256,8 @@ namespace Kit.Sql.Base
             return GetMapping(typeof(T), createFlags);
         }
 
+        public abstract List<T> Lista<T>(string sql) where T : IConvertible;
+
         public abstract TableQuery<T> Table<T>() where T : new();
 
         public abstract BaseTableQuery Table(Type Type);
@@ -314,6 +316,8 @@ namespace Kit.Sql.Base
         /// <param name="TableName">Nombre de la tabla a buscar</param>
         /// <returns>Un booleano que indica si la table existe ó no</returns>
         public abstract bool TableExists(string TableName);
+
+        public abstract bool ViewExists(string viewName);
 
         public bool TableExists<T>() where T : new()
         {

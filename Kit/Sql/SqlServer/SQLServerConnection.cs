@@ -396,7 +396,7 @@ namespace Kit.Sql.SqlServer
             return Lista<T>(sql, CommandType.Text, 0, parameters);
         }
 
-        public List<T> Lista<T>(string sql) where T : IConvertible
+        public override List<T> Lista<T>(string sql)
         {
             return Lista<T>(sql, CommandType.Text, 0);
         }
@@ -535,7 +535,7 @@ namespace Kit.Sql.SqlServer
                 if (cmd.Connection.State != ConnectionState.Open)
                     cmd.Connection.Open();
                 ReportaTransaccion(cmd);
-                return new Reader(cmd,this);
+                return new Reader(cmd, this);
             }
             catch (Exception ex)
             {
@@ -609,6 +609,7 @@ namespace Kit.Sql.SqlServer
         {
             return Exists(sql, GetParameters(parametros));
         }
+
         public bool Exists(string sql, params SqlParameter[] parametros)
         {
             bool result = false;
@@ -1195,9 +1196,15 @@ namespace Kit.Sql.SqlServer
             EXEC($"ALTER DATABASE SCOPED CONFIGURATION SET IDENTITY_CACHE={(enabled ? "ON" : "OFF")};");
         }
 
+        public override bool ViewExists(string viewName)
+        {
+            return Exists($"SELECT name FROM sys.views WHERE name = @ViewName",
+            new SqlParameter("ViewName", viewName));
+        }
+
         public override bool TableExists(string tablename)
         {
-            return Exists($"(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @Tablename)",
+            return Exists($"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @Tablename",
                 new SqlParameter("Tablename", tablename));
         }
 
@@ -1376,7 +1383,6 @@ namespace Kit.Sql.SqlServer
                 {
                     query += " without rowid";
                 }
-
                 Execute(query);
             }
             else
@@ -2853,6 +2859,7 @@ WHERE
             }
             return parameters;
         }
+
         private SqlParameter[] GetParameters(List<object> ps)
         {
             SqlParameter[] parameters = new SqlParameter[ps.Count];

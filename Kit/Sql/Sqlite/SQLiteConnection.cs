@@ -334,7 +334,7 @@ namespace Kit.Sql.Sqlite
             return result;
         }
 
-        public List<T> Lista<T>(string sql) where T : IConvertible
+        public override List<T> Lista<T>(string sql)
         {
             List<T> result = new List<T>();
             using (IReader reader = Read(sql))
@@ -433,12 +433,14 @@ namespace Kit.Sql.Sqlite
             }
         }
 
+        public override bool ViewExists(string viewName)
+        {
+            return Exists($"SELECT name FROM sqlite_master WHERE type='view' AND name='{viewName}'");
+        }
+
         public override bool TableExists(string TableName)
         {
-            using (IReader reader = Read($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';"))
-            {
-                return reader?.Read() ?? false;
-            }
+            return Exists($"SELECT name FROM sqlite_master WHERE type='table' AND name='{TableName}';");
         }
 
         public void Batch(string sql)
@@ -872,7 +874,7 @@ namespace Kit.Sql.Sqlite
                     throw new Exception($"Init table method must be static at {map.TableName}");
                 }
                 Execute(query);
-                InitMethod?.Invoke(null, null);
+                InitMethod?.Invoke(null, new object[] { this });
             }
             else
             {
@@ -2609,7 +2611,7 @@ namespace Kit.Sql.Sqlite
             }
             var q = string.Format("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
 
-            Guid guid_key=Guid.Empty;
+            Guid guid_key = Guid.Empty;
             if (map.SyncMode.Direction != SyncDirection.NoSync)
             {
                 guid_key = ExecuteScalar<Guid>($"SELECT SyncGuid from {map.TableName} where {map.PK.Name}=?",
