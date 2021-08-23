@@ -118,7 +118,7 @@ namespace Kit.Daemon
             }
         }
 
-        public bool Inactive => (FactorDeDescanso >= DaemonConfig.MaxSleep);
+        public bool Inactive => !IsAwake && (FactorDeDescanso >= DaemonConfig.MaxSleep);
         public bool IsInited { get; private set; }
 
         public Daemon SetPackageSize(int PackageSize = Sync.SyncManager.RegularPackageSize)
@@ -296,7 +296,7 @@ namespace Kit.Daemon
                 if (device.IsFirstLaunchTime)
                 {
                     device.IsFirstLaunchTime = false;
-                    //I Have been deleted and reinstalled! :o, so i need to sync everything again...
+                    //I Have been deleted and reinstalled! , so i need to sync everything again...
                     SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
                     SQLHLite.Update(device);
                 }

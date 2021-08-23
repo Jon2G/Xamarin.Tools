@@ -157,11 +157,20 @@ namespace Kit.Daemon.Abstractions
 
         internal bool CheckTriggers(SQLServerConnection Connection)
         {
+            var InitTableAttributetype = typeof(InitTableAttribute);
             foreach (var table in
                 this.DownloadTables.Where(x => x.Value is Kit.Sql.SqlServer.TableMapping
                 && (x.Value.SyncDirection == SyncDirection.Download || x.Value.SyncDirection == SyncDirection.TwoWay)))
             {
-                Trigger.CheckTrigger(Connection, table.Value, Daemon.Current.DaemonConfig.DbVersion);
+                var map = table.Value;
+                Trigger.CheckTrigger(Connection, map, Daemon.Current.DaemonConfig.DbVersion);
+                var InitMethod = map.MappedType.GetMethods()
+                      .Where(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()).FirstOrDefault();
+                if (InitMethod is not null && !InitMethod.IsStatic)
+                {
+                    throw new Exception($"Init table method must be static at {map.TableName}");
+                }
+                InitMethod?.Invoke(null, new object[] { Connection });
             }
 
             return true;
