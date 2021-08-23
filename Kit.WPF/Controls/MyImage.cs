@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Kit;
 
-using Kit;
 
 namespace Kit.WPF.Controls
 {

@@ -13,6 +13,7 @@ using Kit.Droid.Services;
 using Kit.Services.Interfaces;
 using Serilog;
 using Android.Telephony;
+using Kit.Extensions;
 using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
 using Kit.Forms.Extensions;
@@ -20,12 +21,12 @@ using Kit.Forms.Services.Interfaces;
 
 namespace Kit.Droid
 {
-    public class ToolsImplementation :AbstractTools
+    public class ToolsImplementation : AbstractTools
     {
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.Android;
         public MainActivity MainActivity { get; private set; }
-     
-        public static Kit.Droid.ToolsImplementation Instance => Tools.Instance as Kit.Droid.ToolsImplementation;
+
+        public new static ToolsImplementation Instance => Kit.Tools.Instance as ToolsImplementation;
 
         public void Init(MainActivity MainActivity)
         {
@@ -42,6 +43,8 @@ namespace Kit.Droid
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()
+                //Log to my sink logger
+                .WriteTo.Async(x => x.Sink(Log.LogsSink))
                 // Enrich each log entry with memory usage and thread ID
                 // .Enrich.WithMemoryUsage()
                 //.Enrich.WithThreadId()

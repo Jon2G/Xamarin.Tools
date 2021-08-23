@@ -22,7 +22,6 @@ namespace Kit.Forms.Dictionaries
             if(Application.Current.Resources["ToolbarDynamicColor"] is null)
             {
                 throw new MissingMemberException("¿Are you missing merged SylesDictionary on App?");
-                return;
             }
             Application.Current.Resources["ToolbarDynamicColor"]
                  = Kit.Daemon.Daemon.OffLine ?

@@ -7,7 +7,6 @@ using Kit.Forms.Services.Interfaces;
 using UIKit;
 using System.Drawing;
 using System.IO;
-using UIKit;
 using CoreGraphics;
 using System.Threading.Tasks;
 using Kit.iOS.Services;
@@ -16,7 +15,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageResizerService))]
 namespace Kit.iOS.Services
 {
-    public class ImageResizerService : IImageResizer
+    public class ImageResizerService : Kit.Forms.Services.Interfaces.IImageResizer
     {
         public static UIKit.UIImage ImageFromByteArray(Stream data)
         {

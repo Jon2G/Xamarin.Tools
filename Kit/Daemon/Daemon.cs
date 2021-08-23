@@ -193,7 +193,7 @@ namespace Kit.Daemon
                 IsBackground = true,
                 Priority = ThreadPriority.BelowNormal
             };
-            Thread.SetApartmentState(ApartmentState.STA);
+            Thread.TrySetApartmentState(ApartmentState.STA);
             Thread.Start();
         }
 
@@ -220,7 +220,7 @@ namespace Kit.Daemon
             await Sleep();
             WaitHandle.Close();
             WaitHandle.Dispose();
-            Thread.Abort();
+            //Thread.Abort();
             Thread = null;
             WaitHandle = null;
             Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);

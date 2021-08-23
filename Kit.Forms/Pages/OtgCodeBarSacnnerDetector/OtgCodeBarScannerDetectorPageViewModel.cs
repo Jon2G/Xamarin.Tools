@@ -46,7 +46,7 @@ namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
             this.BeginView = BeginView;
             this.CenterView = CenterView;
             this.EndView = EndView;
-            IKeyboardListenerService = new Services.IKeyboardListenerService(ReadCode, ReadCharacter, IsEnabled: true);
+            IKeyboardListenerService = new Services.IKeyboardListenerService((e, s) => ReadCode(e, s).SafeFireAndForget(), ReadCharacter, IsEnabled: true);
             IKeyboardListenerService.OnKeyboardPluggedInChanged += this.ListenerService_OnKeyboardPluggedInChanged;
             ListenerService_OnKeyboardPluggedInChanged(IKeyboardListenerService, EventArgs.Empty);
         }
@@ -58,8 +58,9 @@ namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
                 "Por favor conecte su lector de código de barras";
         }
 
-        private async void ReadCode(object sender, string Code)
+        private async Task ReadCode(object sender, string Code)
         {
+            await Task.Yield();
             this.Code = Code;
             this.CenterView.TranslateTo(0, 50).SafeFireAndForget();
             this.CenterView.TranslateTo(0, 0).SafeFireAndForget();

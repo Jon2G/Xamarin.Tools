@@ -28,12 +28,9 @@ namespace Kit.Forms.Pages
         public BasePopUp()
         {
             this.ShowDialogCallback = new AutoResetEvent(false);
-            this.BackgroundClickedCommand = new Command(BackgroundClicked);
         }
 
-        private void BackgroundClicked()
-        {
-        }
+      
 
         protected void InvokeConfirmado(object sender, EventArgs e)
         {

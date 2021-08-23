@@ -21,8 +21,8 @@ namespace Kit.Droid.Services
         {
             await Task.Yield();
 
-            View? rootView = CrossCurrentActivity.Current.Activity.Window.DecorView.RootView;
-            using (Bitmap? screenshot = Android.Graphics.Bitmap.CreateBitmap(
+            View rootView = CrossCurrentActivity.Current.Activity.Window.DecorView.RootView;
+            using (Bitmap screenshot = Android.Graphics.Bitmap.CreateBitmap(
                 rootView.Width,
                 rootView.Height,
                 Android.Graphics.Bitmap.Config.Argb8888))

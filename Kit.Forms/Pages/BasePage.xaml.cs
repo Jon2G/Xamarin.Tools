@@ -191,9 +191,9 @@ namespace Kit.Forms.Pages
         }
 
         #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public new event PropertyChangedEventHandler PropertyChanged;
         //[Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }

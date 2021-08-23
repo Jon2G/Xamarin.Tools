@@ -504,7 +504,7 @@ namespace Kit.Sql.SqlServer
                     {
                         ReportaTransaccion(cmd);
                         Log.Logger.Error(ex, "");
-                        throw ex;
+                        throw;
                     }
                 }
                 con.Close();
@@ -543,7 +543,7 @@ namespace Kit.Sql.SqlServer
                 Log.Logger.Error(sql);
                 if (!Log.AlertOnDBConnectionError(ex) && Tools.Debugging)
                 {
-                    throw ex;
+                    throw;
                 }
                 this.LastException = ex;
                 return new FakeReader();
@@ -588,11 +588,11 @@ namespace Kit.Sql.SqlServer
                     ReportaTransaccion(cmd);
                 return await new Reader().AsyncReader(cmd);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (Tools.Debugging)
                 {
-                    throw ex;
+                    throw;
                 }
                 Log.Logger.Error("Transaccion fallida reportada");
                 Log.Logger.Error(GetCommandText(cmd));
@@ -2685,12 +2685,12 @@ WHERE
                         count = insertCmd.ExecuteNonQuery(parameters);
                     }
                 }
-                catch (SqlServerException ex)
+                catch (SqlServerException)
                 {
                     //if (SQLite3.ExtendedErrCode (this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull) {
                     //	throw NotNullConstraintViolationException.New (ex.Result, ex.Message, map, obj);
                     //}
-                    throw ex;
+                    throw;
                 }
             }
             if (!shouldnotify && obj is ISync isync)
@@ -2819,9 +2819,9 @@ WHERE
             {
                 rowsAffected = Execute(q, ps.DistinctBy(x => x.ParameterName).ToArray());
             }
-            catch (SqlServerException ex)
+            catch (SqlServerException)
             {
-                throw ex;
+                throw;
             }
 
             if (shouldnotify && rowsAffected > 0)
@@ -2937,13 +2937,13 @@ WHERE
             {
                 rowsAffected = Execute(q, parmeters.ToArray());
             }
-            catch (SqlServerException ex)
+            catch (SqlServerException)
             {
                 //if (ex.Result == SQLite3.Result.Constraint && SQLite3.ExtendedErrCode (this.Handle) == SQLite3.ExtendedResult.ConstraintNotNull) {
                 //	throw NotNullConstraintViolationException.New (ex, map, obj);
                 //}
 
-                throw ex;
+                throw;
             }
 
             if (shouldnotify && rowsAffected > 0)
@@ -3012,9 +3012,9 @@ WHERE
             {
                 rowsAffected = Execute(q, GetParameters(ps));
             }
-            catch (SqlServerException ex)
+            catch (SqlServerException)
             {
-                throw ex;
+                throw;
             }
 
             if (shouldnotify && rowsAffected > 0)
@@ -3262,9 +3262,9 @@ WHERE
                         Connection.Close();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    throw;
                 }
             }
         }

@@ -19,11 +19,11 @@ namespace Kit.Forms.Services
                 Console.WriteLine($"CapturePhotoAsync COMPLETED: {file}");
                 return file;
             }
-            catch (FeatureNotSupportedException fnsEx)
+            catch (FeatureNotSupportedException)
             {
                 // Feature is now supported on the device
             }
-            catch (PermissionException pEx)
+            catch (PermissionException)
             {
                 // Permissions not granted
             }

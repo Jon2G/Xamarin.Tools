@@ -154,7 +154,7 @@ namespace Kit.Sql.Reflection
         {
             if (Enconding is null)
             {
-                Enconding = Encoding.UTF7;
+                Enconding = Encoding.UTF8;
             }
             string text = null;
             using (StreamReader reader = new System.IO.StreamReader(stream, Enconding))

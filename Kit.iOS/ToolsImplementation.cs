@@ -39,6 +39,8 @@ namespace Kit.iOS
                 .WriteTo.NSLog()
                 // Create a custom logger in order to set another limit,
                 // particularly, any logs from Information level will also be written into a rolling file
+
+                .WriteTo.Async(x => x.Sink(Kit.Log.LogsSink))
                 .WriteTo.Logger(config =>
                     config
                         .MinimumLevel.Information()

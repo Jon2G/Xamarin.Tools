@@ -118,7 +118,7 @@ namespace Kit.Forms.Controls
         }
 
         private ZXingScannerPage Page;
-        private INavigation Navigation;
+        private INavigation INavigation;
         private bool IsShell;
         private ICommand _CloseCommand;
         private ICommand CloseCommand => _CloseCommand ??= new Command(Close);
@@ -149,11 +149,11 @@ namespace Kit.Forms.Controls
         {
             if (IsShell)
             {
-                Navigation.PopAsync();
+                INavigation.PopAsync();
             }
             else
             {
-                Navigation.PopModalAsync();
+                INavigation.PopModalAsync();
             }
            
         }
@@ -192,17 +192,17 @@ namespace Kit.Forms.Controls
                 return;
             }
             this.IsShell = (Shell.Current is not null);
-            this.Navigation = IsShell ? Shell.Current.Navigation : Application.Current.MainPage.Navigation;
+            this.INavigation = IsShell ? Shell.Current.Navigation : Application.Current.MainPage.Navigation;
             BuildPage();
             Device.BeginInvokeOnMainThread(() =>
             {
                 if (this.IsShell)
                 {
-                    this.Navigation.PushAsync(Page);
+                    this.INavigation.PushAsync(Page);
                 }
                 else
                 {
-                    this.Navigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
+                    this.INavigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
                 }
 
             });

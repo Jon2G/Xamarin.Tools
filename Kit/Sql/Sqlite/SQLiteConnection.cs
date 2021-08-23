@@ -2329,7 +2329,7 @@ namespace Kit.Sql.Sqlite
                     throw NotNullConstraintViolationException.New(ex, Table, obj);
                 }
 
-                throw ex;
+                throw;
             }
 
             if (shouldnotify && rowsAffected > 0)
@@ -2410,7 +2410,7 @@ namespace Kit.Sql.Sqlite
                     throw NotNullConstraintViolationException.New(ex, table.Table, obj);
                 }
 
-                throw ex;
+                throw;
             }
 
             if (shouldnotify && rowsAffected > 0)
@@ -2498,7 +2498,7 @@ namespace Kit.Sql.Sqlite
                     throw NotNullConstraintViolationException.New(ex, map, obj);
                 }
 
-                throw ex;
+                throw;
             }
 
             if (shouldnotify && rowsAffected > 0)

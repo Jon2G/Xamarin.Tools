@@ -37,7 +37,7 @@ namespace Kit.License
         private readonly IDialogs Dialogs;
 
         private ICommand _LogInCommand;
-        public ICommand LogInCommand => _LogInCommand ?? new AsyncCommand(LogIn);
+        public ICommand LogInCommand => _LogInCommand ??= new AsyncCommand(LogIn);
 
         public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs)
         {

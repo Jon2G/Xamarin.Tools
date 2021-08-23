@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
-using Serilog.Core;
+using Kit.Extensions;
 
 namespace Kit
 {
@@ -63,7 +63,8 @@ namespace Kit
             }
             private set => _Current = value;
         }
-
+        public LogsSink _LogsSink { get; private set; }
+        public static LogsSink LogsSink => Current._LogsSink;
         public Log()
         {
         }
@@ -79,7 +80,8 @@ namespace Kit
             Current = new Log()
             {
                 LoggerPath = Path.Combine(logDirectory.FullName, "log.log"),
-                CriticalLoggerPath = Path.Combine(logDirectory.FullName, "critcal_log.log")
+                CriticalLoggerPath = Path.Combine(logDirectory.FullName, "critcal_log.log"),
+                _LogsSink = new LogsSink()
             };
             return Current;
         }
