@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Kit;
 
-
 namespace Kit.WPF.Controls
 {
     public class MyImage : System.Windows.Controls.Image
@@ -82,13 +81,12 @@ namespace Kit.WPF.Controls
             get
             {
                 byte[] bytes = null;
-                BitmapSource bitmapSource = Source as BitmapSource;
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                if (bitmapSource != null)
+                PngBitmapEncoder encoder = new ();
+                if (Source is BitmapSource bitmapSource)
                 {
                     encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
 
-                    using (MemoryStream stream = new MemoryStream())
+                    using (MemoryStream stream = new ())
                     {
                         encoder.Save(stream);
                         bytes = stream.ToArray();
@@ -143,8 +141,8 @@ namespace Kit.WPF.Controls
                     {
                         return null;
                     }
-                    Controls.CrossImage.CrossImage cross = new Controls.CrossImage.CrossImage();
-                    BitmapImage image = new BitmapImage();
+                    Controls.CrossImage.CrossImage cross = new ();
+                    BitmapImage image = new ();
                     image.BeginInit();
                     //image.CacheOption = BitmapCacheOption.Default;
                     image.UriSource = new Uri(file);

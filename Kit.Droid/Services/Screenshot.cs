@@ -27,10 +27,10 @@ namespace Kit.Droid.Services
                 rootView.Height,
                 Android.Graphics.Bitmap.Config.Argb8888))
             {
-                Canvas canvas = new Canvas(screenshot);
+                Canvas canvas = new (screenshot);
                 rootView.Draw(canvas);
 
-                using (MemoryStream stream = new MemoryStream())
+                using (MemoryStream stream = new ())
                 {
                     screenshot.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 90, stream);
                     return stream.ToArray();
