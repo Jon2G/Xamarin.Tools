@@ -37,7 +37,8 @@ namespace Kit.Services.Interfaces
                 //    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
                 //}
                 DeviceIdBuilder builder = new DeviceIdBuilder();
-                builder.AddProcessorId();
+                builder.AddMacAddress()
+                    .AddMachineName();
                 return string.Concat(id ?? string.Empty, builder.ToString());
             }
         }

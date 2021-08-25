@@ -58,18 +58,18 @@
     <EmbeddedResource Remove="Dialogs\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="5.5.0-alpha0068">
+    <PackageReference Include="Costura.Fody" Version="5.5.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DeviceId" Version="5.3.0" />
+    <PackageReference Include="DeviceId" Version="6.0.0" />
     <PackageReference Include="Fody" Version="6.5.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1-dev-00876" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.1-dev-00780" />
     <PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
