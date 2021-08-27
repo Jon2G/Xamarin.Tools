@@ -82,12 +82,12 @@
     <PackageReference Include="ZXing.Net" Version="0.16.6">
       <Aliases>SharedZXingNet</Aliases>
     </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.4" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.4" />
-    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.4" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.5" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.5" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.5" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.114.4" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">
