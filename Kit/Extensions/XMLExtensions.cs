@@ -29,7 +29,7 @@ namespace Kit
 
         public static string SerializeObject<T>(this T toSerialize)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
 
             using (StringWriter textWriter = new StringWriter())
             {

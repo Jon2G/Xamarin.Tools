@@ -112,5 +112,30 @@ namespace Kit
                     throw new ArgumentException();
             }
         }
+
+
+
+        /// <summary>
+        /// Devuelve un saludo según la hora indicada.
+        /// 00:00-11:59 Buenos días
+        /// 12:00-18:59 Buenas tardes
+        /// 19:00-23:59 Buenas noches
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static string Saludo(this DateTime date)
+        {
+            int hora = date.Hour;
+            int minutos = date.Minute;
+            if (hora <= 11 && minutos <= 59)//todas las horas menores a las 11:59
+            {
+                return "Buenas días";
+            }
+            if (hora <= 18 && minutos <= 59)
+            {
+                return "Buenas tardes";
+            }
+            return "Buenas noches";
+        }
     }
 }

@@ -51,6 +51,7 @@
     <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.0" />
     <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.0" />
     <PackageReference Include="Forms9Patch" Version="2.4.9" />
+    <PackageReference Include="FreshMvvm" Version="4.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.IO" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.JPEGCodec" Version="1.0.1" />
