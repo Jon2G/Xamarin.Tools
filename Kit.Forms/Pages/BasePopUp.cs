@@ -13,34 +13,12 @@ namespace Kit.Forms.Pages
 {
     public class BasePopUp : PopupPage
     {
-        public ICommand ConfirmedCommand;
-
-        [Obsolete("Use ConfirmedCommand")]
-        public event EventHandler Confirmado;
-
         public ICommand ClosedCommad;
-
-        [Obsolete("Use ClosedCommad")]
-        public event EventHandler OnClosed;
-
         private readonly AutoResetEvent ShowDialogCallback;
 
         public BasePopUp()
         {
             this.ShowDialogCallback = new AutoResetEvent(false);
-        }
-
-      
-
-        protected void InvokeConfirmado(object sender, EventArgs e)
-        {
-            Confirmado?.Invoke(sender, e);
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            Confirmado?.Invoke(this, null);
         }
 
         public virtual async Task<BasePopUp> ShowDialog()
@@ -62,21 +40,11 @@ namespace Kit.Forms.Pages
             return this;
         }
 
-        public virtual async void Confirm(object obj = null, bool close = true)
-        {
-            ConfirmedCommand?.Execute(obj ?? this);
-            if (close)
-            {
-                await Close();
-            }
-        }
-
         public virtual async Task<BasePopUp> Close()
         {
             Closing();
             await PopupNavigation.Instance.RemovePageAsync(this, true);
             this.ShowDialogCallback.Set();
-            OnClosed?.Invoke(this, EventArgs.Empty);
             ClosedCommad?.Execute(this);
             return this;
         }
