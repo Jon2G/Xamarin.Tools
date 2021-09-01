@@ -48,10 +48,13 @@ namespace Kit.Daemon
                 {
                     _OffLine = value;
                     OnGlobalPropertyChanged();
+                    Current.OnPropertyChanged(nameof(ISOffline));
                     Current.OnConnectionStateChanged?.Execute(Current);
                 }
             }
         }
+
+        public bool ISOffline => OffLine;
 
         private static Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
 
