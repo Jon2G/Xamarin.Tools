@@ -37,7 +37,13 @@ namespace Kit.Forms.Controls
         public new Color BackgroundColor
         {
             get => ColorBackground;
-            set => ColorBackground = value;
+            set
+            {
+                SetValue(BackgroundColorProperty, Color.Transparent);
+                SetValue(ColorBackgroundProperty, value);
+                ColorBackground = value;
+                OnPropertyChanged();
+            }
         }
 
         public Color ColorBackground
