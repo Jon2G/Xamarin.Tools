@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Kit.Controls.CrossBrush
+﻿namespace Kit.Controls.CrossBrush
 {
     public class GradientStop<C> where C : Color,new()
     {

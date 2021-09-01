@@ -6,12 +6,11 @@ namespace Kit.Forms.Converters
 {
     public class IsEqualConverter : IValueConverter
     {
-        public static readonly IValueConverter Instance = new IsEqualConverter();
         public bool IsReversed { get; set; }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return IsReversed ? !value.Equals(parameter) : (object)value.Equals(parameter);
+            bool r = value.Equals(parameter);
+            return IsReversed ? !r : r;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

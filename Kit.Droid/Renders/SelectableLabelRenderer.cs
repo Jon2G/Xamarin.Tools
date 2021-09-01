@@ -2,9 +2,6 @@
 using Android.Views;
 using Kit.Droid.Renders;
 using Kit.Forms.Controls;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 

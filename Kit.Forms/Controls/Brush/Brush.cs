@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Kit.Controls.CrossBrush;
-using Kit;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.Brush

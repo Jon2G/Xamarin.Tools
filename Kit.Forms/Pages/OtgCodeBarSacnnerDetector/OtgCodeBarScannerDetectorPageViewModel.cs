@@ -2,10 +2,7 @@
 using Kit.Forms.Services;
 using Kit.Model;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Forms9Patch;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector

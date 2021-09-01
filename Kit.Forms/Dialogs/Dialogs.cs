@@ -1,8 +1,5 @@
 ﻿using Kit.Dialogs;
 using Kit.Forms.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 

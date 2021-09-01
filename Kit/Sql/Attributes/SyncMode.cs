@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Kit.Enums;
 using Kit.Sql.Enums;
 
 namespace Kit.Sql.Attributes

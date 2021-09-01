@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using Kit.Daemon.Devices;
 using Kit.Dialogs;
 using Kit.Enums;
 using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
-using Serilog;
 
 namespace Kit
 {

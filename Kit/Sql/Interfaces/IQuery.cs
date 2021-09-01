@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Kit.Sql.Base;
 
 namespace Kit.Sql.Interfaces

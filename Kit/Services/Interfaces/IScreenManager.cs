@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Kit.Enums;
+﻿using Kit.Enums;
 
 namespace Kit.Services.Interfaces
 {

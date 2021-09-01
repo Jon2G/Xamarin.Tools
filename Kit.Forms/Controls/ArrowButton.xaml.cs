@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using FFImageLoading;
-using Forms9Patch;
-using Kit;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.Xaml;
 using ContentView = Xamarin.Forms.ContentView;
 using ImageSource = Xamarin.Forms.ImageSource;

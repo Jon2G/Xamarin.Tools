@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Windows;
 
 // Si establece ComVisible en false, los tipos de este ensamblado no estarán visibles 

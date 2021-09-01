@@ -1,14 +1,8 @@
 ﻿using Kit.Forms.Extensions;
 using Kit.Services.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Kit.Forms.Services.Interfaces;
-using Plugin.Media;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

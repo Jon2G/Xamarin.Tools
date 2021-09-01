@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using System.Text;
 
 namespace Kit.Sql.Base

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content.PM;
@@ -10,9 +6,7 @@ using Android.OS;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Application = Android.App.Application;
 using Kit.Droid.Services;
-using Serilog;
 
 namespace Kit.Droid
 {

@@ -1,14 +1,9 @@
 ﻿using Android.Graphics;
 using Plugin.CurrentActivity;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Kit.Droid.Services;
 using Kit.Services.Interfaces;
-using Xamarin.Forms;
 using Bitmap = Android.Graphics.Bitmap;
 using View = Android.Views.View;
 

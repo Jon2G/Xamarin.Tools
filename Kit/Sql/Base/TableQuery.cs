@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Kit;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;

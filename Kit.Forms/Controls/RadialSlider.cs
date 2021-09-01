@@ -2,9 +2,7 @@
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 using System.ComponentModel;
-using System.Windows.Input;
 
 namespace Kit.Forms.Controls
 {

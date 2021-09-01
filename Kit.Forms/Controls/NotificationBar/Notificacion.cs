@@ -1,7 +1,4 @@
-﻿using Kit;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Windows.Input;
 using Kit.Model;
 using Xamarin.Forms;

@@ -1,21 +1,13 @@
-﻿using Kit.Sql;
-using Stimulsoft.Base.Drawing;
-using Stimulsoft.Report;
-using Stimulsoft.Report.Components;
+﻿using Stimulsoft.Report;
 using Stimulsoft.Report.Export;
 using Stimulsoft.Report.Print;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Kit.WPF.Reportes

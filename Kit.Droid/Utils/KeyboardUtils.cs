@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using Android.App;
+﻿using Android.App;
 using Android.Graphics;
 using Android.Views;
 using Android.Views.InputMethods;
-using Java.Lang;
-using Boolean = System.Boolean;
 using System;
 using Android.Content;
 using Java.Interop;

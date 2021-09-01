@@ -1,8 +1,5 @@
-﻿using Kit.Sql;
-using Kit.Sql.Helpers;
+﻿using Kit.Sql.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Kit.Daemon.Abstractions
 {

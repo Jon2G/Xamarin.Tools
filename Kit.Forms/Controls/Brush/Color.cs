@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.Forms.Controls.Brush
+﻿namespace Kit.Forms.Controls.Brush
 {
     public class Color : Kit.Controls.CrossBrush.Color
     {

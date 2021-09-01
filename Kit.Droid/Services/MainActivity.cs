@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
@@ -12,9 +11,7 @@ using FFImageLoading.Forms.Platform;
 using Kit.Forms.Services;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
-using Java.Lang;
 using Kit.Droid.Services;
-using Kit.Forms.Services.Interfaces;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]

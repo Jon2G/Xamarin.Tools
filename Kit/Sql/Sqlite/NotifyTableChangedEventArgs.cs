@@ -1,5 +1,4 @@
 using System;
-using Kit.Sql.Base;
 using Kit.Sql.Enums;
 
 namespace Kit.Sql.Sqlite

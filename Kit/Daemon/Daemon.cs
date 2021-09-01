@@ -1,33 +1,21 @@
-﻿using Kit.Sql;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kit.Daemon.Abstractions;
 using Kit.Daemon.Devices;
-using Kit.Enums;
-using Kit.Services.Interfaces;
 using Kit.Daemon.Enums;
 using Kit.Daemon.Sync;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
-using Kit.Sql.Interfaces;
-using Kit.Sql.Helpers;
-using Kit.Sql.Reflection;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
-using TableMapping = Kit.Sql.Base.TableMapping;
 using System.Windows.Input;
-using Kit;
 
 namespace Kit.Daemon
 {

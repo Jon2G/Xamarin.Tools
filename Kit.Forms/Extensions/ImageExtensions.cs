@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Kit;
 using Kit.Forms.Services.Interfaces;
 using Xamarin.Forms;
 

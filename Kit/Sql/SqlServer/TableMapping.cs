@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
 using Kit.Sql.Enums;
 
 namespace Kit.Sql.SqlServer

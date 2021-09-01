@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using Kit.Services.Interfaces;
 using Kit.Sql.Attributes;
-using Kit.Sql.Helpers;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 
