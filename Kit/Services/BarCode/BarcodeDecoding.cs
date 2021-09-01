@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using ImageProcessing.JPEGCodec;
 using ImageProcessing.PNGCodec;
 using ImageProcessing.TGACodec;

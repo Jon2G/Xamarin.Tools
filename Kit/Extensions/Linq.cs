@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Kit.Sql.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using Kit.Sql.Base;
 
 namespace Kit
 {

@@ -6,8 +6,6 @@
 
 namespace Kit.WPF.Dialogs.ICustomMessageBox
 {
-    using Kit.Sql;
-    using System;
     using System.Windows;
 
     using Kit.Enums;

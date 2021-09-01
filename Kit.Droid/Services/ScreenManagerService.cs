@@ -1,9 +1,6 @@
 ﻿using Android.App;
 using Android.Views;
 using Kit.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Kit.Services.Interfaces;
 
 namespace Kit.Droid.Services

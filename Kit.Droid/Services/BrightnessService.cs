@@ -1,9 +1,6 @@
 ﻿using Android.Views;
 using Kit.Services.Interfaces;
 using Plugin.CurrentActivity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Kit.Droid.Services;
 using Xamarin.Forms;
 

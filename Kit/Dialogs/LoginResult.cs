@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.Dialogs
+﻿namespace Kit.Dialogs
 {
     public class LoginResult
     {

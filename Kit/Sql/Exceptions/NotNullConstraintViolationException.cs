@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Kit.Sql.Base;
 using Kit.Sql.Sqlite;
 
 namespace Kit.Sql.Exceptions

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
 using static Kit.Sql.Base.BaseOrm;
 
 namespace Kit.Sql.Sqlite

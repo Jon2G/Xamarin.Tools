@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using Kit.Sql.Base;
 using Kit.Sql.Helpers;
 using Kit.Sql.Readers;

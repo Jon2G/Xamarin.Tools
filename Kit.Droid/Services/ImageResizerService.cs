@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
 using Xamarin.Forms;

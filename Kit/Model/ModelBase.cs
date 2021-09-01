@@ -1,7 +1,4 @@
-﻿using Kit.Sql.Attributes;
-using System;
-using System.ComponentModel;
-using System.Linq.Expressions;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;

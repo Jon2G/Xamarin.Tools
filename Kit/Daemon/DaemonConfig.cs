@@ -1,10 +1,4 @@
 ﻿using Kit.Daemon.Enums;
-using Kit.Sql;
-using Kit.Sql.Helpers;
-using Kit.Sql.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Kit.Sql.Base;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;

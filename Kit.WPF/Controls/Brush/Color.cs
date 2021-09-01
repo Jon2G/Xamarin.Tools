@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using Color = System.Windows.Media.Color;
-namespace Kit.WPF.Controls.Brush
+﻿namespace Kit.WPF.Controls.Brush
 {
     public class Color : Kit.Controls.CrossBrush.Color
     {

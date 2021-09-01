@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Text;
-using Kit.Sql.Base;
 using SQLitePCL;
 
 namespace Kit.Sql.Sqlite

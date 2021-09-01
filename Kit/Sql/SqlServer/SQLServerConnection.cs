@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kit.Daemon.Sync;
-using Kit;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;

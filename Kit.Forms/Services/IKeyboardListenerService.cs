@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Forms9Patch;
 using Kit.Forms.Extensions;
 using Kit.Model;
-using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
 
 namespace Kit.Forms.Services
 {

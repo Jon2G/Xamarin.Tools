@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.Forms.Services.Interfaces
+﻿namespace Kit.Forms.Services.Interfaces
 {
     public interface IKeyboardService : Forms9Patch.IKeyboardService
     {

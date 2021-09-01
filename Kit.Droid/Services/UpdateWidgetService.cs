@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using Kit.Droid.Services;
+﻿using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
 using Kit.Sql.Reflection;
 using Plugin.CurrentActivity;

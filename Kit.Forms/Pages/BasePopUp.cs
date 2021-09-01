@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
-using Xamarin.Forms;
-using Command = Kit.Extensions.Command;
 
 namespace Kit.Forms.Pages
 {

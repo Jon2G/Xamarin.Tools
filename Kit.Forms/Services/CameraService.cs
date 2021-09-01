@@ -2,9 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Kit.Enums;
-using Kit.Forms.Services.Interfaces;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace Kit.Forms.Services
 {

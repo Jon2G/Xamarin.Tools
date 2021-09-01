@@ -1,7 +1,4 @@
 ﻿using Kit.Forms.Fonts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Views

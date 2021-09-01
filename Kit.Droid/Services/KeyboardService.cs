@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Android.Content;
+﻿using Android.Content;
 using Android.Views.InputMethods;
 using Kit.Droid.Services;
 using Kit.Droid.Utils;

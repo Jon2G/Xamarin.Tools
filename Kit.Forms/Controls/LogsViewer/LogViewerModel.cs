@@ -1,5 +1,4 @@
 ﻿using Kit.Extensions;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Kit.Forms.Controls.LogsViewer

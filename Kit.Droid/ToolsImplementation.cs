@@ -1,23 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using Android.App;
-using Android.Util;
-using Android.Views;
 using Kit.Enums;
-using Xamarin.Essentials;
-using Xamarin.Forms;
-using Kit.Services;
 using Kit.Droid.Services;
-using Kit.Services.Interfaces;
 using Serilog;
-using Android.Telephony;
-using Kit.Extensions;
-using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Services;
-using Kit.Forms.Extensions;
-using Kit.Forms.Services.Interfaces;
 
 namespace Kit.Droid
 {

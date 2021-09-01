@@ -1,9 +1,5 @@
 ﻿using FFImageLoading.Forms;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Kit.Forms.Extensions;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls

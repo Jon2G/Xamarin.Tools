@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Kit.Forms.Fonts;
+﻿using Kit.Forms.Fonts;
 using Xamarin.Forms;
 
 [assembly: ExportFont("kiticons_4.ttf", Alias = FontelloIcons.Font)]

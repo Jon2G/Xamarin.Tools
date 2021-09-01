@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.Controls.CrossBrush
+﻿namespace Kit.Controls.CrossBrush
 {
     public abstract class Color
     {

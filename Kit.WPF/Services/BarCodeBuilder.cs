@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Kit.Services.BarCode;
-using Kit.Services.Interfaces;
 using ZXing;
 using ZXing.Common;
 using ZXing.Rendering;

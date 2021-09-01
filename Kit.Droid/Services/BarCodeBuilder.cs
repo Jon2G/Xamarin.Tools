@@ -3,7 +3,6 @@ using System.IO;
 using Android.Graphics;
 using Kit.Droid.Services;
 using Kit.Services.BarCode;
-using Kit.Services.Interfaces;
 using Xamarin.Forms;
 using ZXing;
 using ZXing.Android;

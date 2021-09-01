@@ -2,7 +2,6 @@
 using Android.OS;
 using Android.Print;
 using Java.IO;
-using Kit.Sql;
 
 namespace Kit.Droid.Services
 {

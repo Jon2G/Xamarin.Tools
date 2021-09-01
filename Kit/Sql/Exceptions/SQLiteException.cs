@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Kit.Sql.Sqlite;
 
 namespace Kit.Sql.Exceptions

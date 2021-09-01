@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Kit.SetUpConnectionString;
-using Kit.Sql.Base;
 using Kit.Sql.Enums;
 using Kit.Sql.Readers;
-using Kit.Sql.Sqlite;
 using Kit.Sql.Tables;
 using TableMapping = Kit.Sql.Base.TableMapping;
 

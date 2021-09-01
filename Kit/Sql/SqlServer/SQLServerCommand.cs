@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Base;
-using Kit.Sql.Helpers;
 using Kit.Sql.Readers;
 using SQLitePCL;
 
