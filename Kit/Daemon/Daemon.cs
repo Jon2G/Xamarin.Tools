@@ -16,6 +16,7 @@ using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using System.Windows.Input;
+using AsyncAwaitBestPractices;
 
 namespace Kit.Daemon
 {
@@ -173,12 +174,15 @@ namespace Kit.Daemon
             }
 
             WaitHandle = new ManualResetEvent(false); //new AutoResetEvent(true);
-            Thread = new Thread(() =>
+            Thread = new Thread(async () =>
             {
                 IsAwake = true;
-                Start();
+                bool result = await Start();
                 IsSleepRequested = false;
                 IsAwake = false;
+                WaitHandle.Dispose();
+                WaitHandle = null;
+                Log.Logger.Information("Daemon thread has been finished , result {0}", result);
             })
             {
                 IsBackground = true,
@@ -203,7 +207,12 @@ namespace Kit.Daemon
                 Run();
                 return;
             }
+            WaitHandle.Reset();
             WaitHandle.Set();
+            while (!IsAwake)
+            {
+                Awake();
+            }
         }
 
         public async Task Destroy()
@@ -304,8 +313,9 @@ namespace Kit.Daemon
             Daemon.OffLine = true;
         }
 
-        private async void Start()
+        private async Task<bool> Start()
         {
+            await Task.Yield();
             try
             {
                 do
@@ -316,7 +326,7 @@ namespace Kit.Daemon
                     {
                         if (WaitHandle is null)
                         {
-                            return;
+                            return false;
                         }
                         if (IsSleepRequested && !OffLine)
                         {
@@ -340,8 +350,7 @@ namespace Kit.Daemon
                                 IsAwake = true;
                                 IsSleepRequested = false;
                                 OffLine = false;
-                                Start();
-                                return;
+                                return await Start();
                             }
                             this.SyncManager.ToDo = true;
                         }
@@ -350,8 +359,7 @@ namespace Kit.Daemon
                             if (!IsInited)
                             {
                                 Initialize();
-                                Start();
-                                return;
+                                return await Start();
                             }
 
                             try
@@ -384,7 +392,7 @@ namespace Kit.Daemon
                             //    FactorDeDescanso = DaemonConfig.MaxSleep;
                             //}
                             //Descansar :)
-                            Log.Logger.Information($"Rest :{FactorDeDescanso} mins.");
+                            Log.Logger.Information($"Rest :{FactorDeDescanso} seconds.");
                             IsAwake = false;
                             Thread.Sleep(TimeSpan.FromSeconds(FactorDeDescanso));
                             //GotoSleep();
@@ -406,7 +414,7 @@ namespace Kit.Daemon
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "En la rutina Run principal");
-                Start();
+                return await Start();
             }
         }
 
@@ -419,6 +427,7 @@ namespace Kit.Daemon
                 HasBeenForcedToSleep = true;
                 WaitHandle.Reset();
                 GotoSleep(HasBeenForcedToSleep);
+                return;
             }
             IsAwake = true;
             IsSleepRequested = false;

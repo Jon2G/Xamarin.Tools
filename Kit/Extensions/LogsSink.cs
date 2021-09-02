@@ -6,9 +6,17 @@ namespace Kit.Extensions
 {
     public struct LogMsg
     {
-        public string Lvl;
-        public string Text;
-        public string TimeStamp;
+        public LogEventLevel EventLevel { get; private set; }
+        public string Level { get; private set; }
+        public string Text { get; private set; }
+        public string TimeStamp { get; private set; }
+        public LogMsg(LogEventLevel EventLevel, string Level, string Text, string TimeStamp)
+        {
+            this.EventLevel = EventLevel;
+            this.Level = Level;
+            this.Text = Text;
+            this.TimeStamp = TimeStamp;
+        }
     }
     public class LogsSink : ILogEventSink
     {
@@ -23,12 +31,10 @@ namespace Kit.Extensions
         /// <param name="logEvent">The log event to write</param>
         public void Emit(LogEvent logEvent)
         {
-            OnLogEmit?.Execute(new LogMsg()
-            {
-                Text = logEvent.RenderMessage(),
-                Lvl = LevelToSeverity(logEvent),
-                TimeStamp = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff") + " -" + logEvent.Timestamp.Offset.ToString(@"hh\:mm"),
-            });
+            string Text = logEvent.RenderMessage();
+            string Lvl = LevelToSeverity(logEvent);
+            string TimeStamp = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff") + " -" + logEvent.Timestamp.Offset.ToString(@"hh\:mm");
+            OnLogEmit?.Execute(new LogMsg(logEvent.Level,Lvl,Text,TimeStamp));
         }
 
         static string LevelToSeverity(LogEvent logEvent)
