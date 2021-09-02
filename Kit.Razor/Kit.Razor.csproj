@@ -20,4 +20,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kit\Kit.csproj" />
+  </ItemGroup>
+
 </Project>
