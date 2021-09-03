@@ -65,6 +65,7 @@ namespace Kit.Forms.Controls.WebView
             {
                 Log.Logger.Warning( "Browser_Navigated {0}", e.Result);
                 FailureCommand?.Execute(e.Result);
+                this.CurrentRequest.Done();
                 return;
             }
             await this.EvaluateJavaScriptAsync(@"window.onerror = function myErrorHandler(errorMsg, url, lineNumber) { console.log('Error occured: ' + errorMsg); return false; }");
