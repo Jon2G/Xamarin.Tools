@@ -135,19 +135,9 @@ namespace Kit.Sql.SqlServer
 
         public object Single(string sql, CommandType type, params SqlParameter[] parameters)
         {
-            object result = default;
-            using (IReader reader = Read(sql, type, parameters))
-            {
-                if (reader.Read())
-                {
-                    if (reader[0] != DBNull.Value)
-                    {
-                        result = (reader[0]);
-                    }
-                }
-            }
-
-            return result;
+            if (IsClosed)
+                RenewConnection();
+            return Connection.Single(sql, type, parameters);
         }
 
         public override T Single<T>(string sql)
@@ -356,25 +346,8 @@ namespace Kit.Sql.SqlServer
             {
                 if (IsClosed)
                     RenewConnection();
-                using (SqlConnection con = this.Con())
-                {
-                    con.Open();
-                    using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = type })
-                    {
-                        cmd.Parameters.AddRange(parameters);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                result.Add(Sqlh.Parse<T>(reader[index]));
-                            }
-                        }
-
-                        ReportaTransaccion(cmd);
-                    }
-
-                    con.Close();
-                }
+                result = Connection.Lista<T>(sql, type, index, parameters);
+                Log.Logger.Debug(sql);
             }
             catch (Exception ex)
             {
@@ -1146,6 +1119,26 @@ namespace Kit.Sql.SqlServer
             this.RenewConnection();
         }
 
+        public static Exception TestConnection(SqlConnection sql)
+        {
+            try
+            {
+                using (SqlConnection con = sql)
+                {
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT 1", con) { CommandType = CommandType.Text })
+                    {
+                        cmd.ExecuteScalar();
+                    }
+                    con.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+            return null;
+        }
         public Exception TestConnection(string sqlConnection)
         {
             try
