@@ -587,6 +587,10 @@ namespace Kit.Sql.SqlServer
             bool result = false;
             using (IReader reader = Read(sql, CommandType.Text, parametros))
             {
+                if(reader is FakeReader)
+                {
+                    throw LastException??new Exception("Reader no read");
+                }
                 if (reader != null)
                 {
                     result = reader.Read();
