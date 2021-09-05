@@ -1,4 +1,6 @@
-﻿namespace Kit
+﻿using System;
+
+namespace Kit
 {
     public static class StringExtensions
     {
@@ -20,6 +22,10 @@
             }
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source?.IndexOf(toCheck, comp) >= 0;
         }
     }
 }
