@@ -79,6 +79,18 @@ namespace Kit
             return lista;
         }
 
+        public static int FindIndexOf<T>(this IList<T> modificadoresSeleccionados, Func<T, bool> p)
+        {
+            for (int i = 0; i < modificadoresSeleccionados.Count; i++)
+            {
+                T elemento = modificadoresSeleccionados[i];
+                if (p.Invoke(elemento))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
         public static int FindIndexOf<T>(this ObservableCollection<T> modificadoresSeleccionados, Func<T, bool> p)
         {
             for (int i = 0; i < modificadoresSeleccionados.Count; i++)
