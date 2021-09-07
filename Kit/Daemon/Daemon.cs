@@ -198,7 +198,8 @@ namespace Kit.Daemon
         /// </summary>
         public void Awake()
         {
-            Log.Logger.Information("Daemon [{0}]", "Awaking");
+            if (Tools.Debugging)
+                Log.Logger.Information("Daemon [{0}]", "Awaking");
             IsSleepRequested = false;
             this.SyncManager.ToDo = true;
             FactorDeDescanso = 0;
