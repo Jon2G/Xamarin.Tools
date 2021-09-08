@@ -10,5 +10,14 @@ namespace Kit.Forms.Controls.LogsViewer
         {
             InitializeComponent();
         }
+
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+            if (Parent is null)
+            {
+                Model?.Dispose();
+            }
+        }
     }
 }
