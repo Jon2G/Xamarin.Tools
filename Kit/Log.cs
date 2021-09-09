@@ -62,8 +62,10 @@ namespace Kit
             }
             private set => _Current = value;
         }
+
         public LogsSink _LogsSink { get; private set; }
         public static LogsSink LogsSink => Current._LogsSink;
+
         public Log()
         {
         }
@@ -208,10 +210,12 @@ namespace Kit
             }
             if (desconexion)
             {
+                //Tools.Instance.Dialogs?.CustomMessageBox.Show($"DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
                 Log.Logger.Warning($"DESCONEXION PROVOCADA POR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
             }
             else
             {
+                //Tools.Instance.Dialogs?.CustomMessageBox.Show($"NO ERROR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
                 Log.Logger.Warning($"FAKE ERROR:=>[☺{exception?.Message}☺,☺{ex?.Message}☺,☺{Exbase?.Message}☺]");
             }
             return desconexion;

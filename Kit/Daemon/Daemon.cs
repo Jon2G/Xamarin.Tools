@@ -17,6 +17,7 @@ using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using System.Windows.Input;
 using AsyncAwaitBestPractices;
+using Kit.Enums;
 
 namespace Kit.Daemon
 {
@@ -268,7 +269,11 @@ namespace Kit.Daemon
                 }
 
                 SQLServerConnection SQLH = DaemonConfig.GetSqlServerConnection();
-                SQLH.SetCacheIdentity(false);
+                SqlServerInformation version = SQLH.Con().GetServerInformation();
+                if (version.Version > SqlServerVersion.V2016)
+                {
+                    SQLH.SetCacheIdentity(false);
+                }
                 if (!Device.Current.EnsureDeviceIsRegistred(SQLH))
                 {
                     return;

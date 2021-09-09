@@ -4,7 +4,10 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using Kit.Enums;
 using Kit.Sql.Helpers;
+using Kit.Sql.SqlServer;
 
 namespace Kit
 {
@@ -107,6 +110,7 @@ namespace Kit
         {
             return Sqlh.Parse<T>(connection.Single(sql, parameters));
         }
+
         private const int Error = -2;
 
         public static int Execute(this SqlConnection connection, string sql, params SqlParameter[] parametros)
@@ -150,6 +154,7 @@ namespace Kit
             }
             return Rows;
         }
+
         public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead)
         {
             connection.Read(sql, OnRead, CommandType.Text);
@@ -187,6 +192,26 @@ namespace Kit
                 Log.Logger.Error("Transaccion fallida reportada");
                 Log.Logger.Error(sql);
             }
+        }
+
+        public static SqlServerInformation GetServerInformation(this SqlConnection connection)
+        {
+            Regex regex = new Regex(@"(?<Version>\d+).*");
+            SqlServerInformation inf = new SqlServerInformation(Enums.SqlServerVersion.None, string.Empty, string.Empty);
+            connection.Read("SELECT SERVERPROPERTY('productversion'), SERVERPROPERTY('productlevel'), SERVERPROPERTY('edition')",
+            (reader) =>
+            {
+                int ver = 0;
+                string version = reader[0].ToString();
+                var match = regex.Match(version);
+                if (match.Success)
+                {
+                    version = match.Groups["Version"].Value;
+                    ver = Convert.ToInt32(version);
+                }
+                inf = new SqlServerInformation((SqlServerVersion)ver, reader[1].ToString(), reader[2].ToString());
+            }, CommandType.Text, null);
+            return inf;
         }
     }
 }

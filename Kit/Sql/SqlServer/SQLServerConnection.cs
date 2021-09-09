@@ -285,6 +285,11 @@ namespace Kit.Sql.SqlServer
             return Rows;
         }
 
+        internal SqlServerInformation GetServerInformation()
+        {
+            return Con().GetServerInformation();
+        }
+
         public int EXEC(SqlConnection connection, string procedimiento, CommandType commandType = CommandType.Text,
             params SqlParameter[] parametros)
         {
@@ -587,9 +592,9 @@ namespace Kit.Sql.SqlServer
             bool result = false;
             using (IReader reader = Read(sql, CommandType.Text, parametros))
             {
-                if(reader is FakeReader)
+                if (reader is FakeReader)
                 {
-                    throw LastException??new Exception("Reader no read");
+                    throw LastException ?? new Exception("Reader no read");
                 }
                 if (reader != null)
                 {
@@ -1143,6 +1148,7 @@ namespace Kit.Sql.SqlServer
             }
             return null;
         }
+
         public Exception TestConnection(string sqlConnection)
         {
             try
