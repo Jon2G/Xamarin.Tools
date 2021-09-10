@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Kit.Services.Interfaces;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
@@ -8,8 +9,18 @@ using Rg.Plugins.Popup.Services;
 
 namespace Kit.Forms.Pages
 {
-    public class BasePopUp : PopupPage
+    public class BasePopUp : PopupPage, ICrossWindow
     {
+        #region ICrossWindow
+
+        Task ICrossWindow.Close() => Close();
+
+        Task ICrossWindow.Show() => Show();
+
+        Task ICrossWindow.ShowDialog() => ShowDialog();
+
+        #endregion ICrossWindow
+
         public ICommand ClosedCommad;
         private readonly AutoResetEvent ShowDialogCallback;
 

@@ -57,7 +57,16 @@ namespace Kit.Forms.Controls
               declaringType: typeof(Lector),
               //defaultValue: new Xamarin.Forms.Command<string>(
               //    (x) => Log.Logger.Debug("Código leido:{0}", x)),
-              defaultBindingMode: BindingMode.TwoWay);
+              defaultBindingMode: BindingMode.TwoWay,
+              propertyChanged: OnCodeReadCommandPropertyChanged);
+
+        private static void OnCodeReadCommandPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is Lector lector)
+            {
+                lector.OnCodeReadCommand = newValue as AsyncCommand<string>;
+            }
+        }
 
         public AsyncCommand<string> OnCodeReadCommand
         {
@@ -150,7 +159,6 @@ namespace Kit.Forms.Controls
             {
                 INavigation.PopModalAsync();
             }
-           
         }
 
         private void OnDisappearing(object sender, EventArgs e)
@@ -160,6 +168,7 @@ namespace Kit.Forms.Controls
             this.Page.ToolbarItems?.Clear();
             this.Page = null;
         }
+
         private ZXingScannerPage BuildPage()
         {
             this.Page = new ZXingScannerPage(new MobileBarcodeScanningOptions()
@@ -178,7 +187,6 @@ namespace Kit.Forms.Controls
             Page.Disappearing += OnDisappearing;
             return this.Page;
         }
-
 
         private void OpenCamera()
         {
@@ -199,7 +207,6 @@ namespace Kit.Forms.Controls
                 {
                     this.INavigation.PushModalAsync(new NavigationPage(Page) { BarTextColor = Color.White, BarBackgroundColor = Color.CadetBlue }, true);
                 }
-
             });
         }
 

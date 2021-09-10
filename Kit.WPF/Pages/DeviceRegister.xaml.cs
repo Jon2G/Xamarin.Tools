@@ -1,20 +1,23 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using Kit.Dialogs;
 using Kit.License;
+using Kit.Services.Interfaces;
+using Kit.WPF.Controls;
 
 namespace Kit.WPF.Pages
 {
     /// <summary>
     /// Lógica de interacción para DeviceRegister.xaml
     /// </summary>
-    public partial class DeviceRegister : Window
+    public partial class DeviceRegister
     {
         public DeviceRegisterModel Model { get; private set; }
 
         public DeviceRegister(BlumAPI.License Licence, IDialogs Dialogs)
         {
-            this.Model = new DeviceRegisterModel(Licence, Dialogs);
+            this.Model = new DeviceRegisterModel(Licence, Dialogs, this);
             this.DataContext = this.Model;
             InitializeComponent();
             this.TxtUsuario.DataContext = this.Model;

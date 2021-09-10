@@ -3,6 +3,7 @@ using System.Windows.Input;
 using AsyncAwaitBestPractices.MVVM;
 using Kit.Dialogs;
 using Kit.Model;
+using Kit.Services.Interfaces;
 
 namespace Kit.License
 {
@@ -33,9 +34,11 @@ namespace Kit.License
 
         private ICommand _LogInCommand;
         public ICommand LogInCommand => _LogInCommand ??= new AsyncCommand(LogIn);
+        private readonly ICrossWindow Window;
 
-        public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs)
+        public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs, ICrossWindow Window)
         {
+            this.Window = Window;
             this.Dialogs = Dialogs;
             this.Licence = licence;
         }
@@ -53,6 +56,7 @@ namespace Kit.License
             {
                 if (await Licence.RegisterDevice(UserName, Password))
                 {
+                    await this.Window.Close();
                     return true;
                 }
             }

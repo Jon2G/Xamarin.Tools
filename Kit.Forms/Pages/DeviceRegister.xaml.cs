@@ -14,7 +14,7 @@ namespace Kit.Forms.Pages
 
         public DeviceRegister(BlumAPI.License Licence, IDialogs Dialogs)
         {
-            this.Model = new DeviceRegisterModel(Licence, Dialogs);
+            this.Model = new DeviceRegisterModel(Licence, Dialogs, this);
             this.BindingContext = this.Model;
             InitializeComponent();
             this.LockModal();

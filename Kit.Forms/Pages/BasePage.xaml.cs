@@ -3,19 +3,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Kit.Enums;
+using Kit.Services.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
-
 namespace Kit.Forms.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class BasePage : ContentPage, INotifyPropertyChanged, IDisposable
+    public partial class BasePage : ContentPage, INotifyPropertyChanged, IDisposable, ICrossWindow
     {
-
         #region IDisposable
+
         public virtual void Dispose()
         {
             DisposeBindingContext();
@@ -45,6 +46,7 @@ namespace Kit.Forms.Pages
                 BindingContext = null;
             }
         }
+
         protected virtual IDisposable[] DisposeAlso { get; }
 
         ~BasePage()
@@ -52,8 +54,34 @@ namespace Kit.Forms.Pages
             DisposeBindingContext();
         }
 
-        #endregion
+        #endregion IDisposable
+
+        #region ICrossWindow
+
+        public Task Close()
+        {
+            if (Shell.Current is Shell shell)
+            {
+                return shell.Navigation.PopAsync();
+            }
+            return Navigation.PopModalAsync();
+        }
+
+        public Task Show()
+        {
+            if (Shell.Current is Shell shell)
+            {
+                return shell.Navigation.PushAsync(this);
+            }
+            return Navigation.PushModalAsync(this);
+        }
+
+        public Task ShowDialog() => Show();
+
+        #endregion ICrossWindow
+
         public object Auxiliar { get; set; }
+
         public class PageOrientationEventArgs : EventArgs
         {
             public PageOrientationEventArgs(PageOrientation orientation)
@@ -72,7 +100,9 @@ namespace Kit.Forms.Pages
 
         private double _width;
         private double _height;
+
         public event EventHandler<PageOrientationEventArgs> OnOrientationChanged = (e, a) => { };
+
         private void InitOrientationPage()
         {
             _width = Width;
@@ -119,6 +149,7 @@ namespace Kit.Forms.Pages
         }
 
         public DeviceOrientation LockedOrientation { get; private set; }
+
         protected BasePage LockOrientation(DeviceOrientation Orientation)
         {
             LockedOrientation = Orientation;
@@ -133,8 +164,6 @@ namespace Kit.Forms.Pages
         {
             base.OnAppearing();
         }
-
-
 
         protected override void OnDisappearing()
         {
@@ -151,17 +180,18 @@ namespace Kit.Forms.Pages
                 }
                 else if (Device.RuntimePlatform == Device.iOS)
                 {
-
                 }
             }
-
         }
+
         protected bool IsModalLocked { get; private set; }
+
         public BasePage LockModal()
         {
             IsModalLocked = !IsModalLocked;
             return this;
         }
+
         protected override bool OnBackButtonPressed()
         {
             if (Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopupStack.LastOrDefault() is BasePopUp popUp)
@@ -175,30 +205,37 @@ namespace Kit.Forms.Pages
             }
             return base.OnBackButtonPressed();
         }
+
         public async void MenuPrincipal()
         {
             await Navigation.PopToRootAsync(true);
-
         }
+
         public void SetScreenMode(ScreenMode Screen)
         {
             Kit.Tools.Instance.ScreenManager.SetScreenMode(Screen);
         }
 
         #region INotifyPropertyChanged
+
         public new event PropertyChangedEventHandler PropertyChanged;
+
         //[Obsolete("Use Raise para mejor rendimiento evitando la reflección")]
         protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
-        void OnPropertyChanged(PropertyChangedEventArgs args)
+
+        private void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged
+
         #region PerfomanceHelpers
+
         protected void Raise<T>(Expression<Func<T>> propertyExpression)
         {
             if (this.PropertyChanged != null)
@@ -226,9 +263,6 @@ namespace Kit.Forms.Pages
             }
         }
 
-
-
-
-        #endregion
+        #endregion PerfomanceHelpers
     }
 }

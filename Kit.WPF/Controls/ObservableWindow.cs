@@ -1,15 +1,28 @@
-﻿using System;
+﻿using Kit.Services.Interfaces;
+using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using Expression = System.Linq.Expressions.Expression;
 
 namespace Kit.WPF.Controls
 {
-    public class ObservableWindow : Window, INotifyPropertyChanged
+    public class ObservableWindow : Window, INotifyPropertyChanged, ICrossWindow
     {
+        #region ICrossWindow
+
+        Task ICrossWindow.Close() => Task.Run(Close);
+
+        Task ICrossWindow.Show() => Task.Run(Show);
+
+        Task ICrossWindow.ShowDialog() => Task.Run(ShowDialog);
+
+        #endregion ICrossWindow
+
         #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -22,9 +35,11 @@ namespace Kit.WPF.Controls
             PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, args);
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged
 
         #region PerfomanceHelpers
+
         public void Raise<T>(Expression<Func<T>> propertyExpression)
         {
             if (this.PropertyChanged != null)
@@ -51,6 +66,7 @@ namespace Kit.WPF.Controls
                 Raise<T>(propertyExpression);
             }
         }
-        #endregion
+
+        #endregion PerfomanceHelpers
     }
 }
