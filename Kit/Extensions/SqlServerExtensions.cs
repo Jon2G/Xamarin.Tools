@@ -189,7 +189,7 @@ namespace Kit
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Transaccion fallida reportada");
+                Log.Logger.Error(ex, "Transaccion fallida reportada");
                 Log.Logger.Error(sql);
             }
         }

@@ -97,6 +97,8 @@ namespace Kit.Services.Web
             return result;
         }
 
+        public Task<Kit.Services.Web.ResponseResult> PostAsBody(string body, string metodo, params string[] parameters) => PostAsBody(Encoding.UTF8.GetBytes(body), metodo, null, parameters);
+
         public Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PostAsBody(byteArray, metodo, null, parameters);
 
         public async Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string method, Dictionary<string, string> query, params string[] parameters)
