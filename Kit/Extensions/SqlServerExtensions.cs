@@ -11,6 +11,19 @@ using Kit.Sql.SqlServer;
 
 namespace Kit
 {
+    public class CommandConfig
+    {
+        public bool ManualRead = false;
+        public int CommandTimeout = 30;
+
+        public CommandType CommandType = CommandType.Text;
+
+        public CommandConfig()
+
+        {
+        }
+    }
+
     public static class SqlServerExtensions
     {
         public static List<T> Lista<T>(this SqlConnection connection, string sql, CommandType type = CommandType.Text, int index = 0,
@@ -113,6 +126,11 @@ namespace Kit
 
         private const int Error = -2;
 
+        public static int Execute(this SqlConnection connection, string sql, IEnumerable<SqlParameter> parametros)
+        {
+            return connection.Execute(sql, parametros.ToArray());
+        }
+
         public static int Execute(this SqlConnection connection, string sql, params SqlParameter[] parametros)
         {
             return connection.Execute(sql, CommandType.Text, parametros);
@@ -155,32 +173,49 @@ namespace Kit
             return Rows;
         }
 
-        public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead)
+        public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead, CommandConfig config = null, IEnumerable<SqlParameter> parameters = null)
         {
-            connection.Read(sql, OnRead, CommandType.Text);
+            connection.Read(sql, OnRead, config, parameters?.ToArray());
+        }
+
+        public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead, IEnumerable<SqlParameter> parameters)
+        {
+            connection.Read(sql, OnRead, parameters.ToArray());
         }
 
         public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead, params SqlParameter[] parameters)
         {
-            connection.Read(sql, OnRead, CommandType.Text, parameters);
+            connection.Read(sql, OnRead, null, parameters);
         }
 
-        public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead, CommandType commandType = CommandType.Text, params SqlParameter[] parameters)
+        public static void Read(this SqlConnection connection, string sql, Action<SqlDataReader> OnRead, CommandConfig config = null, params SqlParameter[] parameters)
         {
             try
             {
                 using (SqlConnection con = connection)
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(sql, connection) { CommandType = commandType })
+                    using (SqlCommand cmd = new SqlCommand(sql, connection))
                     {
+                        if (config is not null)
+                        {
+                            cmd.CommandType = config.CommandType;
+                            cmd.CommandTimeout = config.CommandTimeout;
+                        }
                         if (parameters is not null)
                             cmd.Parameters.AddRange(parameters);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            while (reader.Read())
+                            if (config?.ManualRead ?? false)
                             {
                                 OnRead.Invoke(reader);
+                            }
+                            else
+                            {
+                                while (reader.Read())
+                                {
+                                    OnRead.Invoke(reader);
+                                }
                             }
                         }
                     }
@@ -210,7 +245,7 @@ namespace Kit
                     ver = Convert.ToInt32(version);
                 }
                 inf = new SqlServerInformation((SqlServerVersion)ver, reader[1].ToString(), reader[2].ToString());
-            }, CommandType.Text, null);
+            });
             return inf;
         }
     }

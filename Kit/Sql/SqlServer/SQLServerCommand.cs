@@ -33,30 +33,10 @@ namespace Kit.Sql.SqlServer
 
         public override int ExecuteNonQuery()
         {
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing: " + this);
-            }
             Log.Logger.Debug("Executing:[{0}]", CommandText);
-            if (_conn.IsClosed)
-            {
-                _conn.RenewConnection();
-            }
-            using (var con = _conn.Connection)
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand(CommandText, _conn.Connection))
-                {
-                    if (this.Parameters.Any())
-                    {
-                        cmd.Parameters.AddRange(this.Parameters.ToArray());
-                    }
-
-                    int affected = cmd.ExecuteNonQuery();
-                    Log.Logger.Debug("Affected: {0} rows", affected);
-                    return affected;
-                }
-            }
+            int affected = _conn.Con().Execute(this.CommandText, this.Parameters);
+            Log.Logger.Debug("Affected: {0} rows", affected);
+            return affected;
         }
 
         public override IEnumerable<T> ExecuteDeferredQuery<T>()
@@ -100,69 +80,47 @@ namespace Kit.Sql.SqlServer
         public override IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map)
         {
             List<T> result = new List<T>();
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing Query: " + this);
-            }
             Log.Logger.Debug("Executing:[{0}]", CommandText);
-            if (_conn.IsClosed)
-            {
-                _conn.RenewConnection();
-            }
             try
             {
-                using (var con = _conn.Connection)
-                {
-                    con.Open();
-                    using (var cmd = new SqlCommand(this.CommandText, con)
-                    {
-                        CommandTimeout = _conn.CommandTimeout
-                    })
-                    {
-                        if (this.Parameters.Any())
-                        {
-                            cmd.Parameters.AddRange(this.Parameters.ToArray());
-                        }
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                var cols = new Base.TableMapping.Column[reader.FieldCount];
-                                var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
-                                for (int i = 0; i < cols.Length; i++)
-                                {
-                                    var name = reader.GetName(i);
-                                    cols[i] = map.FindColumn(name);
-                                    if (cols[i] != null)
-                                        fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(cols[i]);
-                                }
+                _conn.Con().Read(this.CommandText, (reader) =>
+                 {
+                     if (reader.Read())
+                     {
+                         var cols = new Base.TableMapping.Column[reader.FieldCount];
+                         var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
+                         for (int i = 0; i < cols.Length; i++)
+                         {
+                             var name = reader.GetName(i);
+                             cols[i] = map.FindColumn(name);
+                             if (cols[i] != null)
+                                 fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(cols[i]);
+                         }
 
-                                do
-                                {
-                                    var obj = Activator.CreateInstance(map.MappedType);
-                                    for (int i = 0; i < cols.Length; i++)
-                                    {
-                                        if (cols[i] == null)
-                                            continue;
+                         do
+                         {
+                             var obj = Activator.CreateInstance(map.MappedType);
+                             for (int i = 0; i < cols.Length; i++)
+                             {
+                                 if (cols[i] == null)
+                                     continue;
 
-                                        if (fastColumnSetters[i] != null)
-                                        {
-                                            fastColumnSetters[i].Invoke((T)obj, reader, i);
-                                        }
-                                        else
-                                        {
-                                            var colType = reader.GetFieldType(i);
-                                            var val = ReadCol(reader, i, colType, cols[i].ColumnType);
-                                            cols[i].SetValue(obj, val);
-                                        }
-                                    }
-                                    OnInstanceCreated(obj);
-                                    result.Add((T)obj);
-                                } while ((reader.Read()));
-                            }
-                        }
-                    }
-                }
+                                 if (fastColumnSetters[i] != null)
+                                 {
+                                     fastColumnSetters[i].Invoke((T)obj, reader, i);
+                                 }
+                                 else
+                                 {
+                                     var colType = reader.GetFieldType(i);
+                                     var val = ReadCol(reader, i, colType, cols[i].ColumnType);
+                                     cols[i].SetValue(obj, val);
+                                 }
+                             }
+                             OnInstanceCreated(obj);
+                             result.Add((T)obj);
+                         } while ((reader.Read()));
+                     }
+                 }, new CommandConfig() { CommandTimeout = _conn.CommandTimeout, ManualRead = true }, this.Parameters);
             }
             catch (Exception ex)
             {
@@ -176,11 +134,6 @@ namespace Kit.Sql.SqlServer
 
         public override T ExecuteScalar<T>()
         {
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing Query: " + this);
-            }
-
             T val = default(T);
 
             if (_conn.IsClosed)
@@ -236,10 +189,6 @@ namespace Kit.Sql.SqlServer
 
         public override IEnumerable<T> ExecuteQueryScalars<T>()
         {
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing Query: " + this);
-            }
             //var stmt = Prepare ();
             //try {
             //	if (SQLite3.ColumnCount (stmt) < 1) {

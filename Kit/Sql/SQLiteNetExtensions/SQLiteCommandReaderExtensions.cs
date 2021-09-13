@@ -22,12 +22,6 @@ namespace Kit.Sql.SQLiteNetExtensions
         //, params object[] ps)
         {
             SQLiteCommand command = (SQLiteCommand)sqliteConn.CreateCommand(cmdText);
-
-            if (sqliteConn.Trace)
-            {
-                Debug.WriteLine("Executing Query: " + sqliteConn);
-            }
-
             return command.ExecuteReader(sqliteConn);
         }
 

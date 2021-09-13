@@ -8,16 +8,16 @@ namespace Kit.Sql.SqlServer
     /// <summary>
     /// Since the insert never changed, we only need to prepare once.
     /// </summary>
-    class PreparedSqlServerInsertCommand : IDisposable
+    internal class PreparedSqlServerInsertCommand : IDisposable
     {
-        bool Initialized=false;
+        private bool Initialized = false;
 
-        SQLServerConnection Connection;
+        private SQLServerConnection Connection;
 
-        string CommandText;
+        private string CommandText;
 
-        sqlite3_stmt Statement;
-        static readonly sqlite3_stmt NullStatement = default(sqlite3_stmt);
+        private sqlite3_stmt Statement;
+        private static readonly sqlite3_stmt NullStatement = default(sqlite3_stmt);
 
         public PreparedSqlServerInsertCommand(SQLServerConnection conn, string commandText)
         {
@@ -31,41 +31,21 @@ namespace Kit.Sql.SqlServer
             {
                 throw new ObjectDisposedException(nameof(PreparedSqlServerInsertCommand));
             }
-
-            if (Connection.Trace)
-            {
-                Connection.Tracer?.Invoke("Executing: " + CommandText);
-            }
-
             CommandText = this.CommandText + "; select SCOPE_IDENTITY();";
             Log.Logger.Debug("Executing:[{0}]", CommandText);
-
-            if (Connection.IsClosed)
+            //if (Connection.IsClosed)
+            //{
+            //    Connection.RenewConnection();
+            //}
+            Int64 result = 0;
+            Connection.Con().Read(this.CommandText, (reader) =>
             {
-                Connection.RenewConnection();
-            }
-            using (var con = Connection.Connection)
-            {
-                con.Open();
-                using (var cmd = new SqlCommand(this.CommandText, con))
+                if (reader.Read())
                 {
-                    if (source?.Any() ?? false)
-                    {
-                        cmd.Parameters.AddRange(source);
-                    }
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Log.Logger.Debug("Affected: {0}", reader.RecordsAffected);
-
-                            return Convert.ToInt64(reader[0]);
-                        }
-                    }
+                    Log.Logger.Debug("Affected: {0}", reader.RecordsAffected);
+                    result = Convert.ToInt64(reader[0]);
                 }
-            }
-
+            }, source);
             return 0;
         }
 
@@ -91,31 +71,10 @@ namespace Kit.Sql.SqlServer
             {
                 throw new ObjectDisposedException(nameof(PreparedSqlServerInsertCommand));
             }
-
-            if (Connection.Trace)
-            {
-                Connection.Tracer?.Invoke("Executing: " + CommandText);
-            }
-            Log.Logger.Debug("Executing:[{0}]",this.CommandText);
-            if (Connection.IsClosed)
-            {
-                Connection.RenewConnection();
-            }
-
-            using (var con = Connection.Connection)
-            {
-                con.Open();
-                using (var cmd = new SqlCommand(this.CommandText, con))
-                {
-                    if (source?.Any() ?? false)
-                    {
-                        cmd.Parameters.AddRange(source);
-                    }
-                    int RecordsAffected= cmd.ExecuteNonQuery();
-                    Log.Logger.Debug("Affected: {0}", RecordsAffected);
-                    return RecordsAffected;
-                }
-            }
+            Log.Logger.Debug("Executing:[{0}]", this.CommandText);
+            int RecordsAffected = Connection.Con().Execute(this.CommandText, source);
+            Log.Logger.Debug("Affected: {0}", RecordsAffected);
+            return RecordsAffected;
         }
 
         public void Dispose()
@@ -124,7 +83,7 @@ namespace Kit.Sql.SqlServer
             GC.SuppressFinalize(this);
         }
 
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             var s = Statement;
             Statement = NullStatement;

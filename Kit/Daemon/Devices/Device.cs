@@ -22,10 +22,12 @@ namespace Kit.Daemon.Devices
             this.DeviceId = IDeviceInfo.DeviceId;
             this.RegisterStatus = DeviceRegisterStatus.Unkown;
         }
+
         internal static void Init()
         {
             Current = new Device();
         }
+
         public string GetDeviceBrand()
         {
             string brand = "GENERIC";
@@ -43,6 +45,7 @@ namespace Kit.Daemon.Devices
             }
             return brand;
         }
+
         public string GetDeviceName()
         {
             string DeviceName = "GENERIC";
@@ -56,6 +59,7 @@ namespace Kit.Daemon.Devices
             }
             return DeviceName;
         }
+
         public string GetDeviceModel()
         {
             string Model = "GENERIC";
@@ -69,6 +73,7 @@ namespace Kit.Daemon.Devices
             }
             return Model;
         }
+
         public string GetDevicePlatform()
         {
             string brand = "GENERIC";
@@ -82,6 +87,7 @@ namespace Kit.Daemon.Devices
             }
             return brand;
         }
+
         private void EnsureTableExists(SQLServerConnection SQLH)
         {
             if (!SQLH.TableExists<SyncDevicesInfo>())
@@ -89,6 +95,7 @@ namespace Kit.Daemon.Devices
                 SQLH.CreateTable<SyncDevicesInfo>();
             }
         }
+
         private bool IsDeviceRegistered(SQLServerConnection SQLH)
         {
             EnsureTableExists(SQLH);
@@ -113,8 +120,12 @@ namespace Kit.Daemon.Devices
             }
             else
             {
-                deviceInfo= SQLH.Table<SyncDevicesInfo>().FirstOrDefault(x => x.DeviceId == DeviceId);
-                deviceInfo.LastTimeSeen=DateTime.Now;
+                deviceInfo = SQLH.Table<SyncDevicesInfo>().FirstOrDefault(x => x.DeviceId == DeviceId);
+                if (deviceInfo is null)
+                {
+                    return IsDeviceRegistered(SQLH);
+                }
+                deviceInfo.LastTimeSeen = DateTime.Now;
                 SQLH.Update(deviceInfo);
             }
             return IsDeviceRegistered(SQLH);

@@ -154,35 +154,6 @@ namespace Kit.Sql.Sqlite
         public bool StoreTimeSpanAsTicks => GetConnection().StoreTimeSpanAsTicks;
 
         /// <summary>
-        /// Whether to writer queries to <see cref="Tracer"/> during execution.
-        /// </summary>
-        /// <value>The tracer.</value>
-        public bool Trace
-        {
-            get { return GetConnection().Trace; }
-            set { GetConnection().Trace = value; }
-        }
-
-        /// <summary>
-        /// The delegate responsible for writing trace lines.
-        /// </summary>
-        /// <value>The tracer.</value>
-        public Action<string> Tracer
-        {
-            get { return GetConnection().Tracer; }
-            set { GetConnection().Tracer = value; }
-        }
-
-        /// <summary>
-        /// Whether Trace lines should be written that show the execution time of queries.
-        /// </summary>
-        public bool TimeExecution
-        {
-            get { return GetConnection().TimeExecution; }
-            set { GetConnection().TimeExecution = value; }
-        }
-
-        /// <summary>
         /// Returns the mappings from types to tables that the connection
         /// currently understands.
         /// </summary>

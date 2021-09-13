@@ -495,9 +495,6 @@ namespace Kit.Sql.Sqlite
         private bool _open;
         private TimeSpan _busyTimeout;
 
-        private System.Diagnostics.Stopwatch _sw;
-        private long _elapsedMilliseconds = 0;
-
         private int _transactionDepth = 0;
         private Random _rand = new Random();
 
@@ -509,22 +506,6 @@ namespace Kit.Sql.Sqlite
         /// Gets the SQLite library version number. 3007014 would be v3.7.14
         /// </summary>
         public int LibVersionNumber { get; private set; }
-
-        /// <summary>
-        /// Whether Trace lines should be written that show the execution time of queries.
-        /// </summary>
-        public bool TimeExecution { get; set; }
-
-        /// <summary>
-        /// Whether to write queries to <see cref="Tracer"/> during execution.
-        /// </summary>
-        public bool Trace { get; set; }
-
-        /// <summary>
-        /// The delegate responsible for writing trace lines.
-        /// </summary>
-        /// <value>The tracer.</value>
-        public Action<string> Tracer { get; set; }
 
         /// <summary>
         /// Whether to store DateTime properties as ticks (true) or strings (false).
@@ -643,7 +624,6 @@ namespace Kit.Sql.Sqlite
             DateTimeStyle = connectionString.DateTimeStyle;
 
             BusyTimeout = TimeSpan.FromSeconds(1.0);
-            Tracer = line => Debug.WriteLine(line);
 
             connectionString.PreKeyAction?.Invoke(this);
             if (connectionString.Key is string stringKey)
@@ -1240,29 +1220,10 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public int Execute(string query, params object[] args)
         {
-            var cmd = CreateCommand(query, args);
-
-            if (TimeExecution)
-            {
-                if (_sw == null)
-                {
-                    _sw = new Stopwatch();
-                }
-                _sw.Reset();
-                _sw.Start();
-            }
-
+            CommandBase cmd = CreateCommand(query, args);
             Log.Logger.Debug(query);
-            var r = cmd.ExecuteNonQuery();
+            int r = cmd.ExecuteNonQuery();
             Log.Logger.Debug($"Rows affected [{r}]");
-
-            if (TimeExecution)
-            {
-                _sw.Stop();
-                _elapsedMilliseconds += _sw.ElapsedMilliseconds;
-                Tracer?.Invoke(string.Format("Finished in {0} ms ({1:0.0} s total)", _sw.ElapsedMilliseconds, _elapsedMilliseconds / 1000.0));
-            }
-
             return r;
         }
 
@@ -1285,27 +1246,8 @@ namespace Kit.Sql.Sqlite
         /// </returns>
         public T ExecuteScalar<T>(string query, params object[] args)
         {
-            var cmd = CreateCommand(query, args);
-
-            if (TimeExecution)
-            {
-                if (_sw == null)
-                {
-                    _sw = new Stopwatch();
-                }
-                _sw.Reset();
-                _sw.Start();
-            }
-
-            var r = cmd.ExecuteScalar<T>();
-
-            if (TimeExecution)
-            {
-                _sw.Stop();
-                _elapsedMilliseconds += _sw.ElapsedMilliseconds;
-                Tracer?.Invoke(string.Format("Finished in {0} ms ({1:0.0} s total)", _sw.ElapsedMilliseconds, _elapsedMilliseconds / 1000.0));
-            }
-
+            CommandBase cmd = CreateCommand(query, args);
+            T r = cmd.ExecuteScalar<T>();
             return r;
         }
 

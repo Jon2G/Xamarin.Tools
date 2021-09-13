@@ -26,11 +26,6 @@ namespace Kit.Sql.Sqlite
 
         public override int ExecuteNonQuery()
         {
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing: " + this);
-            }
-
             var r = SQLite3.Result.OK;
             var stmt = Prepare();
             r = SQLite3.Step(stmt);
@@ -97,11 +92,6 @@ namespace Kit.Sql.Sqlite
             if (_conn.IsClosed)
                 _conn.RenewConnection();
 
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing Query: " + this);
-            }
-
             Log.Logger.Debug(this.CommandText);
             var stmt = Prepare();
             try
@@ -158,11 +148,6 @@ namespace Kit.Sql.Sqlite
 
         public override T ExecuteScalar<T>()
         {
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing Query: " + this);
-            }
-
             T val = default(T);
 
             var stmt = Prepare();
@@ -197,10 +182,6 @@ namespace Kit.Sql.Sqlite
 
         public override IEnumerable<T> ExecuteQueryScalars<T>()
         {
-            if (_conn.Trace)
-            {
-                _conn.Tracer?.Invoke("Executing Query: " + this);
-            }
             var stmt = Prepare();
             try
             {

@@ -971,9 +971,6 @@ namespace Kit.Sql.SqlServer
 
         #endregion SQLH
 
-        private System.Diagnostics.Stopwatch _sw;
-        private long _elapsedMilliseconds = 0;
-
         private int _transactionDepth = 0;
         private Random _rand = new Random();
 
@@ -981,22 +978,6 @@ namespace Kit.Sql.SqlServer
         /// Gets or sets the database path used by this connection.
         /// </summary>
         public new SqlConnectionStringBuilder ConnectionString { get; set; }
-
-        /// <summary>
-        /// Whether Trace lines should be written that show the execution time of queries.
-        /// </summary>
-        public bool TimeExecution { get; set; }
-
-        /// <summary>
-        /// Whether to write queries to <see cref="Tracer"/> during execution.
-        /// </summary>
-        public bool Trace { get; set; }
-
-        /// <summary>
-        /// The delegate responsible for writing trace lines.
-        /// </summary>
-        /// <value>The tracer.</value>
-        public Action<string> Tracer { get; set; }
 
         /// <summary>
         ///// Whether to store DateTime properties as ticks (true) or strings (false).
@@ -1107,7 +1088,6 @@ namespace Kit.Sql.SqlServer
             if (connectionString.ConnectionString == null)
                 throw new InvalidOperationException("ConnectionString must be specified");
             ConnectionString = connectionString;
-            Tracer = line => Debug.WriteLine(line);
             Connection = new SqlConnection(ConnectionString.ConnectionString);
         }
 
@@ -1756,28 +1736,9 @@ WHERE
         /// </returns>
         public int Execute(string query, params SqlParameter[] args)
         {
-            var cmd = CreateCommand(query, args);
-
-            if (TimeExecution)
-            {
-                if (_sw == null)
-                {
-                    _sw = new Stopwatch();
-                }
-                _sw.Reset();
-                _sw.Start();
-            }
+            SQLServerCommand cmd = CreateCommand(query, args);
             Log.Logger.Debug("Executing:[{0}]", cmd.CommandText);
-            var r = cmd.ExecuteNonQuery();
-
-            if (TimeExecution)
-            {
-                _sw.Stop();
-                _elapsedMilliseconds += _sw.ElapsedMilliseconds;
-                Tracer?.Invoke(string.Format("Finished in {0} ms ({1:0.0} s total)", _sw.ElapsedMilliseconds, _elapsedMilliseconds / 1000.0));
-            }
-
-            return r;
+            return cmd.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -1785,7 +1746,6 @@ WHERE
         /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'
         /// in the command text for each of the arguments and then executes that command.
         /// Use this method when return primitive values.
-        /// You can set the Trace or TimeExecution properties of the connection
         /// to profile execution.
         /// </summary>
         /// <param name="query">
@@ -1799,28 +1759,8 @@ WHERE
         /// </returns>
         public T ExecuteScalar<T>(string query, params SqlParameter[] args)
         {
-            var cmd = CreateCommand(query, args);
-
-            if (TimeExecution)
-            {
-                if (_sw == null)
-                {
-                    _sw = new Stopwatch();
-                }
-                _sw.Reset();
-                _sw.Start();
-            }
-
-            var r = cmd.ExecuteScalar<T>();
-
-            if (TimeExecution)
-            {
-                _sw.Stop();
-                _elapsedMilliseconds += _sw.ElapsedMilliseconds;
-                Tracer?.Invoke(string.Format("Finished in {0} ms ({1:0.0} s total)", _sw.ElapsedMilliseconds, _elapsedMilliseconds / 1000.0));
-            }
-
-            return r;
+            SQLServerCommand cmd = CreateCommand(query, args);
+            return cmd.ExecuteScalar<T>();
         }
 
         /// <summary>
@@ -2625,9 +2565,9 @@ WHERE
 
         public override int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true)
         {
-            if (map.SyncDirection != SyncDirection.NoSync)
-            {
-            }
+            //if (map.SyncDirection != SyncDirection.NoSync)
+            //{
+            //}
 
             if (map.PK != null && map.PK.IsAutomatic)
             {
@@ -2671,7 +2611,7 @@ WHERE
                 parameters[i] = new SqlParameter(cols[i].Name, vals[i]);
             }
 
-            var insertCmd = GetInsertCommand(map, extra);
+            PreparedSqlServerInsertCommand insertCmd = GetInsertCommand(map, extra);
             int count;
 
             lock (insertCmd)

@@ -7,48 +7,48 @@ namespace Kit.Sql.Sqlite
     /// <summary>
     /// Since the insert never changed, we only need to prepare once.
     /// </summary>
-    class PreparedSqlLiteInsertCommand : IDisposable
+    internal class PreparedSqlLiteInsertCommand : IDisposable
     {
-        bool Initialized;
+        private bool Initialized;
 
-        SQLiteConnection Connection;
-        string CommandText;
+        private SQLiteConnection Connection;
+        private string CommandText;
 
-       public sqlite3_stmt Statement;
-        static readonly sqlite3_stmt NullStatement = default (sqlite3_stmt);
+        public sqlite3_stmt Statement;
+        private static readonly sqlite3_stmt NullStatement = default(sqlite3_stmt);
 
-        public PreparedSqlLiteInsertCommand (SQLiteConnection conn, string commandText)
+        public PreparedSqlLiteInsertCommand(SQLiteConnection conn, string commandText)
         {
             Connection = conn;
             CommandText = commandText;
         }
 
-        public int ExecuteNonQuery (object[] source)
+        public int ExecuteNonQuery(object[] source)
         {
-            if (Initialized && Statement == NullStatement) {
-                throw new ObjectDisposedException (nameof (PreparedSqlLiteInsertCommand));
+            if (Initialized && Statement == NullStatement)
+            {
+                throw new ObjectDisposedException(nameof(PreparedSqlLiteInsertCommand));
             }
-            if(Connection.IsClosed)
+            if (Connection.IsClosed)
                 Connection.RenewConnection();
-
-            if (Connection.Trace) {
-                Connection.Tracer?.Invoke ("Executing: " + CommandText);
-            }
 
             var r = SQLite3.Result.OK;
 
-            if (!Initialized) {
-                Statement = SQLite3.Prepare2 (Connection.Handle, CommandText);
+            if (!Initialized)
+            {
+                Statement = SQLite3.Prepare2(Connection.Handle, CommandText);
                 Initialized = true;
             }
 
             //bind the values.
-            if (source != null) {
-                for (int i = 0; i < source.Length; i++) {
-                    SQLiteCommand.BindParameter (Statement, i + 1, source[i], Connection.StoreDateTimeAsTicks, Connection.DateTimeStringFormat, Connection.StoreTimeSpanAsTicks);
+            if (source != null)
+            {
+                for (int i = 0; i < source.Length; i++)
+                {
+                    SQLiteCommand.BindParameter(Statement, i + 1, source[i], Connection.StoreDateTimeAsTicks, Connection.DateTimeStringFormat, Connection.StoreTimeSpanAsTicks);
                 }
             }
-            r = SQLite3.Step (Statement);
+            r = SQLite3.Step(Statement);
 
             if (r == SQLite3.Result.Done)
             {
@@ -79,25 +79,26 @@ namespace Kit.Sql.Sqlite
             }
         }
 
-        public void Dispose ()
+        public void Dispose()
         {
-            Dispose (true);
-            GC.SuppressFinalize (this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        void Dispose (bool disposing)
+        private void Dispose(bool disposing)
         {
             var s = Statement;
             Statement = NullStatement;
             Connection = null;
-            if (s != NullStatement) {
-                SQLite3.Finalize (s);
+            if (s != NullStatement)
+            {
+                SQLite3.Finalize(s);
             }
         }
 
-        ~PreparedSqlLiteInsertCommand ()
+        ~PreparedSqlLiteInsertCommand()
         {
-            Dispose (false);
+            Dispose(false);
         }
     }
 }

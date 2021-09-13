@@ -247,8 +247,13 @@ namespace Kit.Daemon.Sync
                         MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(TableMapping) });
                         method = method.MakeGenericMethod(table.MappedType);
                         IEnumerable<dynamic> result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table });
+                        if (!result.Any())
+                        {
+                            CurrentPackage.MarkAsSynced(source_con);
+                            continue;
+                        }
                         if (Daemon.Current.IsSleepRequested) { return false; }
-                        dynamic i_result = result.FirstOrDefault();
+                        dynamic i_result = result.First();
                         ISync read = Convert.ChangeType(i_result, typeof(ISync));
                         if (read is null && action == NotifyTableChangedAction.Delete)
                         {
@@ -263,7 +268,7 @@ namespace Kit.Daemon.Sync
                             CurrentPackage.MarkAsSynced(source_con);
                             continue;
                         }
-                        if(read is null)
+                        if (read is null)
                         {
                             Log.Logger.Warning("READ RESULTO EN NULL '{0}'", this.CurrentPackage.TableName);
                             CurrentPackage.MarkAsSynced(source_con);

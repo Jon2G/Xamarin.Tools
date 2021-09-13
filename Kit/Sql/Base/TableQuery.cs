@@ -41,6 +41,30 @@ namespace Kit.Sql.Base
 
         public abstract TableQuery<U> Clone<U>();
 
+        public bool Any(Expression<Func<T, bool>> predExpr)
+        {
+            var pred = _where;
+            if (predExpr != null && predExpr.NodeType == ExpressionType.Lambda)
+            {
+                var lambda = (LambdaExpression)predExpr;
+                pred = pred != null ? Expression.AndAlso(pred, lambda.Body) : lambda.Body;
+            }
+
+            List<object> args = new List<object>();
+            List<Condition> conditions = new List<Condition>();
+            string cmdText = "select 1 from \"" + Table.TableName + "\"";
+            var w = CompileExpr(pred, args, conditions);
+            cmdText += " where " + w.CommandText;
+
+            object[] conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+            bool any = false;
+            using (CommandBase command = Connection.CreateCommand(cmdText, conditions_array))
+            {
+                any = command.ExecuteReader().Read();
+            }
+            return any;
+        }
+
         /// <summary>
         /// Filters the query based on a predicate.
         /// </summary>
