@@ -8,6 +8,7 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+// ReSharper disable once CheckNamespace
 namespace Kit.Forms
 {
     public static class BindingObjectExtensions
