@@ -21,6 +21,7 @@ using Xamarin.Essentials;
 using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using Kit.SetUpConnectionString;
 using AsyncAwaitBestPractices.MVVM;
+using System.Windows.Input;
 
 namespace Kit.Forms.Pages
 {
@@ -31,7 +32,7 @@ namespace Kit.Forms.Pages
     {
         public Lector Leector { get; set; }
 
-        public event EventHandler Confirmado;
+        public ICommand Confirmado { get; set; }
 
         public SetUpConnectionStringViewModelBase Model { get; set; }
 
@@ -148,7 +149,7 @@ namespace Kit.Forms.Pages
                     {
                         await Navigation.PopModalAsync();
                     }
-                    Confirmado?.Invoke(this, EventArgs.Empty);
+                    Confirmado?.Execute(this);
                     Confirmado = null;
                 }
             }
@@ -171,7 +172,7 @@ namespace Kit.Forms.Pages
                 return true;
             }
             Navigation.PopModalAsync(true);
-            Confirmado?.Invoke(this, EventArgs.Empty);
+            Confirmado?.Execute(this);
             Confirmado = null;
             return true;
         }

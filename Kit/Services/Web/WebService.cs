@@ -79,6 +79,7 @@ namespace Kit.Services.Web
             {
                 Log.Logger.Error(ex, $"GET: {this.Url}");
                 result.HttpStatusCode = (HttpStatusCode)ex.Status;
+                result.Extra = ex.Message;
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
                     using (StreamReader reader = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()))
@@ -92,7 +93,8 @@ namespace Kit.Services.Web
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, $"GET: {GetUrl}");
-                result.Response = "ERROR";
+                result.Response = "ERROR"; 
+                result.Extra = ex.Message;
             }
             return result;
         }

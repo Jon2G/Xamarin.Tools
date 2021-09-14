@@ -7,11 +7,13 @@ namespace Kit.Services.Web
     {
         public HttpStatusCode HttpStatusCode;
         public string Response;
+        public string Extra;
 
-        public ResponseResult(HttpStatusCode httpStatusCode, string response)
+        public ResponseResult(HttpStatusCode httpStatusCode, string response, string Extra)
         {
             HttpStatusCode = httpStatusCode;
             Response = response;
+            this.Extra = Extra;
         }
     }
 }

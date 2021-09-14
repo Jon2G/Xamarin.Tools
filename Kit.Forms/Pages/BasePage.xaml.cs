@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Kit.Enums;
 using Kit.Services.Interfaces;
@@ -81,6 +82,7 @@ namespace Kit.Forms.Pages
         #endregion ICrossWindow
 
         public object Auxiliar { get; set; }
+        private AutoResetEvent ShowDialogCallback;
 
         public class PageOrientationEventArgs : EventArgs
         {
@@ -168,10 +170,7 @@ namespace Kit.Forms.Pages
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            //if (App.Current.MainPage is MainPage MP)
-            //{
-            //    MP.ActualizarSandwich(this);
-            //}
+            this.ShowDialogCallback?.Set();
             if (LockedOrientation != DeviceOrientation.Other)
             {
                 if (Device.RuntimePlatform == Device.Android)
@@ -214,6 +213,16 @@ namespace Kit.Forms.Pages
         public void SetScreenMode(ScreenMode Screen)
         {
             Kit.Tools.Instance.ScreenManager.SetScreenMode(Screen);
+        }
+
+        public async Task<BasePage> WaitUntilDisappear()
+        {
+            if (ShowDialogCallback is null)
+            {
+                this.ShowDialogCallback = new AutoResetEvent(false);
+            }
+            await Task.Run(() => this.ShowDialogCallback.WaitOne());
+            return this;
         }
 
         #region INotifyPropertyChanged
