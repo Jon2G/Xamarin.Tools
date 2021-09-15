@@ -135,9 +135,7 @@ namespace Kit.Sql.SqlServer
 
         public object Single(string sql, CommandType type, params SqlParameter[] parameters)
         {
-            if (IsClosed)
-                RenewConnection();
-            return Connection.Single(sql, type, parameters);
+            return Con().Single(sql, type, parameters);
         }
 
         public override T Single<T>(string sql)
