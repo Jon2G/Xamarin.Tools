@@ -59,7 +59,7 @@ namespace Kit.Forms.Pages
 
         #region ICrossWindow
 
-        public Task Close()
+        public virtual Task Close()
         {
             if (Shell.Current is Shell shell)
             {
@@ -68,7 +68,7 @@ namespace Kit.Forms.Pages
             return Navigation.PopModalAsync();
         }
 
-        public Task Show()
+        public virtual Task Show()
         {
             if (Shell.Current is Shell shell)
             {
@@ -77,7 +77,7 @@ namespace Kit.Forms.Pages
             return Navigation.PushModalAsync(this);
         }
 
-        public Task ShowDialog() => Show();
+        public virtual Task ShowDialog() => Show();
 
         #endregion ICrossWindow
 
