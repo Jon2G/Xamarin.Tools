@@ -28,11 +28,14 @@ namespace Kit
             get { return GetConsoleWindow() != IntPtr.Zero; }
         }
 
+        private static Type ConsoleType;
+
         /// <summary>
         /// Creates a new console instance if the process is not attached to a console already.
         /// </summary>
-        public static void Show()
+        public static void Show(Type type=null)
         {
+            ConsoleType = type?? typeof(System.Console);
             //#if DEBUG
             if (!HasConsole)
             {
@@ -70,26 +73,25 @@ namespace Kit
 
         static void InvalidateOutAndError()
         {
-            Type type = typeof(System.Console);
-
-            System.Reflection.FieldInfo _out = type.GetField("_out",
+       
+            System.Reflection.FieldInfo _out = ConsoleType.GetField("_out",
                 System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
-            System.Reflection.FieldInfo _error = type.GetField("_error",
+            System.Reflection.FieldInfo _error = ConsoleType.GetField("_error",
                 System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
-            System.Reflection.MethodInfo _InitializeStdOutError = type.GetMethod("InitializeStdOutError",
+            System.Reflection.MethodInfo _InitializeStdOutError = ConsoleType.GetMethod("InitializeStdOutError",
                 System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
-            Debug.Assert(_out != null);
-            Debug.Assert(_error != null);
+            //Debug.Assert(_out != null);
+            //Debug.Assert(_error != null);
 
-            Debug.Assert(_InitializeStdOutError != null);
+            //Debug.Assert(_InitializeStdOutError != null);
 
-            _out.SetValue(null, null);
-            _error.SetValue(null, null);
+            _out?.SetValue(null, null);
+            _error?.SetValue(null, null);
 
-            _InitializeStdOutError.Invoke(null, new object[] { true });
+            _InitializeStdOutError?.Invoke(null, new object[] { true });
         }
 
         static void SetOutAndErrorNull()
