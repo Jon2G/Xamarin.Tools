@@ -1,51 +1,26 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using AsyncAwaitBestPractices.MVVM;
 using FFImageLoading;
+using Kit.Forms.Extensions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ContentView = Xamarin.Forms.ContentView;
 using ImageSource = Xamarin.Forms.ImageSource;
-
+using Brush = Xamarin.Forms.Brush;
 namespace Kit.Forms.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile), Preserve()]
-    public partial class ArrowButton : ContentView
+    public partial class ArrowButton
     {
-        public static readonly BindableProperty ColorBackgroundProperty = BindableProperty.Create(
-            propertyName: nameof(ColorBackground),
-            returnType: typeof(Color),
-            declaringType: typeof(ArrowButton),
-            defaultValue: Color.WhiteSmoke,
-            propertyChanged: BackgroundColorPropertyChanged);
-
-        private static void BackgroundColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (bindable is ArrowButton arrow)
-            {
-                arrow.ColorBackground = (Color)newValue;
-            }
-        }
-
         public new Color BackgroundColor
         {
-            get => ColorBackground;
+            get => (Color)base.GetValue(BackgroundColorProperty);
             set
             {
-                SetValue(BackgroundColorProperty, Color.Transparent);
-                SetValue(ColorBackgroundProperty, value);
-                ColorBackground = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color ColorBackground
-        {
-            get => (Color)GetValue(ColorBackgroundProperty);
-            set
-            {
-                SetValue(BackgroundColorProperty, Color.Transparent);
-                SetValue(ColorBackgroundProperty, value);
+                base.SetValue(BackgroundColorProperty, value);
                 OnPropertyChanged();
             }
         }
@@ -54,18 +29,17 @@ namespace Kit.Forms.Controls
             propertyName: nameof(TextColor),
             returnType: typeof(Color),
             declaringType: typeof(ArrowButton),
-            defaultValue: Color.Black,
-            propertyChanged: TextColorChanged);
-
-        private static void TextColorChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (bindable is ArrowButton arrow)
+            defaultValue: Color.Black, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
             {
-                arrow.TitleColor = (Color)newValue;
-                arrow.SubTitleColor = (Color)newValue;
-                arrow.TextColor = (Color)newValue;
-            }
-        }
+                if (e is ArrowButton arrow)
+                {
+                    Color color = (Color)n;
+                    arrow.TitleColor = color;
+                    arrow.SubTitleColor = color;
+                    arrow.TextColor = color;
+                }
+            });
 
         public Color TextColor
         {
@@ -73,16 +47,21 @@ namespace Kit.Forms.Controls
             set
             {
                 SetValue(TextColorProperty, value);
-                SubTitleColor = value;
                 SetValue(SubTitleColorProperty, value);
-                TitleColor = value;
                 SetValue(TitleColorProperty, value);
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TitleColor));
+                OnPropertyChanged(nameof(SubTitleColor));
             }
         }
 
         public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
-            propertyName: nameof(ArrowColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Accent);
+            propertyName: nameof(ArrowColor), returnType: typeof(Color),
+            declaringType: typeof(ArrowButton), defaultValue: Color.Accent, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.ArrowColor = (Color)n;
+            });
 
         public Color ArrowColor
         {
@@ -95,7 +74,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty TitleColorProperty = BindableProperty.Create(
-            propertyName: nameof(TitleColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Black);
+            propertyName: nameof(TitleColor), returnType: typeof(Color),
+            declaringType: typeof(ArrowButton), defaultValue: Color.Black, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.TitleColor = (Color)n;
+            });
 
         public Color TitleColor
         {
@@ -108,7 +92,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty SubTitleColorProperty = BindableProperty.Create(
-            propertyName: nameof(SubTitleColor), returnType: typeof(Color), declaringType: typeof(ArrowButton), defaultValue: Color.Black);
+            propertyName: nameof(SubTitleColor), returnType: typeof(Color),
+            declaringType: typeof(ArrowButton), defaultValue: Color.Black, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.SubTitleColor = (Color)n;
+            });
 
         public Color SubTitleColor
         {
@@ -121,7 +110,9 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty TitleProperty = BindableProperty.Create(
-            propertyName: nameof(Title), returnType: typeof(string), declaringType: typeof(ArrowButton), defaultValue: string.Empty);
+            propertyName: nameof(Title), returnType: typeof(string),
+            declaringType: typeof(ArrowButton), defaultValue: string.Empty, BindingMode.OneWay,
+            propertyChanged: (e, o, n) => { if (e is ArrowButton arrow) arrow.Title = n?.ToString(); });
 
         public string Title
         {
@@ -134,7 +125,9 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty SubTitleProperty = BindableProperty.Create(
-            propertyName: nameof(SubTitle), returnType: typeof(string), declaringType: typeof(ArrowButton), defaultValue: string.Empty);
+            propertyName: nameof(SubTitle), returnType: typeof(string),
+            declaringType: typeof(ArrowButton), defaultValue: string.Empty, BindingMode.OneWay,
+            propertyChanged: (e, o, n) => { if (e is ArrowButton arrow) arrow.SubTitle = n?.ToString(); });
 
         public string SubTitle
         {
@@ -147,7 +140,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty SubTitleFontSizeProperty = BindableProperty.Create(
-            propertyName: nameof(SubTitleFontSize), returnType: typeof(int), declaringType: typeof(ArrowButton), defaultValue: 12);
+            propertyName: nameof(SubTitleFontSize), returnType: typeof(int),
+            declaringType: typeof(ArrowButton), defaultValue: 12, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.SubTitleFontSize = (int)n;
+            });
 
         [TypeConverter(typeof(FontSizeConverter))]
         public int SubTitleFontSize
@@ -161,7 +159,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(
-            propertyName: nameof(TitleFontSize), returnType: typeof(int), declaringType: typeof(ArrowButton), defaultValue: 14);
+            propertyName: nameof(TitleFontSize), returnType: typeof(int),
+            declaringType: typeof(ArrowButton), defaultValue: 14, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.TitleFontSize = (int)n;
+            });
 
         [TypeConverter(typeof(FontSizeConverter))]
         public int TitleFontSize
@@ -178,7 +181,7 @@ namespace Kit.Forms.Controls
 
         public static readonly BindableProperty CommandProperty =
             BindableProperty.Create(nameof(ArrowButton.Command), typeof(ICommand),
-            typeof(ArrowButton), null,
+            typeof(ArrowButton), null, BindingMode.OneWay,
             propertyChanging: OnCommandChanging, propertyChanged: OnCommandChanged);
 
         public ICommand Command
@@ -236,7 +239,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(
-            propertyName: nameof(CommandParameter), returnType: typeof(object), declaringType: typeof(ArrowButton), defaultValue: null);
+            propertyName: nameof(CommandParameter), returnType: typeof(object),
+            declaringType: typeof(ArrowButton), defaultValue: null, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.CommandParameter = n;
+            });
 
         public object CommandParameter
         {
@@ -249,7 +257,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty IconProperty = BindableProperty.Create(
-            propertyName: nameof(Icon), returnType: typeof(ImageSource), declaringType: typeof(ArrowButton), defaultValue: null);
+            propertyName: nameof(Icon), returnType: typeof(ImageSource), declaringType: typeof(ArrowButton),
+            defaultValue: null, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.Icon = n as ImageSource;
+            });
 
         [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource Icon
@@ -263,7 +276,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty IconHeightRequestProperty = BindableProperty.Create(
-            propertyName: nameof(IconHeightRequest), returnType: typeof(double), declaringType: typeof(ArrowButton), defaultValue: 20d);
+            propertyName: nameof(IconHeightRequest), returnType: typeof(double),
+            declaringType: typeof(ArrowButton), defaultValue: 20d, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.IconHeightRequest = (double)n;
+            });
 
         public double IconHeightRequest
         {
@@ -276,7 +294,12 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty IsArrowVisibleProperty = BindableProperty.Create(
-            propertyName: nameof(IsArrowVisible), returnType: typeof(bool), declaringType: typeof(ArrowButton), defaultValue: true);
+            propertyName: nameof(IsArrowVisible), returnType: typeof(bool),
+            declaringType: typeof(ArrowButton), defaultValue: true, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.IsArrowVisible = (bool)n;
+            });
 
         public bool IsArrowVisible
         {
@@ -292,13 +315,18 @@ namespace Kit.Forms.Controls
 
         public ArrowButton()
         {
-            this.TouchedCommand = new Xamarin.Forms.Command(Touched);
+            this.TouchedCommand = new AsyncCommand(Touched);
             InitializeComponent();
         }
 
-        private void Touched()
+        private async Task Touched()
         {
-            HapticFeedback.Perform(HapticFeedbackType.Click);
+            await Task.Yield();
+            if (await Permisos.CanVibrate())
+            {
+                HapticFeedback.Perform(HapticFeedbackType.Click);
+            }
+
             this.Command?.Execute(this.CommandParameter);
         }
     }
