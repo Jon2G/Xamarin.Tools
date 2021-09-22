@@ -73,5 +73,11 @@ namespace Kit.Forms.Extensions
                 await Permisos.EnsurePermission<Xamarin.Essentials.Permissions.StorageWrite>() ==
                 PermissionStatus.Granted;
         }
+
+        public static async Task<bool> CanVibrate()
+        {
+            PermissionStatus can = await Permissions.CheckStatusAsync<Permissions.Vibrate>();
+            return can== PermissionStatus.Granted;
+        }
     }
 }
