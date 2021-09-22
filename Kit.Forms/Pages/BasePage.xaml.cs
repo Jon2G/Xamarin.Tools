@@ -22,12 +22,14 @@ namespace Kit.Forms.Pages
         {
             DisposeBindingContext();
         }
-
+        public virtual void OnClose() { }
         protected override void OnParentSet()
         {
             base.OnParentSet();
             if (Parent == null)
             {
+                OnClose();
+                this.ShowDialogCallback?.Set();
                 DisposeBindingContext();
             }
         }
@@ -166,11 +168,10 @@ namespace Kit.Forms.Pages
         {
             base.OnAppearing();
         }
-
+     
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            this.ShowDialogCallback?.Set();
             if (LockedOrientation != DeviceOrientation.Other)
             {
                 if (Device.RuntimePlatform == Device.Android)
@@ -215,7 +216,7 @@ namespace Kit.Forms.Pages
             Kit.Tools.Instance.ScreenManager.SetScreenMode(Screen);
         }
 
-        public async Task<BasePage> WaitUntilDisappear()
+        public async Task<BasePage> WaitUntilClose()
         {
             if (ShowDialogCallback is null)
             {

@@ -197,7 +197,13 @@ namespace Kit.Daemon
         /// Despierta al demonio en caso de que este dormido,si no esta presente lo invoca,
         /// si esta ocupado le indica que busque por cambios nuevos
         /// </summary>
-        public void Awake()
+        public async Task AwakeAsync()
+        {
+            await Task.Yield();
+            Awake();
+        }
+
+        private void Awake()
         {
             if (Tools.Debugging)
                 Log.Logger.Information("Daemon [{0}]", "Awaking");
