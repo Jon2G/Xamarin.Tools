@@ -106,6 +106,7 @@ namespace Kit.Forms.Validations
                 alertLabel.SetValue(Label.BindingContextProperty, this);
                 alertLabel.SetBinding(Label.TextProperty, path: nameof(ErrorMessage));
                 alertLabel.SetBinding(Label.IsVisibleProperty, path: nameof(HasError));
+
                 StackLayout stack = new StackLayout() { Spacing = 0, Padding = 0 };
                 OriginalParent.Children.RemoveAt(Index);
                 stack.Children.Add(View);
