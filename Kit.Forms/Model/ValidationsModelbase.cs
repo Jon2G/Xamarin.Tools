@@ -53,8 +53,8 @@ namespace Kit.Forms.Model
         {
             if (!string.IsNullOrEmpty(propertyName))
             {
-                if (_errors.ContainsKey(propertyName) && (_errors[propertyName] != null) && _errors[propertyName].Count > 0)
-                    return _errors[propertyName].ToList();
+                if(_errors.TryGetValue(propertyName,out List<string> list) && list.Any())
+                    return list;
                 else
                     return null;
             }
