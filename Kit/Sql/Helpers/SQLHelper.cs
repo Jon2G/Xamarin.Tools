@@ -1,44 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Kit.Sql.Helpers
 {
-    public class SQLHelper
+    public static class SQLHelper
     {
-        public bool Debugging { get; protected set; }
-        private string _LibraryPath;
-        public string LibraryPath
+        public static void Load_e_sqlite_3()
         {
-            get => _LibraryPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            set => _LibraryPath = value;
+            bool is64 = Environment.Is64BitOperatingSystem;
+            FileInfo dll = new FileInfo($"{Tools.Instance.LibraryPath}\\{(is64 ? "x64" : "x86")}\\sqlite3.dll");
+            if (dll.Exists)
+                Assembly.Load(dll.FullName);
         }
-
-        public SQLHelper(string LibraryPath, bool Debugging)
-        {
-            this.LibraryPath = LibraryPath;
-            this.Debugging = Debugging;
-        }
-
-        public void SetDebugging(bool Debugging)
-        {
-            this.Debugging = Debugging;
-        }
-
-
-        public static SQLHelper Init(string LibraryPath, bool Debugging)
-        {
-            Set(new SQLHelper(LibraryPath, Debugging));
-            return Instance;
-        }
-
-        private static void Set(SQLHelper Instance)
-        {
-            _Instance = Instance;
-        }
-        private static SQLHelper _Instance;
-        public static SQLHelper Instance => _Instance;
-
-
         public static string FormatTime(TimeSpan TimeSpan)
         {
             return $"{TimeSpan:hh}:{TimeSpan:mm}:{TimeSpan:ss}";
@@ -133,8 +108,6 @@ namespace Kit.Sql.Helpers
         {
             return IsNull(value) ? ifnull : value;
         }
-
-
 
     }
 }

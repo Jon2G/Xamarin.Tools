@@ -79,6 +79,9 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="Unity" Version="5.11.10" />
+    <PackageReference Include="Unity.Abstractions" Version="5.11.7" />
+    <PackageReference Include="Unity.Container" Version="5.11.11" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
     <PackageReference Include="ZXing.Net" Version="0.16.6">
       <Aliases>SharedZXingNet</Aliases>
@@ -88,7 +91,6 @@
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.6" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">
