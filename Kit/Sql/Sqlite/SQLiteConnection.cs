@@ -1958,13 +1958,13 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of rows added to the table.
         /// </returns>
-        public int Insert(object obj)
+        public int Insert(object obj, bool shouldnotify = true)
         {
             if (obj == null)
             {
                 return 0;
             }
-            return Insert(obj, "", Orm.GetType(obj));
+            return Insert(obj, "", Orm.GetType(obj), shouldnotify);
         }
 
         /// <summary>
@@ -2575,10 +2575,10 @@ namespace Kit.Sql.Sqlite
         /// <typeparam name='T'>
         /// The type of objects to delete.
         /// </typeparam>
-        public int DeleteAll<T>()
+        public int DeleteAll<T>(bool shouldnotify = true)
         {
             var map = GetMapping(typeof(T));
-            return DeleteAll((Kit.Sql.Sqlite.TableMapping)map);
+            return DeleteAll((Kit.Sql.Sqlite.TableMapping)map, shouldnotify);
         }
 
         /// <summary>
@@ -2592,12 +2592,12 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of objects deleted.
         /// </returns>
-        public int DeleteAll(TableMapping map)
+        public int DeleteAll(TableMapping map, bool shouldnotify)
         {
             var query = string.Format("delete from \"{0}\"", map.TableName);
-            OnTableDeleteAll(map);
+            OnTableDeleteAll(map, shouldnotify);
             var count = Execute(query);
-            if (count > 0)
+            if (shouldnotify && count > 0)
                 OnTableChanged(map, NotifyTableChangedAction.Delete, null);
             return count;
         }
@@ -2701,8 +2701,9 @@ namespace Kit.Sql.Sqlite
 
         public event EventHandler<NotifyTableChangedEventArgs> TableChanged;
 
-        private void OnTableDeleteAll(TableMapping table)
+        private void OnTableDeleteAll(TableMapping table, bool shouldnotify)
         {
+            if (!shouldnotify) return;
             Table<ChangesHistory>().Delete(x => x.TableName == table.TableName);
             if (table.SyncDirection != SyncDirection.NoSync)
                 QueryScalars<Guid>($"SELECT SyncGuid FROM {table.TableName}")

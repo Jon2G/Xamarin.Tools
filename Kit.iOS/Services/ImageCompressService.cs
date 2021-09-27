@@ -13,6 +13,7 @@ using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
+    [Sql.Attributes.Preserve]
     public class ImageCompressService : IImageCompressService
     {
         public async Task<FileStream> CompressImage(Stream imageData, int Quality)

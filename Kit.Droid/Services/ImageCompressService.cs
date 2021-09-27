@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Android.Graphics;
 using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
+using Kit.Sql.Attributes;
 using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageCompressService))]
 namespace Kit.Droid.Services
 {
+    [Preserve]
     public class ImageCompressService : IImageCompressService
     {
         public async Task<FileStream> CompressImage(Stream imageData, int Quality)
