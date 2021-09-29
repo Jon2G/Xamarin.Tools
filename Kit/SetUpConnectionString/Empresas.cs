@@ -31,7 +31,9 @@ namespace Kit.SetUpConnectionString
         }
         public IEnumerable<string> ListarEmpresas()
         {
-            this.ListaEmpresas = SQLHLite.Table<Configuracion>().Select(x => x.Empresa).ToList();
+            if (SQLHLite is null)
+                return new List<string>();
+                this.ListaEmpresas = SQLHLite.Table<Configuracion>().Select(x => x.Empresa).ToList();
             if (this.ListaEmpresas.Any())
             {
                 this.Seleccionada = SQLHLite.Table<Configuracion>().Where(x => x.Activa).Select(x => x.Empresa).FirstOrDefault();
