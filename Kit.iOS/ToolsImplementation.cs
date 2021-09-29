@@ -18,12 +18,11 @@ using Kit.Forms.Controls.CrossImage;
 using Kit.Forms.Dialogs;
 using Kit.Forms.Extensions;
 using System.IO;
-
 namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override string TemporalPath=> System.IO.Path.GetTempPath();
+        public override string TemporalPath => System.IO.Path.GetTempPath();
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
         public override void Init()
         {

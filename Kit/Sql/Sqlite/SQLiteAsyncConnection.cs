@@ -689,9 +689,9 @@ namespace Kit.Sql.Sqlite
         /// <returns>
         /// The number of objects deleted.
         /// </returns>
-        public Task<int> DeleteAllAsync(TableMapping map)
+        public Task<int> DeleteAllAsync(TableMapping map,bool shouldnotify=true)
         {
-            return WriteAsync(conn => conn.DeleteAll(map));
+            return WriteAsync(conn => conn.DeleteAll(map,shouldnotify));
         }
 
         /// <summary>
