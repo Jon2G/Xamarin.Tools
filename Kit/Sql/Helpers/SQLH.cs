@@ -129,6 +129,10 @@ namespace Kit.Sql.Helpers
             {
                 if (type.IsEnum)
                 {
+                    if(obj is int enum_int)
+                    {
+                        return Enum.ToObject(type, enum_int);
+                    }
                     return Enum.Parse(type, obj.ToString(), true);
                 }
 
