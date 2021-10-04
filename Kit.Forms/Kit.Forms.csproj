@@ -57,7 +57,7 @@
     <PackageReference Include="MoyskleyTech.ImageProcessing.JPEGCodec" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.PNGCodec" Version="1.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.TGACodec" Version="1.0.1" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.12" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.13" />
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />

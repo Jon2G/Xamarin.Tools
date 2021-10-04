@@ -26,19 +26,19 @@ namespace Kit.Daemon.Sync
         [AutoIncrement, Column(SyncGuidColumnName)]
         public virtual Guid Guid { get; set; }
 
-        public virtual Task<bool> CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)
+        public virtual bool CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)
         {
-            return Task.FromResult(false);
+            return false;
         }
 
-        public virtual Task<bool> Affects(Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
+        public virtual bool Affects(Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
         {
-            return Task.FromResult(false);
+            return false;
         }
 
-        public virtual Task<bool> ShouldSync(SqlBase source_con, SqlBase target_con)
+        public virtual bool ShouldSync(SqlBase source_con, SqlBase target_con)
         {
-            return Task.FromResult(true);
+            return true;
         }
 
         public virtual void OnDownloaded(NotifyTableChangedAction action)
