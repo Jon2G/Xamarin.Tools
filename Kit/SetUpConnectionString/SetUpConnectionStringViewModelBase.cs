@@ -44,7 +44,7 @@ namespace Kit.SetUpConnectionString
             this.SqLite = SqLite;
             this.SqlServer = SqlServer ?? new SQLServerConnection(String.Empty);
             this.Empresas = new Empresas(SqLite);
-            //this.Configuration = configuracion ?? new Configuracion();
+            Configuration = configuracion ?? new Configuracion();
             Configuration.IdentificadorDispositivo = DeviceId;
             this.Empresas.ListarEmpresas();
         }
