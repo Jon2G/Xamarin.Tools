@@ -13,7 +13,7 @@
     <FileVersion>1.1.2.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
-    <Configurations>Debug;Release;Gorilla;Debug2;x64</Configurations>
+    <Configurations>Release;Debug;x64;Debug2;Gorilla</Configurations>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -111,13 +111,11 @@
     <Folder Include="License\" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <Version>5.0.9</Version>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9">
     </PackageReference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <Version>5.0.9</Version>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9">
     </PackageReference>
   </ItemGroup>
 </Project>
