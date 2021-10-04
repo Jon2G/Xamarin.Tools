@@ -18,6 +18,7 @@ using Kit.Sql.Tables;
 using System.Windows.Input;
 using AsyncAwaitBestPractices;
 using Kit.Enums;
+using ThreadState = System.Diagnostics.ThreadState;
 
 namespace Kit.Daemon
 {
@@ -105,9 +106,12 @@ namespace Kit.Daemon
             get => _FactorDeDescanso;
             private set
             {
-                _FactorDeDescanso = value;
-                Raise(() => FactorDeDescanso);
-                Raise(() => Inactive);
+                if (_FactorDeDescanso != value)
+                {
+                    _FactorDeDescanso = value;
+                    Raise(() => FactorDeDescanso);
+                    Raise(() => Inactive);
+                }
             }
         }
 
@@ -175,10 +179,10 @@ namespace Kit.Daemon
             }
 
             WaitHandle = new ManualResetEvent(false); //new AutoResetEvent(true);
-            Thread = new Thread(async () =>
+            Thread = new Thread(() =>
             {
                 IsAwake = true;
-                bool result = await Start();
+                bool result = Start();
                 IsSleepRequested = false;
                 IsAwake = false;
                 WaitHandle.Dispose();
@@ -210,6 +214,21 @@ namespace Kit.Daemon
             IsSleepRequested = false;
             this.SyncManager.ToDo = true;
             FactorDeDescanso = 0;
+
+            if (Thread is not null)
+                switch (Thread.ThreadState)
+                {
+                    case System.Threading.ThreadState.Aborted:
+                    case System.Threading.ThreadState.AbortRequested:
+                    case System.Threading.ThreadState.StopRequested:
+                    case System.Threading.ThreadState.Stopped:
+                    case System.Threading.ThreadState.Unstarted:
+                        WaitHandle?.Dispose();
+                        WaitHandle = null;
+                        Thread = null;
+                        break;
+
+                }
             if (WaitHandle is null)
             {
                 Run();
@@ -325,9 +344,8 @@ namespace Kit.Daemon
             Daemon.OffLine = true;
         }
 
-        private async Task<bool> Start()
+        private bool Start()
         {
-            await Task.Yield();
             try
             {
                 do
@@ -362,7 +380,7 @@ namespace Kit.Daemon
                                 IsAwake = true;
                                 IsSleepRequested = false;
                                 OffLine = false;
-                                return await Start();
+                                return Start();
                             }
                             this.SyncManager.ToDo = true;
                         }
@@ -371,7 +389,7 @@ namespace Kit.Daemon
                             if (!IsInited)
                             {
                                 Initialize();
-                                return await Start();
+                                return Start();
                             }
 
                             try
@@ -381,11 +399,11 @@ namespace Kit.Daemon
                                 this.IsAwake = true;
 
                                 //antes de descargar cambios subamos nuestra información que necesita ser actualizada (si existe) para evitar que se sobreescriba!
-                                if (!await this.SyncManager.Upload() && !IsSleepRequested)
+                                if (!this.SyncManager.Upload() && !IsSleepRequested)
                                 {
                                     this.IsAwake = true;
                                     //actualizar los cambios pendientes en nuestra copia local (si es que hay)
-                                    if (!await this.SyncManager.Download())
+                                    if (!this.SyncManager.Download())
                                     {
                                         this.SyncManager.CurrentDirection = SyncTarget.NOT_SET;
                                     }
@@ -426,7 +444,7 @@ namespace Kit.Daemon
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "En la rutina Run principal");
-                return await Start();
+                return Start();
             }
         }
 

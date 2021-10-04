@@ -96,7 +96,7 @@ namespace Kit.Daemon.Sync
             DownloadQuery = string.Empty;
         }
 
-        public Task<bool> Download()
+        public bool Download()
         {
             lock (DownloadQuery)
             {
@@ -109,7 +109,7 @@ namespace Kit.Daemon.Sync
             }
         }
 
-        public Task<bool> Upload()
+        public bool Upload()
         {
             if (UploadQuery is null)
             {
@@ -145,7 +145,7 @@ namespace Kit.Daemon.Sync
             return query;
         }
 
-        private async Task<bool> GetPendings(SyncTarget SyncTarget)
+        private bool GetPendings(SyncTarget SyncTarget)
         {
             try
             {
@@ -181,7 +181,7 @@ namespace Kit.Daemon.Sync
                 this.CurrentDirection = SyncTarget;
                 if (ToDo && !Daemon.Current.IsSleepRequested)
                 {
-                    ToDo = await ProcesarAcciones(SyncTarget);
+                    ToDo = ProcesarAcciones(SyncTarget);
                     return true;
                 }
                 return false;
@@ -194,7 +194,7 @@ namespace Kit.Daemon.Sync
             return false;
         }
 
-        private async Task<bool> ProcesarAcciones(SyncTarget direccion)
+        private bool ProcesarAcciones(SyncTarget direccion)
         {
             Processed = 0;
             CurrentPackage = null;
@@ -274,14 +274,14 @@ namespace Kit.Daemon.Sync
                             CurrentPackage.MarkAsSynced(source_con);
                             continue;
                         }
-                        if (read != null)
+                        if (read != null && CurrentPackage is not null)
                         {
                             switch (CurrentPackage.Action)
                             {
                                 case NotifyTableChangedAction.Insert:
                                 case NotifyTableChangedAction.Update:
 
-                                    if (direccion == SyncTarget.Local || await read.ShouldSync(source_con, target_con))
+                                    if (direccion == SyncTarget.Local || read.ShouldSync(source_con, target_con))
                                     {
                                         CanDo = true;
                                         object old_pk = null;
@@ -291,7 +291,7 @@ namespace Kit.Daemon.Sync
                                             old_pk = read.GetPk();
                                         }
 
-                                        if (await read.CustomUpload(source_con, target_con, table))
+                                        if (read.CustomUpload(source_con, target_con, table))
                                         {
                                             CurrentPackage.MarkAsSynced(source_con);
                                             Processed++;
@@ -311,7 +311,7 @@ namespace Kit.Daemon.Sync
 
                                         if (source_con is SQLiteConnection lite)
                                         {
-                                            if (await read.Affects(lite, old_pk))
+                                            if (read.Affects(lite, old_pk))
                                             {
                                                 CurrentPackage.MarkAsSynced(source_con);
                                                 Processed++;
