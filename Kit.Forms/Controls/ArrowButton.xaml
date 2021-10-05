@@ -31,14 +31,16 @@
             <Label Text="{Binding Title}" 
                    TextColor="{Binding TitleColor}"
                    FontSize="{Binding TitleFontSize}"
-                   IsVisible="{Binding Title,
-                                           Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>
+                   FontAttributes="{Binding TitleFontAttributes}"
+                   IsVisible="{Binding Title,Converter={StaticResource StringNullOrEmptyBoolConverter}}"
+                   FontFamily="{Binding TitleFontFamily}"/>
 
             <Label Grid.Row="1" Text="{Binding SubTitle}" 
                    TextColor="{Binding SubTitleColor}" 
                    FontSize="{Binding SubTitleFontSize}"
-                   IsVisible="{Binding SubTitle,
-                                           Converter={StaticResource StringNullOrEmptyBoolConverter}}"/>
+                   FontAttributes="{Binding SubTitleFontAttributes}"
+                   IsVisible="{Binding SubTitle,Converter={StaticResource StringNullOrEmptyBoolConverter}}"
+                   FontFamily="{Binding SubtitleFontFamily}"/>
         </StackLayout>
 
         <Image Margin="10,0" Grid.Column="2" VerticalOptions="CenterAndExpand" IsVisible="{Binding IsArrowVisible}">

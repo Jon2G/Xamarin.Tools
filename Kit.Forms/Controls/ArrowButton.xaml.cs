@@ -140,17 +140,17 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty SubTitleFontSizeProperty = BindableProperty.Create(
-            propertyName: nameof(SubTitleFontSize), returnType: typeof(int),
-            declaringType: typeof(ArrowButton), defaultValue: 12, BindingMode.OneWay,
+            propertyName: nameof(SubTitleFontSize), returnType: typeof(double),
+            declaringType: typeof(ArrowButton), defaultValue: 12d, BindingMode.OneWay,
             propertyChanged: (e, o, n) =>
             {
-                if (e is ArrowButton arrow) arrow.SubTitleFontSize = (int)n;
+                if (e is ArrowButton arrow) arrow.SubTitleFontSize = (double)n;
             });
 
         [TypeConverter(typeof(FontSizeConverter))]
-        public int SubTitleFontSize
+        public double SubTitleFontSize
         {
-            get => (int)GetValue(SubTitleFontSizeProperty);
+            get => (double)GetValue(SubTitleFontSizeProperty);
             set
             {
                 SetValue(SubTitleFontSizeProperty, value);
@@ -159,22 +159,75 @@ namespace Kit.Forms.Controls
         }
 
         public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(
-            propertyName: nameof(TitleFontSize), returnType: typeof(int),
-            declaringType: typeof(ArrowButton), defaultValue: 14, BindingMode.OneWay,
+            propertyName: nameof(TitleFontSize), returnType: typeof(double),
+            declaringType: typeof(ArrowButton), defaultValue: 14d, BindingMode.OneWay,
             propertyChanged: (e, o, n) =>
             {
-                if (e is ArrowButton arrow) arrow.TitleFontSize = (int)n;
+                if (e is ArrowButton arrow) arrow.TitleFontSize = (double)n;
             });
 
         [TypeConverter(typeof(FontSizeConverter))]
-        public int TitleFontSize
+        public double TitleFontSize
         {
-            get => (int)GetValue(TitleFontSizeProperty);
+            get => (double)GetValue(TitleFontSizeProperty);
             set
             {
                 SetValue(TitleFontSizeProperty, value);
                 OnPropertyChanged();
             }
+        }
+
+        public static readonly BindableProperty TitleFontAttributesProperty = BindableProperty.Create(
+            propertyName: nameof(TitleFontAttributes), returnType: typeof(FontAttributes),
+            declaringType: typeof(ArrowButton), defaultValue: FontAttributes.Bold, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.TitleFontAttributes = (FontAttributes)n;
+            });
+        public FontAttributes TitleFontAttributes
+        {
+            get { return (FontAttributes)GetValue(TitleFontAttributesProperty); }
+            set { SetValue(TitleFontAttributesProperty, value); OnPropertyChanged(); }
+        }
+        public static readonly BindableProperty SubTitleFontAttributesProperty = BindableProperty.Create(
+            propertyName: nameof(SubTitleFontAttributes), returnType: typeof(FontAttributes),
+            declaringType: typeof(ArrowButton), defaultValue: FontAttributes.Bold, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.SubTitleFontAttributes = (FontAttributes)n;
+            });
+        public FontAttributes SubTitleFontAttributes
+        {
+            get { return (FontAttributes)GetValue(SubTitleFontAttributesProperty); }
+            set { SetValue(SubTitleFontAttributesProperty, value); OnPropertyChanged(); }
+        }
+
+        public static readonly BindableProperty TitleFontFamilyProperty = BindableProperty.Create(
+            propertyName: nameof(TitleFontFamily), returnType: typeof(string),
+            declaringType: typeof(ArrowButton), defaultValue:null, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.TitleFontFamily = n?.ToString();
+            });
+
+        public string TitleFontFamily
+        {
+            get { return (string)GetValue(TitleFontFamilyProperty); }
+            set { SetValue(TitleFontFamilyProperty, value);OnPropertyChanged(); }
+        }
+
+        public static readonly BindableProperty SubtitleFontFamilyProperty = BindableProperty.Create(
+            propertyName: nameof(SubtitleFontFamily), returnType: typeof(string),
+            declaringType: typeof(ArrowButton), defaultValue: null, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow) arrow.TitleFontFamily = n?.ToString();
+            });
+
+        public string SubtitleFontFamily
+        {
+            get { return (string)GetValue(SubtitleFontFamilyProperty); }
+            set { SetValue(SubtitleFontFamilyProperty, value);OnPropertyChanged(); }
         }
 
         private bool IsEnabledCore { set; get; }
