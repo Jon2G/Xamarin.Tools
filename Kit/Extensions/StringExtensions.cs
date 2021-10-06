@@ -27,5 +27,18 @@ namespace Kit
         {
             return source?.IndexOf(toCheck, comp) >= 0;
         }
+        public static bool ContainsAny(this string source, params string[] toCkeck) =>
+            source.ContainsAny(StringComparison.CurrentCulture, toCkeck);
+        public static bool ContainsAny(this string source, StringComparison comp, params string[] toCkeck)
+        {
+            foreach (string s in toCkeck)
+            {
+                if (source.Contains(s, comp))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

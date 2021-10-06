@@ -10,6 +10,8 @@ using Xamarin.Forms.Xaml;
 using ContentView = Xamarin.Forms.ContentView;
 using ImageSource = Xamarin.Forms.ImageSource;
 using Brush = Xamarin.Forms.Brush;
+using Xamarin.CommunityToolkit.Effects;
+
 namespace Kit.Forms.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile), Preserve()]
@@ -22,6 +24,8 @@ namespace Kit.Forms.Controls
             {
                 base.SetValue(BackgroundColorProperty, value);
                 OnPropertyChanged();
+                if (value != Color.LightGray)
+                    TouchEffect.SetNormalBackgroundColor(this.arrow, value);
             }
         }
 
@@ -204,7 +208,7 @@ namespace Kit.Forms.Controls
 
         public static readonly BindableProperty TitleFontFamilyProperty = BindableProperty.Create(
             propertyName: nameof(TitleFontFamily), returnType: typeof(string),
-            declaringType: typeof(ArrowButton), defaultValue:null, BindingMode.OneWay,
+            declaringType: typeof(ArrowButton), defaultValue: null, BindingMode.OneWay,
             propertyChanged: (e, o, n) =>
             {
                 if (e is ArrowButton arrow) arrow.TitleFontFamily = n?.ToString();
@@ -213,7 +217,7 @@ namespace Kit.Forms.Controls
         public string TitleFontFamily
         {
             get { return (string)GetValue(TitleFontFamilyProperty); }
-            set { SetValue(TitleFontFamilyProperty, value);OnPropertyChanged(); }
+            set { SetValue(TitleFontFamilyProperty, value); OnPropertyChanged(); }
         }
 
         public static readonly BindableProperty SubtitleFontFamilyProperty = BindableProperty.Create(
@@ -227,7 +231,7 @@ namespace Kit.Forms.Controls
         public string SubtitleFontFamily
         {
             get { return (string)GetValue(SubtitleFontFamilyProperty); }
-            set { SetValue(SubtitleFontFamilyProperty, value);OnPropertyChanged(); }
+            set { SetValue(SubtitleFontFamilyProperty, value); OnPropertyChanged(); }
         }
 
         private bool IsEnabledCore { set; get; }
@@ -370,6 +374,7 @@ namespace Kit.Forms.Controls
         {
             this.TouchedCommand = new AsyncCommand(Touched);
             InitializeComponent();
+            TouchEffect.SetNormalBackgroundColor(this.arrow, this.arrow.BackgroundColor);
         }
 
         private async Task Touched()

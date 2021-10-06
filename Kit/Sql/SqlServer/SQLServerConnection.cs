@@ -458,7 +458,6 @@ namespace Kit.Sql.SqlServer
         {
             return DataTable(Querry, CommandType.Text, TableName, parameters);
         }
-
         public DataTable DataTable(string Querry, CommandType commandType = CommandType.StoredProcedure, string TableName = null, params SqlParameter[] parameters)
         {
             DataTable result = new DataTable(TableName);

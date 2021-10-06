@@ -228,6 +228,35 @@ namespace Kit
                 Log.Logger.Error(sql);
             }
         }
+        public static DataTable DataTable(this SqlConnection connection, string sql, string TableName = null)
+        {
+            return connection.DataTable(sql, TableName, new CommandConfig() { CommandType = CommandType.Text });
+        }
+        public static DataTable DataTable(this SqlConnection connection, string sql, string TableName = null, CommandConfig config = null, params SqlParameter[] parameters)
+        {
+            config = config ?? new CommandConfig();
+            DataTable result = new DataTable(TableName);
+            using (SqlConnection con = connection)
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = config.CommandType })
+                {
+                    if (parameters != null)
+                        cmd.Parameters.AddRange(parameters);
+                    try
+                    {
+                        result.Load(cmd.ExecuteReader());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex, "");
+                        throw;
+                    }
+                }
+                con.Close();
+            }
+            return result;
+        }
 
         public static SqlServerInformation GetServerInformation(this SqlConnection connection)
         {

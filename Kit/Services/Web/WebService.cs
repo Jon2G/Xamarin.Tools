@@ -44,9 +44,11 @@ namespace Kit.Services.Web
             return sb.ToString();
         }
 
-        public Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters) => GET(metodo, null, parameters);
+        public Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters) => GET(metodo,null, null, parameters);
 
-        public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, Dictionary<string, string> query, params string[] parameters)
+        public Task<Kit.Services.Web.ResponseResult> GET(string metodo, Dictionary<string, string> query, params string[] parameters)
+            => GET(metodo, null, query, parameters);
+        public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, int? timeOut = null, Dictionary<string, string> query=null, params string[] parameters)
         {
             Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
             {
@@ -69,6 +71,8 @@ namespace Kit.Services.Web
 
                     using (HttpClient client = new HttpClient(handler))
                     {
+                        if (timeOut is int tt)
+                            client.Timeout = TimeSpan.FromMilliseconds(tt);
                         client.DefaultRequestHeaders.Add("Accept", "application/json");
                         result.Response = await client.GetStringAsync(GetUrl);
                         result.HttpStatusCode = HttpStatusCode.OK;
@@ -93,7 +97,7 @@ namespace Kit.Services.Web
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, $"GET: {GetUrl}");
-                result.Response = "ERROR"; 
+                result.Response = "ERROR";
                 result.Extra = ex.Message;
             }
             return result;
