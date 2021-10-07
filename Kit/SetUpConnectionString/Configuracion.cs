@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace Kit.SetUpConnectionString
 {
     [Preserve(AllMembers = true), Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
-    public class Configuracion : ModelBase
+    public class Configuracion : ModelBase, ICloneable
     {
         private string _cadenaCon;
         private string _nombreDb;
@@ -273,10 +273,7 @@ namespace Kit.SetUpConnectionString
             };
         }
 
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        public string Serialize() => JsonConvert.SerializeObject(this);
 
         public static Configuracion DeSerialize(string codigoBarras)
         {
@@ -296,5 +293,8 @@ namespace Kit.SetUpConnectionString
                 return null;
             }
         }
+
+        public T Clone<T>() => (T)Clone();
+        public object Clone() => DeSerialize(this.Serialize());
     }
 }

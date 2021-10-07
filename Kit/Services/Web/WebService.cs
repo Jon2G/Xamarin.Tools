@@ -28,10 +28,10 @@ namespace Kit.Services.Web
                 {
                     sb_parameters.AppendFormat("{0}/", Uri.EscapeDataString(oneParameter));
                 }
-                if (sb_parameters.Last() == '/')
-                {
-                    sb_parameters = sb_parameters.Remove(sb_parameters.Length - 1, 1);
-                }
+            }
+            if (sb_parameters.Last() == '/')
+            {
+                sb_parameters = sb_parameters.Remove(sb_parameters.Length - 1, 1);
             }
             if (query != null && query.Any())
             {

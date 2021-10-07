@@ -26,7 +26,7 @@ namespace Kit.Services.Web
             for (int i = 1; i < 255; i++)
             {
                 string ip = $"{ipBase}.{i}";
-                PingReply reply = await PingOrTimeout(ip, 100);
+                PingReply reply = await PingOrTimeout(ip, 250);
                 OnPingReply(reply, ip);
             }
             sw.Stop();

@@ -309,7 +309,7 @@ namespace Kit
 
             return left;
         }
-        public static TSource Last<TSource>(this IEnumerable<TSource> source)
+        public static TSource GetLast<TSource>(this IEnumerable<TSource> source)
         {
             TSource last = source.TryGetLast(out bool found);
             if (!found)
@@ -320,7 +320,7 @@ namespace Kit
             return last;
         }
 
-        public static TSource Last<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        public static TSource GetLast<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             TSource last = source.TryGetLast(predicate, out bool found);
             if (!found)
@@ -331,10 +331,10 @@ namespace Kit
             return last;
         }
 
-        public static TSource LastOrDefault<TSource>(this IEnumerable<TSource> source) =>
+        public static TSource LastDefault<TSource>(this IEnumerable<TSource> source) =>
             source.TryGetLast(out bool _);
 
-        public static TSource LastOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
+        public static TSource LastDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
             source.TryGetLast(predicate, out bool _);
 
         private static TSource TryGetLast<TSource>(this IEnumerable<TSource> source, out bool found)
