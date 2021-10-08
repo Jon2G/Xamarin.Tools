@@ -50,7 +50,7 @@ namespace Kit.Sql.Sqlite
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "");
+                Log.Logger.Error(ex, Query);
                 return false;
             }
             finally

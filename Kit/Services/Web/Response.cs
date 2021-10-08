@@ -27,6 +27,7 @@ namespace Kit.Services.Web
             this.Extra = v;
             return this;
         }
+        public static new Response<T> FromJson(string Json) => Newtonsoft.Json.JsonConvert.DeserializeObject<Response<T>>(Json);
     }
 
     public class Response
@@ -47,6 +48,9 @@ namespace Kit.Services.Web
         {
 
         }
+        public string ToJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this);
+
+        public virtual Response FromJson(string Json) => Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(Json);
     }
 
 }
