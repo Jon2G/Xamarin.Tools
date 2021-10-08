@@ -63,7 +63,7 @@ namespace Kit.Forms.Controls.WebView
             if (e.Result == WebNavigationResult.Timeout || e.Result == WebNavigationResult.Cancel ||
                 e.Result == WebNavigationResult.Failure)
             {
-                Log.Logger.Warning( "Browser_Navigated {0}", e.Result);
+                Log.Logger.Warning("Browser_Navigated {0}", e.Result);
                 FailureCommand?.Execute(e.Result);
                 this.CurrentRequest.Done();
                 return;
@@ -87,6 +87,7 @@ namespace Kit.Forms.Controls.WebView
         public Task GoHome() => GoTo(HomePage);
         public async Task GoTo(string url)
         {
+            await Task.Yield();
             string navigateUrl = url;
             if (!url.StartsWith(HomePage))
             {
