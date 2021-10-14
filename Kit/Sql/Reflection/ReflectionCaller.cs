@@ -29,7 +29,7 @@ namespace Kit.Sql.Reflection
 
         public Type GetType(string TypeName)
         {
-            return Dll.GetType(TypeName,true,true);
+            return Dll.GetType(TypeName, true, true);
         }
 
         private Assembly SearchAssembly(string AssemblyName)
@@ -49,6 +49,14 @@ namespace Kit.Sql.Reflection
             return null;
         }
 
+        public static ReflectionCaller FromThis(object obj)
+        {
+            return new ReflectionCaller().GetAssembly(obj.GetType());
+        }
+        public static ReflectionCaller FromType(Type type)
+        {
+            return new ReflectionCaller().GetAssembly(type);
+        }
         public static ReflectionCaller FromAssembly<T>()
         {
             return new ReflectionCaller().GetAssembly<T>();

@@ -12,11 +12,12 @@ using Kit.Forms.Services;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Kit.Droid.Services;
+using Kit.Forms.Services.Interfaces;
+using Kit.Sql.Reflection;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
 [assembly: Dependency(typeof(MainActivity))]
-
 namespace Kit.Droid.Services
 {
     [MetaData(name: "android.support.FILE_PROVIDER_PATH", Resource = "@xml/paths")]
@@ -26,7 +27,7 @@ namespace Kit.Droid.Services
             ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden |
             ConfigChanges.Mcc | ConfigChanges.Mnc | ConfigChanges.Navigation
     )]
-    public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IUpdateWidget
     {
         public static MainActivity Instance;
 
@@ -88,6 +89,16 @@ namespace Kit.Droid.Services
         public static Context GetAppContext()
         {
             return Android.App.Application.Context;
+        }
+
+        public void UpdateWidget(string AppWidgetProviderFullClassName)
+        {
+            using (ReflectionCaller caller = ReflectionCaller.FromThis(this))
+            {
+                var context = CrossCurrentActivity.Current.AppContext;
+                var type = caller.GetType(AppWidgetProviderFullClassName);
+                context.UpdateWidget(type);
+            }
         }
     }
 }
