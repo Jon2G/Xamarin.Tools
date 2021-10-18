@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
-    public abstract class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public abstract class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IUpdateWidget
     {
         protected abstract Application GetApp { get; }
         protected virtual void Initialize() { }
@@ -28,13 +28,11 @@ namespace Kit.iOS.Services
             Initialize();
             new TintTransformation();
             Kit.iOS.Tools.Init();
+            DependencyService.RegisterSingleton(this);
             LoadApplication(GetApp);
             return base.FinishedLaunching(app, options);
         }
 
-        public void UpdateWidget(string AppWidgetProviderClassName)
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract void UpdateWidget(string AppWidgetProviderClassName);
     }
 }
