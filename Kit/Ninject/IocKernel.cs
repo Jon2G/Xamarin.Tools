@@ -14,14 +14,18 @@ namespace Kit.Ninject
 
         public static T Get<T>()
         {
-            return _kernel.Get<T>();
+            if (_kernel is null)
+            {
+                return default(T);
+            }
+            return _kernel.Get<T>() ?? default(T);
         }
 
         public static void Initialize(params INinjectModule[] modules)
         {
             if (_kernel == null)
             {
-                _kernel = new StandardKernel(modules);
+                _kernel = new StandardKernel(new NinjectSettings() { LoadExtensions = false }, modules);
             }
         }
     }
