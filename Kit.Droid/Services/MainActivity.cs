@@ -17,7 +17,6 @@ using Kit.Sql.Reflection;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
-[assembly: Dependency(typeof(MainActivity))]
 namespace Kit.Droid.Services
 {
     [MetaData(name: "android.support.FILE_PROVIDER_PATH", Resource = "@xml/paths")]
@@ -31,6 +30,10 @@ namespace Kit.Droid.Services
     {
         public static MainActivity Instance;
 
+        public MainActivity()
+        {
+            
+        }
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
@@ -62,6 +65,7 @@ namespace Kit.Droid.Services
             global::Xamarin.Forms.Forms.SetFlags("Shapes_Experimental", "DragAndDrop_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
             CachedImageRenderer.InitImageViewHandler();
             CachedImageRenderer.Init(false);
             UserDialogs.Init(this);

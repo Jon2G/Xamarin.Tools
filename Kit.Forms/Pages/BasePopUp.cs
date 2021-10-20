@@ -6,6 +6,7 @@ using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
+using Xamarin.Forms;
 
 namespace Kit.Forms.Pages
 {
@@ -27,6 +28,7 @@ namespace Kit.Forms.Pages
         public BasePopUp()
         {
             this.ShowDialogCallback = new AutoResetEvent(false);
+            this.Visual = VisualMarker.Material;
         }
 
         public virtual async Task<BasePopUp> ShowDialog()

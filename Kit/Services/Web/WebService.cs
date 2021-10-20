@@ -13,6 +13,28 @@ namespace Kit.Services.Web
     public sealed class WebService
     {
         private readonly string Url;
+        private static HttpClientHandler _HttpClientHandler;
+        private static HttpClientHandler HttpClientHandler
+        {
+            get
+            {
+                if (_HttpClientHandler is not null)
+                    return _HttpClientHandler;
+
+                _HttpClientHandler = new HttpClientHandler()
+                {
+                    Proxy = null,
+                    UseProxy = false
+                };
+                if (Tools.Instance.RuntimePlatform != Enums.RuntimePlatform.WPF)
+                {
+                    _HttpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                }
+                return _HttpClientHandler;
+            }
+        }
+
+        private static readonly HttpClient HttpClient = new HttpClient(HttpClientHandler);
 
         public WebService(string Url)
         {
@@ -44,11 +66,11 @@ namespace Kit.Services.Web
             return sb.ToString();
         }
 
-        public Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters) => GET(metodo,null, null, parameters);
+        public Task<Kit.Services.Web.ResponseResult> GET(string metodo, params string[] parameters) => GET(metodo, null, null, parameters);
 
         public Task<Kit.Services.Web.ResponseResult> GET(string metodo, Dictionary<string, string> query, params string[] parameters)
             => GET(metodo, null, query, parameters);
-        public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, int? timeOut = null, Dictionary<string, string> query=null, params string[] parameters)
+        public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, int? timeOut = null, Dictionary<string, string> query = null, params string[] parameters)
         {
             Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
             {
@@ -58,26 +80,11 @@ namespace Kit.Services.Web
             string responseText = string.Empty;
             try
             {
-                using (HttpClientHandler handler = new HttpClientHandler()
-                {
-                    Proxy = null,
-                    UseProxy = false
-                })
-                {
-                    if (Tools.Instance.RuntimePlatform != Enums.RuntimePlatform.WPF)
-                    {
-                        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-                    }
-
-                    using (HttpClient client = new HttpClient(handler))
-                    {
-                        if (timeOut is int tt)
-                            client.Timeout = TimeSpan.FromMilliseconds(tt);
-                        client.DefaultRequestHeaders.Add("Accept", "application/json");
-                        result.Response = await client.GetStringAsync(GetUrl);
-                        result.HttpStatusCode = HttpStatusCode.OK;
-                    }
-                }
+                if (timeOut is int tt)
+                    HttpClient.Timeout = TimeSpan.FromMilliseconds(tt);
+                HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+                result.Response = await HttpClient.GetStringAsync(GetUrl);
+                result.HttpStatusCode = HttpStatusCode.OK;
             }
             catch (WebException ex)
             {
@@ -117,22 +124,13 @@ namespace Kit.Services.Web
             try
             {
                 geturl = BuildUrl(method, query, parameters);
-                using (HttpClientHandler handler = new HttpClientHandler()
-                {
-                    Proxy = null,
-                    UseProxy = false,
-                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-                })
-                {
-                    using (var client = new HttpClient(handler))
-                    {
-                        var body = new ByteArrayContent(byteArray);
-                        body.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
-                        HttpResponseMessage message = await client.PostAsync(geturl, body);
-                        result.HttpStatusCode = message.StatusCode;
-                        result.Response = await message.Content.ReadAsStringAsync();
-                    }
-                }
+                var body = new ByteArrayContent(byteArray);
+                body.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
+                HttpResponseMessage message = await HttpClient.PostAsync(geturl, body);
+                result.HttpStatusCode = message.StatusCode;
+                result.Response = await message.Content.ReadAsStringAsync();
+
+
 
                 return result;
             }
@@ -156,32 +154,23 @@ namespace Kit.Services.Web
             try
             {
                 geturl = BuildUrl(method, query, parameters);
-                using (HttpClientHandler handler = new HttpClientHandler()
+
+                using (var httpResponse = await HttpClient.GetAsync(geturl))
                 {
-                    Proxy = null,
-                    UseProxy = false,
-                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-                })
-                {
-                    using (HttpClient client = new HttpClient(handler))
+                    if (httpResponse.StatusCode == HttpStatusCode.OK)
                     {
-                        using (var httpResponse = await client.GetAsync(geturl))
-                        {
-                            if (httpResponse.StatusCode == HttpStatusCode.OK)
-                            {
-                                return new MemoryStream(await httpResponse.Content.ReadAsByteArrayAsync());
-                            }
-                            else
-                            {
-                                //Url is Invalid
-                                return null;
-                            }
-                        }
-                        //client.DefaultRequestHeaders.Add("Accept", "application/json");
-                        //result.Response = await client.GetStringAsync(GetUrl);
-                        //result.HttpStatusCode = HttpStatusCode.OK;
+                        return new MemoryStream(await httpResponse.Content.ReadAsByteArrayAsync());
+                    }
+                    else
+                    {
+                        //Url is Invalid
+                        return null;
                     }
                 }
+                //client.DefaultRequestHeaders.Add("Accept", "application/json");
+                //result.Response = await client.GetStringAsync(GetUrl);
+                //result.HttpStatusCode = HttpStatusCode.OK;
+
             }
             catch (Exception ex)
             {
