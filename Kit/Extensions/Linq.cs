@@ -275,6 +275,13 @@ namespace Kit
             }
         }
 
+        /// <summary>
+        /// Randomizes position of items in a lists and returns IEnumerable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="rng"></param>
+        /// <returns></returns>
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
         {
             T[] elements = source.ToArray();

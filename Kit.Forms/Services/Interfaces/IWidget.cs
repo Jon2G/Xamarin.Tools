@@ -10,7 +10,7 @@ namespace Kit.Forms.Services.Interfaces
         public abstract string AppWidgetProviderFullClassName { get; }
         public static void UpdateWidget(string AppWidgetProviderFullClassName)
         {
-            IUpdateWidget iWidget = DependencyService.Get<IUpdateWidget>();
+            IUpdateWidget iWidget =TinyIoC.TinyIoCContainer.Current.Resolve<IUpdateWidget>();
             iWidget?.UpdateWidget(AppWidgetProviderFullClassName);
         }
 
