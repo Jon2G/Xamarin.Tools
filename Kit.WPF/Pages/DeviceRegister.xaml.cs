@@ -34,7 +34,7 @@ namespace Kit.WPF.Pages
             this.Model.Password = Pssword.Password;
             if (await this.Model.LogIn())
             {
-                this.Close();
+                Tools.Instance.SynchronizeInvoke.BeginInvokeOnMainThread(Close);
             }
         }
     }

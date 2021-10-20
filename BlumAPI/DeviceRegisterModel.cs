@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using AsyncAwaitBestPractices;
 using AsyncAwaitBestPractices.MVVM;
 using Kit.Dialogs;
 using Kit.Model;
@@ -56,7 +57,7 @@ namespace Kit.License
             {
                 if (await Licence.RegisterDevice(UserName, Password))
                 {
-                    await this.Window.Close();
+                    Tools.Instance.SynchronizeInvoke.BeginInvokeOnMainThread(() => this.Window.Close().SafeFireAndForget());
                     return true;
                 }
             }

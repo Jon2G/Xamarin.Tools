@@ -641,6 +641,10 @@ namespace Kit.Sql.Sqlite
             connectionString.PostKeyAction?.Invoke(this);
         }
 
+        public SQLiteConnection(string ConnectionString) : base(ConnectionString)
+        {
+        }
+
         public override SqlBase RenewConnection()
         {
 #if NETFX_CORE
