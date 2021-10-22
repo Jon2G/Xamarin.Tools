@@ -254,7 +254,12 @@ namespace Kit.Daemon.Sync
                         }
                         if (Daemon.Current.IsSleepRequested) { return false; }
                         dynamic i_result = result.First();
-                        ISync read = Convert.ChangeType(i_result, typeof(ISync));
+                        ISync read = null;
+                        if (i_result is ISync isync)
+                        {
+                            read = isync;
+                        }
+                        //ISync read = Convert.ChangeType(i_result, typeof(ISync));
                         if (read is null && action == NotifyTableChangedAction.Delete)
                         {
                             if (target_con is SQLiteConnection lite)
