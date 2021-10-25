@@ -10,7 +10,7 @@
              HorizontalOptions="FillAndExpand"  Padding="5" Visual="Default"
              xct:TouchEffect.PressedBackgroundColor="LightGray"
              xct:TouchEffect.PressedScale="0.99" VerticalOptions="FillAndExpand"
-             xct:TouchEffect.Command="{Binding TouchedCommand,Source={x:Reference arrow}}"
+
              xct:TouchEffect.NativeAnimation="True">
     <Frame.Margin>
         <OnPlatform x:TypeArguments="Thickness">
