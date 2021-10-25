@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-
+using System.Collections.Generic;
 namespace Kit
 {
     public static class Linq
@@ -262,6 +262,7 @@ namespace Kit
 
 #endif
 
+       
         public static void Remove<T>(this ICollection<T> source, Func<T, bool> p)
         {
             for (int i = 0; i < source.Count; i++)

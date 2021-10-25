@@ -227,6 +227,11 @@ namespace Kit.Daemon
                         WaitHandle = null;
                         Thread = null;
                         break;
+                    case System.Threading.ThreadState.Background | System.Threading.ThreadState.WaitSleepJoin:
+                    case System.Threading.ThreadState.WaitSleepJoin:
+                        WaitHandle.Set();
+                        Awake();
+                        return;
 
                 }
             if (WaitHandle is null)

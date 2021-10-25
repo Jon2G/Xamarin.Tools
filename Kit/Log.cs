@@ -182,6 +182,10 @@ namespace Kit
 
         public static bool IsDBConnectionError(Exception ex)
         {
+            if(ex is null)
+            {
+                return false;
+            }
             Exception Exbase = MainExcepcion(ex);
             Exception exception = ex;
 #if NETSTANDARD
