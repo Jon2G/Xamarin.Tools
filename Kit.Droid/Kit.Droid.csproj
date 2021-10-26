@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-    <TargetFramework>MonoAndroid11.0</TargetFramework>
+    <TargetFrameworks>MonoAndroid11.0</TargetFrameworks>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
