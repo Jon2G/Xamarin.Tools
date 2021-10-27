@@ -29,7 +29,8 @@ namespace Kit.iOS.Services
             Initialize();
             new TintTransformation();
             Kit.iOS.Tools.Init();
-            DependencyService.RegisterSingleton(this);
+            TinyIoC.TinyIoCContainer.Current.Register<IImageCompressService>(new ImageCompressService());
+            TinyIoC.TinyIoCContainer.Current.Register<IUpdateWidget>(this);
             LoadApplication(GetApp);
             return base.FinishedLaunching(app, options);
         }

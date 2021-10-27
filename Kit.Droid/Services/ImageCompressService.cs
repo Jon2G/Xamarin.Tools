@@ -12,6 +12,10 @@ namespace Kit.Droid.Services
     [Preserve]
     public class ImageCompressService : IImageCompressService
     {
+        public ImageCompressService()
+        {
+            
+        }
         public async Task<FileStream> CompressImage(Stream imageData, int Quality)
         {
             string path = System.IO.Path.Combine(Kit.Tools.Instance.TemporalPath, $"{Guid.NewGuid():N}.jpeg");

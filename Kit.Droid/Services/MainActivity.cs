@@ -32,7 +32,7 @@ namespace Kit.Droid.Services
 
         public MainActivity()
         {
-            
+
         }
         public override void OnConfigurationChanged(Configuration newConfig)
         {
@@ -74,6 +74,8 @@ namespace Kit.Droid.Services
             Rg.Plugins.Popup.Popup.Init(this);
             Kit.Droid.Tools.Init(this, savedInstanceState);
             Forms9Patch.Droid.Settings.Initialize(this);
+            TinyIoC.TinyIoCContainer.Current.Register<IImageCompressService>(new ImageCompressService());
+            TinyIoC.TinyIoCContainer.Current.Register<IUpdateWidget>(this);
             Instance = this; //ImagePicker
             ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
         }
