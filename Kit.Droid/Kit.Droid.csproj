@@ -16,9 +16,9 @@
     <Deterministic>True</Deterministic>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -36,6 +37,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\paths.xml" />
@@ -83,7 +85,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kit.Forms\Kit.Forms.csproj" />
     <ProjectReference Include="..\Kit\Kit.csproj">
-      <Project>{3727a404-d8ba-40d8-9380-be9c3cd2a889}</Project>
+      <Project>{3727A404-D8BA-40D8-9380-BE9C3CD2A889}</Project>
       <Name>Kit</Name>
     </ProjectReference>
   </ItemGroup>
@@ -104,6 +106,26 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Compile Include="Services\Screenshot.cs" />
+    <Compile Include="Services\BarCodeBuilder.cs" />
+    <Compile Include="Services\BrightnessService.cs" />
+    <Compile Include="Services\CustomPrintDocumentAdapter.cs" />
+    <Compile Include="Services\FolderPermissions.cs" />
+    <Compile Include="Services\GalleryService.cs" />
+    <Compile Include="Services\ImageCompressService.cs" />
+    <Compile Include="Services\ImageResizerService.cs" />
+    <Compile Include="Services\IpAddressService.cs" />
+    <Compile Include="Services\KeyboardService.cs" />
+    <Compile Include="Services\MainActivity.cs" />
+    <Compile Include="Services\ScreenManagerService.cs" />
+    <Compile Include="Effects\ViewLifecycleEffect.cs" />
+    <Compile Include="Extensions\ContextExtensions.cs" />
+    <Compile Include="Renders\SelectableLabelRenderer.cs" />
+    <Compile Include="Utils\KeyboardUtils.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="ToolsImplementation.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 
 </Project>
