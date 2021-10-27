@@ -1,26 +1,22 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetFrameworks>MonoAndroid11.0</TargetFrameworks>
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <ProductVersion>8.0.30703</ProductVersion>
-    <PackOnBuild>true</PackOnBuild>
     <SchemaVersion>2.0</SchemaVersion>
     <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
-    <ProjectGuid>{69924835-CCFB-4764-A16F-F31295748C29}</ProjectGuid>
+    <ProjectGuid>{7F3FAB21-7412-4D23-9308-E374489E588C}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{9ef11e43-1701-4396-8835-8392d57abb70}</TemplateGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kit.Droid</RootNamespace>
-    <AssemblyName>Kit.Droid</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>True</Deterministic>
-    <AndroidResgenFile></AndroidResgenFile>
+    <AppDesignerFolder>Properties</AppDesignerFolder>  
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
+    <PackOnBuild>true</PackOnBuild>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <LangVersion>latest</LangVersion>
     <Version>1.1.2.0</Version>
     <AssemblyVersion>1.1.2.0</AssemblyVersion>
@@ -136,5 +132,9 @@
     </ItemGroup>
   </Target>
 
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0-beta.69" PrivateAssets="all" />
+  </ItemGroup>
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 
 </Project>
