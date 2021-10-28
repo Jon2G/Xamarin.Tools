@@ -38,7 +38,8 @@ namespace Kit.Forms.Extensions
         /// <returns></returns>
         public static Task<FileStream> CompressImage(Stream imageData, int Quality)
         {
-            return DependencyService.Get<IImageCompressService>().CompressImage(imageData, Quality);
+            var service = TinyIoC.TinyIoCContainer.Current.Resolve<IImageCompressService>();
+            return service.CompressImage(imageData, Quality);
         }
         public static ImageSource ByteToImage(this byte[] ByteArray)
         {

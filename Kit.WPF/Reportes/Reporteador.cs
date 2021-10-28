@@ -35,9 +35,12 @@ namespace Kit.WPF.Reportes
                 string path = $"{Kit.Tools.Instance.LibraryPath}{scape}{directorio}";
                 this.RutaReportes = path;
             }
-            if (string.IsNullOrEmpty(RutaLogo) || this.RutaLogo[0] == '\\')
+            if (this.RutaLogo[0] == '\\')
             {
-                this.RutaLogo = $"{this.RutaReportes}{this.RutaLogo}";
+                string directorio = this.RutaLogo.Substring(1);
+                string scape = Kit.Tools.Instance.LibraryPath.EndsWith("\\") ? "" : "\\";
+                string path = $"{Kit.Tools.Instance.LibraryPath}{scape}{directorio}";
+                this.RutaLogo = path;
             }
         }
 
@@ -440,6 +443,8 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
+                if (Tools.Debugging)
+                    this.StiReport.Design();
                 MessageBox.Show(ex.ToString());
                 Log.Logger.Error(ex, "Loading repport");
             }

@@ -22,7 +22,7 @@ namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
-        public override string TemporalPath => System.IO.Path.GetTempPath();
+        public override string TemporalPath => Xamarin.Essentials.FileSystem.CacheDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
         public override void Init()
         {

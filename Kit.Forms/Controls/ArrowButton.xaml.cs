@@ -375,6 +375,8 @@ namespace Kit.Forms.Controls
             this.TouchedCommand = new AsyncCommand(Touched);
             InitializeComponent();
             TouchEffect.SetNormalBackgroundColor(this.arrow, this.arrow.BackgroundColor);
+            TouchEffect.SetCommand(this, TouchedCommand);
+            //xct: TouchEffect.Command = "{Binding TouchedCommand,Source={x:Reference arrow}}"
         }
 
         private async Task Touched()

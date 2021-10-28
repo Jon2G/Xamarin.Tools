@@ -126,7 +126,7 @@ namespace Kit
 
             return -1;
         }
-
+        
         public static void AddRange<T>(this ICollection<T> ts, params T[] pelementos)
         {
             ts.AddRange<T>(elementos: pelementos);
@@ -322,7 +322,7 @@ namespace Kit
             TSource last = source.TryGetLast(out bool found);
             if (!found)
             {
-                throw  new Exception("No elements!");
+                throw new Exception("No elements!");
             }
 
             return last;

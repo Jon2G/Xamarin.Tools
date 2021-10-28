@@ -8,6 +8,7 @@ namespace Kit.Droid
 {
     public class ToolsImplementation : AbstractTools
     {
+        public override string TemporalPath => Xamarin.Essentials.FileSystem.CacheDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.Android;
         public MainActivity MainActivity { get; private set; }
 
