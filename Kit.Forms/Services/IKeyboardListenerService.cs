@@ -93,7 +93,9 @@ namespace Kit.Forms.Services
         private void Confirm()
         {
             this.CountDown.Stop();
-            OnReciveCode?.Invoke(this, RecievedText?.ToString()?.Trim());
+            string code = RecievedText?.ToString()?.Trim();
+            if (!string.IsNullOrEmpty(code))
+                OnReciveCode?.Invoke(this, code);
             this.RecievedText = new StringBuilder();
         }
 
@@ -110,7 +112,7 @@ namespace Kit.Forms.Services
                 return;
             }
 
-            if (text == "\n")
+            if (text == "\n" && !string.IsNullOrEmpty(Code))
             {
                 OnReciveCode?.Invoke(this, Code);
                 RecievedText = new StringBuilder();

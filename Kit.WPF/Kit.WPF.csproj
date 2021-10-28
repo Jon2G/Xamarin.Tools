@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>net47</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <ProjectTypeGuids>{60DC8134-EBA5-43B8-BCC9-BB4BC16C2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC};{9A19103F-16F7-4668-BE54-9A1E7A4F7556}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Tools.WPF.Forms</AssemblyTitle>
@@ -58,7 +58,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="DeviceId" Version="6.0.0" />
+    <PackageReference Include="EnvDTE" Version="16.10.31320.204" />
     <PackageReference Include="Fody" Version="6.5.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="15.8.243" />
+    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.16.30">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -70,6 +77,7 @@
     <PackageReference Include="SQLitePCLRaw.bundle_winsqlite3" Version="2.0.6" />
     <PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="Unity" Version="5.11.10" />
     <PackageReference Include="Unity.Abstractions" Version="5.11.7" />
     <PackageReference Include="Unity.Container" Version="5.11.11" />
@@ -78,6 +86,9 @@
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.7" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\envdte.dll</HintPath>
+    </Reference>
     <Reference Include="Stimulsoft.Base">
       <HintPath>Assamblies\Stimulsoft.Base.dll</HintPath>
     </Reference>
