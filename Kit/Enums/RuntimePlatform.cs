@@ -2,6 +2,7 @@
 {
     public enum RuntimePlatform
     {
-        WPF, Android,iOS, UWP, NetCore
+        WPF, Android,iOS, UWP, NetCore,
+        Unknown
     }
 }

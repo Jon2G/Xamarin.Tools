@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Kit.Enums;
 
 namespace Kit.Services.Web
 {
@@ -26,7 +27,7 @@ namespace Kit.Services.Web
                     Proxy = null,
                     UseProxy = false
                 };
-                if (Tools.Instance.RuntimePlatform != Enums.RuntimePlatform.WPF)
+                if ((Tools.Instance?.RuntimePlatform??RuntimePlatform.Unknown) != Enums.RuntimePlatform.WPF)
                 {
                     _HttpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
                 }
@@ -57,9 +58,12 @@ namespace Kit.Services.Web
             }
             if (query != null && query.Any())
             {
-                foreach (KeyValuePair<string, string> oneParameter in query)
+                var first = query.First();
+                sb_parameters.Append($"?{first.Key}={ Uri.EscapeDataString(first.Value)}");
+                for (int i = 1; i < query.Count; i++)
                 {
-                    sb_parameters.AppendFormat("?{0}={1}", oneParameter.Key, Uri.EscapeDataString(oneParameter.Value));
+                    var oneParameter = query.ElementAt(i);
+                    sb_parameters.AppendFormat("&{0}={1}", oneParameter.Key, Uri.EscapeDataString(oneParameter.Value));
                 }
             }
             StringBuilder sb = new StringBuilder(this.Url).Append('/').Append(metodo).Append(sb_parameters);
