@@ -8,7 +8,7 @@
     <PackOnBuild>true</PackOnBuild>
     <SchemaVersion>2.0</SchemaVersion>
     <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
-    <ProjectGuid>{69924835-CCFB-4764-A16F-F31295748C29}</ProjectGuid>
+    <ProjectGuid>{7F3FAB21-7412-4D23-9308-E374489E588C}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{9ef11e43-1701-4396-8835-8392d57abb70}</TemplateGuid>
     <OutputType>Library</OutputType>
