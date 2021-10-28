@@ -37,9 +37,8 @@ namespace Kit.Droid.Services
         private Application _App;
 
 
-        protected virtual void Initialize(Bundle savedInstanceState) {
+        protected virtual void Initialize() {
             LoadApplication(CurrentApp);
-            Kit.Droid.Tools.Init(this, savedInstanceState);
             FontCache.DeleteFontCacheIfFontChanged(CurrentApp.GetType());
         }
 
