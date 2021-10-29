@@ -15,6 +15,7 @@ using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
 using Kit.Sql.Reflection;
 using Application = Xamarin.Forms.Application;
+using System;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]
@@ -29,18 +30,9 @@ namespace Kit.Droid.Services
     )]
     public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IUpdateWidget
     {
-        protected abstract Application GetApp { get; }
-        private Application CurrentApp
-        {
-            get => _App ??= GetApp;
-        }
-        private Application _App;
-
-
-        protected virtual void Initialize(Bundle savedInstanceState) {
-            LoadApplication(CurrentApp);
+        protected virtual void Initialize(Bundle savedInstanceState, Type CurrentApp ) {
             Kit.Droid.Tools.Init(this, savedInstanceState);
-            FontCache.DeleteFontCacheIfFontChanged(CurrentApp.GetType());
+            FontCache.DeleteFontCacheIfFontChanged(CurrentApp);
         }
 
         public static MainActivity Instance;
