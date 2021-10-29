@@ -214,7 +214,10 @@ namespace Kit.Daemon
             IsSleepRequested = false;
             this.SyncManager.ToDo = true;
             FactorDeDescanso = 0;
-
+            if (IsAwake)
+            {
+                return;
+            }
             if (Thread is not null)
                 switch (Thread.ThreadState)
                 {
