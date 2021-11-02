@@ -16,10 +16,10 @@
     <Deterministic>True</Deterministic>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <LangVersion>latest</LangVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -118,7 +118,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kit.Forms\Kit.Forms.csproj" />
     <ProjectReference Include="..\Kit\Kit.csproj">
-      <Project>{3727a404-d8ba-40d8-9380-be9c3cd2a889}</Project>
+      <Project>{FBDD1DCC-B804-4690-8113-98D775DE9A88}</Project>
       <Name>Kit</Name>
     </ProjectReference>
   </ItemGroup>

@@ -6,6 +6,9 @@
     <LangVersion>latest</LangVersion>
     <RootNamespace>Kit.Razor</RootNamespace>
     <AssemblyName>Kit.Razor</AssemblyName>
+    <PackageId>Kit.Razor</PackageId>
+    <StaticWebAssetBasePath>_content/$(PackageId)</StaticWebAssetBasePath>
+    <TypescriptOutDir>wwwroot</TypescriptOutDir>
   </PropertyGroup>
 
   <ItemGroup>

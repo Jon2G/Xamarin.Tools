@@ -25,6 +25,7 @@ namespace Kit.iOS.Services
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
+        public virtual void BeforeLoadApplication(UIApplication app, NSDictionary options){}
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.SetFlags("Shapes_Experimental", "DragAndDrop_Experimental");
@@ -39,6 +40,7 @@ namespace Kit.iOS.Services
             Kit.iOS.Tools.Init();
             TinyIoC.TinyIoCContainer.Current.Register<IImageCompressService>(new ImageCompressService());
             TinyIoC.TinyIoCContainer.Current.Register<IUpdateWidget>(this);
+            BeforeLoadApplication(app,options);
             LoadApplication(CurrentApp);
             return base.FinishedLaunching(app, options);
         }
