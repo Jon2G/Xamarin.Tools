@@ -26,7 +26,7 @@ namespace Kit.WPF.Reportes
             StiOptions.Designer.AllowUseWinControl = true;
             StiOptions.Viewer.AllowUseDragDrop =
             StiOptions.Designer.AllowUseDragDrop = false;
-            this.RutaLogo = RutaLogo;
+            this.RutaLogo = string.IsNullOrEmpty(RutaLogo) ? "\\logo.png" : RutaLogo;
             this.RutaReportes = RutaReportes;
             if (this.RutaReportes[0] == '\\')
             {
@@ -35,6 +35,7 @@ namespace Kit.WPF.Reportes
                 string path = $"{Kit.Tools.Instance.LibraryPath}{scape}{directorio}";
                 this.RutaReportes = path;
             }
+
             if (this.RutaLogo[0] == '\\')
             {
                 string directorio = this.RutaLogo.Substring(1);
