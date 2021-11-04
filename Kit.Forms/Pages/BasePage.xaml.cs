@@ -167,7 +167,20 @@ namespace Kit.Forms.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            if (HasAppeared)
+            {
+                return;
+            }
+            OnFirstAppearing();
+            HasAppeared = true;
         }
+
+        private bool HasAppeared;
+        protected virtual void OnFirstAppearing()
+        {
+            
+        }
+
      
         protected override void OnDisappearing()
         {

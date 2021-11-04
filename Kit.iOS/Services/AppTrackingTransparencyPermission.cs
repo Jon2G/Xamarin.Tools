@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppTrackingTransparency;
 using Kit.Forms.Services.Interfaces;
 using Kit.iOS.Services;
 using UIKit;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using TinyIoC;
 
 [assembly: Dependency(typeof(AppTrackingTransparencyPermission))]
 namespace Kit.iOS.Services
 {
+    [Preserve]
     public class AppTrackingTransparencyPermission : Permissions.BasePlatformPermission, IAppTrackingTransparencyPermission
     {
         protected override Func<IEnumerable<string>> RequiredInfoPlistKeys => () => new string[] { "NSUserTrackingUsageDescription" };
@@ -21,26 +22,26 @@ namespace Kit.iOS.Services
         // Requests the user to accept or deny a permission
         public void RequestAsync(Action<PermissionStatus> completion)
         {
-            ATTrackingManager.RequestTrackingAuthorization((result) => completion(Convert(result)));
+            AppTrackingTransparency.ATTrackingManager.RequestTrackingAuthorization((result) => completion(Convert(result)));
         }
 
         // This method checks if current status of the permission
         public override Task<PermissionStatus> CheckStatusAsync()
         {
-            return Task.FromResult(Convert(ATTrackingManager.TrackingAuthorizationStatus));
+            return Task.FromResult(Convert(AppTrackingTransparency.ATTrackingManager.TrackingAuthorizationStatus));
         }
 
-        private PermissionStatus Convert(ATTrackingManagerAuthorizationStatus status)
+        private PermissionStatus Convert(AppTrackingTransparency.ATTrackingManagerAuthorizationStatus status)
         {
             switch (status)
             {
-                case ATTrackingManagerAuthorizationStatus.NotDetermined:
+                case AppTrackingTransparency.ATTrackingManagerAuthorizationStatus.NotDetermined:
                     return PermissionStatus.Disabled;
-                case ATTrackingManagerAuthorizationStatus.Restricted:
+                case AppTrackingTransparency.ATTrackingManagerAuthorizationStatus.Restricted:
                     return PermissionStatus.Restricted;
-                case ATTrackingManagerAuthorizationStatus.Denied:
+                case AppTrackingTransparency.ATTrackingManagerAuthorizationStatus.Denied:
                     return PermissionStatus.Denied;
-                case ATTrackingManagerAuthorizationStatus.Authorized:
+                case AppTrackingTransparency.ATTrackingManagerAuthorizationStatus.Authorized:
                     return PermissionStatus.Granted;
                 default:
                     return PermissionStatus.Unknown;

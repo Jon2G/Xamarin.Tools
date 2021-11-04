@@ -92,6 +92,7 @@
 #endregion
 #if SERIALIZABLE
 using System.Runtime.Serialization;
+using Kit.Sql.Attributes;
 #endif
 
 namespace TinyIoC

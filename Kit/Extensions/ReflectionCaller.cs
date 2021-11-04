@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Kit.Sql.Reflection
+namespace Kit
 {
     public class ReflectionCaller : IDisposable
     {
@@ -17,6 +17,10 @@ namespace Kit.Sql.Reflection
         {
         }
 
+        public ReflectionCaller(Assembly dll)
+        {
+            Dll = dll;
+        }
         public ReflectionCaller(string AssemblyName)
         {
             string Library = Tools.Instance.LibraryPath;
