@@ -1,4 +1,5 @@
-﻿using FFImageLoading.Transformations;
+﻿using System;
+using FFImageLoading.Transformations;
 using Foundation;
 using Kit.Forms.Services;
 using Kit.Forms.Services.Interfaces;
@@ -7,17 +8,15 @@ using Xamarin.Forms;
 
 namespace Kit.iOS.Services
 {
-    public abstract class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IUpdateWidget
+    public abstract class AppDelegate<T> : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IUpdateWidget
+        where T :Application
     {
-        protected abstract Application GetApp { get; }
-        private Application CurrentApp
+        public AppDelegate()
         {
-            get => _App ??= GetApp;
+
         }
-        private Application _App;
 
-
-        protected virtual void Initialize() { FontCache.DeleteFontCacheIfFontChanged(CurrentApp.GetType()); }
+        protected virtual void Initialize() { FontCache.DeleteFontCacheIfFontChanged(typeof(T)); }
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
         // method you should instantiate the window, load the UI into it and then make the window
@@ -41,7 +40,7 @@ namespace Kit.iOS.Services
             TinyIoC.TinyIoCContainer.Current.Register<IImageCompressService>(new ImageCompressService());
             TinyIoC.TinyIoCContainer.Current.Register<IUpdateWidget>(this);
             BeforeLoadApplication(app,options);
-            LoadApplication(CurrentApp);
+            LoadApplication(Activator.CreateInstance<T>());
             return base.FinishedLaunching(app, options);
         }
 

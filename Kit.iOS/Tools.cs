@@ -14,16 +14,18 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using FFImageLoading.Forms.Platform;
 using Xamarin.CommunityToolkit.Effects;
+using PreserveAttribute = Xamarin.Forms.Internals.PreserveAttribute;
+
 
 namespace Kit.iOS
 {
+    [Preserve()]
     public class Tools : Kit.Tools
     {
         public static AbstractTools Init()
         {
             //////////////////////////////////////////
             Xamarin.Forms.Forms.Init();
-
             Rg.Plugins.Popup.Popup.Init();
             CachedImageRenderer.Init();
             AppDomain.CurrentDomain.UnhandledException += Log.CurrentDomainOnUnhandledException;
@@ -31,7 +33,10 @@ namespace Kit.iOS
             Set(new ToolsImplementation());
             (Instance as ToolsImplementation).Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
-
+            if (UIDevice.CurrentDevice.CheckSystemVersion(14,0))
+            {
+                TinyIoC.TinyIoCContainer.Current.Register(typeof(Kit.Forms.Services.Interfaces.IAppTrackingTransparencyPermission),new AppTrackingTransparencyPermission());
+            }
             if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
             {
                 // Ask the user for permission to get notifications on iOS 10.0+

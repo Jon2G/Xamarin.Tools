@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Fonts\FontelloIcons\font\kiticons_4.ttf" />
+    <EmbeddedResource Include="Fonts\FontelloIcons\font\kiticons4.ttf" />
   </ItemGroup>
 
 
@@ -82,8 +82,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
     <ProjectReference Include="..\Kit\Kit.csproj" />
+    <ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

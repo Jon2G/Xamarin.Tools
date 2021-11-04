@@ -1,7 +1,7 @@
 ﻿using Kit.Forms.Fonts;
 using Xamarin.Forms;
 
-[assembly: ExportFont("kiticons_4.ttf", Alias = FontelloIcons.Font)]
+[assembly: ExportFont(FontelloIcons.FontResourceName, Alias = FontelloIcons.Font,EmbeddedFontResourceId = "Kit.Forms.Fonts.FontelloIcons.font.kiticons4.ttf")]
 namespace Kit.Forms.Fonts
 {
     public static class FontelloIcons
@@ -12,5 +12,6 @@ namespace Kit.Forms.Fonts
         public const string RightArrow = "\uF105";
         public const string ThreeDots = "\uF0C9";
         public const string Font = "KitFontIcons";
+        public const string FontResourceName = "kiticons4.ttf";
     }
 }

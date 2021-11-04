@@ -37,26 +37,40 @@ namespace Kit.Forms.Services
                         exportFontAttribute.FontFileName);
                 }
 
-                if (fontFilePath == null || !File.Exists(fontFilePath)) return;
+                if (string.IsNullOrEmpty(fontFilePath)) return;
 
                 var deleteFile = false;
 
                 var asmName = assembly.GetName().Name;
-                using (var embeddedStream =
-                    assembly.GetManifestResourceStream(asmName + ".Resources.Fonts." +
-                                                       exportFontAttribute.FontFileName))
-                using (var fileStream = File.OpenRead(fontFilePath))
+                using(ReflectionCaller caller=new ReflectionCaller(assembly))
                 {
-                    var embeddedFontHash = GetHash(embeddedStream);
-                    var cachedFontHash = GetHash(fileStream);
+                    string fontName = exportFontAttribute.FontFileName;
+                    string resourceName = caller.FindResources(x=>x.Contains(fontName)).FirstOrDefault();
 
-                    deleteFile = embeddedFontHash is null || !embeddedFontHash.SequenceEqual(cachedFontHash);
-                }
+                    using (Stream embeddedStream =caller.GetResource(resourceName))
+                    {
+                        using (var fileStream =
+                             File.Exists(fontFilePath) ?
+                            File.OpenRead(fontFilePath) : null)
+                        {
+                            var embeddedFontHash = GetHash(embeddedStream);
+                            var cachedFontHash = GetHash(fileStream);
 
-                if (deleteFile)
-                {
-                    Debug.WriteLine($"deleting '{fontFilePath}'");
-                    File.Delete(fontFilePath);
+                            deleteFile = embeddedFontHash is null || !embeddedFontHash.SequenceEqual(cachedFontHash);
+                        }
+
+                        if (deleteFile)
+                        {
+                            Debug.WriteLine($"deleting '{fontFilePath}'");
+                            File.Delete(fontFilePath);
+                            using (var fileStream = File.Open(fontFilePath, FileMode.OpenOrCreate))
+                            {
+                                embeddedStream.Position = 0;
+                                fileStream.Position = 0;
+                                embeddedStream.CopyTo(fileStream);
+                            }
+                        }
+                    }
                 }
 
                 static byte[] GetHash(Stream stream)

@@ -13,7 +13,6 @@ using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
-using Kit.Sql.Reflection;
 using Application = Xamarin.Forms.Application;
 using System;
 

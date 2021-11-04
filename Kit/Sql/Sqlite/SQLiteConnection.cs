@@ -19,7 +19,6 @@ using Kit.Sql.Exceptions;
 using Kit.Sql.Helpers;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Readers;
-using Kit.Sql.Reflection;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using SQLitePCL;
