@@ -90,7 +90,6 @@ namespace Kit.Services.Web
                     }
                     catch (SocketException ex)
                     {
-                        Log.Logger.Error(ex, "OnPingReply");
                         name = "?";
                     }
                     Console.WriteLine("{0} ({1}) is up: ({2} ms)", ip, name, reply.RoundtripTime);

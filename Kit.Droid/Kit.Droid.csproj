@@ -118,7 +118,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kit.Forms\Kit.Forms.csproj" />
     <ProjectReference Include="..\Kit\Kit.csproj">
-      <Project>{FBDD1DCC-B804-4690-8113-98D775DE9A88}</Project>
+      <Project>{3727A404-D8BA-40D8-9380-BE9C3CD2A889}</Project>
       <Name>Kit</Name>
     </ProjectReference>
   </ItemGroup>
