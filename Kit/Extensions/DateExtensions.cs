@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Kit
 {
@@ -6,7 +7,11 @@ namespace Kit
     {
         public static DateTime MexicoCityCurrentDateTime()
         {
-            return DateTime.UtcNow.AddHours(-5);
+            //if (DateTime.UtcNow.IsDaylightSavingTime())
+            //{
+            //    return DateTime.UtcNow.AddHours(-5);
+            //}
+            return DateTime.UtcNow.AddHours(-6);
         }
 
         /// <summary>
