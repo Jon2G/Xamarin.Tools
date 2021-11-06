@@ -71,6 +71,7 @@ namespace Kit.Forms.Controls.WebView
             await this.EvaluateJavaScriptAsync(@"window.onerror = function myErrorHandler(errorMsg, url, lineNumber) { console.log('Error occured: ' + errorMsg); return false; }");
             if (e.Url is null)
             {
+                this.CurrentRequest?.Done();
                 await GoTo(HomePage);
                 return;
             }
@@ -127,7 +128,7 @@ namespace Kit.Forms.Controls.WebView
                 while (NavigationQueue.Any())
                 {
                     this.CurrentRequest = NavigationQueue.Dequeue();
-                    Source = new UrlWebViewSource()
+                    this.Source = new UrlWebViewSource()
                     {
                         Url = this.CurrentRequest.Url.AbsoluteUri
                     };
