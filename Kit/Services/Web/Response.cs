@@ -9,7 +9,7 @@ namespace Kit.Services.Web
     {
         public new static Response<T> Error => new(APIResponseResult.INTERNAL_ERROR, "ERROR");
         public new static Response<T> InvalidRequest => new(APIResponseResult.INVALID_REQUEST, "!Solicitud invalida!");
-        public new static Response<T> NotExecuted => new(APIResponseResult.NOT_EXECUTED, "!Solicitud invalida/no ejecutada!");
+       // public new static Response<T> NotExecuted => new(APIResponseResult.NOT_EXECUTED, "!Solicitud invalida/no ejecutada!");
         public new static Response<T> Offline => new(APIResponseResult.INTERNAL_ERROR, "El servicio web no esta dispobile por el momento.");
         public T Extra { get; set; }
         public Response(APIResponseResult ResponseResult, string Message, T Extra = default(T))
@@ -36,7 +36,7 @@ namespace Kit.Services.Web
         public string Message { get; set; }
         public static Response Error => new(APIResponseResult.INTERNAL_ERROR, "ERROR");
         public static Response InvalidRequest => new(APIResponseResult.INVALID_REQUEST, "!Solicitud invalida!");
-        public static Response NotExecuted => new(APIResponseResult.NOT_EXECUTED, "!Solicitud invalida/no ejecutada!");
+      // public static Response NotExecuted => new(APIResponseResult.NOT_EXECUTED, "!Solicitud invalida/no ejecutada!");
         public static Response Offline => new(APIResponseResult.INTERNAL_ERROR, "El servicio web no esta dispobile por el momento.");
 
         public Response(APIResponseResult ResponseResult, string Message)

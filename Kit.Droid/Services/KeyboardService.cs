@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Android.Runtime;
 using Android.Views.InputMethods;
 using Kit.Droid.Services;
 using Kit.Droid.Utils;
@@ -9,6 +10,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(KeyboardService))]
 namespace Kit.Droid.Services
 {
+    [Preserve]
     public class KeyboardService : Forms9Patch.Droid.KeyboardService, IKeyboardService, KeyboardUtils.SoftKeyboardToggleListener
     {
         public bool IsVisible { get; private set; }

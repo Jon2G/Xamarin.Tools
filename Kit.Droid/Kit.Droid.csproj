@@ -69,7 +69,6 @@
     <PackageReference Include="ZXing.Net.Bindings.Android" Version="0.16.6" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Effects\ViewLifecycleEffect.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Renders\SelectableLabelRenderer.cs" />
