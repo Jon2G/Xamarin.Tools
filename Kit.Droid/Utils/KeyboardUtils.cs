@@ -6,9 +6,11 @@ using System;
 using Android.Content;
 using Java.Interop;
 using Java.Util;
+using Android.Runtime;
 
 namespace Kit.Droid.Utils
 {
+    [Preserve]
     public class KeyboardUtils : Java.Lang.Object, ViewTreeObserver.IOnGlobalLayoutListener
     {
         private const int MAGIC_NUMBER = 200;
