@@ -53,12 +53,25 @@ namespace Kit.Daemon.Abstractions
 
                 if (directionAttribute.Direction == SyncDirection.Download || directionAttribute.Direction == SyncDirection.TwoWay)
                 {
-                    this.DownloadTables.Add(
-                        Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
-                        , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                    this.DownloadTables.Add(
-                        Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                        , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                    string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type));
+                    if (this.DownloadTables.TryGetValue(key, out TableMapping mapping))
+                    {
+                        mapping.Merge(Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                    }
+                    else
+                    {
+                        this.DownloadTables.Add(key, Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                    }
+                    key = Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type));
+                    if (this.DownloadTables.TryGetValue(key, out TableMapping localMapping))
+                    {
+                        localMapping.Merge(Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                    }
+                    else
+                    {
+                        this.DownloadTables.Add(key, Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                    }
+
                 }
 
                 if (directionAttribute.Direction == SyncDirection.Upload || directionAttribute.Direction == SyncDirection.TwoWay)

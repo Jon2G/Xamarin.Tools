@@ -7,7 +7,10 @@ namespace Kit.Forms.Converters
     public class IsEqualOrGreaterThanConverter : IValueConverter
     {
         public static readonly IValueConverter Instance = new IsEqualOrGreaterThanConverter();
+        public IsEqualOrGreaterThanConverter()
+        {
 
+        }
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double intValue = System.Convert.ToDouble(value);

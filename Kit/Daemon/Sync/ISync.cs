@@ -26,7 +26,11 @@ namespace Kit.Daemon.Sync
         [AutoIncrement, Column(SyncGuidColumnName)]
         public virtual Guid Guid { get; set; }
 
-        public virtual bool CustomUpload(SqlBase con, SqlBase targecon, Kit.Sql.Base.TableMapping map)
+        public virtual void Delete(SqlBase con, SqlBase targetcon, Kit.Sql.Base.TableMapping map)
+        {
+            targetcon.Delete(this);
+        }
+        public virtual bool CustomUpload(SqlBase con, SqlBase targetcon, Kit.Sql.Base.TableMapping map)
         {
             return false;
         }

@@ -125,6 +125,10 @@ namespace Kit.Sql.Base
             var command = Connection.CreateCommand(cmdText, conditions_array);
 
             int result = command.ExecuteNonQuery();
+            if (result < 0)
+            {
+
+            }
             if (ShouldNotify && result > 0 && Table.SyncDirection != SyncDirection.NoSync)
             {
                 if (Connection is SQLiteConnection sqlite)

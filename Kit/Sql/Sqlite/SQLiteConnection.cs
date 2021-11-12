@@ -2720,7 +2720,7 @@ namespace Kit.Sql.Sqlite
                 return;
             }
 
-            if (obj is Guid guid)
+             if (obj is Guid guid)
             {
                 UpdateVersionControl(new ChangesHistory(
                     table.TableName

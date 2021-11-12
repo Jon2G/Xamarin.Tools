@@ -29,6 +29,7 @@ namespace Kit.Sql.Tables
 
         public int Priority { get; set; }
 
+        public DateTime Date { get; set; }
         public ChangesHistory()
         {
         }
@@ -39,6 +40,7 @@ namespace Kit.Sql.Tables
             this.Guid = SyncGuid;
             this.Action = Action;
             this.Priority = Priority;
+            this.Date = DateTime.Now;
         }
 
         public void Save(SQLiteConnection con)
@@ -66,7 +68,8 @@ namespace Kit.Sql.Tables
                 SyncHistory syncHistory = new SyncHistory
                 {
                     DeviceId = Daemon.Devices.Device.Current.DeviceId,
-                    Guid = this.Guid
+                    Guid = this.Guid,
+                    Date=DateTime.Now
                 };
                 origin.Table<SyncHistory>().Delete(x => x.Guid == syncHistory.Guid);
                 origin.Insert(syncHistory, string.Empty);
