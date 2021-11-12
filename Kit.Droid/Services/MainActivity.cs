@@ -29,7 +29,8 @@ namespace Kit.Droid.Services
     )]
     public abstract class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IUpdateWidget
     {
-        protected virtual void Initialize(Bundle savedInstanceState, Type CurrentApp ) {
+        protected virtual void Initialize(Bundle savedInstanceState, Type CurrentApp)
+        {
             Kit.Droid.Tools.Init(this, savedInstanceState);
             FontCache.DeleteFontCacheIfFontChanged(CurrentApp);
         }
@@ -53,15 +54,19 @@ namespace Kit.Droid.Services
 
         public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
         {
-            if (!e.Flags.HasFlag(Android.Views.KeyEventFlags.SoftKeyboard) || keyCode == Keycode.Back)
+            try
             {
-                char character = ((char)e.GetUnicodeChar(e.MetaState));
-                IKeyboardListenerService.Current?.OnKeyUp(character);
-                if (Kit.Tools.Debugging)
+                if (!e.Flags.HasFlag(Android.Views.KeyEventFlags.SoftKeyboard) || keyCode == Keycode.Back)
                 {
-                    Log.Logger.Debug("Keyboard:{0}", character);
+                    char character = ((char)e.GetUnicodeChar(e.MetaState));
+                    IKeyboardListenerService.Current?.OnKeyUp(character);
+                    if (Kit.Tools.Debugging)
+                    {
+                        Log.Logger.Debug("Keyboard:{0}", character);
+                    }
                 }
             }
+            catch (Exception ex) { Log.Logger?.Error(ex, "OnKeyUp"); }
             return base.OnKeyUp(keyCode, e);
         }
 
