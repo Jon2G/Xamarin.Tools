@@ -1,0 +1,22 @@
+﻿<div class="top animated bounceIn">
+  <div id="popup">
+    <span class="message">
+      Profile Image Uploader<br />
+      <small>Drop your image into the space below</small>
+    </span>
+  </div>
+</div>
+
+<div id="container">
+  <div class="box">
+    <div class="progress"></div>
+  </div>
+  <div class="v-align">
+    <div class="arrow"></div>
+  </div>
+  <img id="image-holder">
+</div>
+
+
+<input id="DropZoneTextbox" @bind-value="FileData64" />
+<Button id="DropZoneBtn" @onclick="()=>Upload()"/>

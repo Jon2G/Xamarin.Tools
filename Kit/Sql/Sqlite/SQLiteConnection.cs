@@ -2064,11 +2064,6 @@ namespace Kit.Sql.Sqlite
 
         public override int Insert(object obj, string extra, Base.TableMapping map, bool shouldnotify = true)
         {
-            if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
-            {
-                partitioned.ToPartitionedDb(map.TableName);
-            }
-
             if (map.PK != null && map.HasAutoIncPK)
             {
                 if (map.PK.ColumnType == typeof(Guid) && map.PK.GetValue(obj).Equals(Guid.Empty))
@@ -2261,10 +2256,6 @@ namespace Kit.Sql.Sqlite
             int rowsAffected = 0;
             try
             {
-                if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
-                {
-                    partitioned.ToPartitionedDb(Table.TableName);
-                }
                 rowsAffected = Execute(q, ps.ToArray());
             }
             catch (SQLiteException ex)
@@ -2342,10 +2333,6 @@ namespace Kit.Sql.Sqlite
             int rowsAffected = 0;
             try
             {
-                if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
-                {
-                    partitioned.ToPartitionedDb(table.Table.TableName);
-                }
                 rowsAffected = Execute(q, ps.ToArray());
             }
             catch (SQLiteException ex)
@@ -2430,10 +2417,6 @@ namespace Kit.Sql.Sqlite
 
             try
             {
-                if (this is Kit.Sql.Partitioned.SQLiteConnection partitioned)
-                {
-                    partitioned.ToPartitionedDb(map.TableName);
-                }
                 rowsAffected = Execute(q, ps.ToArray());
             }
             catch (SQLiteException ex)
