@@ -228,6 +228,8 @@ namespace Kit.Daemon.Sync
                             case SyncDirection.Upload:
                                 if (direccion != SyncTarget.Remote)
                                 {
+                                    CurrentPackage.MarkAsSynced(source_con);
+                                    CanDo = true;
                                     continue;
                                 }
                                 break;
@@ -332,7 +334,7 @@ namespace Kit.Daemon.Sync
                                     break;
 
                                 case NotifyTableChangedAction.Delete:
-                                    target_con.Delete(read);
+                                    read.Delete(source_con,target_con,table);                                  
                                     read.OnSynced(direccion, action);
                                     CurrentPackage.MarkAsSynced(source_con);
                                     Processed++;

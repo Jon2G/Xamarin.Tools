@@ -131,6 +131,13 @@ namespace Kit.Sql.Base
             _insertOrReplaceColumns = Columns.Where(c => !c.IsAutomatic).ToArray();
         }
 
+        internal void Merge(TableMapping tableMapping)
+        {
+            List<Column> columns = new List<Column>(this.Columns);
+            columns.AddRange(tableMapping.Columns.Where(x => !this.Columns.Any(c => c.Name == x.Name)));
+            this.Columns = columns.ToArray();
+        }
+
         protected static TypeInfo GetTypeInfo(Type type)
         {
             return type.GetTypeInfo();

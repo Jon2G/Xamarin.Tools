@@ -9,6 +9,7 @@ namespace Kit.Sql.Tables
     {
         [MaxLength(100)]
         public string DeviceId { get; set; }
+        public DateTime Date { get; set; }
 
         public void Save(SqlBase origin)
         {

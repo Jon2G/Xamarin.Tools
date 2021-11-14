@@ -1,6 +1,7 @@
 ﻿using Plugin.DeviceInfo.Abstractions;
 using System;
 using DeviceId;
+using System.IO;
 
 namespace Kit.Services.Interfaces
 {
@@ -34,10 +35,21 @@ namespace Kit.Services.Interfaces
                 //{
                 //    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
                 //}
+                FileInfo keyFile = new FileInfo(Path.Combine(Tools.Instance.LibraryPath, "Key.key"));
+                if (keyFile.Exists)
+                {
+                    id = File.ReadAllText(keyFile.FullName);
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        return id;
+                    }
+                }
                 DeviceIdBuilder builder = new DeviceIdBuilder();
-                builder.AddMacAddress()
-                    .AddMachineName();
-                return string.Concat(id ?? string.Empty, builder.ToString());
+                builder.AddMachineName();
+                builder.AddMacAddress(true);
+                id = builder.ToString();
+                File.WriteAllText(keyFile.FullName, id);
+                return id;
             }
         }
 
