@@ -175,6 +175,8 @@ namespace Kit.Forms.Pages
             HasAppeared = true;
         }
 
+        public virtual void OnSleep() { }
+
         private bool HasAppeared;
         protected virtual void OnFirstAppearing()
         {

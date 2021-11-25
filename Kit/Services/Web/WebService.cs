@@ -27,7 +27,7 @@ namespace Kit.Services.Web
                     Proxy = null,
                     UseProxy = false
                 };
-                if ((Tools.Instance?.RuntimePlatform??RuntimePlatform.Unknown) != Enums.RuntimePlatform.WPF)
+                if ((Tools.Instance?.RuntimePlatform ?? RuntimePlatform.Unknown) != Enums.RuntimePlatform.WPF)
                 {
                     _HttpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
                 }
@@ -66,7 +66,12 @@ namespace Kit.Services.Web
                     sb_parameters.AppendFormat("&{0}={1}", oneParameter.Key, Uri.EscapeDataString(oneParameter.Value));
                 }
             }
-            StringBuilder sb = new StringBuilder(this.Url).Append('/').Append(metodo).Append(sb_parameters);
+            StringBuilder sb = new StringBuilder(this.Url);
+            if (sb.Last() != '/')
+            {
+                sb.Append('/');
+            }
+            sb.Append(metodo).Append(sb_parameters);
             return sb.ToString();
         }
 

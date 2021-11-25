@@ -5,13 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using AsyncAwaitBestPractices;
 using Xamarin.Forms;
 using Kit;
 using Kit.Forms;
+using Kit.Sql.Attributes;
 using StackLayout = Xamarin.Forms.StackLayout;
 
 namespace Kit.Forms.Validations
 {
+    [Preserve(AllMembers = true)]
     public class ControlValidationBehavior : Behavior<View>, IControlValidation
     {
         private View View { get; set; }
@@ -128,7 +131,6 @@ namespace Kit.Forms.Validations
             // Find the handler method
             MethodInfo method = typeof(ControlValidationBehavior).GetMethod(nameof(OnParentSet),
                 BindingFlags.NonPublic | BindingFlags.Instance);
-
             // Subscribe to the event
             EventInfo eventInfo = View.GetType().GetEvent("ParentSet", BindingFlags.Instance | BindingFlags.NonPublic);
             Type type = eventInfo.EventHandlerType;

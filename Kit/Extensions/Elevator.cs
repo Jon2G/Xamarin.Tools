@@ -14,9 +14,9 @@ namespace Kit
             {
                 throw new InvalidCastException($"{LowerType.Name} is not subclass of {ElevatedType.Name}");
             }
-            string json = JsonSerializer.Serialize(Lower);
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(Lower);
 
-            return JsonSerializer.Deserialize<T>(json);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
         }
     }
 }
