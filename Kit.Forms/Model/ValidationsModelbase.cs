@@ -8,9 +8,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Kit.Forms.Validations;
 using System.ComponentModel.DataAnnotations;
+using Kit.Sql.Attributes;
 
 namespace Kit.Forms.Model
 {
+    [Preserve]
     public abstract class ValidationsModelbase : ModelBase, INotifyScrollToProperty, INotifyDataErrorInfo
     {
         #region Properties

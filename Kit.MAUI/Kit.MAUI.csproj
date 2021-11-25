@@ -4,6 +4,7 @@
 		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows;net6.0-windows10.0.19041</TargetFrameworks>
 		<UseMaui>true</UseMaui>
+		<RootNamespace>Kit.MAUI</RootNamespace>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<SingleProject>true</SingleProject>
@@ -12,6 +13,7 @@
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">30.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 
@@ -36,6 +38,8 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_winsqlite3" Version="2.0.7" />
 		<PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview3" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 		<Folder Include="Platforms\Windows\Services\" />
@@ -295,10 +299,10 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
+
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
-		<PackageReference Include="AsyncAwaitBestPractices" Version="6.0.2" />
-		<PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.2" />
+		<PackageReference Include="AsyncAwaitBestPractices" Version="6.0.3" />
+		<PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.3" />
 		<PackageReference Include="ClosedXML" Version="0.95.4" />
 		<PackageReference Include="DeviceId" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

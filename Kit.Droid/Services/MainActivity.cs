@@ -56,7 +56,7 @@ namespace Kit.Droid.Services
         {
             try
             {
-                if (!e.Flags.HasFlag(Android.Views.KeyEventFlags.SoftKeyboard) || keyCode == Keycode.Back)
+                if (!e.Flags.HasFlag(Android.Views.KeyEventFlags.SoftKeyboard) && !e.Flags.HasFlag(KeyEventFlags.VirtualHardKey))
                 {
                     char character = ((char)e.GetUnicodeChar(e.MetaState));
                     IKeyboardListenerService.Current?.OnKeyUp(character);
