@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DeviceId" Version="6.0.0" />
+    <PackageReference Include="Dirkster.NumericUpDownLib" Version="3.0.0" />
     <PackageReference Include="EnvDTE" Version="16.10.31320.204" />
 
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="15.8.243" />
