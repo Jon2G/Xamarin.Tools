@@ -43,7 +43,8 @@ namespace Kit
             return date;
         }
 
-        public static string Dia(this DayOfWeek day)
+
+        public static string GetDayName(this DayOfWeek day)
         {
             switch (day)
             {

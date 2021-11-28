@@ -48,8 +48,8 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.534" />
-    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.3" />
-    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.3" />
+    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.4" />
+    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.4" />
     <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="FreshMvvm" Version="4.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.1" />
@@ -122,36 +122,6 @@
     <Reference Include="XamPane">
       <HintPath>..\..\..\.nuget\packages\xampane\1.0.0\lib\netstandard2.0\XamPane.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Controls\ActionSheet\ActionSheet.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\ActivityIndicator\ActivityIndicatorView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\ArrowButton.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\LogsViewer\LogViewer.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Dialogs\Login.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Dictionaries\SylesDictionary.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BasePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Pages\OtgCodeBarSacnnerDetector\OtgCodeBarScannerDetectorPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Pages\ShareCadenaCon.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
