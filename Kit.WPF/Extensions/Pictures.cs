@@ -154,6 +154,26 @@ namespace Kit
                 return bitmapImage;
             }
         }
+        /// <summary>
+        /// Saves an image as a jpeg image, with the given quality
+        /// </summary>
+        /// <param name="path"> Path to which the image would be saved. </param>
+        /// <param name="quality"> An integer from 0 to 100, with 100 being the highest quality. </param>
+        public static void SaveJpeg(this BitmapImage img, string path, int quality)
+        {
+            var bitmap = img.BitmapImage2Bitmap();
+
+            if (quality < 0 || quality > 100)
+                throw new ArgumentOutOfRangeException("quality must be between 0 and 100.");
+
+            // Encoder parameter for image quality
+            EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+            // JPEG image codec
+            ImageCodecInfo jpegCodec = GetEncoderInfo("image/jpeg");
+            EncoderParameters encoderParams = new EncoderParameters(1);
+            encoderParams.Param[0] = qualityParam;
+            bitmap.Save(path, jpegCodec, encoderParams);
+        }
 
         /// <summary>
         /// Saves an image as a jpeg image, with the given quality

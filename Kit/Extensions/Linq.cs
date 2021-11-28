@@ -77,7 +77,14 @@ namespace Kit
             }
             return lista;
         }
-
+        public static int FindIndexOf<T>(this IList<T> modificadoresSeleccionados, IEquatable<T> p) 
+        {
+            if (p is null)
+            {
+                return modificadoresSeleccionados.FindIndexOf(x => x is null);
+            }
+            return modificadoresSeleccionados.FindIndexOf(x => p.Equals(x));
+        }
         public static int FindIndexOf<T>(this IList<T> modificadoresSeleccionados, Func<T, bool> p)
         {
             for (int i = 0; i < modificadoresSeleccionados.Count; i++)
@@ -125,7 +132,7 @@ namespace Kit
 
             return -1;
         }
-        
+
         public static void AddRange<T>(this ICollection<T> ts, params T[] pelementos)
         {
             ts.AddRange<T>(elementos: pelementos);
@@ -261,7 +268,7 @@ namespace Kit
 
 #endif
 
-       
+
         public static void Remove<T>(this ICollection<T> source, Func<T, bool> p)
         {
             for (int i = 0; i < source.Count; i++)

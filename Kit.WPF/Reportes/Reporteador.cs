@@ -26,8 +26,8 @@ namespace Kit.WPF.Reportes
             StiOptions.Designer.AllowUseWinControl = true;
             StiOptions.Viewer.AllowUseDragDrop =
             StiOptions.Designer.AllowUseDragDrop = false;
-            this.RutaLogo = RutaLogo;
-            this.RutaReportes = RutaReportes;
+            this.RutaLogo = string.IsNullOrEmpty(RutaLogo) ? "\\logo.png" : RutaLogo;
+            this.RutaReportes = String.IsNullOrEmpty(RutaReportes) ? "\\mrt" : RutaReportes;
             if (this.RutaReportes[0] == '\\')
             {
                 string directorio = this.RutaReportes.Substring(1);
@@ -443,8 +443,8 @@ namespace Kit.WPF.Reportes
             }
             catch (Exception ex)
             {
-                if (Tools.Debugging)
-                    this.StiReport.Design();
+                if (Tools.Debugging && !Disenando)
+                    return NuevoReporte(archivo_mrt, true, diccionario);
                 MessageBox.Show(ex.ToString());
                 Log.Logger.Error(ex, "Loading repport");
             }

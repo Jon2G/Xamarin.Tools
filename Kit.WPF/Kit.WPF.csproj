@@ -60,23 +60,24 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DeviceId" Version="6.0.0" />
-    <PackageReference Include="EnvDTE" Version="16.10.31320.204" />
+    <PackageReference Include="Dirkster.NumericUpDownLib" Version="3.0.0" />
+    <PackageReference Include="EnvDTE" Version="17.0.31902.203" />
 
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="15.8.243" />
-    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.16.30">
+    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="3.0.4492">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.1-dev-00780" />
     <PackageReference Include="SQLitePCLRaw.bundle_winsqlite3" Version="2.0.7" />
     <PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
+    <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.2.0-beta" />
     <PackageReference Include="ZXing.Net" Version="0.16.6" />
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.7" />
     <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.7" />
