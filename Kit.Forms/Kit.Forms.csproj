@@ -48,8 +48,8 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.534" />
-    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.3" />
-    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.3" />
+    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.4" />
+    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.4" />
     <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="FreshMvvm" Version="4.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.1" />
