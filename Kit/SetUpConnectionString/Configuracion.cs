@@ -52,10 +52,10 @@ namespace Kit.SetUpConnectionString
 
         public static Configuracion FromMyB(string connectionString)
         {
-            string Catalog = Regex.Match(connectionString, "(Catalog +?=(?<Value>.+?);)").TryGetGroup("Value")?.Value;
-            string DataSource = Regex.Match(connectionString, "(Data Source=(?<Value>.+?);)").TryGetGroup("Value")?.Value
+            string Catalog = Regex.Match(connectionString, "(Catalog ?=(?<Value>.+?);)").TryGetGroup("Value")?.Value;
+            string DataSource = Regex.Match(connectionString, "(Data ?Source=(?<Value>.+?);)").TryGetGroup("Value")?.Value
                 ?.Replace("TCP:", string.Empty);
-            string UserId = Regex.Match(connectionString, "(User ID=(?<Value>.+?);)").TryGetGroup("Value")?.Value;
+            string UserId = Regex.Match(connectionString, "(User ?ID=(?<Value>.+?);)").TryGetGroup("Value")?.Value;
             string Password = Regex.Match(connectionString, "(Password=(?<Value>.+);?)").TryGetGroup("Value")?.Value;
             return Configuracion.BuildFrom(NombreDB: Catalog, Password: Password, Servidor: DataSource, Usuario: UserId);
         }
