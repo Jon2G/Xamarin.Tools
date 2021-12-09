@@ -159,7 +159,7 @@ namespace Kit.Daemon
 
         public Daemon SetSchema(params Type[] tables)
         {
-            this.Schema = new Schema(tables);
+            this.Schema = new Schema(tables); 
             return Current;
         }
 
@@ -207,10 +207,15 @@ namespace Kit.Daemon
             Awake();
         }
 
-        private void Awake()
+        private void Awake(uint count=0)
         {
+            count++;
+            if (count > 10)
+            {
+                return;
+            }
             if (Tools.Debugging)
-                Log.Logger.Information("Daemon [{0}]", "Awaking");
+                Log.Logger.Information("Daemon [{0}]-[{1}]", "Awaking",count);
             IsSleepRequested = false;
             this.SyncManager.ToDo = true;
             FactorDeDescanso = 0;
@@ -233,7 +238,7 @@ namespace Kit.Daemon
                     case System.Threading.ThreadState.Background | System.Threading.ThreadState.WaitSleepJoin:
                     case System.Threading.ThreadState.WaitSleepJoin:
                         WaitHandle.Set();
-                        Awake();
+                        Task.Delay(500).ContinueWith((t) => Awake(count)).SafeFireAndForget();
                         return;
 
                 }
@@ -246,7 +251,7 @@ namespace Kit.Daemon
             WaitHandle.Set();
             while (!IsAwake)
             {
-                Awake();
+                Awake(count);
             }
         }
 
@@ -486,7 +491,10 @@ namespace Kit.Daemon
                     }
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+
+            }
             return false;
         }
 

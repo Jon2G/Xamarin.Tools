@@ -14,65 +14,64 @@ namespace Kit.Forms.Services
             try
             {
                 var assembly = AppType.Assembly;
-                var exportFontAttribute =
-                    assembly.GetCustomAttributes(typeof(ExportFontAttribute), true).FirstOrDefault() as
-                        ExportFontAttribute;
 
-                if (exportFontAttribute == null) return;
-
-                string? fontFilePath = null;
-                if (Device.RuntimePlatform == Device.Android)
+                foreach (ExportFontAttribute exportFontAttribute in assembly.GetCustomAttributes(typeof(ExportFontAttribute), true))
                 {
-                    fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.CacheDirectory,
-                        exportFontAttribute.FontFileName);
-                }
-                else if (Device.RuntimePlatform == Device.UWP)
-                {
-                    fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "fonts",
-                        exportFontAttribute.FontFileName);
-                }
-                else if (Device.RuntimePlatform == Device.iOS)
-                {
-                    fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.CacheDirectory,
-                        exportFontAttribute.FontFileName);
-                }
+                    if (exportFontAttribute == null) return;
 
-                if (string.IsNullOrEmpty(fontFilePath)) return;
-
-                var deleteFile = false;
-
-                var asmName = assembly.GetName().Name;
-                using(ReflectionCaller caller=new ReflectionCaller(assembly))
-                {
-                    string fontName = exportFontAttribute.FontFileName;
-                    string resourceName = caller.FindResources(x=>x.Contains(fontName)).FirstOrDefault();
-
-                    using (Stream embeddedStream =caller.GetResource(resourceName))
+                    string? fontFilePath = null;
+                    if (Device.RuntimePlatform == Device.Android)
                     {
-                        using (var fileStream =
-                             File.Exists(fontFilePath) ?
-                            File.OpenRead(fontFilePath) : null)
-                        {
-                            var embeddedFontHash = GetHash(embeddedStream);
-                            var cachedFontHash = GetHash(fileStream);
+                        fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.CacheDirectory,
+                            exportFontAttribute.FontFileName);
+                    }
+                    else if (Device.RuntimePlatform == Device.UWP)
+                    {
+                        fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "fonts",
+                            exportFontAttribute.FontFileName);
+                    }
+                    else if (Device.RuntimePlatform == Device.iOS)
+                    {
+                        fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.CacheDirectory,
+                            exportFontAttribute.FontFileName);
+                    }
 
-                            deleteFile = embeddedFontHash is null || !embeddedFontHash.SequenceEqual(cachedFontHash);
-                        }
+                    if (string.IsNullOrEmpty(fontFilePath)) return;
 
-                        if (deleteFile)
+                    var deleteFile = false;
+
+                    var asmName = assembly.GetName().Name;
+                    using (ReflectionCaller caller = new ReflectionCaller(assembly))
+                    {
+                        string fontName = exportFontAttribute.FontFileName;
+                        string resourceName = caller.FindResources(x => x.Contains(fontName)).FirstOrDefault();
+
+                        using (Stream embeddedStream = caller.GetResource(resourceName))
                         {
-                            Debug.WriteLine($"deleting '{fontFilePath}'");
-                            File.Delete(fontFilePath);
-                            using (var fileStream = File.Open(fontFilePath, FileMode.OpenOrCreate))
+                            using (var fileStream =
+                                 File.Exists(fontFilePath) ?
+                                File.OpenRead(fontFilePath) : null)
                             {
-                                embeddedStream.Position = 0;
-                                fileStream.Position = 0;
-                                embeddedStream.CopyTo(fileStream);
+                                var embeddedFontHash = GetHash(embeddedStream);
+                                var cachedFontHash = GetHash(fileStream);
+
+                                deleteFile = embeddedFontHash is null || !embeddedFontHash.SequenceEqual(cachedFontHash);
+                            }
+
+                            if (deleteFile)
+                            {
+                               Debug.WriteLine($"deleting '{fontFilePath}'");
+                                File.Delete(fontFilePath);
+                                using (var fileStream = File.Open(fontFilePath, FileMode.OpenOrCreate))
+                                {
+                                    embeddedStream.Position = 0;
+                                    fileStream.Position = 0;
+                                    embeddedStream.CopyTo(fileStream);
+                                }
                             }
                         }
                     }
                 }
-
                 static byte[] GetHash(Stream stream)
                 {
                     if (stream is null)

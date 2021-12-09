@@ -7,7 +7,6 @@ using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using FFImageLoading.Forms.Platform;
 using Kit.Forms.Services;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
@@ -15,6 +14,7 @@ using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
 using Application = Xamarin.Forms.Application;
 using System;
+using FFImageLoading.Forms.Platform;
 
 [assembly: UsesFeature("android.hardware.camera", Required = false)]
 [assembly: UsesPermission("android.permission.ACCESS_WIFI_STATE")]

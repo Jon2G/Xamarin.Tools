@@ -45,6 +45,7 @@
     <Compile Include="Classes\PreviewControllerDS.cs" />
     <Compile Include="Effects\ViewLifecycleEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renders\CircleViewRenderer.cs" />
     <Compile Include="Renders\SelectableLabelRenderer .cs" />
     <Compile Include="Services\AppDelegate.cs" />
     <Compile Include="Services\AppTrackingTransparencyPermission.cs" />

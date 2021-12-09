@@ -33,7 +33,7 @@ namespace Kit.WPF
         {
             Init(
                 new Kit.WPF.Dialogs.Dialogs(),
-                Application.Current is null ? null : new SynchronizeInvoke(), new ScreenManagerService(),
+                new SynchronizeInvoke(), new ScreenManagerService(),
                 new Kit.WPF.Controls.CrossImage.CrossImageExtensions(),
                 new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()

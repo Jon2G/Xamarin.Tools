@@ -26,7 +26,8 @@ namespace Kit.Droid
             Set(new ToolsImplementation());
             (Instance as ToolsImplementation).Init(activity);
             CrossCurrentActivity.Current.Init(activity, bundle);
-            ZXing.Net.Mobile.Forms.Android.Platform.Init();
+            
+            //ZXing.Net.Mobile.Forms.Android.Platform.Init();
             OrientationServices(activity);
             BaseInit();
             return Instance;

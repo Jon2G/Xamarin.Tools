@@ -4,17 +4,19 @@ using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
 using Xamarin.Forms;
 using Android.Graphics;
-using FFImageLoading;
+using Kit;
+using System.Threading.Tasks;
 
 [assembly: Dependency(typeof(ImageResizerService))]
 namespace Kit.Droid.Services
 {
     public class ImageResizerService : IImageResizer
-	{
-        public static FileStream ResizeImageAndroid(Stream imageData, float width, float height)
+    {
+        public static async Task<FileStream> ResizeImageAndroid(Stream imageData, float width, float height)
         {
+            await Task.Yield();
             // Load the bitmap
-            byte[] bytes = imageData.ToByteArray();
+            byte[] bytes = await Kit.Helpers.GetByteArray(imageData);
             Bitmap originalImage = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
             Bitmap resizedImage = Bitmap.CreateScaledBitmap(originalImage, (int)width, (int)height, false);
             string path = System.IO.Path.Combine(Kit.Tools.Instance.TemporalPath, $"{Guid.NewGuid():N}.jpeg");
@@ -31,9 +33,7 @@ namespace Kit.Droid.Services
             }
         }
 
-		public FileStream ResizeImage(Stream imageData, float width, float height)
-        {
-            return ResizeImageAndroid(imageData, width, height);
-        }
+        public Task<FileStream> ResizeImage(Stream imageData, float width, float height) => ResizeImageAndroid(imageData, width, height);
+
     }
 }

@@ -10,13 +10,11 @@ namespace Kit.Forms.Extensions
         public static async Task<FileImageSource> ResizeImage(this FileImageSource imageData, float width, float height)
         {
             await Task.Yield();
-            FileStream file = ResizeImage(imageData.ImageToStream(), width, height);
+            FileStream file = await ResizeImage(imageData.ImageToStream(), width, height);
             return (FileImageSource)FileImageSource.FromFile(file.Name);
         }
-        public static FileStream ResizeImage(Stream imageData, float width, float height)
-        {
-            return DependencyService.Get<IImageResizer>().ResizeImage(imageData, width, height);
-        }
+        public static Task<FileStream> ResizeImage(Stream imageData, float width, float height) => DependencyService.Get<IImageResizer>().ResizeImage(imageData, width, height);
+
 
         /// <summary>
         /// 
@@ -27,7 +25,7 @@ namespace Kit.Forms.Extensions
         public static async Task<FileImageSource> CompressImage(this FileImageSource imageData, int Quality)
         {
             await Task.Yield();
-            FileStream file =await CompressImage(imageData.ImageToStream(), Quality);
+            FileStream file = await CompressImage(imageData.ImageToStream(), Quality);
             return (FileImageSource)FileImageSource.FromFile(file.Name);
         }
         /// <summary>
