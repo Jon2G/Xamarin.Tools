@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Linq;
+using Kit.Entity;
 using Kit.Services.Interfaces;
 using Kit.Sql.Attributes;
-using Kit.Sql.SqlServer;
+
 using Kit.Sql.Tables;
 
 namespace Kit.Daemon.Devices
@@ -88,15 +91,16 @@ namespace Kit.Daemon.Devices
             return brand;
         }
 
-        private void EnsureTableExists(SQLServerConnection SQLH)
+        private void EnsureTableExists(IDbConnection SQLH)
         {
-            if (!SQLH.TableExists<SyncDevicesInfo>())
-            {
-                SQLH.CreateTable<SyncDevicesInfo>();
-            }
+            //TODO
+            //if (!SQLH.TableExists<SyncDevicesInfo>())
+            //{
+            //    SQLH.CreateTable<SyncDevicesInfo>();
+            //}
         }
 
-        private bool IsDeviceRegistered(SQLServerConnection SQLH)
+        private bool IsDeviceRegistered(IDbConnection SQLH)
         {
             EnsureTableExists(SQLH);
             bool registered = SQLH.Table<SyncDevicesInfo>().Any(x => x.DeviceId == DeviceId);
@@ -104,7 +108,7 @@ namespace Kit.Daemon.Devices
             return registered;
         }
 
-        public bool EnsureDeviceIsRegistred(SQLServerConnection SQLH)
+        public bool EnsureDeviceIsRegistred(IDbConnection SQLH)
         {
             SyncDevicesInfo deviceInfo;
             //SQL SERVER

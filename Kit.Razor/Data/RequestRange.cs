@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
-using Kit.Sql.SqlServer;
+
 
 namespace Kit.Razor.Data
 {
@@ -55,10 +56,10 @@ namespace Kit.Razor.Data
             return this;
         }
 
-        public string GetOffset(Kit.Sql.Base.SqlBase con)
+        public string GetOffset(IDbConnection con)
         {
             string Offset;
-            if (con is SQLServerConnection)
+            if (con is IDbConnection)
             {
                 Offset = $"OFFSET {From} ROWS FETCH NEXT {Step} ROWS ONLY";
             }

@@ -1,14 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
 using Kit.Daemon.Devices;
+using Kit.Entity;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
+
 
 namespace Kit.Sql.Tables
 {
     [Table("DEVICE_INFORMATION")]
     public class DeviceInformation
     {
-        [PrimaryKey, MaxLength(500)]
+        [Key, MaxLength(500)]
         public string DeviceId { get; set; }
         public bool IsFirstLaunchTime { get; set; }
         public DeviceInformation()
@@ -20,10 +26,10 @@ namespace Kit.Sql.Tables
         [Column("LAST_TIME_SEEN")]
         public DateTime LastAuthorizedTime { get; set; }
 
-        public DeviceInformation Get(SqlBase sql)
+        public DeviceInformation Get(IDbConnection connection)
         {
-            return sql.Table<Kit.Sql.Tables.DeviceInformation>()
-                .FirstOrDefault(x => x.DeviceId == Device.Current.DeviceId) ?? new DeviceInformation();
+            return connection.Table<DeviceInformation>()
+                   .FirstOrDefault(x => x.DeviceId == Device.Current.DeviceId) ?? new DeviceInformation();
 
         }
     }

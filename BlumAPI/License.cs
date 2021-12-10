@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using BlumAPI.Enums;
 using Kit;
 using Kit.Daemon.Devices;
+using Kit.Entity;
 using Kit.Enums;
-using Kit.Sql.Base;
+
 using Kit.Sql.Tables;
 
 namespace BlumAPI
@@ -101,7 +103,7 @@ namespace BlumAPI
             return brand;
         }
 
-        public async Task<bool> IsAuthorizated(SqlBase sql)
+        public async Task<bool> IsAuthorizated(IDbConnection sql)
         {
             try
             {
@@ -120,7 +122,7 @@ namespace BlumAPI
                         Log.Logger.Information("Project is active");
                         Autorized = true;
                         DeviceInformation.LastAuthorizedTime = DateTime.Now;
-                        sql.InsertOrReplace(DeviceInformation);
+                        sql.InsertOrUpdate(DeviceInformation);
                         break;
 
                     case ProjectActivationState.Expired:

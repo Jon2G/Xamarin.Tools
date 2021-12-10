@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using Hjg.Pngcs;
+using Kit.Entity;
 using Kit.Model;
-using Kit.Sql.Sqlite;
-using Kit.Sql.SqlServer;
+
+
 
 namespace Kit.SetUpConnectionString
 {
@@ -22,8 +26,8 @@ namespace Kit.SetUpConnectionString
         }
 
         public string DeviceId => Daemon.Devices.Device.Current.DeviceId;
-        public SQLServerConnection SqlServer { get; set; }
-        public readonly SQLiteConnection SqLite;
+        public IDbConnection SqlServer { get; set; }
+        public readonly IDbConnection SqLite;
         private Configuracion _Configuration;
 
         public Configuracion Configuration
@@ -39,10 +43,10 @@ namespace Kit.SetUpConnectionString
 
         public string ConnectionString => this.Configuration?.CadenaCon;
 
-        public SetUpConnectionStringViewModelBase(SQLiteConnection SqLite, SQLServerConnection SqlServer, Configuracion configuracion)
+        public SetUpConnectionStringViewModelBase(IDbConnection SqLite, IDbConnection SqlServer, Configuracion configuracion)
         {
             this.SqLite = SqLite;
-            this.SqlServer = SqlServer ?? new SQLServerConnection(String.Empty);
+            this.SqlServer = SqlServer ?? new SqlConnection(String.Empty);
             this.Empresas = new Empresas(SqLite);
             this.Configuration = configuracion ?? new Configuracion();
             Configuration.IdentificadorDispositivo = DeviceId;
@@ -51,8 +55,8 @@ namespace Kit.SetUpConnectionString
 
         public Exception TestConnection()
         {
-            SqlServer = new SQLServerConnection(this.Configuration.CadenaCon);
-            if (SqlServer.TestConnection() is Exception ex)
+            SqlServer = new SqlConnection(this.Configuration.CadenaCon);
+            if (!SqlServer.TryToConnect(out Exception ex))
             {
                 return ex;
             }
@@ -81,7 +85,7 @@ namespace Kit.SetUpConnectionString
             {
                 IdentificadorDispositivo = DeviceId
             };
-            this.SqlServer = new SQLServerConnection(String.Empty);
+            this.SqlServer = new SqlConnection(String.Empty);
         }
     }
 }

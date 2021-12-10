@@ -1,12 +1,18 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Kit.Entity;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
-using Kit.Sql.Sqlite;
-using Kit.Sql.SqlServer;
+
+
 using Newtonsoft.Json;
 
 namespace Kit.SetUpConnectionString
@@ -22,10 +28,18 @@ namespace Kit.SetUpConnectionString
         private string _password;
         private string _empresa;
 
+#if !NET48
         [NotNull]
+#else
+[Required]
+#endif
         public string IdentificadorDispositivo { get; set; }
 
+#if !NET48
         [NotNull]
+#else
+[Required]
+#endif
         public string CadenaCon
         {
             get => _cadenaCon;
@@ -116,7 +130,7 @@ namespace Kit.SetUpConnectionString
             }
         }
 
-        [PrimaryKey, MaxLength(50)]
+        [Key, MaxLength(50)]
         public string Empresa
         {
             get => _empresa;
@@ -155,14 +169,14 @@ namespace Kit.SetUpConnectionString
             this.CadenaCon = CadenaCon;
         }
 
-        public static Configuracion ObtenerConfiguracion(SQLiteConnection SQHLite, string DeviceId)
+        public static Configuracion ObtenerConfiguracion(IDbConnection SQHLite, string DeviceId)
         {
             Configuracion configuracion = null;
             try
             {
                 var configs = SQHLite.Table<Configuracion>();
-                configuracion = configs.FirstOrDefault(x => x.Activa)
-                ?? new Configuracion(string.Empty, DeviceId);
+                configuracion = (configs.FirstOrDefault(x => x.Activa)
+                ?? new Configuracion(string.Empty, DeviceId)).RefreshConnectionString();
             }
             catch (Exception ex)
             {
@@ -171,15 +185,15 @@ namespace Kit.SetUpConnectionString
             return configuracion;
         }
 
-        public static bool IsUserDefined(SQLiteConnection SQLHLite)
+        public static bool IsUserDefined(IDbConnection SQLHLite)
         {
             string pin = SQLHLite.ExecuteScalar<string>("SELECT DEFINED_USER_PIN FROM CONFIGURACION WHERE ACTIVA=1");
             return (!string.IsNullOrEmpty(pin));
         }
 
-        public Exception ProbarConexion(SQLServerConnection SQLH)
+        public Exception ProbarConexion(IDbConnection SQLH)
         {
-            Exception resultado = SQLH.TestConnection();
+            SQLH.TryToConnect(out Exception resultado);
             if (resultado != null)
             {
                 Log.Logger.Debug(resultado, "Prueba de conexión");
@@ -192,7 +206,7 @@ namespace Kit.SetUpConnectionString
             return new Configuracion(string.Empty, string.Empty);
         }
 
-        public void Salvar(SQLiteConnection SQLHLite, SQLServerConnection SQLH)
+        public void Salvar(IDbConnection SQLHLite, IDbConnection SQLH)
         {
             try
             {
@@ -200,12 +214,13 @@ namespace Kit.SetUpConnectionString
                 {
                     this.Empresa = NombreDB;
                 }
-                SQLH.ConnectionString = (new SqlConnectionStringBuilder(this.CadenaCon));
+                SQLH.ConnectionString = this.CadenaCon;
                 this.Activa = true;
-                SQLHLite.EXEC("UPDATE CONFIGURACION SET ACTIVA=0");
-                SQLHLite.InsertOrReplace(this);
+                SQLHLite.Execute("UPDATE CONFIGURACION SET ACTIVA=0");
+                SQLHLite.InsertOrUpdate(this);
 
-                if (SQLH.TableExists("COMANDERAS_MOVILES"))
+
+                if (SQLH is SqlConnection sqscon && sqscon.TableExists("COMANDERAS_MOVILES"))
                 {
                     bool existeRegistro = SQLH.Exists(
                         "SELECT *FROM COMANDERAS_MOVILES WHERE ID_DIPOSITIVO=@ID",
@@ -229,14 +244,14 @@ namespace Kit.SetUpConnectionString
             return BuildFrom(configuracion.NombreDB, configuracion.Password, configuracion.Puerto, configuracion.Servidor, configuracion.Usuario, configuracion.IdentificadorDispositivo);
         }
 
-        public void RefreshConnectionString()
+        public Configuracion RefreshConnectionString()
         {
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Data Source=TCP:")
                 .Append(Servidor)
                 .Append((!string.IsNullOrEmpty(Puerto?.Trim()) ? "," + Puerto : ""))//no puerto no lo pongo
                 .Append(";Initial Catalog=")
-                .Append(NombreDB);
+                .Append(NombreDB).Append(";TrustServerCertificate=True;");
             if (string.IsNullOrEmpty(Usuario?.Trim()) && string.IsNullOrEmpty(Password?.Trim()))//no usuario no contraseña credenciales por defecto
             {
                 ConnectionString.Append(";Integrated Security=True;");
@@ -253,9 +268,10 @@ namespace Kit.SetUpConnectionString
                 Replace(Environment.NewLine, "").
                 Replace('\n', ' ').
                 Replace('\r', ' ').ToString().
-                Split(';');
+                Split(new []{';'},StringSplitOptions.RemoveEmptyEntries);
 
             this.CadenaCon = string.Join(";" + Environment.NewLine, args);
+            return this;
         }
 
         public static Configuracion BuildFrom(

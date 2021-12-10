@@ -3536,7 +3536,7 @@ namespace TinyIoC
           catch (MethodAccessException)
 #endif
           {
-            // Ignore methods we can't access - added for Silverlight
+            // NotMapped methods we can't access - added for Silverlight
           }
         }
 
@@ -3575,7 +3575,7 @@ namespace TinyIoC
             catch (MethodAccessException)
 #endif
             {
-              // Ignore methods we can't access - added for Silverlight
+              // NotMapped methods we can't access - added for Silverlight
             }
           }
         }

@@ -5,6 +5,8 @@ using SharedZXingNet::ZXing;
 using Acr.UserDialogs;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,9 +18,7 @@ using Kit.Forms.Controls;
 using Kit.Forms.Fonts;
 using Kit.Forms.Services;
 using Kit.Services.BarCode;
-using Kit.Sql.SqlServer;
 using Xamarin.Essentials;
-using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using Kit.SetUpConnectionString;
 using AsyncAwaitBestPractices.MVVM;
 using System.Windows.Input;
@@ -49,25 +49,25 @@ namespace Kit.Forms.Pages
         private Kit.Extensions.Command<CadenaCon> OnAppearingCommand;
         private readonly CancellationTokenSource CancellationTokenSource;
 
-        public CadenaCon(SQLiteConnection DBConection) : this(DBConection, null, null)
+        public CadenaCon(IDbConnection DBConection) : this(DBConection, null, null)
         {
         }
 
-        public CadenaCon(SQLiteConnection DBConection, Exception exception = null) : this(DBConection, null, exception)
+        public CadenaCon(IDbConnection DBConection, Exception exception = null) : this(DBConection, null, exception)
         {
         }
 
-        public CadenaCon(SQLiteConnection DBConection, Configuracion Configuracion) : this(DBConection, Configuracion, null)
+        public CadenaCon(IDbConnection DBConection, Configuracion Configuracion) : this(DBConection, Configuracion, null)
         {
         }
 
-        public CadenaCon(SQLiteConnection DBConection, Configuracion Configuracion, Exception exception)
+        public CadenaCon(IDbConnection DBConection, Configuracion Configuracion, Exception exception)
         {
             try
             {
                 this.CancellationTokenSource = new CancellationTokenSource();
                 var config = Configuracion ?? Configuracion.ObtenerConfiguracion(DBConection, Daemon.Devices.Device.Current.DeviceId);
-                this.Model = new SetUpConnectionStringViewModelBase(DBConection, new SQLServerConnection(config.CadenaCon), config);
+                this.Model = new SetUpConnectionStringViewModelBase(DBConection, new SqlConnection(config.CadenaCon), config);
                 this.BindingContext = this.Model;
                 InitializeComponent();
                 ToogleStatus(exception);
@@ -227,7 +227,7 @@ namespace Kit.Forms.Pages
         {
             using (Acr.UserDialogs.UserDialogs.Instance.Loading("Espere un momento..."))
             {
-                if (EliminarDB(this.Model.SqLite.DatabasePath))
+                if (EliminarDB(this.Model.SqLite.Database))
                 {
                     Log.Logger.Warning("Se elimino la base de datos");
                     await Acr.UserDialogs.UserDialogs.Instance.AlertAsync("Se elimino la base de datos local", "Atención", "Ok");

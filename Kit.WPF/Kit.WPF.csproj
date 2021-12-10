@@ -44,6 +44,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
     <LangVersion>latest</LangVersion>
+    <UserSecretsId>ec13043b-0827-4ef2-a807-21f4b2327114</UserSecretsId>
   </PropertyGroup>
   <Import Project="..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets" Condition="Exists('..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -62,6 +63,10 @@
     <PackageReference Include="DeviceId" Version="6.0.0" />
     <PackageReference Include="Dirkster.NumericUpDownLib" Version="3.0.0" />
     <PackageReference Include="EnvDTE" Version="17.0.31902.203" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.21" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.21" />
 
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="15.8.243" />
     <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="3.0.4492">
@@ -73,14 +78,20 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.1-dev-00780" />
+    <PackageReference Include="SQLite" Version="3.13.0" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.7" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.7" />
     <PackageReference Include="SQLitePCLRaw.bundle_winsqlite3" Version="2.0.7" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.7" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.7" />
+    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.7" />
     <PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.2.0-beta" />
+    <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
     <PackageReference Include="ZXing.Net" Version="0.16.6" />
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.7" />
-    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.7" />
+
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EnvDTE">
@@ -128,14 +139,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
-    <ProjectReference Include="..\Kit\Kit.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\toolbox.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
+    <ProjectReference Include="..\Kit\Kit.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\ArrowButton.xaml">
@@ -154,5 +165,19 @@
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Microsoft.Extensions.DependencyInjection.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Microsoft.Extensions.DependencyInjection.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Microsoft.Extensions.Logging.Abstractions.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Microsoft.Extensions.Logging.Abstractions.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

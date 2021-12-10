@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
+
 
 namespace Kit.Sql.Tables
 {
@@ -11,7 +13,7 @@ namespace Kit.Sql.Tables
         public string DeviceId { get; set; }
         public DateTime Date { get; set; }
 
-        public void Save(SqlBase origin)
+        public void Save(IDbConnection origin)
         {
             throw new NotImplementedException();
         }

@@ -12,6 +12,7 @@
 using System;
 using System.Windows.Media;
 
+
 namespace Kit.WPF.Controls.ColorBox.Utils
 {
     internal static class ColorHelper

@@ -1,21 +1,22 @@
 ﻿using Kit.Daemon.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Kit.Daemon.Devices;
+using Kit.Entity;
 using Kit.Model;
-using Kit.Sql.Base;
+using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
-using Kit.Sql.Exceptions;
-using Kit.Sql.Sqlite;
-using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using static Kit.Daemon.Helpers.Helper;
-using TableMapping = Kit.Sql.Base.TableMapping;
+using ITableMapping = System.Data.ITableMapping;
 
 namespace Kit.Daemon.Sync
 {
@@ -68,83 +69,21 @@ namespace Kit.Daemon.Sync
             }
         }
 
-        private string DownloadQuery
-        {
-            get;
-            set;
-        }
-
-        private string UploadQuery
-        {
-            get;
-            set;
-        }
-
         public SyncManager()
         {
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
             this.PackageSize = RegularPackageSize;
-            this.DownloadQuery = string.Empty;
             this.CurrentDirection = SyncTarget.NOT_SET;
         }
 
         public void SetPackageSize(int PackageSize = RegularPackageSize)
         {
             this.PackageSize = PackageSize;
-            UploadQuery = null;
-            DownloadQuery = string.Empty;
         }
 
-        public bool Download()
-        {
-            lock (DownloadQuery)
-            {
-                if (string.IsNullOrEmpty(DownloadQuery))
-                {
-                    DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Remote]);
-                    Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
-                }
-                return GetPendings(SyncTarget.Local);
-            }
-        }
-
-        public bool Upload()
-        {
-            if (UploadQuery is null)
-            {
-                UploadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Local]);
-                Log.Logger.Information("Prepared {0} Upload Query - [{1}]", "DAEMON", UploadQuery);
-            }
-            return GetPendings(SyncTarget.Remote);
-        }
-
-        private string PrepareQuery(SqlBase source)
-        {
-            string query = string.Empty;
-            switch (source)
-            {
-                case SQLServerConnection:
-                    query = "SELECT ";
-                    if (PackageSize > 0)
-                    {
-                        query += $"TOP {this.PackageSize}";
-                    }
-                    query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
-                    return query;
-
-                case SQLiteConnection:
-                    query =
-                        $"select SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
-                    if (PackageSize > 0)
-                    {
-                        query += $" limit {this.PackageSize}";
-                    }
-                    return query;
-            }
-            return query;
-        }
-
+        public bool Download() => GetPendings(SyncTarget.Local);
+        public bool Upload() => GetPendings(SyncTarget.Remote);
         private bool GetPendings(SyncTarget SyncTarget)
         {
             try
@@ -155,27 +94,18 @@ namespace Kit.Daemon.Sync
                     return false;
                 }
                 this.CurrentPackage = null;
-                string query = string.Empty;
-                switch (SyncTarget)
-                {
-                    case SyncTarget.Local:
-                        query = DownloadQuery;
-                        break;
-
-                    case SyncTarget.Remote:
-                        query = UploadQuery;
-                        break;
-                }
                 var source = SyncTarget.InvertDirection();
-                if (!string.IsNullOrEmpty(query))
+
+                if (Daemon.Current.IsSleepRequested)
                 {
-                    if (Daemon.Current.IsSleepRequested)
-                    {
-                        return false;
-                    }
-                    this.Pendings = new Queue<ChangesHistory>(Daemon.Current.DaemonConfig[source].RenewConnection()
-                        .DeferredQuery<ChangesHistory>(query).ToList());
+                    return false;
                 }
+                var s = Daemon.Current.DaemonConfig[source].Table<SyncHistory>();
+                this.Pendings = new Queue<ChangesHistory>(Daemon.Current.DaemonConfig[source]
+                    .Table<ChangesHistory>().Where(c => !s.Any(s => c.Guid == s.Guid && s.DeviceId == c.DeviceId))
+                    .Take(this.PackageSize <= 0 ? Int32.MaxValue : this.PackageSize)
+                    .ToList());
+
                 TotalPendientes = Pendings.Count;
                 ToDo = TotalPendientes > 0;
                 this.CurrentDirection = SyncTarget;
@@ -198,11 +128,11 @@ namespace Kit.Daemon.Sync
         {
             Processed = 0;
             CurrentPackage = null;
-            TableMapping table = null;
+            DbSet<dynamic> table = null;
             SyncTarget source = direccion.InvertDirection();
-            SqlBase source_con = Daemon.Current.DaemonConfig[source];
-            SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
-            string condition = (source_con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
+            IDbConnection source_con = Daemon.Current.DaemonConfig[source];
+            IDbConnection target_con = Daemon.Current.DaemonConfig[direccion];
+            string condition = (source_con is IDbConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
 
             bool CanDo = false;
 
@@ -216,11 +146,11 @@ namespace Kit.Daemon.Sync
                 try
                 {
                     this.CurrentPackage = Pendings.Dequeue();
-
-                    table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
+                    var tableType = Daemon.Current.Schema[this.CurrentPackage.TableName];
+                    table = source_con.Table(tableType);
                     if (table != null)
                     {
-                        switch (table.SyncDirection)
+                        switch (SyncMode.GetSyncDirection(tableType))
                         {
                             case SyncDirection.TwoWay:
                                 break;
@@ -243,12 +173,7 @@ namespace Kit.Daemon.Sync
                         }
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
                         NotifyTableChangedAction action = CurrentPackage.Action;
-                        string selection_list = table.SelectionList;
-                        CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
-                         new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
-                        MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(TableMapping) });
-                        method = method.MakeGenericMethod(table.MappedType);
-                        IEnumerable<dynamic> result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table });
+                        IEnumerable<dynamic> result = table.Where(x => (x as ISync).Guid == CurrentPackage.Guid);
                         if (!result.Any())
                         {
                             CurrentPackage.MarkAsSynced(source_con);
@@ -261,17 +186,13 @@ namespace Kit.Daemon.Sync
                         {
                             read = isync;
                         }
+                        var target_table = target_con.Table(tableType);
                         //ISync read = Convert.ChangeType(i_result, typeof(ISync));
                         if (read is null && action == NotifyTableChangedAction.Delete)
                         {
-                            if (target_con is SQLiteConnection lite)
-                            {
-                                lite.EXEC($"DELETE FROM {table.TableName} where SyncGuid=?", CurrentPackage.Guid);
-                            }
-                            else if (target_con is SQLServerConnection con)
-                            {
-                                con.EXEC($"DELETE FROM {table.TableName} where SyncGuid=@SyncGuid", new System.Data.SqlClient.SqlParameter("SyncGuid", CurrentPackage.Guid));
-                            }
+                            var toDelete = target_table
+                                 .Where(x => (x as ISync).Guid == CurrentPackage.Guid);
+                            target_table.RemoveRange(toDelete);
                             CurrentPackage.MarkAsSynced(source_con);
                             continue;
                         }
@@ -291,12 +212,8 @@ namespace Kit.Daemon.Sync
                                     if (direccion == SyncTarget.Local || read.ShouldSync(source_con, target_con))
                                     {
                                         CanDo = true;
-                                        object old_pk = null;
+                                        object old_pk = read.GetPk();
 
-                                        if (table.PK != null)
-                                        {
-                                            old_pk = read.GetPk();
-                                        }
 
                                         if (read.CustomUpload(source_con, target_con, table))
                                         {
@@ -305,18 +222,19 @@ namespace Kit.Daemon.Sync
                                             read.OnSynced(direccion, action);
                                             return true;
                                         }
+                                        target_con.InsertOrUpdate(read);
 
-                                        if (target_con is SQLiteConnection)
-                                        {
-                                            target_con.InsertOrReplace(read, false);
-                                        }
-                                        else
-                                        {
-                                            target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
-                                            target_con.Insert(read, String.Empty, read.GetType(), false);
-                                        }
+                                        //if (target_con is IDbConnection)
+                                        //{
+                                          
+                                        //}
+                                        //else
+                                        //{
+                                        //    target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
+                                        //    target_con.Insert(read, String.Empty, read.GetType(), false);
+                                        //}
 
-                                        if (source_con is SQLiteConnection lite)
+                                        if (source_con is IDbConnection lite)
                                         {
                                             if (read.Affects(lite, old_pk))
                                             {
@@ -334,7 +252,7 @@ namespace Kit.Daemon.Sync
                                     break;
 
                                 case NotifyTableChangedAction.Delete:
-                                    read.Delete(source_con,target_con,table);                                  
+                                    read.Delete(source_con, target_con, table);
                                     read.OnSynced(direccion, action);
                                     CurrentPackage.MarkAsSynced(source_con);
                                     Processed++;
@@ -351,13 +269,13 @@ namespace Kit.Daemon.Sync
                 }
                 catch (Exception ex)
                 {
-                    if (ex is SQLiteException)
-                    {
-                        if (ex.Message.Contains("no such table"))
-                        {
-                            target_con.CreateTable(table);
-                        }
-                    }
+                    //if (ex is SQLiteException)
+                    //{
+                    //    if (ex.Message.Contains("no such table"))
+                    //    {
+                    //        target_con.CreateTable(table);
+                    //    }
+                    //}
                     if (Debugger.IsAttached)
                     {
                         //Debugger.Break();

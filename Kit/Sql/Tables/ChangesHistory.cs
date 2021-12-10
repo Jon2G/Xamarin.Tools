@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Text;
 using Kit.Daemon.Sync;
+using Kit.Entity;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
+using System.Data.Entity.Migrations;
 using Kit.Sql.Enums;
-using Kit.Sql.Sqlite;
+
 
 namespace Kit.Sql.Tables
 {
@@ -14,7 +18,7 @@ namespace Kit.Sql.Tables
     /// </summary>
     public class ChangesHistory : ISync
     {
-        [PrimaryKey, AutoIncrement, Column("SyncGuid")]
+        [Key, Index(IsClustered = true, IsUnique = true), Column("SyncGuid")]
         public override Guid Guid { get; set; }
 
         /// <summary>
@@ -30,6 +34,8 @@ namespace Kit.Sql.Tables
         public int Priority { get; set; }
 
         public DateTime Date { get; set; }
+        [MaxLength(100)]
+        public string DeviceId { get; set; }
         public ChangesHistory()
         {
         }
@@ -43,25 +49,25 @@ namespace Kit.Sql.Tables
             this.Date = DateTime.Now;
         }
 
-        public void Save(SQLiteConnection con)
+        public void Save(IDbConnection con)
         {
-            con.InsertOrReplace(this);
+            con.InsertOrUpdate(this);
         }
 
-        public static void MarkAsSynced(SqlBase origin, Guid SyncGuid)
+        public static void MarkAsSynced(IDbConnection origin, Guid SyncGuid)
         {
             SyncHistory syncHistory = new SyncHistory
             {
                 DeviceId = Daemon.Devices.Device.Current.DeviceId,
                 Guid = SyncGuid
             };
-            origin.Table<SyncHistory>().Delete(x => x.Guid == syncHistory.Guid);
-            origin.Insert(syncHistory, string.Empty);
+            origin.Delete<SyncHistory>(x => x.Guid == syncHistory.Guid);
+            origin.Insert(syncHistory);
         }
 
-        public static void MarkAsSynced(SqlBase origin, ISync ISync) => MarkAsSynced(origin, ISync.Guid);
+        public static void MarkAsSynced(IDbConnection origin, ISync ISync) => MarkAsSynced(origin, ISync.Guid);
 
-        public void MarkAsSynced(SqlBase origin)
+        public void MarkAsSynced(IDbConnection origin)
         {
             try
             {
@@ -69,22 +75,10 @@ namespace Kit.Sql.Tables
                 {
                     DeviceId = Daemon.Devices.Device.Current.DeviceId,
                     Guid = this.Guid,
-                    Date=DateTime.Now
+                    Date = DateTime.Now
                 };
-                origin.Table<SyncHistory>().Delete(x => x.Guid == syncHistory.Guid);
-                origin.Insert(syncHistory, string.Empty);
-
-                //if (connection is SqlServer SQLH)
-                //{
-                //    SQLH.EXEC("INSERT INTO DESCARGAS_VERSIONES(ID_DESCARGA,ID_DISPOSITIVO) VALUES(@ID_DESCARGA,@ID_DISPOSITIVO)"
-                //            , System.Data.CommandType.Text, false,
-                //            new SqlParameter("ID_DESCARGA", Id),
-                //            new SqlParameter("ID_DISPOSITIVO", Device.Current.DeviceId));
-                //}
-                //else if (connection is SqLite SQLHLite)
-                //{
-                //    SQLHLite.EXEC($"DELETE FROM VERSION_CONTROL WHERE ID=?", Id);
-                //}
+                origin.Delete<SyncHistory>(x => x.Guid == syncHistory.Guid);
+                origin.Insert(syncHistory);
             }
             catch (Exception ex)
             {

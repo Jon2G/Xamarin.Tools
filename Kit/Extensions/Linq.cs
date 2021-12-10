@@ -1,4 +1,4 @@
-﻿using Kit.Sql.Base;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -150,7 +150,7 @@ namespace Kit
 
         public static DataTable ToTable<T>(this T obj)
         {
-            TableMapping map = new Kit.Sql.Sqlite.TableMapping(typeof(T));
+            ITableMapping map = new Kit.Sql.Sqlite.ITableMapping(typeof(T));
             DataTable data = new DataTable(map.TableName);
             foreach (var col in map.Columns)
             {
@@ -182,9 +182,9 @@ namespace Kit
             {
                 type = typeof(T);
             }
-            TableMapping map = new Kit.Sql.Sqlite.TableMapping(type);
+            ITableMapping map = new Kit.Sql.Sqlite.ITableMapping(type);
             DataTable data = new DataTable(map.TableName);
-            foreach (TableMapping.Column col in map.Columns)
+            foreach (ITableMapping.Column col in map.Columns)
             {
                 data.Columns.Add(col.Name, col.ColumnType);
             }

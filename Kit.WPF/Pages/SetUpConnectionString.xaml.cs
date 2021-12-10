@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Kit.Entity;
 using Kit.Enums;
 using Kit.Services.BarCode;
 using Kit.SetUpConnectionString;
-using Kit.Sql.Sqlite;
-using Kit.Sql.SqlServer;
+
+
 using Kit.WPF.Controls;
 using Kit.WPF.Dialogs.ICustomMessageBox;
 using Microsoft.Win32;
@@ -23,20 +25,20 @@ namespace Kit.WPF.Pages
     {
         public SetUpConnectionStringViewModelBase Model { get; set; }
 
-        public SetUpConnectionString(Exception ex, SQLServerConnection SqlServer, SQLiteConnection SqLite, Configuracion Configuration)
+        public SetUpConnectionString(Exception ex, IDbConnection SqlServer, IDbConnection SqLite, Configuracion Configuration)
         {
             this.Model = new SetUpConnectionStringViewModelBase(SqLite, SqlServer, Configuration);
             InitializeComponent();
             TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
 
-        public SetUpConnectionString(Exception ex, Configuracion Configuration, SQLiteConnection SqLite = null) :
+        public SetUpConnectionString(Exception ex, Configuracion Configuration, IDbConnection SqLite = null) :
             this(ex, null, SqLite, Configuration)
         {
             TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
 
-        public SetUpConnectionString(SQLServerConnection SqlServer, SQLiteConnection SqLite = null, Exception ex = null) :
+        public SetUpConnectionString(IDbConnection SqlServer, IDbConnection SqLite = null, Exception ex = null) :
             this(ex, SqlServer, SqLite, new Configuracion())
         {
             TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
@@ -52,9 +54,8 @@ namespace Kit.WPF.Pages
                     return;
                 }
 
-                var SqlServer = new SQLServerConnection(this.Model.ConnectionString);
-                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Model.ConnectionString);
-                if (SqlServer.TestConnection(this.Model.ConnectionString) is Exception ex)
+                SqlConnection SqlServer = new SqlConnection(this.Model.ConnectionString);
+                if (!SqlServer.TryToConnect(this.Model.ConnectionString, out Exception ex))
                 {
                     if (CustomMessageBox.ShowYesNo(
                             "La conexión actual no es valida\n" + ex.Message + "\n¿Desea guardarla de todas formas?",
@@ -63,7 +64,7 @@ namespace Kit.WPF.Pages
                         return;
                     }
                 }
-                SqlServer.ConnectionString = new SqlConnectionStringBuilder(this.Model.ConnectionString);
+                SqlServer.ConnectionString = this.Model.ConnectionString;
                 this.Model.SqlServer = SqlServer;
                 this.Model.Save();
                 this.Close();

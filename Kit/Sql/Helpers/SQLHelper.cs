@@ -20,7 +20,7 @@ namespace Kit.Sql.Helpers
         }
         public static string FormatTime(DateTime TimeSpan)
         {
-            //using (SQLiteConnection lite = Conecction())
+            //using (IDbConnection lite = Conecction())
             //{
             //'2020-09-17T12:27:55'  Formato universal de fecha y hora sql server
             return TimeSpan.ToString("yyyy-MM-ddTHH:mm:ss");

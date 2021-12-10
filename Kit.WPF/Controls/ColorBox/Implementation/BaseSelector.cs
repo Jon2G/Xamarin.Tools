@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+
 namespace Kit.WPF.Controls.ColorBox.Implementation
 {
     abstract class BaseSelector : FrameworkElement

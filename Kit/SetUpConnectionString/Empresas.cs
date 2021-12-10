@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using Kit.Entity;
 using Kit.Model;
-using Kit.Sql.Sqlite;
+
 
 namespace Kit.SetUpConnectionString
 {
@@ -24,8 +26,8 @@ namespace Kit.SetUpConnectionString
             get => _Seleccionada;
             set { _Seleccionada = value; Raise(() => Seleccionada); }
         }
-        private readonly SQLiteConnection SQLHLite;
-        public Empresas(SQLiteConnection SQLHLite)
+        private readonly IDbConnection SQLHLite;
+        public Empresas(IDbConnection SQLHLite)
         {
             this.SQLHLite = SQLHLite;
         }

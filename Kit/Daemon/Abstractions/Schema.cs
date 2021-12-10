@@ -1,50 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using Kit.Daemon.Enums;
+using Kit.Entity;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
-using Kit.Sql.SqlServer;
-using static Kit.Sql.Base.BaseOrm;
-using TableMapping = Kit.Sql.Base.TableMapping;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using ITableMapping = System.Data.ITableMapping;
+
 
 namespace Kit.Daemon.Abstractions
 {
     [Preserve(AllMembers = true)]
     public class Schema
     {
-        public readonly Dictionary<string, TableMapping> UploadTables;
-        public readonly Dictionary<string, TableMapping> DownloadTables;
-        private HashSet<string> DeniedTables;
+        public readonly HashSet<Type> UploadTables;
+        public readonly HashSet<Type> DownloadTables;
+        public readonly HashSet<Type> AllTables;
         public readonly bool HasDownloadTables;
         public readonly bool HasUploadTables;
-
+        public Type this[string name] => this.AllTables.FirstOrDefault(x => x.Name == name);
         public Schema(params Type[] tables)
         {
-            this.UploadTables = new Dictionary<string, TableMapping>();
-            this.DownloadTables = new Dictionary<string, TableMapping>();
+            this.UploadTables = new();
+            this.DownloadTables = new();
+            this.AllTables = new();
             BuildSchema(tables);
             this.HasDownloadTables = this.DownloadTables.Any();
             this.HasUploadTables = this.UploadTables.Any();
         }
 
-        public Dictionary<string, TableMapping> GetAll() => this.DownloadTables.Merge(this.UploadTables);
 
         private void BuildSchema(params Type[] tables)
         {
             foreach (Type type in tables)
             {
-                var typeInfo = type.GetTypeInfo();
-#if ENABLE_IL2CPP
-			var directionAttribute = typeInfo.GetCustomAttribute<SyncMode> ();
-#else
-                var directionAttribute =
-                    typeInfo.CustomAttributes
-                        .Where(x => x.AttributeType == typeof(SyncMode))
-                        .Select(x => (SyncMode)InflateAttribute(x))
-                        .FirstOrDefault();
-#endif
+                var directionAttribute = SyncMode.GetSyncMode(type);
                 if (directionAttribute is null)
                 {
                     Log.Logger.Warning("SyncDirection is not defined");
@@ -53,99 +47,18 @@ namespace Kit.Daemon.Abstractions
 
                 if (directionAttribute.Direction == SyncDirection.Download || directionAttribute.Direction == SyncDirection.TwoWay)
                 {
-                    string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type));
-                    if (this.DownloadTables.TryGetValue(key, out TableMapping mapping))
-                    {
-                        mapping.Merge(Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                    }
-                    else
-                    {
-                        this.DownloadTables.Add(key, Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                    }
-                    key = Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type));
-                    if (this.DownloadTables.TryGetValue(key, out TableMapping localMapping))
-                    {
-                        localMapping.Merge(Daemon.Current.DaemonConfig.Local.GetMapping(type));
-                    }
-                    else
-                    {
-                        this.DownloadTables.Add(key, Daemon.Current.DaemonConfig.Local.GetMapping(type));
-                    }
-
+                    if (!AllTables.Contains(type))
+                        this.AllTables.Add(type);
+                    this.DownloadTables.Add(type);
                 }
 
                 if (directionAttribute.Direction == SyncDirection.Upload || directionAttribute.Direction == SyncDirection.TwoWay)
                 {
-                    this.UploadTables.Add(
-                    Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))
-                    , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                    this.UploadTables.Add(
-                        Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                        , Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                    if (!AllTables.Contains(type))
+                        this.AllTables.Add(type);
+                    this.UploadTables.Add(type);
                 }
-
-                //switch (directionAttribute.Direction)
-                //{
-                //    case SyncDirection.TwoWay:
-                //        this.DownloadTables.Add(
-                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                //            , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                //        this.UploadTables.Add(
-                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                //            , Daemon.Current.DaemonConfig.Local.GetMapping(type));
-                //        break;
-                //    case SyncDirection.Download:
-                //        this.DownloadTables.Add(
-                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                //            , Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                //        break;
-                //    case SyncDirection.Upload:
-                //        this.UploadTables.Add(
-                //            Daemon.Current.DaemonConfig.Local.GetTableMappingKey(TableMapping.GetTableName(type))
-                //            , Daemon.Current.DaemonConfig.Local.GetMapping(type));
-                //        break;
-                //    case SyncDirection.NoSync:
-                //        Log.Logger.Warning($"La tabla [{type.FullName}] esta definida en el schema pero se marco como no sincronizar");
-                //        break;
-                //    default:
-                //        throw new ArgumentOutOfRangeException();
-                //}
                 Log.Logger.Information("BUILDED SCHEMA [{0}] - [{1}]", type.FullName, directionAttribute.Direction);
-            }
-        }
-
-        public TableMapping this[string TableName, SyncTarget direcction]
-        {
-            get
-            {
-                string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableName);
-                if (DeniedTables != null && DeniedTables.Contains(key))
-                {
-                    return null;
-                }
-                switch (direcction)
-                {
-                    case SyncTarget.Local:
-                        if (this.DownloadTables.ContainsKey(key))
-                            return this.DownloadTables[key];
-                        break;
-
-                    case SyncTarget.Remote:
-                        if (this.UploadTables.ContainsKey(key))
-                            return this.UploadTables[key];
-                        break;
-                }
-                if (this.DeniedTables is null)
-                {
-                    this.DeniedTables = new HashSet<string>();
-                }
-                DeniedTables.Add(key);
-
-                //if (!IsValidDirection(table.TableDirection, direcction))
-                //{
-                //    return null;
-                //}
-                return null;
             }
         }
 
@@ -166,20 +79,17 @@ namespace Kit.Daemon.Abstractions
             return false;
         }
 
-        internal bool CheckTriggers(SQLServerConnection Connection)
+        internal bool CheckTriggers(IDbConnection Connection)
         {
             var InitTableAttributetype = typeof(InitTableAttribute);
-            foreach (var table in
-                this.DownloadTables.Where(x => x.Value is Kit.Sql.SqlServer.TableMapping
-                && (x.Value.SyncDirection == SyncDirection.Download || x.Value.SyncDirection == SyncDirection.TwoWay)))
+            foreach (var table in this.DownloadTables)
             {
-                var map = table.Value;
-                Trigger.CheckTrigger(Connection, map, Daemon.Current.DaemonConfig.DbVersion);
-                var InitMethod = map.MappedType.GetMethods()
+                Trigger.CheckTrigger(Connection, table, Daemon.Current.DaemonConfig.DbVersion);
+                var InitMethod = table.GetMethods()
                       .Where(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()).FirstOrDefault();
                 if (InitMethod is not null && !InitMethod.IsStatic)
                 {
-                    throw new Exception($"Init table method must be static at {map.TableName}");
+                    throw new Exception($"Init table method must be static at {table}");
                 }
                 InitMethod?.Invoke(null, new object[] { Connection });
             }

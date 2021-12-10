@@ -1,7 +1,7 @@
-﻿using Kit.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Kit.Enums;
 
 namespace Kit.Sql.SqlServer
 {

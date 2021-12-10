@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 using System.Linq;
 using Kit;
-using Kit.Sql.Sqlite;
+
 using Kit.Daemon;
 using Kit.SetUpConnectionString;
-using Kit.Sql.Readers;
+
 using Kit.Daemon.Devices;
+using Kit.Db.Abstractions;
+using Kit.Entity;
+using Microsoft.Data.Sqlite;
 
 namespace BlumAPI.MyB.Versions
 {
@@ -19,7 +23,7 @@ namespace BlumAPI.MyB.Versions
         public DirectoryInfo Directory { get; }
         public abstract string ConfigDbRealtivePath { get; }
         public FileInfo ConfigDb { get; private set; }
-        public SQLiteConnection Con() => new SQLiteConnection(ConfigDb, 0);
+        public SqliteConnection Con() => ConfigDb.SqliteConnectionFromFile();
         public MybVersion(VersionMyBusinessPos version, DirectoryInfo directory, DirectoryInfo virtualDirectory)
         {
             this.Version = version;
@@ -146,7 +150,7 @@ namespace BlumAPI.MyB.Versions
         /// <summary>
         /// Establece los scripts faltantes en los iconos de la barras de tareas
         /// </summary>
-        public void EstableceScripts(Kit.Sql.SqlServer.SQLServerConnection con)
+        public void EstableceScripts(IDbConnection con)
         {
             try
             {
@@ -161,7 +165,7 @@ namespace BlumAPI.MyB.Versions
                         if (con.Exists(
                             $@"SELECT CODIGO FROM formatosdelta WHERE DESCRIP='NUEVA_{modulo}' AND CODIGO NOT LIKE '%--MODULO%'"))
                         {
-                            con.EXEC($"DELETE FROM formatosdelta WHERE DESCRIP='NUEVA_{modulo}'");
+                            con.Execute($"DELETE FROM formatosdelta WHERE DESCRIP='NUEVA_{modulo}'");
                         }
                         if (!con.Exists(
                             $"SELECT DESCRIP FROM formatosdelta WHERE DESCRIP='NUEVA_{modulo}'"))
@@ -182,13 +186,13 @@ namespace BlumAPI.MyB.Versions
                             codigo.AppendLine("\t\tProcess.Start(p)");
                             codigo.AppendLine("End Sub");
                             codigo.AppendLine("End Class");
-                            con.EXEC
+                            con.Execute
                             (@"INSERT INTO formatosdelta (catalogo, codigo,  descrip, formato, grupo, observ,  tipo,  proyecto,  usuario,  usufecha,  usuhora,  referencias) VALUES (@CATALOGO,@CODIGO,@DESCRIP,@FORMATO,@GRUPO,@OBSERV,@TIPO,@PROYECTO,@USUARIO,@USUFECHA,@USUHORA,@REFERENCIAS)",
 
                                 new System.Data.SqlClient.SqlParameter("CATALOGO", "RESTAURANTE"),
                                 new System.Data.SqlClient.SqlParameter("DESCRIP", $"NUEVA_{modulo}"),
                                 new System.Data.SqlClient.SqlParameter("FORMATO", $"NUEVA_{modulo}"),
-                                new System.Data.SqlClient.SqlParameter("GRUPO", "RESTAURANTE"),
+                                new System.Data.SqlClient.SqlParameter("GRUPO", "RETAURANTE"),
                                 new System.Data.SqlClient.SqlParameter("OBSERV", "MYGOURMETPOS"),
                                 new System.Data.SqlClient.SqlParameter("TIPO", "Programa .NET"),
                                 new System.Data.SqlClient.SqlParameter("PROYECTO", "RESTAURANTE"),
@@ -201,29 +205,29 @@ namespace BlumAPI.MyB.Versions
                             );
                         }
                     }
-                    con.EXEC(
+                    con.Execute(
                         "UPDATE opcionesbarra SET  descripcion = 'Comandas', barra = 'restaurante', barratemporal = 'restaurante', activa = 1, imagen = '001-tray.png', tipodeobjeto = 'Programa .NET', modal = 0, objetoaejecutar = 'NUEVA_COMANDERA', usuusuario = 'SUP', usufecha = '20190114', usuhora = '11:11:58' WHERE opcion = 'Comandas';");
-                    con.EXEC(
+                    con.Execute(
                         "UPDATE opcionesbarra SET descripcion = 'MyGourmetPos.Administrador', barra = 'restaurante', barratemporal = 'restaurante', activa = 1, imagen = 'team.png', tipodeobjeto = 'Programa .NET', modal = 0, objetoaejecutar = 'NUEVA_MyGourmetPos.Administrador', usuusuario = 'SUP', usufecha = '20190114', usuhora = '11:13:23' WHERE opcion = 'Menu';");
-                    con.EXEC(
+                    con.Execute(
                         "UPDATE opcionesBarra SET imagen='003-payment.png' WHERE opcion='puntodeventa'");
-                    con.EXEC(
+                    con.Execute(
                         "UPDATE formatosdelta set codigo=REPLACE(codigo,'C:\\Program Files (x86)\\GOURMETPOS\\Imgs\\logo.png','imagenes/LogoNombre.png') where formato='INICIO2016'");
-                    con.EXEC(
+                    con.Execute(
                         "UPDATE formatosdelta set codigo=REPLACE(codigo,'MyBusiness POS','MyBusiness POS & MyGourmet POS') where formato='INICIO2016'");
                     if (!con.Exists("SELECT OPCION FROM opcionesbarra WHERE OPCION='Cocina'"))
                     {
-                        con.EXEC(
+                        con.Execute(
                             "INSERT INTO opcionesbarra(opcion, usuario,  orden,ordentemporal,  descripcion,  barra,  barratemporal,  activa,  imagen,  tipodeobjeto,  modal,  objetoaejecutar,  usuusuario,  usufecha,  usuhora) VALUES('Cocina', 'SUP', 7, 7, 'Cocina', 'restaurante', 'restaurante',  1, '001-chef.png', 'Programa .NET', 0,  'NUEVA_COCINA', 'SUP', '20190114', '11:20:14');");
                     }
                     if (!con.Exists("SELECT OPCION FROM opcionesbarra WHERE OPCION='Comandas'"))
                     {
-                        con.EXEC(
+                        con.Execute(
                             "INSERT INTO opcionesbarra(opcion, usuario,  orden,ordentemporal,  descripcion,  barra,  barratemporal,  activa,  imagen,  tipodeobjeto,  modal,  objetoaejecutar,  usuusuario,  usufecha,  usuhora) VALUES('Comandas', 'SUP', 7, 7, 'Comandas', 'restaurante', 'restaurante',  1, '001-tray.png', 'Programa .NET', 0,  'NUEVA_COMANDERA', 'SUP', '20190114', '11:20:14');");
                     }
                     if (!con.Exists("SELECT OPCION FROM opcionesbarra WHERE OPCION='Menu'"))
                     {
-                        con.EXEC(
+                        con.Execute(
                             "INSERT INTO opcionesbarra(opcion, usuario,  orden,ordentemporal,  descripcion,  barra,  barratemporal,  activa,  imagen,  tipodeobjeto,  modal,  objetoaejecutar,  usuusuario,  usufecha,  usuhora) VALUES('Menu', 'SUP', 7, 7, 'MyGourmetPos.Administrador', 'restaurante', 'restaurante',  1, 'team.png', 'Programa .NET', 0,  'NUEVA_MyGourmetPos.Administrador', 'SUP', '20190114', '11:20:14');");
                     }
                     //COBRO RAPIDO
@@ -311,7 +315,7 @@ namespace BlumAPI.MyB.Versions
                         codigo.AppendLine("    End Function");
                         codigo.AppendLine("End Class");
 
-                        con.EXEC
+                        con.Execute
                         (@"INSERT INTO formatosdelta (catalogo, codigo,  descrip, formato, grupo, observ,  tipo,  proyecto,  usuario,  usufecha,  usuhora,  referencias) VALUES (@CATALOGO,@CODIGO,@DESCRIP,@FORMATO,@GRUPO,@OBSERV,@TIPO,@PROYECTO,@USUARIO,@USUFECHA,@USUHORA,@REFERENCIAS)",
 
                             new System.Data.SqlClient.SqlParameter("CATALOGO", "RESTAURANTE"),
@@ -372,7 +376,7 @@ namespace BlumAPI.MyB.Versions
                         codigo.AppendLine("\tSet rstPV = Nothing\t");
                         codigo.AppendLine("End Function");
 
-                        con.EXEC
+                        con.Execute
                         (@"UPDATE formatosdelta SET CODIGO=@CODIGO WHERE formato = 'PUNTOV080'",
 
                             new System.Data.SqlClient.SqlParameter("CODIGO", codigo.ToString())
@@ -387,7 +391,7 @@ namespace BlumAPI.MyB.Versions
                         codigo.AppendLine("\tPublic Sub Main");
                         codigo.AppendLine("End Sub");
                         codigo.AppendLine("End Class");
-                        con.EXEC
+                        con.Execute
                         (@"UPDATE formatosdelta SET CODIGO=@CODIGO WHERE formato = 'SERVICIO' AND codigo LIKE '%Imports%'",
 
                             new System.Data.SqlClient.SqlParameter("CODIGO", codigo.ToString())
@@ -407,9 +411,8 @@ namespace BlumAPI.MyB.Versions
         public Configuracion DatosCadenaCon(string empresa)
         {
             Configuracion cadena = null;
-            using (SQLiteConnection conectado = this.Con())
-            {
-                using (IReader reader = conectado.Read($"SELECT cadenadeconexion FROM configuracion where nombre='{empresa}'"))
+            this.Con()
+                .Read($"SELECT cadenadeconexion FROM configuracion where nombre='{empresa}'", (reader) =>
                 {
                     if (reader.Read())
                     {
@@ -418,28 +421,23 @@ namespace BlumAPI.MyB.Versions
                         cadena.IdentificadorDispositivo = Device.Current.DeviceId;
                         cadena.Activa = true;
                     }
-
-                }
-                conectado.Close();
-            }
+                }, new CommandConfig() { ManualRead = true });
             return cadena;
 
         }
         public List<string> Empresas()
         {
             List<string> empresas = new List<string>();
-            using (SQLiteConnection conectado = this.Con())
-            {
-                using (IReader reader = conectado.Read($"SELECT Nombre FROM configuracion"))
-                {
-                    while (reader.Read())
+            this.Con()
+                .Read($"SELECT Nombre FROM configuracion",
+                    (reader) =>
                     {
-                        empresas.Add(reader[0].ToString());
-                    }
-                }
-                conectado.Close();
-            }
 
+                        while (reader.Read())
+                        {
+                            empresas.Add(reader[0].ToString());
+                        }
+                    });
             return empresas;
         }
     }

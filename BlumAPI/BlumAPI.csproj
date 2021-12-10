@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFrameworks>netstandard2.1;net5.0;netcoreapp3.1;net6.0;net48;</TargetFrameworks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kit\Kit.csproj" />
+	  <PackageReference Include="System.Net.Http" Version="4.3.4" />
+	  <ProjectReference Include="..\Kit\Kit.csproj" />
   </ItemGroup>
 
 </Project>

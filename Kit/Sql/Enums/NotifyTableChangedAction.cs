@@ -3,7 +3,6 @@
 namespace Kit.Sql.Enums
 {
 
-	[StoreAsText]
 	public enum NotifyTableChangedAction
 	{
 		Insert,

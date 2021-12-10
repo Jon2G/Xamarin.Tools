@@ -10,15 +10,15 @@ using Kit.Daemon.Enums;
 using Kit.Daemon.Sync;
 using Kit.Model;
 using Kit.Sql.Attributes;
-using Kit.Sql.Base;
 using Kit.Sql.Enums;
-using Kit.Sql.Sqlite;
-using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using System.Windows.Input;
 using AsyncAwaitBestPractices;
+using Kit.Entity;
 using Kit.Enums;
+using Kit.Sql.SqlServer;
 using ThreadState = System.Diagnostics.ThreadState;
+using System.Data.Entity;
 
 namespace Kit.Daemon
 {
@@ -148,11 +148,11 @@ namespace Kit.Daemon
             this.Schema = new Schema();
         }
 
-        public Daemon Configure(SqlBase Local, SqlBase Remote, int DbVersion, int MaxSleep = 30)
+        public Daemon Configure(IDbConnection Local, IDbConnection Remote, int DbVersion, int MaxSleep = 30)
         {
             Current.DaemonConfig = new DaemonConfig(DbVersion, Local, Remote, MaxSleep);
-            Current.DaemonConfig.Local.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
-            Current.DaemonConfig.Remote.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
+            //Current.DaemonConfig.Local.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
+            //Current.DaemonConfig.Remote.OnConnectionStringChanged += Current.SQLH_OnConnectionStringChanged;
             Log.Logger.Debug("Daemon has been configured");
             return this;
         }
@@ -301,8 +301,8 @@ namespace Kit.Daemon
                     return;
                 }
 
-                SQLServerConnection SQLH = DaemonConfig.GetSqlServerConnection();
-                SqlServerInformation version = SQLH.Con().GetServerInformation();
+                SqlConnection SQLH = DaemonConfig.GetSqlServerConnection() as SqlConnection;
+                SqlServerInformation version = (SQLH as SqlConnection).GetServerInformation();
                 if (version.Version > SqlServerVersion.V2016)
                 {
                     SQLH.SetCacheIdentity(false);
@@ -311,13 +311,9 @@ namespace Kit.Daemon
                 {
                     return;
                 }
-                SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll()
-                    .DistinctBy(x => x.Value.MappedType)
-                    .Select(x => x.Value.MappedType));
+                DaemonConfig.Remote.GetContext().CheckTables(Schema.AllTables.ToArray());
+                DaemonConfig.Local.GetContext().CheckTables(Schema.DownloadTables.ToArray());
                 Schema.CheckTriggers(SQLH);
-
-                SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
-                SQLHLite.CheckTables(Schema.DownloadTables.Select(x => x.Value.MappedType));
                 if (OnInicializate != null)
                 {
                     if (!OnInicializate.Invoke())
@@ -326,7 +322,7 @@ namespace Kit.Daemon
                     }
                 }
 
-                DeviceInformation device = SQLHLite.Table<DeviceInformation>().FirstOrDefault() ??
+                DeviceInformation device = DaemonConfig.Local.Table<DeviceInformation>().FirstOrDefault() ??
                                            new DeviceInformation()
                                            {
                                                IsFirstLaunchTime = true,
@@ -336,8 +332,10 @@ namespace Kit.Daemon
                 {
                     device.IsFirstLaunchTime = false;
                     //I Have been deleted and reinstalled! , so i need to sync everything again...
-                    SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
-                    SQLHLite.Update(device);
+
+                    var table = DaemonConfig.Remote.Table<SyncHistory>();
+                    table.RemoveRange(table.Where(x => x.DeviceId == device.DeviceId));
+                    DaemonConfig.Local.Update(device);
                 }
                 IsInited = true;
             }
@@ -473,21 +471,8 @@ namespace Kit.Daemon
 
         private bool TryToConnect()
         {
-            try
-            {
-                Log.Logger.Debug("Daemon attemping to connect to sqlserver.");
-                var conection = DaemonConfig.GetSqlServerConnection().ConnectionString;
-                using (SqlConnection con = new SqlConnection(conection.ConnectionString))
-                {
-                    con.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT 1", con) { CommandType = CommandType.Text })
-                    {
-                        return (int)cmd.ExecuteScalar() == 1;
-                    }
-                }
-            }
-            catch (Exception) { }
-            return false;
+            Log.Logger.Debug("Daemon attemping to connect to sqlserver.");
+            return DaemonConfig.Remote.TryToConnect(out _);
         }
 
         ///// <summary>
@@ -497,9 +482,9 @@ namespace Kit.Daemon
         ///// <param name="TableName"></param>
         ///// <param name="PrimaryKeyValue"></param>
         ///// <param name="Accion"></param>
-        public void SqliteSync(SQLiteConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion, int Priority)
+        public void SqliteSync(IDbConnection con, string TableName, Guid SyncGuid, NotifyTableChangedAction Accion, int Priority)
         {
-            con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion, Priority));
+            //   con.UpdateVersionControl(new ChangesHistory(TableName, SyncGuid, Accion, Priority));
         }
     }
 }
