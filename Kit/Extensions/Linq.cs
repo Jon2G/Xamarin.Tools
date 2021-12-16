@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 namespace Kit
 {
@@ -77,7 +79,7 @@ namespace Kit
             }
             return lista;
         }
-        public static int FindIndexOf<T>(this IList<T> modificadoresSeleccionados, IEquatable<T> p) 
+        public static int FindIndexOf<T>(this IList<T> modificadoresSeleccionados, IEquatable<T> p)
         {
             if (p is null)
             {
@@ -148,16 +150,42 @@ namespace Kit
 
 #if NETSTANDARD1_0 || NETSTANDARD2_0 || NET462
 
+        public static DataTable ToTable<T>(this T obj, params Expression<Func<T, dynamic>>[] propertyExpressions)
+        {
+            TableMapping map = new Kit.Sql.Sqlite.TableMapping(typeof(T));
+            DataTable data = new DataTable(map.TableName);
+            foreach (var propertyExpression in propertyExpressions)
+            {
+                MemberExpression body = propertyExpression.Body as MemberExpression;
+                if (body == null)
+                    throw new ArgumentException("'propertyExpression' should be a member expression");
+                data.Columns.Add(body.Member.Name, body.Type);
+            }
+
+            List<object> valores = new List<object>();
+            if (obj is null) { return data; }
+            foreach (var propertyExpression in propertyExpressions)
+            {
+                MemberExpression body = propertyExpression.Body as MemberExpression;
+                var column = map.Columns.First(x => x.PropertyName == body.Member.Name);
+                valores.Add(column.GetValue(obj));
+            }
+            data.Rows.Add(valores.ToArray());
+
+            return data;
+        }
+
         public static DataTable ToTable<T>(this T obj)
         {
             TableMapping map = new Kit.Sql.Sqlite.TableMapping(typeof(T));
             DataTable data = new DataTable(map.TableName);
-            foreach (var col in map.Columns)
+            foreach (var col in map.Columns.Where(x => x.ColumnType.IsPrimitive()))
             {
                 data.Columns.Add(col.Name, col.ColumnType);
             }
 
             List<object> valores = new List<object>();
+            if (obj is null) { return data; }
             foreach (var column in map.Columns)
             {
                 valores.Add(column.GetValue(obj));

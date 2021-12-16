@@ -52,11 +52,11 @@ namespace Kit.SetUpConnectionString
 
         public static Configuracion FromMyB(string connectionString)
         {
-            string Catalog = Regex.Match(connectionString, "(Catalog ?=(?<Value>.+?);)").TryGetGroup("Value")?.Value;
-            string DataSource = Regex.Match(connectionString, "(Data ?Source=(?<Value>.+?);)").TryGetGroup("Value")?.Value
+            string Catalog = Regex.Match(connectionString, "(Catalog ?=(?<Value>[a-zA-Z0-9_.-]+?);)").TryGetGroup("Value")?.Value;
+            string DataSource = Regex.Match(connectionString, @"(Data ?Source=(?<Value>[a-zA-Z0-9_,\\:.-]+?);)").TryGetGroup("Value")?.Value
                 ?.Replace("TCP:", string.Empty);
-            string UserId = Regex.Match(connectionString, "(User ?ID=(?<Value>.+?);)").TryGetGroup("Value")?.Value;
-            string Password = Regex.Match(connectionString, "(Password=(?<Value>.+);?)").TryGetGroup("Value")?.Value;
+            string UserId = Regex.Match(connectionString, "(User ?ID=(?<Value>[a-zA-Z0-9_.-]+?);)").TryGetGroup("Value")?.Value;
+            string Password = Regex.Match(connectionString, "(Password=(?<Value>[a-zA-Z0-9_.-]+);?)").TryGetGroup("Value")?.Value;
             return Configuracion.BuildFrom(NombreDB: Catalog, Password: Password, Servidor: DataSource, Usuario: UserId);
         }
 
@@ -229,7 +229,7 @@ namespace Kit.SetUpConnectionString
             return BuildFrom(configuracion.NombreDB, configuracion.Password, configuracion.Puerto, configuracion.Servidor, configuracion.Usuario, configuracion.IdentificadorDispositivo);
         }
 
-        public void RefreshConnectionString()
+        public Configuracion RefreshConnectionString()
         {
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Data Source=TCP:")
@@ -256,6 +256,7 @@ namespace Kit.SetUpConnectionString
                 Split(';');
 
             this.CadenaCon = string.Join(";" + Environment.NewLine, args);
+            return this;
         }
 
         public static Configuracion BuildFrom(
