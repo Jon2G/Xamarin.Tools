@@ -59,7 +59,7 @@ namespace Kit.Daemon
 
         public bool ISOffline => OffLine;
 
-        private static Lazy<Daemon> Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+        protected static Lazy<Daemon> Inicializate { get; set; } 
 
         public static Daemon Current
         {
@@ -81,10 +81,10 @@ namespace Kit.Daemon
         }
 
         //{ get => Thread?.IsAlive ?? false; } //{ get; set; }
-        internal bool IsSleepRequested
+        public bool IsSleepRequested
         {
             get;
-            private set;
+            protected set;
         }
 
         private SyncManager _SyncManager;
@@ -140,8 +140,11 @@ namespace Kit.Daemon
             Current.IsInited = false;
             Awake();
         }
-
-        private Daemon()
+        static Daemon()
+        {
+           Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+        }
+        protected Daemon()
         {
             this.IsInited = false;
             this.SyncManager = new SyncManager();
@@ -159,7 +162,7 @@ namespace Kit.Daemon
 
         public Daemon SetSchema(params Type[] tables)
         {
-            this.Schema = new Schema(tables); 
+            this.Schema = new Schema(tables);
             return Current;
         }
 
@@ -207,7 +210,7 @@ namespace Kit.Daemon
             Awake();
         }
 
-        private void Awake(uint count=0)
+        private void Awake(uint count = 0)
         {
             count++;
             if (count > 10)
@@ -215,7 +218,7 @@ namespace Kit.Daemon
                 return;
             }
             if (Tools.Debugging)
-                Log.Logger.Information("Daemon [{0}]-[{1}]", "Awaking",count);
+                Log.Logger.Information("Daemon [{0}]-[{1}]", "Awaking", count);
             IsSleepRequested = false;
             this.SyncManager.ToDo = true;
             FactorDeDescanso = 0;
@@ -476,7 +479,7 @@ namespace Kit.Daemon
             IsSleepRequested = false;
         }
 
-        private bool TryToConnect()
+        protected virtual bool TryToConnect()
         {
             try
             {

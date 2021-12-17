@@ -31,11 +31,11 @@ namespace Kit.Services.Web
             }
             sw.Stop();
             TimeSpan span = new TimeSpan(sw.ElapsedTicks);
-            Console.WriteLine("Took {0} milliseconds. {1} hosts active.", sw.ElapsedMilliseconds, upCount);
+            Console.WriteLine("Took {0} milliseconds. {1} hosts active.", span, upCount);
             Console.ReadLine();
         }
 
-        private async Task<PingReply> PingOrTimeout(string hostname, int timeOut)
+        public async Task<PingReply> PingOrTimeout(string hostname, int timeOut=250)
         {
             await Task.Yield();
             PingReply result = null;
