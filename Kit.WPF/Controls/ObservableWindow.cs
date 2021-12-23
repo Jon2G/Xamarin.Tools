@@ -13,9 +13,9 @@ namespace Kit.WPF.Controls
     {
         #region ICrossWindow
 
-        Task ICrossWindow.Close() => Task.Run(Close);
+        Task ICrossWindow.Close() => Task.Run(()=>Application.Current.Dispatcher.Invoke(Close));
 
-        Task ICrossWindow.Show() => Task.Run(Show);
+        Task ICrossWindow.Show() => Task.Run(()=>Application.Current.Dispatcher.Invoke(Show));
 
         Task ICrossWindow.ShowDialog() => Task.Run(ShowDialog);
 

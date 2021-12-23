@@ -131,7 +131,7 @@ namespace Kit.Sql.Sqlite
             CreateTable<DeviceInformation>();
             Insert(new DeviceInformation()
             {
-                DeviceId = Daemon.Devices.Device.Current.DeviceId,
+                DeviceId = Daemon.Devices.Device.Current?.DeviceId,
                 IsFirstLaunchTime = true
             });
         }
