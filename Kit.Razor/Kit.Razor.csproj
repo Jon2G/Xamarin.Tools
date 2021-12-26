@@ -1,35 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
-    <RazorLangVersion>3.0</RazorLangVersion>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <RootNamespace>Kit.Razor</RootNamespace>
-    <AssemblyName>Kit.Razor</AssemblyName>
-    <PackageId>Kit.Razor</PackageId>
-    <StaticWebAssetBasePath>_content/$(PackageId)</StaticWebAssetBasePath>
-    <TypescriptOutDir>wwwroot</TypescriptOutDir>
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Components\DropZone.razor.css" />
-    <None Remove="Components\DropZone.razor.js" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
+		<RazorLangVersion>3.0</RazorLangVersion>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>Kit.Razor</RootNamespace>
+		<AssemblyName>Kit.Razor</AssemblyName>
+		<PackageId>Kit.Razor</PackageId>
+		<StaticWebAssetBasePath>_content/$(PackageId)</StaticWebAssetBasePath>
+		<TypescriptOutDir>wwwroot</TypescriptOutDir>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Components\DropZone.razor.css" />
+		<None Remove="Components\DropZone.razor.js" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="3.1.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Host" Version="1.1.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="3.1.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.21" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.21" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="3.1.21" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Host" Version="1.1.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="3.1.21" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Kit\Kit.csproj" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.1" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\Kit\Kit.csproj" />
+	</ItemGroup>
 </Project>

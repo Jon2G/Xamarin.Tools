@@ -68,9 +68,9 @@ namespace Kit.iOS.Services
             }
         }
 
-        public FileStream ResizeImage(Stream imageData, float width, float height)
+        public Task<FileStream> ResizeImage(Stream imageData, float width, float height)
         {
-            return ResizeImageIOS(imageData, width, height);
+            return Task.FromResult(ResizeImageIOS(imageData, width, height));
         }
     }
 }

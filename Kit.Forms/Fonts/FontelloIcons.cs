@@ -1,7 +1,8 @@
 ﻿using Kit.Forms.Fonts;
 using Xamarin.Forms;
+using System;
 
-[assembly: ExportFont(FontelloIcons.FontResourceName, Alias = FontelloIcons.Font,EmbeddedFontResourceId = "Kit.Forms.Fonts.FontelloIcons.font.kiticons4.ttf")]
+[assembly: ExportFont(fontFileName: FontelloIcons.FontResourceName, Alias = FontelloIcons.Font)]
 namespace Kit.Forms.Fonts
 {
     public static class FontelloIcons

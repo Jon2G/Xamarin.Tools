@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:plugin="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin"
              xmlns:controls="clr-namespace:Kit.Forms.Controls" 
              xmlns:noti="clr-namespace:Kit.Forms.Controls.NotificationBar"
              xmlns:views1="clr-namespace:Kit.Forms.Views;assembly=Kit.Forms"
@@ -42,27 +41,27 @@
                 </BindableLayout.ItemTemplate>
             </StackLayout>
 
-            <plugin:ProgressRing ProgressColor="Coral" IsVisible="{Binding IsProgressVisible}" 
+            <controls:ProgressRing ProgressColor="Coral" IsVisible="{Binding IsProgressVisible}" 
                                  HorizontalOptions="End" VerticalOptions="FillAndExpand" 
                                  HeightRequest="30" WidthRequest="30" 
                                  x:Name="Progress" Progress="{Binding ProgressSource}"
                                  BackgroundColor="Transparent" Margin="0">
-                <plugin:ProgressRing.Style>
-                    <Style TargetType="{x:Type plugin:ProgressRing}">
+                <controls:ProgressRing.Style>
+                    <Style TargetType="{x:Type controls:ProgressRing}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ProgressSource}" Value="1"
-                                         TargetType="{x:Type plugin:ProgressRing}">
+                                         TargetType="{x:Type controls:ProgressRing}">
                                 <Setter Property="ProgressColor" Value="LightGreen"/>
                             </DataTrigger>
 
                             <DataTrigger Binding="{Binding ProgressSource}" Value="0"
-                                         TargetType="{x:Type plugin:ProgressRing}">
+                                         TargetType="{x:Type controls:ProgressRing}">
                                 <Setter Property="RingBaseColor" Value="#C9E9C9"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </plugin:ProgressRing.Style>
-            </plugin:ProgressRing>
+                </controls:ProgressRing.Style>
+            </controls:ProgressRing>
 
             <views1:MyButton BorderColor="Transparent" HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
                               ImgSource="{Binding Logo}"
