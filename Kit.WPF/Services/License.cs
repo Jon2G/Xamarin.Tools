@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Kit.Services.Interfaces;
 using Kit.WPF.Pages;
 using BaseLicense = BlumAPI.License;
 
@@ -10,15 +11,14 @@ namespace Kit.WPF.Services
         {
         }
 
-        protected override Task OpenRegisterForm()
+        protected override async Task OpenRegisterForm()
         {
-            DeviceRegister register = new DeviceRegister(this, new Dialogs.Dialogs())
+            ICrossWindow register = new DeviceRegister(this)
             {
                 Owner = null,
                 WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen
             };
-            register.ShowDialog();
-            return Task.FromResult(true);
+            await register.ShowDialog();
         }
     }
 }

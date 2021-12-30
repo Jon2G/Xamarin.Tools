@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Kit.Enums;
 using Kit.Services.BarCode;
+using Kit.Services.Interfaces;
 using Kit.SetUpConnectionString;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
@@ -19,7 +20,7 @@ namespace Kit.WPF.Pages
     /// <summary>
     /// Interaction logic for SetUpConnectionString.xaml
     /// </summary>
-    public partial class SetUpConnectionString : ObservableWindow
+    public partial class SetUpConnectionString : ObservableWindow, ISetUpConnectionString
     {
         public SetUpConnectionStringViewModelBase Model { get; set; }
 
@@ -41,7 +42,6 @@ namespace Kit.WPF.Pages
         {
             TxtStatus.Text = ex?.Message ?? "La cadena de conexion es correcta";
         }
-
         private void Guardar(object sender, RoutedEventArgs e)
         {
             try

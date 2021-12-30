@@ -10,7 +10,8 @@ namespace Kit
 {
     public class Log
     {
-        public static DirectoryInfo LogDirectory => new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
+        public static DirectoryInfo LogDirectory =>
+            new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Logs"));
 
         public static ILogger Logger
         {
@@ -48,20 +49,15 @@ namespace Kit
 
         public event EventHandler OnConecctionLost;
 
-        private static Log _Current;
+        private static Lazy<Log> _Current =
+            new Lazy<Log>(() =>
+                 new Log()
+                 {
+                     LoggerPath = Path.Combine(LogDirectory.FullName, "log.log"),
+                     CriticalLoggerPath = Path.Combine(LogDirectory.FullName, "critcal_log.log")
+                 });
 
-        public static Log Current
-        {
-            get
-            {
-                return _Current ??= (new Log()
-                {
-                    LoggerPath = Path.Combine(LogDirectory.FullName, "log.log"),
-                    CriticalLoggerPath = Path.Combine(LogDirectory.FullName, "critcal_log.log")
-                });
-            }
-            private set => _Current = value;
-        }
+        public static Log Current => _Current.Value;
 
         public LogsSink _LogsSink { get; private set; }
         public static LogsSink LogsSink => Current._LogsSink;
@@ -78,12 +74,17 @@ namespace Kit
             {
                 logDirectory.Create();
             }
-            Current = new Log()
+            if (_Current.IsValueCreated)
             {
-                LoggerPath = Path.Combine(logDirectory.FullName, "log.log"),
-                CriticalLoggerPath = Path.Combine(logDirectory.FullName, "critcal_log.log"),
-                _LogsSink = new LogsSink()
-            };
+                throw new InvalidOperationException("The logger has been already created by lazy");
+            }
+            _Current = new Lazy<Log>(() =>
+               new Log()
+               {
+                   LoggerPath = Path.Combine(logDirectory.FullName, "log.log"),
+                   CriticalLoggerPath = Path.Combine(logDirectory.FullName, "critcal_log.log"),
+                   _LogsSink = new LogsSink()
+               });
             return Current;
         }
 
@@ -182,7 +183,7 @@ namespace Kit
 
         public static bool IsDBConnectionError(Exception ex)
         {
-            if(ex is null)
+            if (ex is null)
             {
                 return false;
             }

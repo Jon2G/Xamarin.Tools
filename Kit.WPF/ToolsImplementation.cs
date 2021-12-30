@@ -6,6 +6,9 @@ using Application = System.Windows.Application;
 using Kit.WPF.Services;
 using Serilog;
 using System.Reflection;
+using Kit.Services.Interfaces;
+using Kit.Dialogs;
+using Kit.Services.BarCode;
 
 namespace Kit.WPF
 {
@@ -29,13 +32,14 @@ namespace Kit.WPF
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public static new Kit.WPF.ToolsImplementation Instance => Tools.Instance as Kit.WPF.ToolsImplementation;
 
-        public override void Init()
+        public override AbstractTools Init()
         {
-            Init(
-                new Kit.WPF.Dialogs.Dialogs(),
-                new SynchronizeInvoke(), new ScreenManagerService(),
-                new Kit.WPF.Controls.CrossImage.CrossImageExtensions(),
-                new BarCodeBuilder());
+            TinyIoC.TinyIoCContainer.Current.Register<ISynchronizeInvoke, SynchronizeInvoke>();
+            TinyIoC.TinyIoCContainer.Current.Register<IDialogs, Kit.WPF.Dialogs.Dialogs>();
+            TinyIoC.TinyIoCContainer.Current.Register<IScreenManager, ScreenManagerService>();
+            TinyIoC.TinyIoCContainer.Current.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.WPF.Controls.CrossImage.CrossImageExtensions>();
+            TinyIoC.TinyIoCContainer.Current.Register<IBarCodeBuilder, BarCodeBuilder>();
+            base.Init();
             Log.Init().SetLogger((new LoggerConfiguration()
                 // Set default log level limit to Debug
                 .MinimumLevel.Debug()
@@ -59,6 +63,7 @@ namespace Kit.WPF
                         .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1,
                             flushToDiskInterval: TimeSpan.FromMilliseconds(500))
                 )).CreateLogger(), CriticalAlert);
+            return this;
         }
 
         public override void CriticalAlert(object sender, EventArgs e)

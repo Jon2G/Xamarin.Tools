@@ -11,12 +11,24 @@ namespace Kit
 {
     public abstract class AbstractTools
     {
+        private Lazy<ISynchronizeInvoke> _SynchronizeInvoke =
+            new Lazy<ISynchronizeInvoke>(() => TinyIoC.TinyIoCContainer.Current.Resolve<ISynchronizeInvoke>());
+        public ISynchronizeInvoke SynchronizeInvoke => _SynchronizeInvoke.Value;
 
-        public Kit.Services.Interfaces.ISynchronizeInvoke SynchronizeInvoke { get; private set; }
-        public Kit.Services.Interfaces.IScreenManager ScreenManager { get; private set; }
-        public IBarCodeBuilder BarCodeBuilder { get; private set; }
-        public IDialogs Dialogs { get; private set; }
-        public Kit.Controls.CrossImage.CrossImageExtensions ImageExtensions { get; private set; }
+        private Lazy<IScreenManager> _ScreenManager =
+            new Lazy<IScreenManager>(() => TinyIoC.TinyIoCContainer.Current.Resolve<IScreenManager>());
+        public IScreenManager ScreenManager => _ScreenManager.Value;
+
+        private Lazy<IBarCodeBuilder> _BarCodeBuilder =
+            new Lazy<IBarCodeBuilder>(() => TinyIoC.TinyIoCContainer.Current.Resolve<IBarCodeBuilder>());
+        public IBarCodeBuilder BarCodeBuilder => _BarCodeBuilder.Value;
+
+        private Lazy<IDialogs> _Dialogs =
+            new Lazy<IDialogs>(() => TinyIoC.TinyIoCContainer.Current.Resolve<IDialogs>());
+        public IDialogs Dialogs => _Dialogs.Value;
+        private Lazy<Kit.Controls.CrossImage.CrossImageExtensions> _ImageExtensions =
+            new Lazy<Kit.Controls.CrossImage.CrossImageExtensions>(() => TinyIoC.TinyIoCContainer.Current.Resolve<Kit.Controls.CrossImage.CrossImageExtensions>());
+        public Kit.Controls.CrossImage.CrossImageExtensions ImageExtensions => _ImageExtensions.Value;
 
         public virtual string LibraryPath => Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         public virtual string TemporalPath => Path.Combine(LibraryPath, "..", "tmp");
@@ -27,29 +39,17 @@ namespace Kit
 
         public static AbstractTools Instance => Tools.Instance;
 
-        public abstract void Init();
-
-        protected AbstractTools Init(
-                IDialogs Dialogs, ISynchronizeInvoke SynchronizeInvoke, IScreenManager ScreenManager,
-                Kit.Controls.CrossImage.CrossImageExtensions ImageExtensions, IBarCodeBuilder BarCodeBuilder)
+        public virtual AbstractTools Init()
         {
-            this.SynchronizeInvoke = SynchronizeInvoke;
-            this.Dialogs = Dialogs;
-            this.ScreenManager = ScreenManager;
-            this.ImageExtensions = ImageExtensions;
-            this.BarCodeBuilder = BarCodeBuilder;
             Device.Init();
             return this;
         }
-
         public virtual void CriticalAlert(object sender, EventArgs e)
         {
             this.Dialogs.CustomMessageBox.ShowOK(sender.ToString(), "Alerta", "Entiendo");
         }
 
-        private static readonly Lazy<bool> _IsInDesingMode =
-            new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);
-
+        private static readonly Lazy<bool> _IsInDesingMode =new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);
         public static bool IsInDesingMode
         {
             get

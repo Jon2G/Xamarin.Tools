@@ -11,13 +11,13 @@ namespace Kit.WPF.Pages
     /// <summary>
     /// Lógica de interacción para DeviceRegister.xaml
     /// </summary>
-    public partial class DeviceRegister
+    public partial class DeviceRegister : ICrossWindow
     {
         public DeviceRegisterModel Model { get; private set; }
 
-        public DeviceRegister(BlumAPI.License Licence, IDialogs Dialogs)
+        public DeviceRegister(BlumAPI.License Licence)
         {
-            this.Model = new DeviceRegisterModel(Licence, Dialogs, this);
+            this.Model = new DeviceRegisterModel(Licence, this);
             this.DataContext = this.Model;
             InitializeComponent();
             this.TxtUsuario.DataContext = this.Model;

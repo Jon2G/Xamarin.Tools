@@ -22,13 +22,14 @@ using SQLiteConnection = Kit.Sql.Sqlite.SQLiteConnection;
 using Kit.SetUpConnectionString;
 using AsyncAwaitBestPractices.MVVM;
 using System.Windows.Input;
+using Kit.Services.Interfaces;
 
 namespace Kit.Forms.Pages
 {
     extern alias SharedZXingNet;
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CadenaCon : BasePage
+    public partial class CadenaCon : BasePage, ISetUpConnectionString
     {
         public Lector Leector { get; set; }
 

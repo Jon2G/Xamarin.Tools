@@ -11,7 +11,7 @@ namespace Kit.Forms.Services
 
         protected override async Task OpenRegisterForm()
         {
-            Forms.Pages.DeviceRegister login = new Forms.Pages.DeviceRegister(this, Kit.Tools.Instance.Dialogs);
+            var login =new Forms.Pages.DeviceRegister(this);
             await login.ShowDialog();
         }
     }

@@ -31,16 +31,14 @@ namespace Kit.License
         }
 
         public BlumAPI.License Licence { get; set; }
-        private readonly IDialogs Dialogs;
 
         private ICommand _LogInCommand;
         public ICommand LogInCommand => _LogInCommand ??= new AsyncCommand(LogIn);
         private readonly ICrossWindow Window;
 
-        public DeviceRegisterModel(BlumAPI.License licence, IDialogs Dialogs, ICrossWindow Window)
+        public DeviceRegisterModel(BlumAPI.License licence, ICrossWindow Window)
         {
             this.Window = Window;
-            this.Dialogs = Dialogs;
             this.Licence = licence;
         }
 
@@ -50,7 +48,7 @@ namespace Kit.License
             IsValidated = !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
             if (!IsValidated)
             {
-                await Dialogs.CustomMessageBox.ShowOK("Debe llenar todos los campos correctamente", "Alerta", "OK");
+                await Tools.Instance.Dialogs.CustomMessageBox.ShowOK("Debe llenar todos los campos correctamente", "Alerta", "OK");
                 return false;
             }
             if (await this.Licence.Login(UserName, Password))
@@ -63,7 +61,7 @@ namespace Kit.License
             }
             else
             {
-                await Dialogs.CustomMessageBox.ShowOK("Usuario o contraseña incorrectos", "Alerta", "OK");
+                await Tools.Instance.Dialogs.CustomMessageBox.ShowOK("Usuario o contraseña incorrectos", "Alerta", "OK");
             }
             return false;
         }

@@ -29,14 +29,17 @@ namespace Kit.SetUpConnectionString
         {
             this.SQLHLite = SQLHLite;
         }
-        public IEnumerable<string> ListarEmpresas()
+        public IEnumerable<string> ListarEmpresas() => ListarEmpresas(SQLHLite);
+        public IEnumerable<string> ListarEmpresas(SQLiteConnection lite)
         {
-            if (SQLHLite is null)
-                return new List<string>();
-                this.ListaEmpresas = SQLHLite.Table<Configuracion>().Select(x => x.Empresa).ToList();
+            if (ListaEmpresas is null)
+                ListaEmpresas = new List<string>();
+            if (lite is null)
+                return this.ListaEmpresas;
+                this.ListaEmpresas.AddRange(lite.Table<Configuracion>().Select(x => x.Empresa));
             if (this.ListaEmpresas.Any())
             {
-                this.Seleccionada = SQLHLite.Table<Configuracion>().Where(x => x.Activa).Select(x => x.Empresa).FirstOrDefault();
+                this.Seleccionada = lite.Table<Configuracion>().Where(x => x.Activa).Select(x => x.Empresa).FirstOrDefault();
             }
             this.ListaEmpresas.Add(string.Empty);
             return this.ListaEmpresas;

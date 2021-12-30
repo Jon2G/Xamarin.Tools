@@ -32,7 +32,8 @@ namespace BlumAPI
                 { "EtiquetadorApp","ETIQUETADOR_2020"},
                 { "MyGourmetPOS","MGPOS2020"},
                 { "Alta y Modificación de Artículos","ALTA2020"},
-                { "Toma de pedidos móvil","PEDIDOS19"}
+                { "Toma de pedidos móvil","PEDIDOS19"},
+                { "Woocommerce servicio de sincronización","WOOSYNC21" }
             };
             this.DeviceInformation = new DeviceInformation()
             {

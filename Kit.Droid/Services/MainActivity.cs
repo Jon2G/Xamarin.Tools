@@ -44,12 +44,13 @@ namespace Kit.Droid.Services
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
-            IKeyboardListenerService.Current?.SetIsKeyboardPluggedIn(IsKeyboardPluggedIn());
+            IKeyboardListenerService.Current?.SetIsKeyboardPluggedIn(IsKeyboardPluggedIn(newConfig));
         }
 
-        public bool IsKeyboardPluggedIn()
+        public bool IsKeyboardPluggedIn(Configuration configuration)
         {
-            return this.Resources.Configuration.Keyboard != Android.Content.Res.KeyboardType.Nokeys;
+            return (configuration ?? this.Resources.Configuration).Keyboard !=
+                Android.Content.Res.KeyboardType.Nokeys;
         }
 
         public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
