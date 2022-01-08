@@ -135,7 +135,8 @@ namespace Kit.Sql.SqlServer
 
         public object Single(string sql, CommandType type, params SqlParameter[] parameters)
         {
-            return Con().Single(sql, type, parameters);
+            var con = Con();
+            return con.Single(sql, type, this.CommandTimeout,parameters);
         }
 
         public override T Single<T>(string sql)

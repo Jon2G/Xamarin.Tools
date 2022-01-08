@@ -73,12 +73,12 @@ namespace Kit
             return connection.Lista<T>(sql: sql, type: CommandType.Text, index: 0, parameters: null);
         }
 
-        public static object Single(this SqlConnection connection, string sql, params SqlParameter[] parameters)
+        public static object Single(this SqlConnection connection, string sql,params SqlParameter[] parameters)
         {
-            return connection.Single(sql, CommandType.Text, parameters);
+            return connection.Single(sql, CommandType.Text, null,parameters);
         }
 
-        public static object Single(this SqlConnection connection, string sql, CommandType type, params SqlParameter[] parameters)
+        public static object Single(this SqlConnection connection, string sql, CommandType type, int? timeOut = null, params SqlParameter[] parameters)
         {
             object result = default;
             using (SqlConnection con = connection)
@@ -86,6 +86,10 @@ namespace Kit
                 con.Open();
                 using (SqlCommand cmd = new SqlCommand(sql, connection) { CommandType = type })
                 {
+                    if(timeOut is not null)
+                    {
+                        cmd.CommandTimeout = (int)timeOut;
+                    }
                     if (parameters is not null)
                         cmd.Parameters.AddRange(parameters);
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -116,7 +120,7 @@ namespace Kit
 
         public static T Single<T>(this SqlConnection connection, string sql, CommandType type, params SqlParameter[] parameters) where T : IConvertible
         {
-            return Sqlh.Parse<T>(connection.Single(sql, type, parameters));
+            return Sqlh.Parse<T>(connection.Single(sql, type,null, parameters));
         }
 
         public static T Single<T>(this SqlConnection connection, string sql, params SqlParameter[] parameters) where T : IConvertible

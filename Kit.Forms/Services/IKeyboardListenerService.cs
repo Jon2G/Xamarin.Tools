@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text;
+using System.Windows.Input;
 using Forms9Patch;
 using Kit.Forms.Extensions;
 using Kit.Model;
+using Xamarin.Forms;
 
 namespace Kit.Forms.Services
 {
@@ -16,7 +18,7 @@ namespace Kit.Forms.Services
         public event EventHandler<string> OnReciveCode;
 
         public event EventHandler<string> OnReciveCharacter;
-        public event EventHandler OnKeyboardPluggedInChanged;
+        public Command<IKeyboardListenerService> OnKeyboardPluggedInChanged { get; set; }
 
         private bool _IsEnabled;
 
@@ -45,7 +47,7 @@ namespace Kit.Forms.Services
                 if (_IsKeyboardPluggedIn != value)
                 {
                     _IsKeyboardPluggedIn = value;
-                    OnKeyboardPluggedInChanged?.Invoke(this, EventArgs.Empty);
+                    OnKeyboardPluggedInChanged?.Execute(this);
                     if (!value)
                     {
                         IsEnabled = false;
@@ -53,9 +55,6 @@ namespace Kit.Forms.Services
                 }
             }
         }
-
-
-
 
         public bool IsDisabled => !IsEnabled;
 
@@ -81,6 +80,12 @@ namespace Kit.Forms.Services
         ~IKeyboardListenerService()
         {
             Dispose();
+        }
+
+        public IKeyboardListenerService SetOnKeyboardPluggedInChanged(Command<IKeyboardListenerService> command)
+        {
+            this.OnKeyboardPluggedInChanged = command;
+            return this;
         }
 
         public IKeyboardListenerService SetDelay(long WaitMillis)

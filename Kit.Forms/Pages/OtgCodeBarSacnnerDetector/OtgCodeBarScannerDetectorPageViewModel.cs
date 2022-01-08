@@ -44,11 +44,12 @@ namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
             this.CenterView = CenterView;
             this.EndView = EndView;
             IKeyboardListenerService = new Services.IKeyboardListenerService((e, s) => ReadCode(e, s).SafeFireAndForget(), ReadCharacter, IsEnabled: true);
-            IKeyboardListenerService.OnKeyboardPluggedInChanged += this.ListenerService_OnKeyboardPluggedInChanged;
-            ListenerService_OnKeyboardPluggedInChanged(IKeyboardListenerService, EventArgs.Empty);
+            IKeyboardListenerService.OnKeyboardPluggedInChanged =
+                new Command<IKeyboardListenerService>(ListenerService_OnKeyboardPluggedInChanged);
+            ListenerService_OnKeyboardPluggedInChanged(IKeyboardListenerService);
         }
 
-        private void ListenerService_OnKeyboardPluggedInChanged(object sender, EventArgs e)
+        private void ListenerService_OnKeyboardPluggedInChanged(IKeyboardListenerService listener)
         {
             Status = IKeyboardListenerService.IsKeyboardPluggedIn ?
                 "Tome una lectura" :
