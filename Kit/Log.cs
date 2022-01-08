@@ -76,7 +76,7 @@ namespace Kit
             }
             if (_Current.IsValueCreated)
             {
-                throw new InvalidOperationException("The logger has been already created by lazy");
+                Log.Logger.Warning("The logger has been already created by lazy");
             }
             _Current = new Lazy<Log>(() =>
                new Log()

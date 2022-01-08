@@ -3,11 +3,12 @@ using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
 using Kit.Daemon.Sync;
+using Kit.Sql.Base;
 using Kit.Sql.Helpers;
 
 namespace Kit.Sql.SqlServer
 {
-    internal class FastColumnSetter
+    internal class FastColumnSetter : BaseFastColumnSetter
     {
         /// <summary>
         /// Creates a delegate that can be used to quickly set object members from query columns.
@@ -23,7 +24,7 @@ namespace Kit.Sql.SqlServer
         ///
         /// If no fast setter is available for the requested column (enums in particular cause headache), then this function returns null.
         /// </returns>
-        internal static Action<T, SqlDataReader, int> GetFastSetter<T>(Base.TableMapping.Column column)
+        internal static Action<T, SqlDataReader, int> GetFastSetter<T>(Column column)
         {
             Action<T, SqlDataReader, int> fastSetter = null;
             if (column.PropertyInfo is null)
@@ -238,7 +239,7 @@ namespace Kit.Sql.SqlServer
         /// <param name="column">The column mapping that identifies the target member of the destination object</param>
         /// <param name="getColumnValue">A lambda that can be used to retrieve the column value at query-time</param>
         /// <returns>A strongly-typed delegate</returns>
-        private static Action<ObjectType, SqlDataReader, int> CreateNullableTypedSetterDelegate<ObjectType, ColumnMemberType>(Base.TableMapping.Column column, Func<SqlDataReader, int, ColumnMemberType> getColumnValue) where ColumnMemberType : struct
+        private static Action<ObjectType, SqlDataReader, int> CreateNullableTypedSetterDelegate<ObjectType, ColumnMemberType>(Column column, Func<SqlDataReader, int, ColumnMemberType> getColumnValue) where ColumnMemberType : struct
         {
             var clrTypeInfo = column.PropertyInfo.PropertyType.GetTypeInfo();
             bool isNullable = false;
@@ -277,7 +278,7 @@ namespace Kit.Sql.SqlServer
         /// <param name="column">The column mapping that identifies the target member of the destination object</param>
         /// <param name="getColumnValue">A lambda that can be used to retrieve the column value at query-time</param>
         /// <returns>A strongly-typed delegate</returns>
-        private static Action<ObjectType, SqlDataReader, int> CreateTypedSetterDelegate<ObjectType, ColumnMemberType>(Base.TableMapping.Column column, Func<SqlDataReader, int, ColumnMemberType> getColumnValue)
+        private static Action<ObjectType, SqlDataReader, int> CreateTypedSetterDelegate<ObjectType, ColumnMemberType>(Column column, Func<SqlDataReader, int, ColumnMemberType> getColumnValue)
         {
             Action<ObjectType, ColumnMemberType> setProperty = null;
             try

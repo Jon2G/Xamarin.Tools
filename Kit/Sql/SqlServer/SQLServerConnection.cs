@@ -1605,7 +1605,7 @@ WHERE
 
         private void MigrateTable(Base.TableMapping map, List<ColumnInfo> existingCols)
         {
-            var toBeAdded = new List<Base.TableMapping.Column>();
+            var toBeAdded = new List<Column>();
 
             foreach (var p in map.Columns)
             {

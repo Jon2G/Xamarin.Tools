@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Kit.Sql.Base;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Kit.Sql.SqlServer
 {
     public class NotNullConstraintViolationException : SqlServerException
     {
-        public IEnumerable<Base.TableMapping.Column> Columns { get; protected set; }
+        public IEnumerable<Column> Columns { get; protected set; }
 
         protected NotNullConstraintViolationException(SQLite3.Result r, string message)
             : this(r, message, null, null)

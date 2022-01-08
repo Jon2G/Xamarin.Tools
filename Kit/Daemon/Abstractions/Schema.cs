@@ -51,7 +51,7 @@ namespace Kit.Daemon.Abstractions
                     directionAttribute = new SyncMode(SyncDirection.Download);
                 }
 
-                if (directionAttribute.Direction == SyncDirection.Download || directionAttribute.Direction == SyncDirection.TwoWay)
+                if (directionAttribute.Direction == SyncDirection.Custom || directionAttribute.Direction == SyncDirection.Download || directionAttribute.Direction == SyncDirection.TwoWay)
                 {
                     string key = Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type));
                     if (this.DownloadTables.TryGetValue(key, out TableMapping mapping))
@@ -74,7 +74,7 @@ namespace Kit.Daemon.Abstractions
 
                 }
 
-                if (directionAttribute.Direction == SyncDirection.Upload || directionAttribute.Direction == SyncDirection.TwoWay)
+                if (directionAttribute.Direction == SyncDirection.Custom || directionAttribute.Direction == SyncDirection.Upload || directionAttribute.Direction == SyncDirection.TwoWay)
                 {
                     this.UploadTables.Add(
                     Daemon.Current.DaemonConfig.Remote.GetTableMappingKey(TableMapping.GetTableName(type))

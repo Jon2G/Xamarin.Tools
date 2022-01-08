@@ -16,6 +16,7 @@ using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using static Kit.Daemon.Helpers.Helper;
 using TableMapping = Kit.Sql.Base.TableMapping;
+using Kit.Daemon.Abstractions;
 
 namespace Kit.Daemon.Sync
 {
@@ -80,8 +81,10 @@ namespace Kit.Daemon.Sync
             set;
         }
 
+        private Dictionary<TableMapping, DaemonCompiledSetter> CompiledSetters { get; set; }
         public SyncManager()
         {
+            this.CompiledSetters = new Dictionary<TableMapping, DaemonCompiledSetter>();
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
             this.PackageSize = RegularPackageSize;
@@ -176,6 +179,10 @@ namespace Kit.Daemon.Sync
                     this.Pendings = new Queue<ChangesHistory>(Daemon.Current.DaemonConfig[source].RenewConnection()
                         .DeferredQuery<ChangesHistory>(query).ToList());
                 }
+                else
+                {
+                    return GetPendings(SyncTarget);
+                }
                 TotalPendientes = Pendings.Count;
                 ToDo = TotalPendientes > 0;
                 this.CurrentDirection = SyncTarget;
@@ -246,10 +253,26 @@ namespace Kit.Daemon.Sync
                         string selection_list = table.SelectionList;
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
-                        MethodInfo method = command.GetType().GetMethod(nameof(CommandBase.ExecuteDeferredQuery), new[] { typeof(TableMapping) });
+                        IEnumerable<dynamic> result;
+                        CompiledSetters.TryGetValue(table, out DaemonCompiledSetter compiledSetter);
+                        MethodInfo method = command.GetType().GetMethod(compiledSetter is null ? "ExecuteDeferredQueryAndCompile": nameof(CommandBase.ExecuteDeferredQuery), compiledSetter is null? new[] { typeof(TableMapping) }: new[] { typeof(TableMapping),typeof(DaemonCompiledSetter) });
                         method = method.MakeGenericMethod(table.MappedType);
-                        IEnumerable<dynamic> result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table });
-                        if (!result.Any())
+                        if (compiledSetter is null)
+                        {
+                            DaemonCompiledSetterTuple resultCompiled = (DaemonCompiledSetterTuple)method.Invoke(command, new object[] { table });
+                            if (resultCompiled?.Results?.Any()??false)
+                            {
+                                compiledSetter = resultCompiled.CompiledSetter;
+                                CompiledSetters.Add(table, compiledSetter);                               
+                           }
+                            result = resultCompiled?.Results;
+                        }
+                        else
+                        {
+                            result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table, compiledSetter });
+                        }
+
+                        if (!result?.Any()??false)
                         {
                             CurrentPackage.MarkAsSynced(source_con);
                             continue;
@@ -287,8 +310,18 @@ namespace Kit.Daemon.Sync
                             {
                                 case NotifyTableChangedAction.Insert:
                                 case NotifyTableChangedAction.Update:
+                                    bool canSync = false;
+                                    if (direccion == SyncTarget.Remote)
+                                    {
+                                        bool shouldSync = read.ShouldSync(source_con, target_con);
+                                        canSync = shouldSync;
+                                    }
+                                    else if (direccion == SyncTarget.Local)
+                                    {
+                                        canSync = true;
+                                    }
 
-                                    if (direccion == SyncTarget.Local || read.ShouldSync(source_con, target_con))
+                                    if (canSync)
                                     {
                                         CanDo = true;
                                         object old_pk = null;
@@ -331,10 +364,14 @@ namespace Kit.Daemon.Sync
                                         Processed++;
                                         read.OnSynced(direccion, action);
                                     }
+                                    else
+                                    {
+                                        return false;
+                                    }
                                     break;
 
                                 case NotifyTableChangedAction.Delete:
-                                    read.Delete(source_con,target_con,table);                                  
+                                    read.Delete(source_con, target_con, table);
                                     read.OnSynced(direccion, action);
                                     CurrentPackage.MarkAsSynced(source_con);
                                     Processed++;

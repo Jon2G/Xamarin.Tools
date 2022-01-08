@@ -6,18 +6,18 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using Expression = System.Linq.Expressions.Expression;
-
+using Kit;
 namespace Kit.WPF.Controls
 {
     public class ObservableWindow : Window, INotifyPropertyChanged, ICrossWindow
     {
         #region ICrossWindow
 
-        Task ICrossWindow.Close() => Task.Run(()=>Application.Current.Dispatcher.Invoke(Close));
+        Task ICrossWindow.Close() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Close());
 
-        Task ICrossWindow.Show() => Task.Run(()=>Application.Current.Dispatcher.Invoke(Show));
+        Task ICrossWindow.Show() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Show());
 
-        Task ICrossWindow.ShowDialog() => Task.Run(ShowDialog);
+        Task ICrossWindow.ShowDialog() =>Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(()=>ShowDialog());
 
         #endregion ICrossWindow
 

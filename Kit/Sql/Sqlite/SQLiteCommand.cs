@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Kit.Daemon.Abstractions;
 using Kit.Sql.Base;
 using Kit.Sql.Exceptions;
 using Kit.Sql.Readers;
@@ -85,7 +86,115 @@ namespace Kit.Sql.Sqlite
         {
             // Can be overridden.
         }
+        public IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map, DaemonCompiledSetter _compiledSetter) where T : class
+        {
+            DaemonCompiledSetter<T, sqlite3_stmt> compiledSetter = _compiledSetter as DaemonCompiledSetter<T, sqlite3_stmt>;
+            List<T> result = new List<T>();
+            if (_conn.IsClosed)
+                _conn.RenewConnection();
 
+            Log.Logger.Debug(this.CommandText);
+            var stmt = Prepare();
+            try
+            {
+                while (SQLite3.Step(stmt) == SQLite3.Result.Row)
+                {
+                    var obj = Activator.CreateInstance(map.MappedType);
+                    for (int i = 0; i < compiledSetter.Columns.Length; i++)
+                    {
+                        if (compiledSetter.Columns[i] == null)
+                            continue;
+
+                        if (compiledSetter.Setters[i] != null)
+                        {
+                            if (obj is not T)
+                            {
+                            }
+                            compiledSetter.Setters[i].Invoke((T)obj, stmt, i);
+                        }
+                        else
+                        {
+                            var colType = SQLite3.ColumnType(stmt, i);
+                            var val = ReadCol(stmt, i, colType, compiledSetter.Columns[i].ColumnType);
+                            compiledSetter.Columns[i].SetValue(obj, val);
+                        }
+                    }
+
+                    OnInstanceCreated(obj);
+                    result.Add((T)obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "SqliteCommand.ExecuteDeferredQuery");
+            }
+            finally
+            {
+                SQLite3.Finalize(stmt);
+            }
+
+            return result;
+        }
+        public DaemonCompiledSetterTuple ExecuteDeferredQueryAndCompile<T>(Base.TableMapping map)
+        {
+            DaemonCompiledSetter<T, sqlite3_stmt> compiled = null;
+            List<T> result = new List<T>();
+            if (_conn.IsClosed)
+                _conn.RenewConnection();
+
+            Log.Logger.Debug(this.CommandText);
+            var stmt = Prepare();
+            try
+            {
+                var cols = new Column[SQLite3.ColumnCount(stmt)];
+                var fastColumnSetters = new Action<T, sqlite3_stmt, int>[SQLite3.ColumnCount(stmt)];
+
+                for (int i = 0; i < cols.Length; i++)
+                {
+                    var name = SQLite3.ColumnName16(stmt, i);
+                    cols[i] = map.FindColumn(name);
+                    if (cols[i] != null)
+                        fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(_conn, cols[i]);
+                }
+                compiled = new DaemonCompiledSetter<T, sqlite3_stmt>(cols, fastColumnSetters);
+                while (SQLite3.Step(stmt) == SQLite3.Result.Row)
+                {
+                    var obj = Activator.CreateInstance(map.MappedType);
+                    for (int i = 0; i < cols.Length; i++)
+                    {
+                        if (cols[i] == null)
+                            continue;
+
+                        if (fastColumnSetters[i] != null)
+                        {
+                            if (obj is not T)
+                            {
+                            }
+                            fastColumnSetters[i].Invoke((T)obj, stmt, i);
+                        }
+                        else
+                        {
+                            var colType = SQLite3.ColumnType(stmt, i);
+                            var val = ReadCol(stmt, i, colType, cols[i].ColumnType);
+                            cols[i].SetValue(obj, val);
+                        }
+                    }
+
+                    OnInstanceCreated(obj);
+                    result.Add((T)obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "SqliteCommand.ExecuteDeferredQuery");
+            }
+            finally
+            {
+                SQLite3.Finalize(stmt);
+            }
+
+            return new DaemonCompiledSetterTuple((IEnumerable<dynamic>)result, compiled);
+        }
         public override IEnumerable<T> ExecuteDeferredQuery<T>(Kit.Sql.Base.TableMapping map)
         {
             List<T> result = new List<T>();
@@ -96,7 +205,7 @@ namespace Kit.Sql.Sqlite
             var stmt = Prepare();
             try
             {
-                var cols = new TableMapping.Column[SQLite3.ColumnCount(stmt)];
+                var cols = new Column[SQLite3.ColumnCount(stmt)];
                 var fastColumnSetters = new Action<T, sqlite3_stmt, int>[SQLite3.ColumnCount(stmt)];
 
                 for (int i = 0; i < cols.Length; i++)

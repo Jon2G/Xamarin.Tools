@@ -1114,7 +1114,7 @@ namespace Kit.Sql.Sqlite
 
         private void MigrateTable(TableMapping map, List<ColumnInfo> existingCols)
         {
-            var toBeAdded = new List<TableMapping.Column>();
+            var toBeAdded = new List<Column>();
 
             foreach (var p in map.Columns)
             {
@@ -1131,7 +1131,7 @@ namespace Kit.Sql.Sqlite
                 }
             }
 
-            foreach (Base.TableMapping.Column p in toBeAdded)
+            foreach (Column p in toBeAdded)
             {
                 var addCol = "alter table \"" + map.TableName + "\" add column " + Orm.SqlDecl(p, StoreDateTimeAsTicks, StoreTimeSpanAsTicks);
                 Execute(addCol);

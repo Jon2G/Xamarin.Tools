@@ -1,11 +1,12 @@
 using System;
 using System.Reflection;
 using System.Text;
+using Kit.Sql.Base;
 using SQLitePCL;
 
 namespace Kit.Sql.Sqlite
 {
-    internal class FastColumnSetter
+    internal class FastColumnSetter: BaseFastColumnSetter
     {
         /// <summary>
         /// Creates a delegate that can be used to quickly set object members from query columns.
@@ -21,7 +22,7 @@ namespace Kit.Sql.Sqlite
         ///
         /// If no fast setter is available for the requested column (enums in particular cause headache), then this function returns null.
         /// </returns>
-        internal static Action<T, sqlite3_stmt, int> GetFastSetter<T>(SQLiteConnection conn, TableMapping.Column column)
+        internal static Action<T, sqlite3_stmt, int> GetFastSetter<T>(SQLiteConnection conn, Column column)
         {
             Action<T, sqlite3_stmt, int> fastSetter = null;
             if (column.PropertyInfo is null)
@@ -234,7 +235,7 @@ namespace Kit.Sql.Sqlite
         /// <param name="column">The column mapping that identifies the target member of the destination object</param>
         /// <param name="getColumnValue">A lambda that can be used to retrieve the column value at query-time</param>
         /// <returns>A strongly-typed delegate</returns>
-        private static Action<ObjectType, sqlite3_stmt, int> CreateNullableTypedSetterDelegate<ObjectType, ColumnMemberType>(TableMapping.Column column, Func<sqlite3_stmt, int, ColumnMemberType> getColumnValue) where ColumnMemberType : struct
+        private static Action<ObjectType, sqlite3_stmt, int> CreateNullableTypedSetterDelegate<ObjectType, ColumnMemberType>(Column column, Func<sqlite3_stmt, int, ColumnMemberType> getColumnValue) where ColumnMemberType : struct
         {
             var clrTypeInfo = column.PropertyInfo.PropertyType.GetTypeInfo();
             bool isNullable = false;
@@ -269,7 +270,7 @@ namespace Kit.Sql.Sqlite
         /// <param name="column">The column mapping that identifies the target member of the destination object</param>
         /// <param name="getColumnValue">A lambda that can be used to retrieve the column value at query-time</param>
         /// <returns>A strongly-typed delegate</returns>
-        private static Action<ObjectType, sqlite3_stmt, int> CreateTypedSetterDelegate<ObjectType, ColumnMemberType>(TableMapping.Column column, Func<sqlite3_stmt, int, ColumnMemberType> getColumnValue)
+        private static Action<ObjectType, sqlite3_stmt, int> CreateTypedSetterDelegate<ObjectType, ColumnMemberType>(Column column, Func<sqlite3_stmt, int, ColumnMemberType> getColumnValue)
         {
             var setProperty = (Action<ObjectType, ColumnMemberType>)Delegate.CreateDelegate(
                 typeof(Action<ObjectType, ColumnMemberType>), null,

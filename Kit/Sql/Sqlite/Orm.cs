@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Sql.Attributes;
+using Kit.Sql.Base;
 using static Kit.Sql.Base.BaseOrm;
 
 namespace Kit.Sql.Sqlite
@@ -25,7 +26,7 @@ namespace Kit.Sql.Sqlite
             return obj.GetType();
         }
 
-        public static string SqlDecl(TableMapping.Column p, bool storeDateTimeAsTicks, bool storeTimeSpanAsTicks)
+        public static string SqlDecl(Column p, bool storeDateTimeAsTicks, bool storeTimeSpanAsTicks)
         {
             string decl = "\"" + p.Name + "\" " + SqlType(p, storeDateTimeAsTicks, storeTimeSpanAsTicks) + " ";
 
@@ -49,7 +50,7 @@ namespace Kit.Sql.Sqlite
             return decl;
         }
 
-        public static string SqlType(TableMapping.Column p, bool storeDateTimeAsTicks, bool storeTimeSpanAsTicks)
+        public static string SqlType(Column p, bool storeDateTimeAsTicks, bool storeTimeSpanAsTicks)
         {
             var clrType = p.ColumnType;
             if (clrType == typeof(Boolean) || clrType == typeof(Byte) || clrType == typeof(UInt16) || clrType == typeof(SByte) || clrType == typeof(Int16) || clrType == typeof(Int32) || clrType == typeof(UInt32) || clrType == typeof(Int64))

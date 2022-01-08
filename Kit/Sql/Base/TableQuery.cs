@@ -10,7 +10,7 @@ using Kit.Sql.SqlServer;
 
 namespace Kit.Sql.Base
 {
-    public abstract class TableQuery<T> : BaseTableQuery, IEnumerable<T>
+    public abstract class TableQuery<T> : BaseTableQuery, IEnumerable<T>, IBaseTableQuery<T>
     {
         public SqlBase Connection { get; private set; }
 
@@ -877,6 +877,15 @@ namespace Kit.Sql.Base
         {
             var query = Take(1);
             return query.ToList().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the first element of this query, or a new element if no element is found.
+        /// </summary>
+        public T FirstOrNew<T>() where T : new()
+        {
+            var query = Take(1);
+            return (T)((object)query.ToList().FirstOrDefault() ?? new T());
         }
 
         /// <summary>

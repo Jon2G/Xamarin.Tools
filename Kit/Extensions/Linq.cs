@@ -212,7 +212,7 @@ namespace Kit
             }
             TableMapping map = new Kit.Sql.Sqlite.TableMapping(type);
             DataTable data = new DataTable(map.TableName);
-            foreach (TableMapping.Column col in map.Columns)
+            foreach (Column col in map.Columns)
             {
                 data.Columns.Add(col.Name, col.ColumnType);
             }

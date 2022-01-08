@@ -85,6 +85,7 @@ namespace Kit.Sql.Base
                 StringBuilder sb = new StringBuilder().Append('[').Append(this.ColumnName).Append(']').Append('{').Append(this.Value).Append('}');
                 return sb.ToString();
             }
+
         }
     }
 }

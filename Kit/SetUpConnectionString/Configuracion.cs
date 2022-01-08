@@ -176,10 +176,13 @@ namespace Kit.SetUpConnectionString
             string pin = SQLHLite.ExecuteScalar<string>("SELECT DEFINED_USER_PIN FROM CONFIGURACION WHERE ACTIVA=1");
             return (!string.IsNullOrEmpty(pin));
         }
-
-        public Exception ProbarConexion(SQLServerConnection SQLH)
+        public SQLServerConnection ToConnection()
         {
-            Exception resultado = SQLH.TestConnection();
+            return new SQLServerConnection(new SqlConnectionStringBuilder(this.RefreshConnectionString().CadenaCon));
+        }
+        public Exception ProbarConexion(SQLServerConnection SQLH = null)
+        {
+            Exception resultado = (SQLH ?? ToConnection()).TestConnection();
             if (resultado != null)
             {
                 Log.Logger.Debug(resultado, "Prueba de conexión");

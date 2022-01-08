@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kit.Daemon.Abstractions;
 using Kit.Sql.Readers;
 
 namespace Kit.Sql.Base

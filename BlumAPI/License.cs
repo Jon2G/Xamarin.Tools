@@ -108,7 +108,7 @@ namespace BlumAPI
             {
                 if (Tools.Debugging)
                 {
-                    return await Task.FromResult(true);
+                //    return await Task.FromResult(true);
                 }
                 await Task.Yield();
                 DeviceInformation = DeviceInformation.Get(sql);

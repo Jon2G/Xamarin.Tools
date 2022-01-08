@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Kit.Daemon.Abstractions;
 using Kit.Sql.Base;
 using Kit.Sql.Readers;
 using SQLitePCL;
@@ -43,7 +44,62 @@ namespace Kit.Sql.SqlServer
         {
             return ExecuteDeferredQuery<T>(_conn.GetMapping(typeof(T)));
         }
+        public DaemonCompiledSetterTuple ExecuteDeferredQueryAndCompile<T>(Base.TableMapping map)
+        {
+            DaemonCompiledSetter<T, SqlDataReader> compiled = null;
+            List<T> result = new List<T>();
 
+            Log.Logger.Debug("Executing:[{0}]", CommandText);
+            try
+            {
+                _conn.Con().Read(this.CommandText, (reader) =>
+                {
+                    if (reader.Read())
+                    {
+                        var cols = new Column[reader.FieldCount];
+                        var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
+                        for (int i = 0; i < cols.Length; i++)
+                        {
+                            var name = reader.GetName(i);
+                            cols[i] = map.FindColumn(name);
+                            if (cols[i] != null)
+                                fastColumnSetters[i] = FastColumnSetter.GetFastSetter<T>(cols[i]);
+                        }
+                        compiled = new DaemonCompiledSetter<T, SqlDataReader>(cols, fastColumnSetters);
+                        do
+                        {
+                            var obj = Activator.CreateInstance(map.MappedType);
+                            for (int i = 0; i < cols.Length; i++)
+                            {
+                                if (cols[i] == null)
+                                    continue;
+
+                                if (fastColumnSetters[i] != null)
+                                {
+                                    fastColumnSetters[i].Invoke((T)obj, reader, i);
+                                }
+                                else
+                                {
+                                    var colType = reader.GetFieldType(i);
+                                    var val = ReadCol(reader, i, colType, cols[i].ColumnType);
+                                    cols[i].SetValue(obj, val);
+                                }
+                            }
+                            OnInstanceCreated(obj);
+                            result.Add((T)obj);
+                        } while ((reader.Read()));
+                    }
+                }, new CommandConfig() { CommandTimeout = _conn.CommandTimeout, ManualRead = true }, this.Parameters);
+            }
+            catch (Exception ex)
+            {
+                if (Log.IsDBConnectionError(ex))
+                {
+                    Daemon.Daemon.OffLine = true;
+                }
+            }
+            return new DaemonCompiledSetterTuple((IEnumerable<dynamic>)result,compiled);
+        }
         public override List<T> ExecuteQuery<T>()
         {
             return ExecuteDeferredQuery<T>(_conn.GetMapping(typeof(T))).ToList();
@@ -77,6 +133,51 @@ namespace Kit.Sql.SqlServer
             // Can be overridden.
         }
 
+        public IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map, DaemonCompiledSetter _compiledSetter) where T : class
+        {
+            DaemonCompiledSetter<T, SqlDataReader> compiledSetter = _compiledSetter as DaemonCompiledSetter<T, SqlDataReader>;
+            List<T> result = new List<T>();
+            Log.Logger.Debug("Executing:[{0}]", CommandText);
+            try
+            {
+                _conn.Con().Read(this.CommandText, (reader) =>
+                {
+                    if (reader.Read())
+                    {
+                        do
+                        {
+                            var obj = Activator.CreateInstance(map.MappedType);
+                            for (int i = 0; i < compiledSetter.Columns.Length; i++)
+                            {
+                                if (compiledSetter.Columns[i] == null)
+                                    continue;
+
+                                if (compiledSetter.Setters[i] != null)
+                                {
+                                    compiledSetter.Setters[i].Invoke((T)obj, reader, i);
+                                }
+                                else
+                                {
+                                    var colType = reader.GetFieldType(i);
+                                    var val = ReadCol(reader, i, colType, compiledSetter.Columns[i].ColumnType);
+                                    compiledSetter.Columns[i].SetValue(obj, val);
+                                }
+                            }
+                            OnInstanceCreated(obj);
+                            result.Add((T)obj);
+                        } while ((reader.Read()));
+                    }
+                }, new CommandConfig() { CommandTimeout = _conn.CommandTimeout, ManualRead = true }, this.Parameters);
+            }
+            catch (Exception ex)
+            {
+                if (Log.IsDBConnectionError(ex))
+                {
+                    Daemon.Daemon.OffLine = true;
+                }
+            }
+            return result;
+        }
         public override IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map)
         {
             List<T> result = new List<T>();
@@ -87,7 +188,7 @@ namespace Kit.Sql.SqlServer
                  {
                      if (reader.Read())
                      {
-                         var cols = new Base.TableMapping.Column[reader.FieldCount];
+                         var cols = new Column[reader.FieldCount];
                          var fastColumnSetters = new Action<T, SqlDataReader, int>[reader.FieldCount];
                          for (int i = 0; i < cols.Length; i++)
                          {
@@ -511,5 +612,7 @@ namespace Kit.Sql.SqlServer
                 }
             }
         }
+
+
     }
 }

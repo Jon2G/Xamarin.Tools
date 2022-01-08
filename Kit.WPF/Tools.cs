@@ -18,7 +18,7 @@ namespace Kit.WPF
             Kit.Tools.Set(new ToolsImplementation(LibraryPath));
             (Kit.Tools.Instance as ToolsImplementation).Init();
             // ZXing.Net.Mobile.Forms.WindowsUniversal.Platform.Init();
-            Kit.Tools.Instance.Init();
+            //Kit.Tools.Instance.Init();
             return Kit.Tools.Instance;
         }
 
