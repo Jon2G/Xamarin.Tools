@@ -739,11 +739,28 @@ namespace Kit.Sql.Base
             if (expression.NodeType == ExpressionType.Equal)
             {
                 conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName);
-                if (this.Connection is SQLServerConnection)
+
+                var column = Table.FindColumnWithPropertyName(parameter.CurrentCondition.ColumnName);
+                if (column is null)
                 {
-                    return $"({parameter.CurrentCondition.ColumnName} is NULL)";
+                    if (this.Connection is SQLServerConnection)
+                    {
+                        conditions.Add(parameter.CurrentCondition);
+                        return $"(@{parameter.CurrentCondition.ColumnName} is NULL)";
+                    }
+                    conditions.Add(parameter.CurrentCondition);
+                    return "(? is ?)";
                 }
-                return "(" + parameter.CommandText + " is ?)";
+                else
+                {
+                    if (this.Connection is SQLServerConnection)
+                    {
+                        return $"({column.Name} is NULL)";
+                    }
+                    return "(" + parameter.CommandText + " is ?)";
+                }
+
+                
             }
             else if (expression.NodeType == ExpressionType.NotEqual)
             {

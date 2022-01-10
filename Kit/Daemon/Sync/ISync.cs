@@ -52,7 +52,14 @@ namespace Kit.Daemon.Sync
         public virtual void OnUploaded(NotifyTableChangedAction action)
         {
         }
+        /// <summary>
+        /// Fires after sql activates instance
+        /// </summary>
+        /// <param name="sql"></param>
+        public virtual void OnLoad(SqlBase sql)
+        {
 
+        }
         /// <summary>
         /// Mandatory for TwoWay Sync
         /// </summary>

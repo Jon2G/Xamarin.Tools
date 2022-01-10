@@ -364,10 +364,6 @@ namespace Kit.Daemon.Sync
                                         Processed++;
                                         read.OnSynced(direccion, action);
                                     }
-                                    else
-                                    {
-                                        return false;
-                                    }
                                     break;
 
                                 case NotifyTableChangedAction.Delete:

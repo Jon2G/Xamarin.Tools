@@ -10,18 +10,18 @@
         <Frame Margin="10" CornerRadius="5"  VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
             <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto"  Padding="0" VerticalOptions="Center" 
                   HorizontalOptions="CenterAndExpand">
-                    <Label Grid.Row="0" Grid.ColumnSpan="3" Text="Cadena de conexión " FontSize="20"  FontAttributes="Bold" HorizontalOptions="Center"/>
-                <forms:ZXingBarcodeImageView Aspect="AspectFill" Grid.Column="1" Grid.Row="1" BarcodeFormat="QR_CODE" VerticalOptions="Fill" HorizontalOptions="Fill"
-                                                 BarcodeValue="{Binding Code}">
-                        <forms:ZXingBarcodeImageView.BarcodeOptions>
-                        <qrcode:QrCodeEncodingOptions Height="1000" Width="1000"/>
-                        </forms:ZXingBarcodeImageView.BarcodeOptions>
-                    </forms:ZXingBarcodeImageView>
-                    <StackLayout  Grid.Row="2" Grid.ColumnSpan="3">
-                        <Label x:Name="TxtTitle" Text="" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Button Clicked="SalvarQr" Text="Guardar código en la galeria"/>
-                    </StackLayout>
-                </Grid>
+                <Label Grid.Row="0" Grid.ColumnSpan="3" Text="Cadena de conexión " FontSize="20"  FontAttributes="Bold" HorizontalOptions="Center"/>
+                <forms:ZXingBarcodeImageView Aspect="AspectFill" Grid.Column="1" 
+                                             Grid.Row="1" BarcodeFormat="QR_CODE" 
+                                             VerticalOptions="Fill"
+                                             HorizontalOptions="Fill"
+                                             BarcodeValue="{Binding Code}"
+                                             x:Name="BarcodeImageView"/>
+                <StackLayout  Grid.Row="2" Grid.ColumnSpan="3">
+                    <Label x:Name="TxtTitle" Text="" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Button Clicked="SalvarQr" Text="Guardar código en la galeria"/>
+                </StackLayout>
+            </Grid>
         </Frame>
     </ContentPage.Content>
 </pages1:BasePopUp>

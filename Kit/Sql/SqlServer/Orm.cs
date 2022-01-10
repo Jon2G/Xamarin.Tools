@@ -26,10 +26,15 @@ namespace Kit.Sql.SqlServer
 
         public static string SqlDecl(Column p)
         {
-            string decl = "\"" + p.Name + "\" " + SqlType(p) + " ";
+            string type = SqlType(p);
+            string decl = "\"" + p.Name + "\" " +type + " ";
 
             if (p.IsPK)
             {
+                if(p.ColumnType == typeof(string)&&decl.Contains("varchar(MAX)"))
+                {
+                    decl= "\"" + p.Name + "\" varchar(500) "; 
+                }
                 decl += "primary key ";
             }
             if (p.IsAutoInc)

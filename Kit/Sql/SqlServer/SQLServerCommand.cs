@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kit.Daemon.Abstractions;
+using Kit.Daemon.Sync;
 using Kit.Sql.Base;
 using Kit.Sql.Readers;
 using SQLitePCL;
@@ -98,7 +99,7 @@ namespace Kit.Sql.SqlServer
                     Daemon.Daemon.OffLine = true;
                 }
             }
-            return new DaemonCompiledSetterTuple((IEnumerable<dynamic>)result,compiled);
+            return new DaemonCompiledSetterTuple((IEnumerable<dynamic>)result, compiled);
         }
         public override List<T> ExecuteQuery<T>()
         {
@@ -128,9 +129,13 @@ namespace Kit.Sql.SqlServer
         /// This can be overridden in combination with the <see cref="SQLServerConnection.NewCommand"/>
         /// method to hook into the life-cycle of objects.
         /// </remarks>
-        protected virtual void OnInstanceCreated(object obj)
+        protected override void OnInstanceCreated(object obj)
         {
             // Can be overridden.
+            if (obj is ISync isync)
+            {
+                isync.OnLoad(this._conn);
+            }
         }
 
         public IEnumerable<T> ExecuteDeferredQuery<T>(Base.TableMapping map, DaemonCompiledSetter _compiledSetter) where T : class

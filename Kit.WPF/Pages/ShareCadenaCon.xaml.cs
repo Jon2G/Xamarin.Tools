@@ -58,7 +58,12 @@ namespace Kit.WPF.Pages
             {
                 encoder.Save(memory);
             }
-            Process.Start(file.FullName);
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(file.FullName)
+            {
+                UseShellExecute = true
+            };
+            p.Start();
         }
     }
 }

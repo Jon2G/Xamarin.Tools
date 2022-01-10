@@ -1,7 +1,7 @@
 ﻿using Kit.Forms.Fonts;
 using Xamarin.Forms;
 
-namespace Kit.Forms.Views
+namespace Kit.Forms.Controls
 {
     public class IconView : ContentView
     {

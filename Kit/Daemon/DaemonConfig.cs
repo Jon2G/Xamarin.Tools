@@ -10,17 +10,18 @@ namespace Kit.Daemon
         public readonly SqlBase Local;
         public readonly SqlBase Remote;
         public readonly int DbVersion;
-
+        public bool ShowErrorDialog { get; set; }
         /// <summary>
         /// Maximo que puede creceer el tiempo de descanso en segundos
         /// </summary>
         public int MaxSleep { get; private set; }
-        internal DaemonConfig(int DbVersion, SqlBase Local, SqlBase Remote, int MaxSleep = 30)
+        internal DaemonConfig(int DbVersion, SqlBase Local, SqlBase Remote, int MaxSleep = 30,bool showErrorDialog=false)
         {
             this.DbVersion = DbVersion;
             this.Local = Local;
             this.Remote = Remote;
             this.MaxSleep = MaxSleep;
+            this.ShowErrorDialog = showErrorDialog;
         }
         public SqlBase this[SyncTarget direcction]
         {

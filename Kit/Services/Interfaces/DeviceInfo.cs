@@ -27,14 +27,6 @@ namespace Kit.Services.Interfaces
             get
             {
                 string id = null;
-                //try
-                //{
-                //    id = HardUniqueId();
-                //}
-                //catch (Exception ex)
-                //{
-                //    Android.Util.Log.Warn("DeviceInfo", "Unable to get id: " + ex.ToString());
-                //}
                 FileInfo keyFile = new FileInfo(Path.Combine(Tools.Instance.LibraryPath, "Key.key"));
                 if (keyFile.Exists)
                 {
@@ -46,7 +38,8 @@ namespace Kit.Services.Interfaces
                 }
                 DeviceIdBuilder builder = new DeviceIdBuilder();
                 builder.AddMachineName();
-                builder.AddMacAddress(true);
+                builder.AddUserName();
+                builder.AddOsVersion();
                 id = builder.ToString();
                 File.WriteAllText(keyFile.FullName, id);
                 return id;

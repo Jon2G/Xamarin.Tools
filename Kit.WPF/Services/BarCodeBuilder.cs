@@ -6,7 +6,9 @@ using Kit.Services.BarCode;
 using ZXing;
 using ZXing.Common;
 using ZXing.Rendering;
-
+#if NET6_0_OR_GREATER
+using ZXing.Windows.Compatibility;
+#endif
 namespace Kit.WPF.Services
 {
     public class BarCodeBuilder : IBarCodeBuilder
@@ -21,7 +23,7 @@ namespace Kit.WPF.Services
                 Options.Height = Height;
                 Options.Margin = Margin;
 
-                BarcodeWriter barcodeWriter = new BarcodeWriter
+                var barcodeWriter = new BarcodeWriter
                 {
                     Format = Formato,
                     Options = Options 

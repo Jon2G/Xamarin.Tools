@@ -1,4 +1,6 @@
-﻿using Kit.Forms.Extensions;
+﻿extern alias SharedZXingNet;
+
+using Kit.Forms.Extensions;
 using Kit.Services.Interfaces;
 using System;
 using System.IO;
@@ -6,6 +8,7 @@ using Kit.Forms.Services.Interfaces;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SharedZXingNet::ZXing.QrCode;
 
 namespace Kit.Forms.Pages
 {
@@ -20,6 +23,11 @@ namespace Kit.Forms.Pages
             this.BindingContext = this;
             this.Code = Code;
             InitializeComponent();
+            this.BarcodeImageView.BarcodeOptions = new QrCodeEncodingOptions()
+            {
+                Height = 1000,
+                Width = 1000
+            };
             this.TxtTitle.Text = Title;
             this.BrightnessService = DependencyService.Get<IBrightnessService>();
         }
@@ -37,7 +45,7 @@ namespace Kit.Forms.Pages
 
         private async void SalvarQr(object sender, EventArgs e)
         {
-            if (await Permisos.EnsurePermission<Permissions.StorageWrite>("Permita el acceso")==PermissionStatus.Granted)
+            if (await Permisos.EnsurePermission<Permissions.StorageWrite>("Permita el acceso") == PermissionStatus.Granted)
             {
                 ScreenshotResult screenshot = await Screenshot.CaptureAsync();
                 using (Stream stream = await screenshot.OpenReadAsync())
