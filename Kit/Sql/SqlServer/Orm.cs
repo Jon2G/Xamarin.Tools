@@ -91,10 +91,10 @@ namespace Kit.Sql.SqlServer
                 //}
             }
 
-            if (!string.IsNullOrEmpty(p.Collation))
-            {
-                decl += "collate " + p.Collation + " ";
-            }
+            //if (!string.IsNullOrEmpty(p.Collation))
+            //{
+            //    decl += "collate " + p.Collation + " ";
+            //}
 
             return decl;
         }

@@ -209,6 +209,7 @@ namespace Kit.Daemon.Sync
             SyncTarget source = direccion.InvertDirection();
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
             SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
+            ISync read=null;
             string condition = (source_con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
 
             bool CanDo = false;
@@ -255,16 +256,16 @@ namespace Kit.Daemon.Sync
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
                         IEnumerable<dynamic> result;
                         CompiledSetters.TryGetValue(table, out DaemonCompiledSetter compiledSetter);
-                        MethodInfo method = command.GetType().GetMethod(compiledSetter is null ? "ExecuteDeferredQueryAndCompile": nameof(CommandBase.ExecuteDeferredQuery), compiledSetter is null? new[] { typeof(TableMapping) }: new[] { typeof(TableMapping),typeof(DaemonCompiledSetter) });
+                        MethodInfo method = command.GetType().GetMethod(compiledSetter is null ? "ExecuteDeferredQueryAndCompile" : nameof(CommandBase.ExecuteDeferredQuery), compiledSetter is null ? new[] { typeof(TableMapping) } : new[] { typeof(TableMapping), typeof(DaemonCompiledSetter) });
                         method = method.MakeGenericMethod(table.MappedType);
                         if (compiledSetter is null)
                         {
                             DaemonCompiledSetterTuple resultCompiled = (DaemonCompiledSetterTuple)method.Invoke(command, new object[] { table });
-                            if (resultCompiled?.Results?.Any()??false)
+                            if (resultCompiled?.Results?.Any() ?? false)
                             {
                                 compiledSetter = resultCompiled.CompiledSetter;
-                                CompiledSetters.Add(table, compiledSetter);                               
-                           }
+                                CompiledSetters.Add(table, compiledSetter);
+                            }
                             result = resultCompiled?.Results;
                         }
                         else
@@ -272,14 +273,14 @@ namespace Kit.Daemon.Sync
                             result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table, compiledSetter });
                         }
 
-                        if (!result?.Any()??false)
+                        if (!result?.Any() ?? false)
                         {
                             CurrentPackage.MarkAsSynced(source_con);
                             continue;
                         }
                         if (Daemon.Current.IsSleepRequested) { return false; }
                         dynamic i_result = result.First();
-                        ISync read = null;
+                        read = null;
                         if (i_result is ISync isync)
                         {
                             read = isync;
@@ -364,6 +365,7 @@ namespace Kit.Daemon.Sync
                                         Processed++;
                                         read.OnSynced(direccion, action);
                                     }
+                                    else { Processed++; }
                                     break;
 
                                 case NotifyTableChangedAction.Delete:
@@ -384,6 +386,7 @@ namespace Kit.Daemon.Sync
                 }
                 catch (Exception ex)
                 {
+                    read?.OnSyncFailed(target_con, source_con, ex);
                     if (ex is SQLiteException)
                     {
                         if (ex.Message.Contains("no such table"))

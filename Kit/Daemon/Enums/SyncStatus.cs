@@ -4,6 +4,7 @@
     {
         Unknown = 0,
         Done = 1,
-        Pending = 2
+        Pending = 2,
+        Failed=3
     }
 }

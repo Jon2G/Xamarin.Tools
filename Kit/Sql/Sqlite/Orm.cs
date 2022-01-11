@@ -29,10 +29,14 @@ namespace Kit.Sql.Sqlite
         public static string SqlDecl(Column p, bool storeDateTimeAsTicks, bool storeTimeSpanAsTicks)
         {
             string decl = "\"" + p.Name + "\" " + SqlType(p, storeDateTimeAsTicks, storeTimeSpanAsTicks) + " ";
-
+           
             if (p.IsPK)
             {
                 decl += "primary key ";
+                if (p.ColumnType == typeof(string)&& string.IsNullOrEmpty(p.Collation))
+                {
+                    decl = "\"" + p.Name + "\" varchar(500) COLLATE NOCASE ";
+                }
             }
             if (p.IsAutoInc)
             {

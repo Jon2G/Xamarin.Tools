@@ -25,7 +25,7 @@ namespace Kit.Daemon.Sync
         /// </summary>
         [AutoIncrement, Column(SyncGuidColumnName)]
         public virtual Guid Guid { get; set; }
-
+        public virtual SyncStatus SyncStatus { get; protected set; }
         public virtual void Delete(SqlBase con, SqlBase targetcon, Kit.Sql.Base.TableMapping map)
         {
             targetcon.Delete(this);
@@ -68,13 +68,12 @@ namespace Kit.Daemon.Sync
         {
             return Guid;
         }
-
         public virtual SyncStatus GetSyncStatus(SqlBase source_con)
         {
-            return GetSyncStatus(source_con, this.Guid);
+            this.SyncStatus= GetSyncStatus(source_con, this.Guid, this.SyncStatus);
+            return SyncStatus;
         }
-
-        public static SyncStatus GetSyncStatus(SqlBase source_con, Guid guid)
+        public static SyncStatus GetSyncStatus(SqlBase source_con, Guid guid, SyncStatus SyncStatus)
         {
             var history = source_con.Table<SyncHistory>().FirstOrDefault(x => x.Guid == guid);
             if (history is null)
@@ -83,13 +82,19 @@ namespace Kit.Daemon.Sync
                 if (changes is null)
                 {
                     //Has been downloaded by Daemon service since daemon downloads dont get inserted here
-                    return SyncStatus.Done;
+                    SyncStatus = SyncStatus.Done;
+                    return SyncStatus;
                 }
+                if (SyncStatus == SyncStatus.Failed)
+                {
+                    return SyncStatus.Failed;
+                }
+                SyncStatus = SyncStatus.Pending;
                 return SyncStatus.Pending;
             }
+            SyncStatus = SyncStatus.Done;
             return SyncStatus.Done;
         }
-
         protected static Guid GetGuid<T>(SqlBase source_con, object id)
         {
             Guid result = Guid.NewGuid();
@@ -101,15 +106,11 @@ namespace Kit.Daemon.Sync
             }
             return result;
         }
-
         public static bool IsSynced<T>(SqlBase source_con, int id)
         {
             Guid guid = GetGuid<T>(source_con, id);
-            return GetSyncStatus(source_con, guid) == SyncStatus.Done;
+            return GetSyncStatus(source_con, guid,SyncStatus.Unknown) == SyncStatus.Done;
         }
-
-  
-
         internal void OnSynced(SyncTarget direccion, NotifyTableChangedAction action)
         {
             switch (direccion)
@@ -123,7 +124,6 @@ namespace Kit.Daemon.Sync
                     break;
             }
         }
-
         public virtual ISync GetBySyncGuid(SqlBase con, Guid syncguid)
         {
             var table = con.Table(this.GetType()).Table;
@@ -140,6 +140,10 @@ namespace Kit.Daemon.Sync
             ISync read = Convert.ChangeType(i_result, typeof(ISync));
 
             return read;
+        }
+        public virtual void OnSyncFailed(SqlBase target, SqlBase source, Exception reason)
+        {
+
         }
     }
 }

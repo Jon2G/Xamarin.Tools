@@ -378,7 +378,8 @@ namespace Kit.Sql.Base
                         }
                     }
 
-                    text = "(" + leftr.CommandText + " " + GetSqlName(bin) + " " + rightr.CommandText + ")";
+                    var _operator = GetSqlName(bin);
+                    text = "(" + leftr.CommandText + " " + _operator + " " + rightr.CommandText+ " )";
                 }
 
                 leftr.CurrentCondition = null;
@@ -760,7 +761,7 @@ namespace Kit.Sql.Base
                     return "(" + parameter.CommandText + " is ?)";
                 }
 
-                
+
             }
             else if (expression.NodeType == ExpressionType.NotEqual)
             {
