@@ -13,17 +13,31 @@ namespace Kit.Sql.Tables
         public bool IsFirstLaunchTime { get; set; }
         public DeviceInformation()
         {
-            //Is not the first time unless proven otherwise
-            this.IsFirstLaunchTime = false;
+            ////Is not the first time unless proven otherwise
+            //this.IsFirstLaunchTime = false;
             this.DeviceId = Daemon.Devices.Device.Current?.DeviceId;
         }
         [Column("LAST_TIME_SEEN")]
         public DateTime LastAuthorizedTime { get; set; }
 
-        public DeviceInformation Get(SqlBase sql)
+        public DeviceInformation SetIsFirstLaunchTime(bool isFirst)
         {
-            return sql.Table<Kit.Sql.Tables.DeviceInformation>()
-                .FirstOrDefault(x => x.DeviceId == Device.Current.DeviceId) ?? new DeviceInformation();
+            IsFirstLaunchTime = isFirst;
+            return this;
+        }
+        public DeviceInformation Save(SqlBase sql)
+        {
+            sql.InsertOrReplace(this);
+            return this;
+        }
+        public static DeviceInformation Get(SqlBase sql)
+        {
+            return sql.Table<DeviceInformation>()
+                .FirstOrDefault(x => x.DeviceId == Device.Current.DeviceId) ??
+                                           new DeviceInformation()
+                                           {
+                                               DeviceId = Device.Current.DeviceId
+                                           }.SetIsFirstLaunchTime(true).Save(sql); 
 
         }
     }

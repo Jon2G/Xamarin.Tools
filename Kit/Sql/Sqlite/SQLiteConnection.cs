@@ -129,11 +129,10 @@ namespace Kit.Sql.Sqlite
                 Version = DBVersion
             });
             CreateTable<DeviceInformation>();
-            Insert(new DeviceInformation()
+            new DeviceInformation()
             {
-                DeviceId = Daemon.Devices.Device.Current?.DeviceId,
-                IsFirstLaunchTime = true
-            });
+                DeviceId = Daemon.Devices.Device.Current?.DeviceId
+            }.SetIsFirstLaunchTime(true).Save(this);
         }
 
         private void CreateDbFromScript()

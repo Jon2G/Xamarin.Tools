@@ -18,7 +18,6 @@ namespace BlumAPI
         private DeviceInformation DeviceInformation;
         private readonly string AppName;
         private string AppKey;
-
         public string Reason { get; private set; }
 
         protected abstract Task OpenRegisterForm();
@@ -34,10 +33,6 @@ namespace BlumAPI
                 { "Alta y Modificación de Artículos","ALTA2020"},
                 { "Toma de pedidos móvil","PEDIDOS19"},
                 { "Woocommerce servicio de sincronización","WOOSYNC21" }
-            };
-            this.DeviceInformation = new DeviceInformation()
-            {
-                DeviceId = Device.Current.DeviceId
             };
             APICaller = new APICaller(Device.Current.DeviceId);
         }
@@ -102,7 +97,7 @@ namespace BlumAPI
             return brand;
         }
 
-        public async Task<bool> IsAuthorizated(SqlBase sql)
+        public async Task<bool> IsAuthorizated(SqlBase SqlBase)
         {
             try
             {
@@ -111,7 +106,7 @@ namespace BlumAPI
                    return await Task.FromResult(true);
                 }
                 await Task.Yield();
-                DeviceInformation = DeviceInformation.Get(sql);
+                DeviceInformation = DeviceInformation.Get(SqlBase);
                 bool Autorized = false;
                 ProjectActivationState state = ProjectActivationState.Unknown;
                 state = await Autheticate(AppName);
@@ -121,7 +116,7 @@ namespace BlumAPI
                         Log.Logger.Information("Project is active");
                         Autorized = true;
                         DeviceInformation.LastAuthorizedTime = DateTime.Now;
-                        sql.InsertOrReplace(DeviceInformation);
+                        SqlBase.InsertOrReplace(DeviceInformation);
                         break;
 
                     case ProjectActivationState.Expired:
@@ -139,7 +134,7 @@ namespace BlumAPI
                         this.Reason = "Este dispositivo debe ser registrado con una licencia valida antes de poder acceder a la aplicación";
                         await Tools.Instance.Dialogs.CustomMessageBox.Show(this.Reason, "Acceso denegado");
                         await OpenRegisterForm();
-                        Autorized = await IsAuthorizated(sql);
+                        Autorized = await IsAuthorizated(SqlBase);
                         break;
 
                     case ProjectActivationState.ConnectionFailed:

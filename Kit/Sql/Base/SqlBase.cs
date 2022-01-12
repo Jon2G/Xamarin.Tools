@@ -238,7 +238,7 @@ namespace Kit.Sql.Base
         public string GetTableMappingKey(string TableName)
         {
             StringBuilder sb = new StringBuilder(TableName).Append(MappingSuffix);
-            return sb.ToString();
+            return sb.ToString().ToUpper().Trim();
         }
 
         /// <summary>

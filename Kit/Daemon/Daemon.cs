@@ -334,18 +334,13 @@ namespace Kit.Daemon
                     }
                 }
 
-                DeviceInformation device = SQLHLite.Table<DeviceInformation>().FirstOrDefault() ??
-                                           new DeviceInformation()
-                                           {
-                                               IsFirstLaunchTime = true,
-                                               DeviceId = Device.Current.DeviceId
-                                           };
+                DeviceInformation device = DeviceInformation.Get(SQLHLite);
                 if (device.IsFirstLaunchTime)
                 {
-                    device.IsFirstLaunchTime = false;
                     //I Have been deleted and reinstalled! , so i need to sync everything again...
                     SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
                     SQLHLite.Update(device);
+                    device.SetIsFirstLaunchTime(false).Save(SQLHLite);
                 }
                 IsInited = true;
             }
