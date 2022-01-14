@@ -1,11 +1,12 @@
 ﻿using System;
 using Microsoft.Maui;using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
+using Xamarin.Forms.Xaml;
 
 namespace Kit.MAUI.Converters
 {
     [TypeConversion(typeof(ImageSource))]
-    public class MyImageSourceConverter : TypeConverter
+    public class MyImageSourceConverter :Xamarin.Forms.TypeConverter
     {
         public override object ConvertFromInvariantString(string value)
         {
