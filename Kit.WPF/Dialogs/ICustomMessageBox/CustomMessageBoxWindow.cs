@@ -110,7 +110,7 @@ namespace Kit.WPF.Dialogs.ICustomMessageBox
                 this.Topmost = false;
                 if (this.Owner is null)
                 {
-                    Window owner = ToolsImplementation.UWPInstance.VentanaPadre();
+                    Window owner = ToolsImplementation.Instance.VentanaPadre();
                     if (this != owner)
                     {
                         this.Owner = owner;

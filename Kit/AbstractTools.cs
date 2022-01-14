@@ -44,9 +44,9 @@ namespace Kit
             Device.Init();
             return this;
         }
-        public virtual void CriticalAlert(object sender, EventArgs e)
+        public virtual void CriticalAlert(string ex)
         {
-            this.Dialogs.CustomMessageBox.ShowOK(sender.ToString(), "Alerta", "Entiendo");
+            this.Dialogs.CustomMessageBox.ShowOK(ex, "Alerta", "Entiendo");
         }
 
         private static readonly Lazy<bool> _IsInDesingMode =new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);

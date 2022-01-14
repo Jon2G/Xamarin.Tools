@@ -19,13 +19,12 @@ namespace Kit
             {
                 if (Current._Logger is null)
                 {
-                    Current._Logger = Serilog.Log.Logger;
+                    return Serilog.Log.Logger;
                 }
-                return Current._Logger;
+                return Current._Logger.Value;
             }
         }
 
-        private ILogger _Logger;
 
         public string CriticalLoggerPath
         {
@@ -45,7 +44,6 @@ namespace Kit
             private set;
         }
 
-        private EventHandler OnAlertCritical;
 
         public event EventHandler OnConecctionLost;
 
@@ -56,6 +54,7 @@ namespace Kit
                      LoggerPath = Path.Combine(LogDirectory.FullName, "log.log"),
                      CriticalLoggerPath = Path.Combine(LogDirectory.FullName, "critcal_log.log")
                  });
+        private Lazy<ILogger> _Logger = null;
 
         public static Log Current => _Current.Value;
 
@@ -66,7 +65,7 @@ namespace Kit
         {
         }
 
-        public static Log Init(DirectoryInfo LogDirectory = null)
+        public static Log Init(Func<Log, ILogger> loggerFactory, DirectoryInfo LogDirectory = null, Action<string> CriticalAction = null)
         {
             string log_path = Path.Combine(LogDirectory?.FullName ?? Log.LogDirectory.FullName);
             DirectoryInfo logDirectory = new DirectoryInfo(log_path);
@@ -74,30 +73,27 @@ namespace Kit
             {
                 logDirectory.Create();
             }
-            if (_Current.IsValueCreated)
+
+            if (CriticalAction != null)
             {
-                Log.Logger.Warning("The logger has been already created by lazy");
+                AlertCriticalUnhandled(CriticalAction);
             }
             _Current = new Lazy<Log>(() =>
                new Log()
                {
                    LoggerPath = Path.Combine(logDirectory.FullName, "log.log"),
                    CriticalLoggerPath = Path.Combine(logDirectory.FullName, "critcal_log.log"),
-                   _LogsSink = new LogsSink()
+                   _LogsSink = new LogsSink(),
+                   _Logger = new Lazy<ILogger>(() =>
+                   {
+                       return loggerFactory.Invoke(Current);
+
+                   })
                });
             return Current;
         }
 
-        public void SetLogger(ILogger Logger, EventHandler CriticalAction = null)
-        {
-            Current._Logger = Logger;
-            Current.OnAlertCritical = CriticalAction;
 
-            if (Current.OnAlertCritical != null)
-            {
-                AlertCriticalUnhandled();
-            }
-        }
 
         #region Errores
 
@@ -132,23 +128,27 @@ namespace Kit
 
         #endregion Errores
 
-        private static void AlertCriticalUnhandled()
+        private static void AlertCriticalUnhandled(Action<string> CriticalAction)
         {
             try
             {
                 FileInfo file = new FileInfo(Current.CriticalLoggerPath);
                 if (file.Exists)
                 {
+                    string criticalDescription = null;
                     using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    using (var sr = new StreamReader(fs, Encoding.Default))
                     {
-                        string criticalDescription = sr.ReadToEnd();
-                        if (!string.IsNullOrEmpty(criticalDescription))
+                        using (var sr = new StreamReader(fs, Encoding.Default))
                         {
-                            Log.Logger.Error(criticalDescription);
-                            Current.OnAlertCritical?.Invoke(criticalDescription, EventArgs.Empty);
-                            file.Delete();
+                            criticalDescription = sr.ReadToEnd();
                         }
+                        fs.Close();
+                    }
+                    if (!string.IsNullOrEmpty(criticalDescription))
+                    {
+                        Log.Logger.Error(criticalDescription);
+                        CriticalAction?.Invoke(criticalDescription);
+                        file.Delete();
                     }
                 }
             }
