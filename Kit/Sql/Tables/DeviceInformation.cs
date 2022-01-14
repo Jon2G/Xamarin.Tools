@@ -27,6 +27,7 @@ namespace Kit.Sql.Tables
         }
         public DeviceInformation Save(SqlBase sql)
         {
+            sql.Table<DeviceInformation>().Delete(false);
             sql.InsertOrReplace(this);
             return this;
         }

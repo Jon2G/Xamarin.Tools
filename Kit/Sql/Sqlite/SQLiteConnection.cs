@@ -1167,10 +1167,11 @@ namespace Kit.Sql.Sqlite
             var cmd = NewCommand();
             cmd.CommandText = cmdText;
 
-            foreach (var o in ps)
-            {
-                cmd.Bind(o);
-            }
+            if (ps is not null)
+                foreach (var o in ps)
+                {
+                    cmd.Bind(o);
+                }
             return cmd;
         }
 
@@ -2702,7 +2703,7 @@ namespace Kit.Sql.Sqlite
                 return;
             }
 
-             if (obj is Guid guid)
+            if (obj is Guid guid)
             {
                 UpdateVersionControl(new ChangesHistory(
                     table.TableName

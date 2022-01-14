@@ -15,7 +15,7 @@ namespace Kit.Sql.SqlServer
     public partial class SQLServerCommand : CommandBase
     {
         private SQLServerConnection _conn;
-        private List<Binding> _bindings;
+
         public string CommandText { get; set; }
         public List<SqlParameter> Parameters { get; internal set; }
 
@@ -29,7 +29,6 @@ namespace Kit.Sql.SqlServer
         public SQLServerCommand(SQLServerConnection conn)
         {
             _conn = conn;
-            _bindings = new List<Binding>();
             CommandText = "";
         }
 
@@ -330,18 +329,7 @@ namespace Kit.Sql.SqlServer
         //	Bind (null, val);
         //}
 
-        public override string ToString()
-        {
-            var parts = new string[1 + _bindings.Count];
-            parts[0] = CommandText;
-            var i = 1;
-            foreach (var b in _bindings)
-            {
-                parts[i] = string.Format("  {0}: {1}", i - 1, b.Value);
-                i++;
-            }
-            return string.Join(Environment.NewLine, parts);
-        }
+    
 
         public override void Dispose()
         {
@@ -363,24 +351,7 @@ namespace Kit.Sql.SqlServer
             //SQLite3.Finalize (stmt);
         }
 
-        private void BindAll(sqlite3_stmt stmt)
-        {
-            int nextIdx = 1;
-            foreach (var b in _bindings)
-            {
-                if (b.Name != null)
-                {
-                    b.Index = SQLite3.BindParameterIndex(stmt, b.Name);
-                }
-                else
-                {
-                    b.Index = nextIdx++;
-                }
-
-                BindParameter(stmt, b.Index, b.Value);
-            }
-        }
-
+     
         private static IntPtr NegativePointer = new IntPtr(-1);
 
         internal static void BindParameter(sqlite3_stmt stmt, int index, object value)

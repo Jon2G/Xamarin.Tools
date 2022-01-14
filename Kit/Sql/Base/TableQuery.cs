@@ -97,27 +97,36 @@ namespace Kit.Sql.Base
         /// </summary>
         public int Delete(Expression<Func<T, bool>> predExpr, bool ShouldNotify = true)
         {
+
             if (_limit.HasValue || _offset.HasValue)
                 throw new InvalidOperationException("Cannot delete with limits or offsets");
 
+            //if (_where == null && predExpr == null)
+            //    throw new InvalidOperationException("No condition specified");
+            object[] conditions_array = null;
+            string cmdText;
             if (_where == null && predExpr == null)
-                throw new InvalidOperationException("No condition specified");
-
-            var pred = _where;
-
-            if (predExpr != null && predExpr.NodeType == ExpressionType.Lambda)
             {
-                var lambda = (LambdaExpression)predExpr;
-                pred = pred != null ? Expression.AndAlso(pred, lambda.Body) : lambda.Body;
+                cmdText = "delete from \"" + Table.TableName + "\"";
             }
+            else
+            {
+                var pred = _where;
 
-            List<object> args = new List<object>();
-            List<Condition> conditions = new List<Condition>();
-            var cmdText = "delete from \"" + Table.TableName + "\"";
-            var w = CompileExpr(pred, args, conditions);
-            cmdText += " where " + w.CommandText;
+                if (predExpr != null && predExpr.NodeType == ExpressionType.Lambda)
+                {
+                    var lambda = (LambdaExpression)predExpr;
+                    pred = pred != null ? Expression.AndAlso(pred, lambda.Body) : lambda.Body;
+                }
 
-            object[] conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+                List<object> args = new List<object>();
+                List<Condition> conditions = new List<Condition>();
+                cmdText = "delete from \"" + Table.TableName + "\"";
+                var w = CompileExpr(pred, args, conditions);
+                cmdText += " where " + w.CommandText;
+
+                conditions_array = (this is SQLServerTableQuery<T> ? conditions.ToArray() : args.ToArray());
+            }
             var command = Connection.CreateCommand(cmdText, conditions_array);
 
             int result = command.ExecuteNonQuery();
@@ -379,7 +388,7 @@ namespace Kit.Sql.Base
                     }
 
                     var _operator = GetSqlName(bin);
-                    text = "(" + leftr.CommandText + " " + _operator + " " + rightr.CommandText+ " )";
+                    text = "(" + leftr.CommandText + " " + _operator + " " + rightr.CommandText + " )";
                 }
 
                 leftr.CurrentCondition = null;

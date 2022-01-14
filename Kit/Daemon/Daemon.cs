@@ -338,8 +338,7 @@ namespace Kit.Daemon
                 if (device.IsFirstLaunchTime)
                 {
                     //I Have been deleted and reinstalled! , so i need to sync everything again...
-                    SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
-                    SQLHLite.Update(device);
+                    SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId); 
                     device.SetIsFirstLaunchTime(false).Save(SQLHLite);
                 }
                 IsInited = true;
