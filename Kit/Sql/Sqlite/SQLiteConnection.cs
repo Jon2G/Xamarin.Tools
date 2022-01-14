@@ -844,17 +844,8 @@ namespace Kit.Sql.Sqlite
                 if (map.WithoutRowId)
                 {
                     query += " without rowid";
-                }
-
-                var InitTableAttributetype = typeof(InitTableAttribute);
-                var InitMethod = map.MappedType.GetMethods()
-                      .Where(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()).FirstOrDefault();
-                if (InitMethod is not null && !InitMethod.IsStatic)
-                {
-                    throw new Exception($"Init table method must be static at {map.TableName}");
-                }
+                }              
                 Execute(query);
-                InitMethod?.Invoke(null, new object[] { this });
             }
             else
             {
@@ -898,7 +889,7 @@ namespace Kit.Sql.Sqlite
                 var columns = index.Columns.OrderBy(i => i.Order).Select(i => i.ColumnName).ToArray();
                 CreateIndex(indexName, index.TableName, columns, index.Unique);
             }
-
+            InitTableAttribute.Find(map.MappedType)?.Execute(this);
             return result;
         }
 
