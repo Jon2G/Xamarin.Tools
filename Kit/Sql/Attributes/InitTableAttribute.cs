@@ -24,8 +24,8 @@ namespace Kit.Sql.Attributes
         {
             var InitTableAttributetype = typeof(InitTableAttribute);
 
-            if (mappedType.GetMethods()
-                       .Where(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()).FirstOrDefault() is MethodInfo method)
+            if (mappedType
+                    .GetMethods().FirstOrDefault(m => m.GetCustomAttributes(InitTableAttributetype, false).Any()) is { } method)
             {
                 if (!method.IsStatic)
                 {
