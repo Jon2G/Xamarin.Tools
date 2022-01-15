@@ -30,42 +30,40 @@ namespace Kit.Droid
             TinyIoC.TinyIoCContainer.Current.Register<IScreenManager, ScreenManagerService>();
             TinyIoC.TinyIoCContainer.Current.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.Forms.Controls.CrossImage.CrossImageExtensions>();
             TinyIoC.TinyIoCContainer.Current.Register<IBarCodeBuilder, BarCodeBuilder>();
-            Log.Init().SetLogger((new LoggerConfiguration()
-               // Set default log level limit to Debug
-               .MinimumLevel.Debug()
-               //Log to my sink logger
-               .WriteTo.Async(x => x.Sink(Log.LogsSink))
-               // Enrich each log entry with memory usage and thread ID
-               // .Enrich.WithMemoryUsage()
-               //.Enrich.WithThreadId()
-               // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
-               .WriteTo.Async(x => x.AndroidLog())
-               // Create a custom logger in order to set another limit,
-               // particularly, any logs from Information level will also be written into a rolling file
-               .WriteTo.Async(x => x.Logger(config =>
-                     config
-                         .MinimumLevel.Information()
-                         .WriteTo.Async(x => x.File(
-                             path: Log.Current.LoggerPath,
-                             retainedFileCountLimit: 7,
-                             flushToDiskInterval: TimeSpan.FromMilliseconds(500)))
-               ))
-               // And create another logger so that logs at Fatal level will immediately send email
-               .WriteTo.Logger(config =>
-                   config
-                       .MinimumLevel.Fatal()
-                       .WriteTo.Async(x => x.File(
-                           path: Log.Current.CriticalLoggerPath,
-                           retainedFileCountLimit: 1,
-                            flushToDiskInterval: TimeSpan.FromMilliseconds(500)))
-               )).CreateLogger(), CriticalAlert);
+            Log.Init((log) =>
+            {
+                return (new LoggerConfiguration()
+                    // Set default log level limit to Debug
+                    .MinimumLevel.Debug()
+                    //Log to my sink logger
+                    .WriteTo.Async(x => x.Sink(Log.LogsSink))
+                    // Enrich each log entry with memory usage and thread ID
+                    // .Enrich.WithMemoryUsage()
+                    //.Enrich.WithThreadId()
+                    // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
+                    .WriteTo.Async(x => x.AndroidLog())
+                    // Create a custom logger in order to set another limit,
+                    // particularly, any logs from Information level will also be written into a rolling file
+                    .WriteTo.Async(x => x.Logger(config =>
+                        config
+                            .MinimumLevel.Information()
+                            .WriteTo.Async(x => x.File(
+                                path: log.LoggerPath,
+                                retainedFileCountLimit: 7,
+                                flushToDiskInterval: TimeSpan.FromMilliseconds(500)))
+                    ))
+                    // And create another logger so that logs at Fatal level will immediately send email
+                    .WriteTo.Logger(config =>
+                        config
+                            .MinimumLevel.Fatal()
+                            .WriteTo.Async(x => x.File(
+                                path: log.CriticalLoggerPath,
+                                retainedFileCountLimit: 1,
+                                flushToDiskInterval: TimeSpan.FromMilliseconds(500)))
+                    )).CreateLogger();
+            }, CriticalAction: CriticalAlert);
             base.Init();
             return this;
-        }
-
-        public override void CriticalAlert(object sender, EventArgs e)
-        {
-            Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
         }
     }
 }
