@@ -844,7 +844,7 @@ namespace Kit.Sql.Sqlite
                 if (map.WithoutRowId)
                 {
                     query += " without rowid";
-                }              
+                }
                 Execute(query);
             }
             else
@@ -2204,7 +2204,7 @@ namespace Kit.Sql.Sqlite
             {
                 return 0;
             }
-            return Update(obj, Orm.GetType(obj));
+            return Update(obj, Orm.GetType(obj), true);
         }
 
         public override int Update(object obj, string Condition, bool shouldnotify = true, params BaseTableQuery.Condition[] pconditions)

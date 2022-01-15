@@ -11,9 +11,9 @@ namespace Kit.Sql.Tables
         public string DeviceId { get; set; }
         public DateTime Date { get; set; }
 
-        public void Save(SqlBase origin)
+        public static void Delete(SqlBase con,Guid syncGuid)
         {
-            throw new NotImplementedException();
+            con.Table<SyncHistory>().Delete(x => x.Guid == syncGuid,false);
         }
     }
 }

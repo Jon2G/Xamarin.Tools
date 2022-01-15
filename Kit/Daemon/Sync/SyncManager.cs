@@ -209,7 +209,7 @@ namespace Kit.Daemon.Sync
             SyncTarget source = direccion.InvertDirection();
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
             SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
-            ISync read=null;
+            ISync read = null;
             string condition = (source_con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
 
             bool CanDo = false;
@@ -347,7 +347,12 @@ namespace Kit.Daemon.Sync
                                         else
                                         {
                                             target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
-                                            target_con.Insert(read, String.Empty, read.GetType(), false);
+                                            //if (target_con.Insert(read, String.Empty, read.GetType(), false) <= 0)
+                                            if (target_con.InsertOrReplace(read,false) <= 0)
+                                            {
+                                                Processed++;
+                                                continue;
+                                            }
                                         }
 
                                         if (source_con is SQLiteConnection lite)

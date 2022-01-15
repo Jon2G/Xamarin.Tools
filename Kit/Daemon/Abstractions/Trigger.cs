@@ -75,6 +75,7 @@ IF @ACTION='{NotifyTableChangedAction.Insert}' OR @action='{NotifyTableChangedAc
 BEGIN
 DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
+DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted)
 
 INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
 SELECT @action,SyncGuid,'{Table.TableName}',{Table.SyncMode.Order} FROM inserted

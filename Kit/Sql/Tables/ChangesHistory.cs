@@ -45,7 +45,7 @@ namespace Kit.Sql.Tables
 
         public void Save(SQLiteConnection con)
         {
-            con.InsertOrReplace(this);
+            con.InsertOrReplace(this,false);
         }
 
         public static void MarkAsSynced(SqlBase origin, Guid SyncGuid)
