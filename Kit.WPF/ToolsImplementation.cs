@@ -34,50 +34,37 @@ namespace Kit.WPF
 
         public override AbstractTools Init()
         {
-            Log.Init().SetLogger((new LoggerConfiguration()
-                   // Set default log level limit to Debug
-                   .MinimumLevel.Debug()
-                   // Enrich each log entry with memory usage and thread ID
-                   // .Enrich.WithMemoryUsage()
-                   //.Enrich.WithThreadId()
-                   // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
-                   .WriteTo.Console()
-                   // Create a custom logger in order to set another limit,
-                   // particularly, any logs from Information level will also be written into a rolling file
-                   .WriteTo.Logger(config =>
-                   config
-                           .MinimumLevel.Debug()
-                           .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7,
-                               flushToDiskInterval: TimeSpan.FromMilliseconds(500))
-                   )
-                   // And create another logger so that logs at Fatal level will immediately send email
-                   .WriteTo.Logger(config =>
-                       config
-                           .MinimumLevel.Fatal()
-                           .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1,
-                               flushToDiskInterval: TimeSpan.FromMilliseconds(500))
-                   )).CreateLogger(), CriticalAlert);
             TinyIoC.TinyIoCContainer.Current.Register<ISynchronizeInvoke, SynchronizeInvoke>();
             TinyIoC.TinyIoCContainer.Current.Register<IDialogs, Kit.WPF.Dialogs.Dialogs>();
             TinyIoC.TinyIoCContainer.Current.Register<IScreenManager, ScreenManagerService>();
             TinyIoC.TinyIoCContainer.Current.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.WPF.Controls.CrossImage.CrossImageExtensions>();
             TinyIoC.TinyIoCContainer.Current.Register<IBarCodeBuilder, BarCodeBuilder>();
+            Log.Init(loggerFactory: (log) => (new LoggerConfiguration()
+                    // Set default log level limit to Debug
+                    .MinimumLevel.Debug()
+                    // Enrich each log entry with memory usage and thread ID
+                    // .Enrich.WithMemoryUsage()
+                    //.Enrich.WithThreadId()
+                    // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
+                    .WriteTo.Console()
+                    // Create a custom logger in order to set another limit,
+                    // particularly, any logs from Information level will also be written into a rolling file
+                    .WriteTo.Logger(config =>
+                    config
+                            .MinimumLevel.Debug()
+                            .WriteTo.File(log.LoggerPath, retainedFileCountLimit: 7,
+                                flushToDiskInterval: TimeSpan.FromMilliseconds(500))
+                    )
+                    // And create another logger so that logs at Fatal level will immediately send email
+                    .WriteTo.Logger(config =>
+                        config
+                            .MinimumLevel.Fatal()
+                            .WriteTo.File(log.CriticalLoggerPath, retainedFileCountLimit: 1,
+                                flushToDiskInterval: TimeSpan.FromMilliseconds(500))
+                    )).CreateLogger(), CriticalAction: CriticalAlert);
             base.Init();
             return this;
         }
-
-        public override void CriticalAlert(object sender, EventArgs e)
-        {
-            MessageBox.Show(sender.ToString(), "Alerta", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        #region UWP Especific
-
-        public static ToolsImplementation UWPInstance
-        {
-            get => Kit.Tools.Instance as ToolsImplementation;
-        }
-
         public Window VentanaPadre()
         {
             if (IsInDesingMode)
@@ -110,7 +97,5 @@ namespace Kit.WPF
                 return null;
             }
         }
-
-        #endregion UWP Especific
     }
 }

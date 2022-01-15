@@ -361,7 +361,7 @@ namespace Kit.Sql.Base
                 }
                 else
                 {
-                    if (rightr.CommandText == "?" && this is SQLServerTableQuery<T>)
+                    if ((rightr.CommandText == "?") && this is SQLServerTableQuery<T>)
                     {
                         if (string.IsNullOrEmpty(rightr.CurrentCondition.ColumnName))
                         {
@@ -375,7 +375,7 @@ namespace Kit.Sql.Base
                         }
                     }
 
-                    if (leftr.CommandText == "?" && this is SQLServerTableQuery<T>)
+                    if ((leftr.CommandText == "?") && this is SQLServerTableQuery<T>)
                     {
                         if (leftr.Value is bool)
                         {
@@ -748,7 +748,7 @@ namespace Kit.Sql.Base
         {
             if (expression.NodeType == ExpressionType.Equal)
             {
-                conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName);
+                conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName&&x.Value is null);
 
                 var column = Table.FindColumnWithPropertyName(parameter.CurrentCondition.ColumnName);
                 if (column is null)
