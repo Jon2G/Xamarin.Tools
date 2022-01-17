@@ -136,6 +136,7 @@ namespace Kit.Sql.Base
             }
             if (ShouldNotify && result > 0 && Table.SyncDirection != SyncDirection.NoSync)
             {
+                Log.Logger.Debug($"Deleted: {result} rows");
                 if (Connection is SQLiteConnection sqlite)
                 {
                     sqlite.OnTableChanged((Kit.Sql.Sqlite.TableMapping)Table, NotifyTableChangedAction.Delete, this);
