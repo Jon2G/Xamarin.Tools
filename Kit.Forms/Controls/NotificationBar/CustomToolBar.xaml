@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Kit.Forms.Controls" 
              xmlns:noti="clr-namespace:Kit.Forms.Controls.NotificationBar"
-             xmlns:views1="clr-namespace:Kit.Forms.Views;assembly=Kit.Forms"
              x:Class="Kit.Forms.Controls.NotificationBar.CustomToolBar" 
              BindingContext="{Static noti:Notificaciones.Instance}"
              BackgroundColor="{DynamicResource ToolbarDynamicColor}"   
@@ -63,7 +62,7 @@
                 </controls:ProgressRing.Style>
             </controls:ProgressRing>
 
-            <views1:MyButton BorderColor="Transparent" HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
+            <controls:MyButton BorderColor="Transparent" HorizontalOptions="End"  HeightRequest="30" Padding="0" Margin="0" StackMargin="0"
                               ImgSource="{Binding Logo}"
                               IsVisible="{Binding IsLogoVisible}" 
                               Text="{Binding LogoText}" BindingContext="{Reference Name=Me}"/>

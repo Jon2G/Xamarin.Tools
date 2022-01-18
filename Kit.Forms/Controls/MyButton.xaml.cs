@@ -5,7 +5,7 @@ using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Kit.Forms.Views
+namespace Kit.Forms.Controls
 {
     [Preserve(AllMembers = true)]
     [XamlCompilation(XamlCompilationOptions.Compile)]

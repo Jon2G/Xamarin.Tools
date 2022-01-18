@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AsyncAwaitBestPractices;
+using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -28,7 +29,11 @@ namespace Kit.Model
 
         #region PerfomanceHelpers
 
-        protected async void Raise<T>(Expression<Func<T>> propertyExpression)
+        protected void Raise<T>(Expression<Func<T>> propertyExpression)
+        {
+            AsyncRaise<T>(propertyExpression).SafeFireAndForget();
+        }
+        protected async Task AsyncRaise<T>(Expression<Func<T>> propertyExpression)
         {
             await Task.Yield();
             if (this.PropertyChanged != null)

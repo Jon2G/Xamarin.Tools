@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:pinView="clr-namespace:Kit.Forms.Pages.PinView;assembly=Kit.Forms"
-             xmlns:views1="clr-namespace:Kit.Forms.Views;assembly=Kit.Forms"
+             xmlns:controls="clr-namespace:Kit.Forms.Controls;assembly=Kit.Forms"
              x:Class="Kit.Forms.Pages.PinView.PinPanel" x:Name="PinViewElement">
     <ContentView.Resources>
         <pinView:LengthToListConverter x:Key="LengthToListConverter"/>
@@ -235,7 +235,7 @@
                     </Button.Effects>
                 </Button>
 
-                <views1:MyButton 
+                <controls:MyButton 
                         NativeAnimation="True"
                         NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
@@ -254,7 +254,7 @@
                         Opacity="{Binding Source={x:Reference PinViewElement}, Path=ButtonOpacity}" BorderColor="Transparent"/>
 
 
-                <views1:MyButton VerticalOptions="Center"
+                <controls:MyButton VerticalOptions="Center"
                         NativeAnimation="True"
                         NativeAnimationColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
                         PressedBackgroundColor="{Binding Source={x:Reference PinViewElement}, Path=DotColor}"
