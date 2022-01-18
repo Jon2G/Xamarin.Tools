@@ -136,7 +136,7 @@ namespace Kit.Sql.SqlServer
         public object Single(string sql, CommandType type, params SqlParameter[] parameters)
         {
             var con = Con();
-            return con.Single(sql, type, this.CommandTimeout,parameters);
+            return con.Single(sql, type, this.CommandTimeout, parameters);
         }
 
         public override T Single<T>(string sql)
@@ -1664,9 +1664,10 @@ WHERE
         /// </returns>
         public override CommandBase CreateCommand(string cmdText, params object[] ps)
         {
-            SqlParameter[] parameters = new SqlParameter[ps.Length];
-            if (ps.Length > 0)
+            SqlParameter[] parameters = null;
+            if (ps is not null && ps.Length > 0)
             {
+                parameters = new SqlParameter[ps.Length];
                 for (int i = 0; i < ps.Length; i++)
                 {
                     Condition condition = (Condition)(ps[i]);

@@ -89,7 +89,7 @@
       <Version>5.0.0.2291</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2291" />
-    <PackageReference Include="ZXing.Net.Bindings.Android" Version="0.16.6" />
+    <PackageReference Include="ZXing.Net.Bindings.Android" Version="0.16.7" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Effects\ViewLifecycleEffect.cs" />

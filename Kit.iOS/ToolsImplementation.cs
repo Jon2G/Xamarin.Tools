@@ -26,6 +26,7 @@ namespace Kit.iOS
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
         public override void Init()
         {
+            TinyIoC.TinyIoCContainer.Current.Register<IClipboardService, ClipboardService>();
             Init(new Forms.Dialogs.Dialogs(), new SynchronizeInvoke(), new ScreenManagerService(),
                 new CrossImageExtensions(), new BarCodeBuilder());
             Log.Init().SetLogger((new LoggerConfiguration()

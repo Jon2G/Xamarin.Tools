@@ -42,7 +42,7 @@
 		<Authors>Jonathan Eduardo García García</Authors>
 		<Version>1.1.2.0</Version>
 		<Company>Jouna77</Company>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageIcon>toolbox.png</PackageIcon>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>

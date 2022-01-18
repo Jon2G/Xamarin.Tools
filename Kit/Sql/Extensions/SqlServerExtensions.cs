@@ -120,7 +120,7 @@ namespace Kit
 
         public static int Execute(this SqlConnection connection, string sql, IEnumerable<SqlParameter> parametros)
         {
-            return connection.Execute(sql, parametros.ToArray());
+            return connection.Execute(sql, parametros?.ToArray());
         }
 
         public static int Execute(this SqlConnection connection, string sql, params SqlParameter[] parametros)
@@ -138,21 +138,23 @@ namespace Kit
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(sql, con) { CommandType = commandType })
                     {
-                        if (parametros.Any(x => x.Value is null))
+                        if (parametros is not null)
                         {
-                            foreach (SqlParameter t in parametros)
+                            if (parametros.Any(x => x.Value is null))
                             {
-                                if (t.Value is null)
+                                foreach (SqlParameter t in parametros)
                                 {
-                                    t.Value = DBNull.Value;
+                                    if (t.Value is null)
+                                    {
+                                        t.Value = DBNull.Value;
+                                    }
+
+                                    if (!parametros.Any(x => x.Value is null))
+                                        break;
                                 }
-
-                                if (!parametros.Any(x => x.Value is null))
-                                    break;
                             }
+                            cmd.Parameters.AddRange(parametros);
                         }
-
-                        cmd.Parameters.AddRange(parametros);
                         Rows = cmd.ExecuteNonQuery();
                     }
                     con.Close();

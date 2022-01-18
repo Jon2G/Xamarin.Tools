@@ -30,6 +30,7 @@ namespace Kit.Droid
             TinyIoC.TinyIoCContainer.Current.Register<IScreenManager, ScreenManagerService>();
             TinyIoC.TinyIoCContainer.Current.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.Forms.Controls.CrossImage.CrossImageExtensions>();
             TinyIoC.TinyIoCContainer.Current.Register<IBarCodeBuilder, BarCodeBuilder>();
+            TinyIoC.TinyIoCContainer.Current.Register<IClipboardService, ClipboardService>();
             Log.Init((log) =>
             {
                 return (new LoggerConfiguration()

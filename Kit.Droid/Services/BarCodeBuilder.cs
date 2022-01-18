@@ -5,9 +5,9 @@ using Kit.Droid.Services;
 using Kit.Services.BarCode;
 using Xamarin.Forms;
 using ZXing;
-using ZXing.Android;
-using ZXing.Android.Rendering;
 using ZXing.Common;
+using ZXing.Mobile;
+
 [assembly: Dependency(typeof(BarCodeBuilder))]
 namespace Kit.Droid.Services
 {

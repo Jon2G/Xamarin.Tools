@@ -27,10 +27,19 @@ namespace Kit.Services.Web
                     Proxy = null,
                     UseProxy = false
                 };
-                if ((Tools.Instance?.RuntimePlatform ?? RuntimePlatform.Unknown) != Enums.RuntimePlatform.WPF)
+                //if ((Tools.Instance?.RuntimePlatform ?? RuntimePlatform.Unknown) != Enums.RuntimePlatform.WPF)
+                //{
+                try
                 {
-                    _HttpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                    _HttpClientHandler.ServerCertificateCustomValidationCallback =
+                        (message, cert, chain, errors) => true;
                 }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex, "HttpClientHandler");
+                }
+
+                //}
                 return _HttpClientHandler;
             }
         }

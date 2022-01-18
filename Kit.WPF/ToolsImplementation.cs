@@ -39,6 +39,7 @@ namespace Kit.WPF
             TinyIoC.TinyIoCContainer.Current.Register<IScreenManager, ScreenManagerService>();
             TinyIoC.TinyIoCContainer.Current.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.WPF.Controls.CrossImage.CrossImageExtensions>();
             TinyIoC.TinyIoCContainer.Current.Register<IBarCodeBuilder, BarCodeBuilder>();
+            TinyIoC.TinyIoCContainer.Current.Register<IClipboardService, ClipboardService>();
             Log.Init(loggerFactory: (log) => (new LoggerConfiguration()
                     // Set default log level limit to Debug
                     .MinimumLevel.Debug()

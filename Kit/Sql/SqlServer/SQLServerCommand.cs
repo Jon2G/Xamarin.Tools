@@ -21,7 +21,8 @@ namespace Kit.Sql.SqlServer
 
         public SQLServerCommand(SQLServerConnection conn, string cmd, params SqlParameter[] parameters)
         {
-            this.Parameters = new List<SqlParameter>(parameters);
+            if (parameters is not null)
+                this.Parameters = new List<SqlParameter>(parameters);
             CommandText = cmd;
             _conn = conn;
         }
@@ -329,7 +330,7 @@ namespace Kit.Sql.SqlServer
         //	Bind (null, val);
         //}
 
-    
+
 
         public override void Dispose()
         {
@@ -351,7 +352,7 @@ namespace Kit.Sql.SqlServer
             //SQLite3.Finalize (stmt);
         }
 
-     
+
         private static IntPtr NegativePointer = new IntPtr(-1);
 
         internal static void BindParameter(sqlite3_stmt stmt, int index, object value)
