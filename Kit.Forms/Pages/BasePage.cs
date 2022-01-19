@@ -78,7 +78,7 @@ namespace Kit.Forms.Pages
             return Navigation.PushModalAsync(this);
         }
 
-        public virtual Task ShowDialog() => Show();
+        public virtual async Task ShowDialog() => await Task.WhenAll(Show(), WaitUntilClose());
 
         #endregion ICrossWindow
 
@@ -218,7 +218,13 @@ namespace Kit.Forms.Pages
             {
                 return true;
             }
-            return base.OnBackButtonPressed();
+            bool close = base.OnBackButtonPressed();
+            if (!close)
+            {
+                OnClose();
+                ShowDialogCallback?.Set();
+            }
+            return close;
         }
 
         public async void MenuPrincipal()
