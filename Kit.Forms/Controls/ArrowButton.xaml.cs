@@ -17,6 +17,47 @@ namespace Kit.Forms.Controls
     [XamlCompilation(XamlCompilationOptions.Compile), Preserve()]
     public partial class ArrowButton
     {
+
+        public static readonly BindableProperty PressedBackgroundColorProperty = BindableProperty.Create(
+            propertyName: nameof(TextColor),
+            returnType: typeof(Color),
+            declaringType: typeof(ArrowButton),
+            defaultValue: Color.LightGray, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow)
+                {
+                    Color color = (Color)n;
+                    arrow.PressedBackgroundColor = color;
+                    TouchEffect.SetPressedBackgroundColor(arrow, color);
+                }
+            });
+
+        public Color PressedBackgroundColor
+        {
+            get => (Color)GetValue(PressedBackgroundColorProperty);
+            set
+            {
+                SetValue(PressedBackgroundColorProperty, value);
+                TouchEffect.SetPressedBackgroundColor(this, value);
+                OnPropertyChanged();
+            }
+        }
+        public static new readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(
+            propertyName: nameof(BackgroundColor),
+            returnType: typeof(Color),
+            declaringType: typeof(ArrowButton),
+            defaultValue: Color.WhiteSmoke, BindingMode.OneWay,
+            propertyChanged: (e, o, n) =>
+            {
+                if (e is ArrowButton arrow)
+                {
+                    Color color = (Color)n;
+                    arrow.BackgroundColor = color;
+                    TouchEffect.SetNormalBackgroundColor(arrow, color);
+                }
+            });
+
         public new Color BackgroundColor
         {
             get => (Color)base.GetValue(BackgroundColorProperty);
@@ -24,8 +65,7 @@ namespace Kit.Forms.Controls
             {
                 base.SetValue(BackgroundColorProperty, value);
                 OnPropertyChanged();
-                if (value != Color.LightGray)
-                    TouchEffect.SetNormalBackgroundColor(this.arrow, value);
+                TouchEffect.SetNormalBackgroundColor(this.arrow, value);
             }
         }
 

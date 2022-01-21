@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Kit.Services.Interfaces;
@@ -12,6 +13,13 @@ namespace Kit.Forms.Pages
 {
     public class BasePopUp : PopupPage, ICrossWindow
     {
+        public bool IsShowed
+        {
+            get
+            {
+                return Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopupStack?.Any(x => x == this) ?? false;
+            }
+        }
         #region ICrossWindow
 
         Task ICrossWindow.Close() => Close();

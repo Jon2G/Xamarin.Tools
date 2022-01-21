@@ -8,7 +8,6 @@
              x:Class="Kit.Forms.Controls.ArrowButton" x:Name="arrow"
              x:DataType="controls:ArrowButton" 
              HorizontalOptions="FillAndExpand"  Padding="5" Visual="Default"
-             xct:TouchEffect.PressedBackgroundColor="LightGray"
              xct:TouchEffect.PressedScale="0.99" VerticalOptions="FillAndExpand"
              xct:TouchEffect.NativeAnimation="True">
     <Frame.Margin>
