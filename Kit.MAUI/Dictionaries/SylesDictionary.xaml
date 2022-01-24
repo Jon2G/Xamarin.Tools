@@ -1,8 +1,0 @@
-﻿<?xaml-comp compile="true" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Kit.MAUI.Dictionaries.SylesDictionary">
-    <Color x:Key="ToolbarDangerColor">#37FF0000</Color>
-    <Color x:Key="ToolbarRegularColor">#37FFFFFF</Color>
-    <Color x:Key="ToolbarDynamicColor">#37FFFFFF</Color>
-</ResourceDictionary>

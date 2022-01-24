@@ -13,7 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Kit.Extensions;
 using Expression = System.Linq.Expressions.Expression;
-
+using WBrush = System.Windows.Media.Brush;
 namespace Kit.WPF.Controls
 {
     public partial class ArrowButton : Button, INotifyPropertyChanged
@@ -64,21 +64,22 @@ namespace Kit.WPF.Controls
 
         public static readonly DependencyProperty TextColorProperty = DependencyProperty.Register(
             name: nameof(TextColor),
-            propertyType: typeof(Color),
-            ownerType: typeof(ArrowButton), new PropertyMetadata(Colors.Black, (e, o) =>
+            propertyType: typeof(WBrush),
+            ownerType: typeof(ArrowButton), new PropertyMetadata(Brushes.Black, 
+                (e, o) =>
               {
                   if (e is ArrowButton arrow)
                   {
-                      Color color = (Color)o.NewValue;
+                      WBrush color = (WBrush)o.NewValue;
                       arrow.TitleColor = color;
                       arrow.SubTitleColor = color;
                       arrow.TextColor = color;
                   }
               }));
 
-        public Color TextColor
+        public WBrush TextColor
         {
-            get => (Color)GetValue(TextColorProperty);
+            get => (WBrush)GetValue(TextColorProperty);
             set
             {
                 SetValue(TextColorProperty, value);
@@ -91,16 +92,16 @@ namespace Kit.WPF.Controls
         }
 
         public static readonly DependencyProperty ArrowColorProperty = DependencyProperty.Register(
-            name: nameof(ArrowColor), propertyType: typeof(Color),
+            name: nameof(ArrowColor), propertyType: typeof(WBrush),
             ownerType: typeof(ArrowButton),
-             new PropertyMetadata(Colors.Blue, (e, o) =>
+             new PropertyMetadata(Brushes.Blue, (e, o) =>
             {
-                if (e is ArrowButton arrow) arrow.ArrowColor = (Color)o.NewValue;
+                if (e is ArrowButton arrow) arrow.ArrowColor = (WBrush)o.NewValue;
             }));
 
-        public Color ArrowColor
+        public WBrush ArrowColor
         {
-            get => (Color)GetValue(ArrowColorProperty);
+            get => (WBrush)GetValue(ArrowColorProperty);
             set
             {
                 SetValue(ArrowColorProperty, value);
@@ -109,16 +110,16 @@ namespace Kit.WPF.Controls
         }
 
         public static readonly DependencyProperty TitleColorProperty = DependencyProperty.Register(
-            name: nameof(TitleColor), propertyType: typeof(Color),
+            name: nameof(TitleColor), propertyType: typeof(WBrush),
             ownerType: typeof(ArrowButton),
-             new PropertyMetadata(Colors.Black, (e, o) =>
+             new PropertyMetadata(Brushes.Black, (e, o) =>
             {
-                if (e is ArrowButton arrow) arrow.TitleColor = (Color)o.NewValue;
+                if (e is ArrowButton arrow) arrow.TitleColor = (WBrush)o.NewValue;
             }));
 
-        public Color TitleColor
+        public WBrush TitleColor
         {
-            get => (Color)GetValue(TitleColorProperty);
+            get => (WBrush)GetValue(TitleColorProperty);
             set
             {
                 SetValue(TitleColorProperty, value);
@@ -127,16 +128,16 @@ namespace Kit.WPF.Controls
         }
 
         public static readonly DependencyProperty SubTitleColorProperty = DependencyProperty.Register(
-            name: nameof(SubTitleColor), propertyType: typeof(Color),
+            name: nameof(SubTitleColor), propertyType: typeof(WBrush),
             ownerType: typeof(ArrowButton),
-             new PropertyMetadata(Colors.Black, (e, o) =>
+             new PropertyMetadata(Brushes.Black, (e, o) =>
             {
-                if (e is ArrowButton arrow) arrow.SubTitleColor = (Color)o.NewValue;
+                if (e is ArrowButton arrow) arrow.SubTitleColor = (WBrush)o.NewValue;
             }));
 
-        public Color SubTitleColor
+        public WBrush SubTitleColor
         {
-            get => (Color)GetValue(SubTitleColorProperty);
+            get => (WBrush)GetValue(SubTitleColorProperty);
             set
             {
                 SetValue(SubTitleColorProperty, value);
@@ -146,7 +147,7 @@ namespace Kit.WPF.Controls
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             name: nameof(Title), propertyType: typeof(string),
-            ownerType: typeof(ArrowButton), 
+            ownerType: typeof(ArrowButton),
              new PropertyMetadata(string.Empty, (e, o) => { if (e is ArrowButton arrow) arrow.Title = o.NewValue?.ToString(); }));
 
         public string Title
@@ -175,9 +176,10 @@ namespace Kit.WPF.Controls
         }
 
         public static readonly DependencyProperty SubTitleFontSizeProperty = DependencyProperty.Register(
-            name: nameof(SubTitleFontSize), propertyType: typeof(double),
+            name: nameof(SubTitleFontSize),
+            propertyType: typeof(double),
             ownerType: typeof(ArrowButton),
-             new PropertyMetadata(Colors.Black, (e, o) =>
+             new PropertyMetadata(12d, (e, o) =>
             {
                 if (e is ArrowButton arrow) arrow.SubTitleFontSize = (double)o.NewValue;
             }));
@@ -195,13 +197,13 @@ namespace Kit.WPF.Controls
 
         public static readonly DependencyProperty TitleFontSizeProperty = DependencyProperty.Register(
             name: nameof(TitleFontSize), propertyType: typeof(double),
-            ownerType: typeof(ArrowButton), 
+            ownerType: typeof(ArrowButton),
              new PropertyMetadata(14d, (e, o) =>
             {
                 if (e is ArrowButton arrow) arrow.TitleFontSize = (double)o.NewValue;
             }));
 
-        [TypeConverter(typeof(FontSizeConverter))]
+        //[TypeConverter(typeof(FontSizeConverter))]
         public double TitleFontSize
         {
             get => (double)GetValue(TitleFontSizeProperty);
@@ -214,7 +216,7 @@ namespace Kit.WPF.Controls
 
         public static readonly DependencyProperty TitleFontAttributesProperty = DependencyProperty.Register(
             name: nameof(TitleFontAttributes), propertyType: typeof(FontWeight),
-            ownerType: typeof(ArrowButton), 
+            ownerType: typeof(ArrowButton),
              new PropertyMetadata(FontWeights.Bold, (e, o) =>
             {
                 if (e is ArrowButton arrow) arrow.TitleFontAttributes = (FontWeight)o.NewValue;
@@ -227,7 +229,7 @@ namespace Kit.WPF.Controls
         }
         public static readonly DependencyProperty SubTitleFontAttributesProperty = DependencyProperty.Register(
             name: nameof(SubTitleFontAttributes), propertyType: typeof(FontWeight),
-            ownerType: typeof(ArrowButton), 
+            ownerType: typeof(ArrowButton),
              new PropertyMetadata(FontWeights.Bold, (e, o) =>
             {
                 if (e is ArrowButton arrow) arrow.SubTitleFontAttributes = (FontWeight)o.NewValue;
@@ -239,30 +241,30 @@ namespace Kit.WPF.Controls
         }
 
         public static readonly DependencyProperty TitleFontFamilyProperty = DependencyProperty.Register(
-            name: nameof(TitleFontFamily), propertyType: typeof(string),
+            name: nameof(TitleFontFamily), propertyType: typeof(FontFamily),
             ownerType: typeof(ArrowButton),
-             new PropertyMetadata(string.Empty, (e, o) =>
-            {
-                if (e is ArrowButton arrow) arrow.TitleFontFamily = o.NewValue?.ToString();
-            }));
-
-        public string TitleFontFamily
+             new PropertyMetadata((FontFamily)Label.FontFamilyProperty.DefaultMetadata.DefaultValue, (e, o) =>
+             {
+                 if (e is ArrowButton arrow) arrow.TitleFontFamily = (FontFamily)o.NewValue;
+             }));
+        
+        public FontFamily TitleFontFamily
         {
-            get { return (string)GetValue(TitleFontFamilyProperty); }
+            get { return (FontFamily)GetValue(TitleFontFamilyProperty); }
             set { SetValue(TitleFontFamilyProperty, value); OnPropertyChanged(); }
         }
 
         public static readonly DependencyProperty SubtitleFontFamilyProperty = DependencyProperty.Register(
-            name: nameof(SubtitleFontFamily), propertyType: typeof(string),
+            name: nameof(SubtitleFontFamily), propertyType: typeof(FontFamily),
             ownerType: typeof(ArrowButton),
-             new PropertyMetadata(string.Empty, (e, o) =>
+             new PropertyMetadata((FontFamily)Label.FontFamilyProperty.DefaultMetadata.DefaultValue, (e, o) =>
             {
-                if (e is ArrowButton arrow) arrow.TitleFontFamily = o.NewValue?.ToString();
+                if (e is ArrowButton arrow) arrow.TitleFontFamily = (FontFamily)o.NewValue;
             }));
 
-        public string SubtitleFontFamily
+        public FontFamily SubtitleFontFamily
         {
-            get { return (string)GetValue(SubtitleFontFamilyProperty); }
+            get { return (FontFamily)GetValue(SubtitleFontFamilyProperty); }
             set { SetValue(SubtitleFontFamilyProperty, value); OnPropertyChanged(); }
         }
 
@@ -279,14 +281,14 @@ namespace Kit.WPF.Controls
             get => (ImageSource)GetValue(IconProperty);
             set
             {
-                SetValue(CommandProperty, value);
+                SetValue(IconProperty, value);
                 OnPropertyChanged();
             }
         }
 
         public static readonly DependencyProperty IconHeightRequestProperty = DependencyProperty.Register(
             name: nameof(IconHeightRequest), propertyType: typeof(double),
-            ownerType: typeof(ArrowButton), 
+            ownerType: typeof(ArrowButton),
              new PropertyMetadata(20d, (e, o) =>
             {
                 if (e is ArrowButton arrow) arrow.IconHeightRequest = (double)o.NewValue;
@@ -304,7 +306,7 @@ namespace Kit.WPF.Controls
 
         public static readonly DependencyProperty IsArrowVisibleProperty = DependencyProperty.Register(
             name: nameof(IsArrowVisible), propertyType: typeof(bool),
-            ownerType: typeof(ArrowButton), 
+            ownerType: typeof(ArrowButton),
              new PropertyMetadata(true, (e, o) =>
             {
                 if (e is ArrowButton arrow) arrow.IsArrowVisible = (bool)o.NewValue;
@@ -321,7 +323,10 @@ namespace Kit.WPF.Controls
         }
 
         public ICommand TouchedCommand { get; }
+        static ArrowButton()
+        {
 
+        }
         public ArrowButton()
         {
             this.TouchedCommand = new Command(Touched);

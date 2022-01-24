@@ -60,12 +60,12 @@
 		<EmbeddedResource Remove="Dialogs\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="DeviceId" Version="6.0.0" />
+		<PackageReference Include="DeviceId" Version="6.2.0" />
 		<PackageReference Include="Dirkster.NumericUpDownLib" Version="3.0.0" />
-		<PackageReference Include="EnvDTE" Version="17.0.31902.203" />
+		<PackageReference Include="EnvDTE" Version="17.0.32112.339" />
 
 		<PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="15.8.243" />
-		<PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="3.0.4492">
+		<PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="3.0.4496">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Xamarin.Forms;
+// ReSharper disable once CheckNamespace
+namespace Kit.Forms
+{
+    public static class ApplicationExtensions
+    {
+        public static T GetResource<T>(this Xamarin.Forms.Application app, string key)
+        {
+            return (T)app.Resources[key];
+        }
+        public static bool IsOnDarkTheme(this Xamarin.Forms.Application app)
+        {
+            return app.RequestedTheme == OSAppTheme.Dark;
+        }
+        public static bool IsOnLightTheme(this Xamarin.Forms.Application app)
+        {
+            return !IsOnDarkTheme(app);
+        }
+
+    }
+}

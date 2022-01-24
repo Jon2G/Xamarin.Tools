@@ -5,6 +5,10 @@ namespace Kit.Forms.Converters
 {
     public class StringNullOrEmptyBoolConverter : IValueConverter
     {
+        public StringNullOrEmptyBoolConverter()
+        {
+            
+        }
         public bool IsReversed { get; set; }
 
         /// <summary>Returns false if string is null or empty

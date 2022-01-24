@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Kit.Sql.Helpers
 {
@@ -105,7 +106,7 @@ namespace Kit.Sql.Helpers
             return value == DBNull.Value || value == null;
         }
 
-        public static T IfNull<T>(object value, T ifnull)
+        public static T IfNull<T>(T value, T ifnull)
         {
             return (T)(IsNull(value) ? ifnull : value);
         }
@@ -138,6 +139,8 @@ namespace Kit.Sql.Helpers
 
                 switch (type.Name)
                 {
+                    case "Char":
+                        return Convert.ToString(obj).FirstOrDefault();
                     case "Guid":
                         return Guid.Parse(obj.ToString());
 

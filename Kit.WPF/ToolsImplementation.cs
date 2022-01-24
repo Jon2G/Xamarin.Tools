@@ -98,5 +98,24 @@ namespace Kit.WPF
                 return null;
             }
         }
+
+        public static T Abrir<T>(Window ventana, bool Modal = true)
+        {
+            if (ventana.Owner is null)
+            {
+                ventana.Owner =Instance.VentanaPadre();
+            }
+            ventana.WindowStartupLocation = ventana.Owner is null ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner;
+            if (Modal)
+                ventana.ShowDialog();
+            else
+                ventana.Show();
+            return (T)(object)ventana;
+        }
+
+        public static void Abrir(Window ventana, bool Modal = true)
+        {
+            Abrir<Window>(ventana, Modal);
+        }
     }
 }

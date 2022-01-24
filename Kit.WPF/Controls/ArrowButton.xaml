@@ -9,12 +9,10 @@
          Command="{Binding TouchedCommand,ElementName=arrow}"
              mc:Ignorable="d"  x:Name="arrow">
     <Button.Resources>
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:ValueConverterGroup x:Key="StringNullOrEmptyBoolConverter">
             <converters:StringNullOrEmptyBoolConverter  IsReversed="True"/>
             <converters:BooleanToVisibilityConverter/>
         </converters:ValueConverterGroup>
-
     </Button.Resources>
     <Button.Style>
         <Style TargetType="Button">
@@ -31,6 +29,9 @@
     </Button.Style>
     <Button.Content>
         <Border Padding="5">
+            <Border.Resources>
+                <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            </Border.Resources>
             <Grid Margin="0" DataContext="{x:Reference arrow}"
                   d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,Type={x:Type controls:ArrowButton}}">
                 <Grid.ColumnDefinitions>

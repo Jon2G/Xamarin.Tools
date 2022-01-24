@@ -27,14 +27,14 @@
 
         <StackLayout Margin="10,5" Grid.Column="1">
             <Label Text="{Binding Title}" 
-                   TextColor="{Binding TitleColor}"
+                   TextColor="{Binding TitleColor,Mode=TwoWay}"
                    FontSize="{Binding TitleFontSize}"
                    FontAttributes="{Binding TitleFontAttributes}"
                    IsVisible="{Binding Title,Converter={StaticResource StringNullOrEmptyBoolConverter}}"
                    FontFamily="{Binding TitleFontFamily}"/>
 
             <Label Grid.Row="1" Text="{Binding SubTitle}" 
-                   TextColor="{Binding SubTitleColor}" 
+                   TextColor="{Binding SubTitleColor,Mode=TwoWay}" 
                    FontSize="{Binding SubTitleFontSize}"
                    FontAttributes="{Binding SubTitleFontAttributes}"
                    IsVisible="{Binding SubTitle,Converter={StaticResource StringNullOrEmptyBoolConverter}}"

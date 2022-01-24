@@ -10,7 +10,7 @@ namespace Kit.Extensions
         public Command(Action<T> execute)
             : base(o =>
             {
-                if (IsValidParameter(o))
+                if (IsValidParameter(ref o))
                 {
                     execute((T)o);
                 }
@@ -25,11 +25,11 @@ namespace Kit.Extensions
         public Command(Action<T> execute, Func<T, bool> canExecute)
             : base(o =>
             {
-                if (IsValidParameter(o))
+                if (IsValidParameter(ref o))
                 {
                     execute((T)o);
                 }
-            }, o => IsValidParameter(o) && canExecute((T)o))
+            }, o => IsValidParameter(ref o) && canExecute((T)o))
         {
             if (execute == null)
                 throw new ArgumentNullException(nameof(execute));
@@ -37,16 +37,20 @@ namespace Kit.Extensions
                 throw new ArgumentNullException(nameof(canExecute));
         }
 
-        private static bool IsValidParameter(object o)
+        private static bool IsValidParameter(ref object o)
         {
             if (o != null)
             {
                 // The parameter isn't null, so we don't have to worry whether null is a valid option
-                return o is T;
                 if (o is not T)
                 {
                     var parsed = Sqlh.Parse<T>(o);
-                    return parsed is not null;
+                    if (parsed is not null)
+                    {
+                        o = parsed;
+                        return true;
+                    }
+                    return false;
                 }
                 return true;
             }

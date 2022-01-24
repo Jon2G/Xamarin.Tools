@@ -639,7 +639,7 @@ namespace Kit.Sql.Sqlite
             connectionString.PostKeyAction?.Invoke(this);
         }
 
-        public SQLiteConnection(string ConnectionString) : base(ConnectionString)
+        public SQLiteConnection(string ConnectionString) : this(new SQLiteConnectionString(ConnectionString), 0)
         {
         }
 
