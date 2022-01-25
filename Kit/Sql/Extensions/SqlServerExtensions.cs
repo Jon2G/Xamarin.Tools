@@ -242,6 +242,11 @@ namespace Kit
         {
             return connection.DataTable(sql, TableName, new CommandConfig() { CommandType = CommandType.Text });
         }
+
+        public static DataTable DataTable(this SqlConnection connection, string sql, string TableName = null, params SqlParameter[] parameters)
+        {
+            return connection.DataTable(sql, TableName, new CommandConfig() { CommandType = CommandType.Text }, parameters);
+        }
         public static DataTable DataTable(this SqlConnection connection, string sql, string TableName = null, CommandConfig config = null, params SqlParameter[] parameters)
         {
             config = config ?? new CommandConfig();
