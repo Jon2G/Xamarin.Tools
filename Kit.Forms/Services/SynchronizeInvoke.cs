@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Kit.Services.Interfaces;
+using System;
 using System.Threading.Tasks;
-using Kit.Services.Interfaces;
 
 namespace Kit.Forms.Services
 {
@@ -14,6 +14,16 @@ namespace Kit.Forms.Services
         public void BeginInvokeOnMainThread(Action action)
         {
             Xamarin.Forms.Device.BeginInvokeOnMainThread(action);
+        }
+
+        public Task<T> InvokeOnMainThreadAsync<T>(Func<T> action)
+        {
+            return Xamarin.Forms.Device.InvokeOnMainThreadAsync(action);
+        }
+
+        public T BeginInvokeOnMainThread<T>(Func<T> action)
+        {
+            return Xamarin.Forms.Device.InvokeOnMainThreadAsync(action).GetAwaiter().GetResult();
         }
     }
 }

@@ -49,7 +49,8 @@ namespace Kit.Model
                 //}
 
                 object target = Expression.Lambda(body.Expression).Compile().DynamicInvoke();
-
+                if (target is null)
+                    return;
                 PropertyChangedEventArgs e = new PropertyChangedEventArgs(body.Member.Name);
                 try
                 {
