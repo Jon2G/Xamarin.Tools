@@ -9,7 +9,7 @@ using Expression = System.Linq.Expressions.Expression;
 using Kit;
 namespace Kit.WPF.Controls
 {
-    public class ObservableWindow : Window, INotifyPropertyChanged, ICrossWindow
+    public class ObservableWindow : Window, INotifyPropertyChanged, ICrossWindow, ICrossVisualElement
     {
         #region ICrossWindow
 
@@ -17,10 +17,21 @@ namespace Kit.WPF.Controls
 
         Task ICrossWindow.Show() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Show());
 
-        Task ICrossWindow.ShowDialog() =>Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(()=>ShowDialog());
+        Task ICrossWindow.ShowDialog() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => ShowDialog());
 
         #endregion ICrossWindow
-
+        #region ICrossVisualElement
+        public object BindingContext
+        {
+            get => this.DataContext;
+            set => DataContext = value;
+        }
+        bool ICrossVisualElement.IsVisible
+        {
+            get => this.Visibility == Visibility.Visible;
+            set => this.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+        #endregion
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;

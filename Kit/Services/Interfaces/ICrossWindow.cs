@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Kit.Services.Interfaces
 {
-    public interface ICrossWindow
+    public interface ICrossWindow : ICrossVisualElement
     {
         Task Close();
 

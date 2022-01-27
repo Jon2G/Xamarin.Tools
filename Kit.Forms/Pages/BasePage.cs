@@ -13,7 +13,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Kit.Forms.Pages
 {
-    public class BasePage : ContentPage, INotifyPropertyChanged, IDisposable, ICrossWindow
+    public class BasePage : ContentPage, INotifyPropertyChanged, IDisposable, ICrossWindow,ICrossVisualElement
     {
         #region IDisposable
 
