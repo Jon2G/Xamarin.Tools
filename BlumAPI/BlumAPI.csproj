@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Platforms>AnyCPU;x64</Platforms>
+    <UserSecretsId>285ae3bc-f3c4-4d0f-93a5-e53d20fcfef7</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
