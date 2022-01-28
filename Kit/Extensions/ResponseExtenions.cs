@@ -20,7 +20,8 @@ namespace Kit
             }
             catch (Exception ex)
             {
-                return new Response(APIResponseResult.INTERNAL_ERROR, ex.Message);
+                Log.Logger.Error(ex, "ToResponse");
+                return new Response(APIResponseResult.INTERNAL_ERROR,response.Response);
             }
         }
 

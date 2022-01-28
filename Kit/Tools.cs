@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using TinyIoC;
 
 namespace Kit
 {
@@ -28,6 +29,7 @@ namespace Kit
             }
             set => currentInstance = value;
         }
+        public static TinyIoCContainer Container => TinyIoC.TinyIoCContainer.Current;
 
         private static bool? _Debugging = null;
         public static bool Debugging => _Debugging ?? Debugger.IsAttached;

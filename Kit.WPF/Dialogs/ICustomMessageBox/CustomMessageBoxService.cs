@@ -29,10 +29,13 @@ namespace Kit.WPF.Dialogs.ICustomMessageBox
         public async Task<CustomMessageBoxResult> Show(string messageBoxText, string caption)
         {
             await Task.Yield();
-            CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption);
-            msg.ShowDialog();
-
-            return msg.Result;
+            var msgbx = await Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() =>
+              {
+                  CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption);
+                  msg.ShowDialog();
+                  return msg;
+              });
+            return msgbx.Result;
         }
 
         /// <summary>
