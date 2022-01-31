@@ -31,7 +31,7 @@ namespace Kit.Sql.SqlServer
             {
                 throw new ObjectDisposedException(nameof(PreparedSqlServerInsertCommand));
             }
-            CommandText = this.CommandText + "; select SCOPE_IDENTITY();";
+            CommandText = this.CommandText + " select SCOPE_IDENTITY();";
             Log.Logger.Debug("Executing:[{0}]", CommandText);
             //if (Connection.IsClosed)
             //{
@@ -40,13 +40,10 @@ namespace Kit.Sql.SqlServer
             Int64 result = 0;
             Connection.Con().Read(this.CommandText, (reader) =>
             {
-                if (reader.Read())
-                {
-                    Log.Logger.Debug("Affected: {0}", reader.RecordsAffected);
-                    result = Convert.ToInt64(reader[0]);
-                }
+                Log.Logger.Debug("Affected: {0}", reader.RecordsAffected);
+                result = Convert.ToInt64(reader[0]);
             }, source);
-            return 0;
+            return result;
         }
 
         private long LastInsertRowid(SqlConnection con)

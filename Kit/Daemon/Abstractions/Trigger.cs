@@ -78,7 +78,15 @@ DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted)
 
 INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
-SELECT @action,SyncGuid,'{Table.TableName}',{Table.SyncMode.Order} FROM inserted
+SELECT @action,inserted.SyncGuid,'{Table.TableName}',{Table.SyncMode.Order}
+FROM inserted 
+GROUP BY inserted.SyncGuid
+---DEBUG
+--SELECT 'INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority) VALUES('''
+--+RTRIM(LTRIM(@action))+''','''
+--+CAST(inserted.SyncGuid AS varchar(MAX))+''',''{Table.TableName}'',{Table.SyncMode.Order})' 
+--FROM inserted  GROUP BY inserted.SyncGuid
+--DEBUG
 
 END ELSE
 BEGIN
@@ -87,7 +95,15 @@ DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted)
 
 INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
-SELECT @action,SyncGuid,'{Table.TableName}',{Table.SyncMode.Order} FROM deleted
+SELECT @action,deleted.SyncGuid,'{Table.TableName}',{Table.SyncMode.Order}
+FROM deleted 
+GROUP BY deleted.SyncGuid
+---DEBUG
+--SELECT 'INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority) VALUES('''
+--+RTRIM(LTRIM(@action))+''','''
+--+CAST(inserted.SyncGuid AS varchar(MAX))+''',''{Table.TableName}'',{Table.SyncMode.Order})' 
+--FROM inserted  GROUP BY inserted.SyncGuid
+--DEBUG
 
 END
 END", System.Data.CommandType.Text);
