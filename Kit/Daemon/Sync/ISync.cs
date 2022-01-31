@@ -35,7 +35,7 @@ namespace Kit.Daemon.Sync
             return false;
         }
 
-        public virtual bool Affects(Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
+        public virtual bool Affects(SyncManager syncManager,Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
         {
             return false;
         }

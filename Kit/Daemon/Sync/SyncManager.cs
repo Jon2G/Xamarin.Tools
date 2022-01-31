@@ -200,7 +200,116 @@ namespace Kit.Daemon.Sync
             }
             return false;
         }
+        public bool ProcesarAcciones(SyncTarget direccion, ISync read, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action)
+        {
+            TableMapping table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
+            bool CanDo = false;
+            //ISync read = Convert.ChangeType(i_result, typeof(ISync));
+            if (read is null && action == NotifyTableChangedAction.Delete)
+            {
+                if (target_con is SQLiteConnection lite)
+                {
+                    lite.EXEC($"DELETE FROM {table.TableName} where SyncGuid=?", CurrentPackage.Guid);
+                }
+                else if (target_con is SQLServerConnection con)
+                {
+                    con.EXEC($"DELETE FROM {table.TableName} where SyncGuid=@SyncGuid", new System.Data.SqlClient.SqlParameter("SyncGuid", CurrentPackage.Guid));
+                }
+                CurrentPackage.MarkAsSynced(source_con);
+                return CanDo;
+            }
+            if (read is null)
+            {
+                Log.Logger.Warning("READ RESULTO EN NULL '{0}'", this.CurrentPackage.TableName);
+                CurrentPackage.MarkAsSynced(source_con);
+                return CanDo;
+            }
+            if (read != null && CurrentPackage is not null)
+            {
+                switch (CurrentPackage.Action)
+                {
+                    case NotifyTableChangedAction.Insert:
+                    case NotifyTableChangedAction.Update:
+                        bool canSync = false;
+                        if (direccion == SyncTarget.Remote)
+                        {
+                            bool shouldSync = read.ShouldSync(source_con, target_con);
+                            canSync = shouldSync;
+                        }
+                        else if (direccion == SyncTarget.Local)
+                        {
+                            canSync = true;
+                        }
 
+                        if (canSync)
+                        {
+                            CanDo = true;
+                            object old_pk = null;
+
+                            if (table.PK != null)
+                            {
+                                old_pk = read.GetPk();
+                            }
+
+                            if (read.CustomUpload(source_con, target_con, table))
+                            {
+                                CurrentPackage.MarkAsSynced(source_con);
+                                Processed++;
+                                read.OnSynced(direccion, action);
+                                return true;
+                            }
+
+                            if (target_con is SQLiteConnection)
+                            {
+                                target_con.InsertOrReplace(read, false);
+                            }
+                            else
+                            {
+                                target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
+                                //if (target_con.Insert(read, String.Empty, read.GetType(), false) <= 0)
+                                if (target_con.InsertOrReplace(read, false) <= 0)
+                                {
+                                    Processed++;
+                                    return CanDo;
+                                }
+                            }
+
+                            if (source_con is SQLiteConnection lite)
+                            {
+                                if (read.Affects(this,lite, old_pk))
+                                {
+                                    CurrentPackage.MarkAsSynced(source_con);
+                                    Processed++;
+                                    read.OnSynced(direccion, action);
+                                    return true;
+                                }
+                            }
+
+                            CurrentPackage.MarkAsSynced(source_con);
+                            Processed++;
+                            read.OnSynced(direccion, action);
+                        }
+                        else { Processed++; }
+                        break;
+
+                    case NotifyTableChangedAction.Delete:
+                        read.Delete(source_con, target_con, table);
+                        read.OnSynced(direccion, action);
+                        CurrentPackage.MarkAsSynced(source_con);
+                        Processed++;
+                        break;
+                }
+            }
+            return CanDo;
+        }
+        public bool ProcesarAcciones(SyncTarget direccion, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action, params ISync[] syncObjs)
+        {
+            foreach (ISync sync in syncObjs)
+            {
+                if (!ProcesarAcciones(direccion, read: sync, target_con, source_con, action)) { break; }
+            }
+            return true;
+        }
         private bool ProcesarAcciones(SyncTarget direccion)
         {
             Processed = 0;
@@ -285,102 +394,7 @@ namespace Kit.Daemon.Sync
                         {
                             read = isync;
                         }
-                        //ISync read = Convert.ChangeType(i_result, typeof(ISync));
-                        if (read is null && action == NotifyTableChangedAction.Delete)
-                        {
-                            if (target_con is SQLiteConnection lite)
-                            {
-                                lite.EXEC($"DELETE FROM {table.TableName} where SyncGuid=?", CurrentPackage.Guid);
-                            }
-                            else if (target_con is SQLServerConnection con)
-                            {
-                                con.EXEC($"DELETE FROM {table.TableName} where SyncGuid=@SyncGuid", new System.Data.SqlClient.SqlParameter("SyncGuid", CurrentPackage.Guid));
-                            }
-                            CurrentPackage.MarkAsSynced(source_con);
-                            continue;
-                        }
-                        if (read is null)
-                        {
-                            Log.Logger.Warning("READ RESULTO EN NULL '{0}'", this.CurrentPackage.TableName);
-                            CurrentPackage.MarkAsSynced(source_con);
-                            continue;
-                        }
-                        if (read != null && CurrentPackage is not null)
-                        {
-                            switch (CurrentPackage.Action)
-                            {
-                                case NotifyTableChangedAction.Insert:
-                                case NotifyTableChangedAction.Update:
-                                    bool canSync = false;
-                                    if (direccion == SyncTarget.Remote)
-                                    {
-                                        bool shouldSync = read.ShouldSync(source_con, target_con);
-                                        canSync = shouldSync;
-                                    }
-                                    else if (direccion == SyncTarget.Local)
-                                    {
-                                        canSync = true;
-                                    }
-
-                                    if (canSync)
-                                    {
-                                        CanDo = true;
-                                        object old_pk = null;
-
-                                        if (table.PK != null)
-                                        {
-                                            old_pk = read.GetPk();
-                                        }
-
-                                        if (read.CustomUpload(source_con, target_con, table))
-                                        {
-                                            CurrentPackage.MarkAsSynced(source_con);
-                                            Processed++;
-                                            read.OnSynced(direccion, action);
-                                            return true;
-                                        }
-
-                                        if (target_con is SQLiteConnection)
-                                        {
-                                            target_con.InsertOrReplace(read, false);
-                                        }
-                                        else
-                                        {
-                                            target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
-                                            //if (target_con.Insert(read, String.Empty, read.GetType(), false) <= 0)
-                                            if (target_con.InsertOrReplace(read,false) <= 0)
-                                            {
-                                                Processed++;
-                                                continue;
-                                            }
-                                        }
-
-                                        if (source_con is SQLiteConnection lite)
-                                        {
-                                            if (read.Affects(lite, old_pk))
-                                            {
-                                                CurrentPackage.MarkAsSynced(source_con);
-                                                Processed++;
-                                                read.OnSynced(direccion, action);
-                                                return true;
-                                            }
-                                        }
-
-                                        CurrentPackage.MarkAsSynced(source_con);
-                                        Processed++;
-                                        read.OnSynced(direccion, action);
-                                    }
-                                    else { Processed++; }
-                                    break;
-
-                                case NotifyTableChangedAction.Delete:
-                                    read.Delete(source_con, target_con, table);
-                                    read.OnSynced(direccion, action);
-                                    CurrentPackage.MarkAsSynced(source_con);
-                                    Processed++;
-                                    break;
-                            }
-                        }
+                        return ProcesarAcciones(direccion, read, target_con, source_con, action);
                     }
                     else
                     {
