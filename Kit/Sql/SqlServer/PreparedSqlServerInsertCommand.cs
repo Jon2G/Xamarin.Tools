@@ -31,14 +31,13 @@ namespace Kit.Sql.SqlServer
             {
                 throw new ObjectDisposedException(nameof(PreparedSqlServerInsertCommand));
             }
-            CommandText = this.CommandText + " select SCOPE_IDENTITY();";
             Log.Logger.Debug("Executing:[{0}]", CommandText);
             //if (Connection.IsClosed)
             //{
             //    Connection.RenewConnection();
             //}
             Int64 result = 0;
-            Connection.Con().Read(this.CommandText, (reader) =>
+            Connection.Con().Read(this.CommandText + " select SCOPE_IDENTITY();", (reader) =>
             {
                 Log.Logger.Debug("Affected: {0}", reader.RecordsAffected);
                 result = Convert.ToInt64(reader[0]);

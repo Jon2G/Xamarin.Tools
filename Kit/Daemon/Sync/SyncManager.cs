@@ -270,13 +270,14 @@ namespace Kit.Daemon.Sync
                                 if (target_con.InsertOrReplace(read, false) <= 0)
                                 {
                                     Processed++;
+                                    read.OnSyncFailed(target_con,source_con,target_con.LastException);
                                     return CanDo;
                                 }
                             }
 
                             if (source_con is SQLiteConnection lite)
                             {
-                                if (read.Affects(this,lite, old_pk))
+                                if (read.Affects(this, lite, old_pk))
                                 {
                                     CurrentPackage.MarkAsSynced(source_con);
                                     Processed++;
@@ -304,11 +305,15 @@ namespace Kit.Daemon.Sync
         }
         public bool ProcesarAcciones(SyncTarget direccion, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action, params ISync[] syncObjs)
         {
+            bool result = true;
             foreach (ISync sync in syncObjs)
             {
-                if (!ProcesarAcciones(direccion, read: sync, target_con, source_con, action)) { break; }
+                if (!ProcesarAcciones(direccion, sync, target_con, source_con, action))
+                {
+                    result = false;
+                }
             }
-            return true;
+            return result;
         }
         private bool ProcesarAcciones(SyncTarget direccion)
         {
@@ -394,7 +399,7 @@ namespace Kit.Daemon.Sync
                         {
                             read = isync;
                         }
-                        return ProcesarAcciones(direccion, read, target_con, source_con, action);
+                        CanDo = ProcesarAcciones(direccion, read, target_con, source_con, action);
                     }
                     else
                     {
