@@ -5,12 +5,13 @@ using System.Reflection;
 using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
+using Kit.Sql.Interfaces;
 using Kit.Sql.Sqlite;
 using static Kit.Sql.Base.BaseOrm;
 
 namespace Kit.Sql.Base
 {
-    public abstract class TableMapping
+    public abstract class TableMapping : IComparable, IEquatable<TableMapping>,IGuid
     {
         public SyncMode SyncMode { get; private set; }
         public SyncDirection SyncDirection => SyncMode?.Direction ?? SyncDirection.NoSync;
@@ -33,9 +34,10 @@ namespace Kit.Sql.Base
         protected Column _autoPk;
         protected Column[] _insertColumns;
         protected Column[] _insertOrReplaceColumns;
-
+        public Guid Guid { get; set; }
         public TableMapping(Type type, CreateFlags createFlags = CreateFlags.None)
         {
+            Guid = Guid.NewGuid();
             MappedType = type;
             CreateFlags = createFlags;
 
@@ -59,7 +61,7 @@ namespace Kit.Sql.Base
             }
             ReadColumns(type, createFlags);
         }
-        protected virtual void ReadColumns(Type type,CreateFlags createFlags)
+        protected virtual void ReadColumns(Type type, CreateFlags createFlags)
         {
             var props = new List<PropertyInfo>();
             var baseType = type;
@@ -218,6 +220,8 @@ namespace Kit.Sql.Base
             }
         }
 
+
+
         public Column FindColumnWithPropertyName(string propertyName)
         {
             var exact = Columns.FirstOrDefault(c => c.PropertyName == propertyName);
@@ -228,6 +232,35 @@ namespace Kit.Sql.Base
         {
             var exact = Columns.FirstOrDefault(c => c.Name.ToLower() == columnName.ToLower());
             return exact;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is TableMapping map)
+            {
+                var thisType = this.GetType();
+                var remoteType = map.GetType();
+                if (remoteType.Equals(thisType))
+                {
+                    return map.TableName.CompareTo(this.TableName);
+                }
+            }
+            return -1;
+        }
+
+        public bool Equals(TableMapping other)
+        {
+            return other?.CompareTo(this) == 0;
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is TableMapping map)
+                return Equals(other: map);
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return this.Guid.GetHashCode();
         }
     }
 }

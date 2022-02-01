@@ -202,7 +202,9 @@ namespace Kit.Daemon.Sync
         }
         public bool ProcesarAcciones(SyncTarget direccion, ISync read, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action)
         {
-            TableMapping table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
+            SchemaTable schemaTable = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
+            TableMapping table = schemaTable.For(source_con);
+
             bool CanDo = false;
             //ISync read = Convert.ChangeType(i_result, typeof(ISync));
             if (read is null && action == NotifyTableChangedAction.Delete)
@@ -319,6 +321,7 @@ namespace Kit.Daemon.Sync
         {
             Processed = 0;
             CurrentPackage = null;
+            SchemaTable schemaTable = null;
             TableMapping table = null;
             SyncTarget source = direccion.InvertDirection();
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
@@ -339,10 +342,10 @@ namespace Kit.Daemon.Sync
                 {
                     this.CurrentPackage = Pendings.Dequeue();
 
-                    table = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
-                    if (table != null)
+                    schemaTable = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
+                    if (schemaTable != null)
                     {
-                        switch (table.SyncDirection)
+                        switch (schemaTable.SyncDirection)
                         {
                             case SyncDirection.TwoWay:
                                 break;
@@ -365,6 +368,7 @@ namespace Kit.Daemon.Sync
                         }
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
                         NotifyTableChangedAction action = CurrentPackage.Action;
+                        table=schemaTable.For(source_con);
                         string selection_list = table.SelectionList;
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));

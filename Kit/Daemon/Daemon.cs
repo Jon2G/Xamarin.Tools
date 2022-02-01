@@ -59,7 +59,7 @@ namespace Kit.Daemon
 
         public bool ISOffline => OffLine;
 
-        protected static Lazy<Daemon> Inicializate { get; set; } 
+        protected static Lazy<Daemon> Inicializate { get; set; }
 
         public static Daemon Current
         {
@@ -142,7 +142,7 @@ namespace Kit.Daemon
         }
         static Daemon()
         {
-           Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
+            Inicializate = new Lazy<Daemon>(Born, LazyThreadSafetyMode.ExecutionAndPublication);
         }
         protected Daemon()
         {
@@ -320,12 +320,16 @@ namespace Kit.Daemon
                     return;
                 }
                 SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll()
-                    .DistinctBy(x => x.Value.MappedType)
-                    .Select(x => x.Value.MappedType));
+                    .Select(x => x.Value.ForSqlServer()).Where(x=> x is not null)
+                    .DistinctBy(x => x.MappedType)
+                    .Select(x => x.MappedType));
                 Schema.CheckTriggers(SQLH);
 
                 SQLiteConnection SQLHLite = DaemonConfig.GetSqlLiteConnection();
-                SQLHLite.CheckTables(Schema.DownloadTables.Select(x => x.Value.MappedType));
+                SQLHLite.CheckTables(Schema.Tables
+                    .Select(x => x.Value.ForSqlServer())
+                    .Where(x => x is not null)
+                    .Select(x => x.MappedType));
                 if (OnInicializate != null)
                 {
                     if (!OnInicializate.Invoke())
@@ -338,7 +342,7 @@ namespace Kit.Daemon
                 if (device.IsFirstLaunchTime)
                 {
                     //I Have been deleted and reinstalled! , so i need to sync everything again...
-                    SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId); 
+                    SQLH.Table<SyncHistory>().Delete(x => x.DeviceId == device.DeviceId);
                     device.SetIsFirstLaunchTime(false).Save(SQLHLite);
                 }
                 IsInited = true;
