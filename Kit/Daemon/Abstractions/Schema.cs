@@ -55,9 +55,10 @@ namespace Kit.Daemon.Abstractions
                 if (mapping is null)
                 {
                     mapping = new SchemaTable(tableName, direction);
-                    mapping.Add(Daemon.Current.DaemonConfig.Remote.GetMapping(type));
-                    mapping.Add(Daemon.Current.DaemonConfig.Local.GetMapping(type));
+                    this.Tables.Add(tableName, mapping);
                 }
+                mapping.Add(Daemon.Current.DaemonConfig.Remote.GetMapping(type));
+                mapping.Add(Daemon.Current.DaemonConfig.Local.GetMapping(type));
                 Log.Logger.Information("BUILDED SCHEMA [{0}] - [{1}]", type.FullName, directionAttribute.Direction);
             }
         }

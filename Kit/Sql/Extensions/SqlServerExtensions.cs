@@ -234,6 +234,7 @@ namespace Kit
             }
             catch (Exception ex)
             {
+                Log.IsDBConnectionError(ex);
                 Log.Logger.Error(ex, "Transaccion fallida reportada");
                 Log.Logger.Error(sql);
             }

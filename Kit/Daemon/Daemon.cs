@@ -36,7 +36,7 @@ namespace Kit.Daemon
         #endregion ThreadMonitor
 
         public Schema Schema { get; private set; }
-        public ICommand OnConnectionStateChanged;
+        public ICommand OnConnectionStateChanged { get; set; }
 
         public event Func<bool> OnInicializate;
 
@@ -420,6 +420,10 @@ namespace Kit.Daemon
                                     if (!this.SyncManager.Download())
                                     {
                                         this.SyncManager.CurrentDirection = SyncTarget.NOT_SET;
+                                        if (!this.TryToConnect())
+                                        {
+                                            Daemon.OffLine = true;
+                                        }
                                     }
                                 }
                             }

@@ -80,11 +80,8 @@ namespace Kit.Daemon.Sync
             get;
             set;
         }
-
-        private Dictionary<TableMapping, DaemonCompiledSetter> CompiledSetters { get; set; }
         public SyncManager()
         {
-            this.CompiledSetters = new Dictionary<TableMapping, DaemonCompiledSetter>();
             this.Pendings = new Queue<ChangesHistory>();
             this.Processed = 0;
             this.PackageSize = RegularPackageSize;
@@ -373,7 +370,7 @@ namespace Kit.Daemon.Sync
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
                         IEnumerable<dynamic> result;
-                        CompiledSetters.TryGetValue(table, out DaemonCompiledSetter compiledSetter);
+                        DaemonCompiledSetter compiledSetter = schemaTable.CompiledSetterFor(source_con);
                         MethodInfo method = command.GetType().GetMethod(compiledSetter is null ? "ExecuteDeferredQueryAndCompile" : nameof(CommandBase.ExecuteDeferredQuery), compiledSetter is null ? new[] { typeof(TableMapping) } : new[] { typeof(TableMapping), typeof(DaemonCompiledSetter) });
                         method = method.MakeGenericMethod(table.MappedType);
                         if (compiledSetter is null)
@@ -382,7 +379,7 @@ namespace Kit.Daemon.Sync
                             if (resultCompiled?.Results?.Any() ?? false)
                             {
                                 compiledSetter = resultCompiled.CompiledSetter;
-                                CompiledSetters.Add(table, compiledSetter);
+                                schemaTable.Add(table,compiledSetter);
                             }
                             result = resultCompiled?.Results;
                         }
