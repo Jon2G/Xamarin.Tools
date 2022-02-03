@@ -1215,7 +1215,7 @@ namespace Kit.Sql.Sqlite
         public int Execute(string query, params object[] args)
         {
             CommandBase cmd = CreateCommand(query, args);
-            Log.Logger.Debug(query);
+            Log.Logger.Debug(cmd?.ToString());
             int r = cmd.ExecuteNonQuery();
             Log.Logger.Debug($"Rows affected [{r}]");
             return r;

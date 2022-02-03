@@ -264,12 +264,12 @@ namespace Kit.Daemon.Sync
                             }
                             else
                             {
-                                target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
+                                //target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
                                 //if (target_con.Insert(read, String.Empty, read.GetType(), false) <= 0)
                                 if (target_con.InsertOrReplace(read, false) <= 0)
                                 {
                                     Processed++;
-                                    read.OnSyncFailed(target_con,source_con,target_con.LastException);
+                                    read.OnSyncFailed(target_con, source_con, target_con.LastException);
                                     return CanDo;
                                 }
                             }
@@ -324,7 +324,7 @@ namespace Kit.Daemon.Sync
             SqlBase source_con = Daemon.Current.DaemonConfig[source];
             SqlBase target_con = Daemon.Current.DaemonConfig[direccion];
             ISync read = null;
-            string condition = (source_con is SQLiteConnection ? "SyncGuid=?" : "SyncGuid=@SyncGuid");
+
 
             bool CanDo = false;
 
@@ -338,7 +338,7 @@ namespace Kit.Daemon.Sync
                 try
                 {
                     this.CurrentPackage = Pendings.Dequeue();
-
+                    string condition = (source_con is SQLiteConnection ? $"SyncGuid='{CurrentPackage.Guid}'" : "SyncGuid=@SyncGuid");
                     schemaTable = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
                     if (schemaTable != null)
                     {
@@ -365,11 +365,11 @@ namespace Kit.Daemon.Sync
                         }
                         //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
                         NotifyTableChangedAction action = CurrentPackage.Action;
-                        table=schemaTable.For(source_con);
+                        table = schemaTable.For(source_con);
                         string selection_list = table.SelectionList;
                         CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
                          new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
-                        IEnumerable<dynamic> result;
+                        List<dynamic> result;
                         DaemonCompiledSetter compiledSetter = schemaTable.CompiledSetterFor(source_con);
                         MethodInfo method = command.GetType().GetMethod(compiledSetter is null ? "ExecuteDeferredQueryAndCompile" : nameof(CommandBase.ExecuteDeferredQuery), compiledSetter is null ? new[] { typeof(TableMapping) } : new[] { typeof(TableMapping), typeof(DaemonCompiledSetter) });
                         method = method.MakeGenericMethod(table.MappedType);
@@ -379,13 +379,13 @@ namespace Kit.Daemon.Sync
                             if (resultCompiled?.Results?.Any() ?? false)
                             {
                                 compiledSetter = resultCompiled.CompiledSetter;
-                                schemaTable.Add(table,compiledSetter);
+                                schemaTable.Add(table, compiledSetter);
                             }
-                            result = resultCompiled?.Results;
+                            result = resultCompiled?.Results.ToList();
                         }
                         else
                         {
-                            result = (IEnumerable<dynamic>)method.Invoke(command, new object[] { table, compiledSetter });
+                            result = ((IEnumerable<dynamic>)method.Invoke(command, new object[] { table, compiledSetter }))?.ToList();
                         }
 
                         if (!result?.Any() ?? false)
@@ -394,13 +394,21 @@ namespace Kit.Daemon.Sync
                             continue;
                         }
                         if (Daemon.Current.IsSleepRequested) { return false; }
+
+                        if (result.Count > 1 && Debugger.IsAttached)
+                        {
+                            Debugger.Break();
+                        }
+
                         dynamic i_result = result.First();
                         read = null;
-                        if (i_result is ISync isync)
+                        if (i_result is ISync)
                         {
-                            read = isync;
+                            read = ((ISync)i_result);
+                            CanDo = ProcesarAcciones(direccion, read, target_con, source_con, action);
                         }
-                        CanDo = ProcesarAcciones(direccion, read, target_con, source_con, action);
+
+
                     }
                     else
                     {
