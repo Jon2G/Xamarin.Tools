@@ -17,14 +17,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.21" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.21" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="3.1.21" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.22" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.22" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="3.1.22" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Host" Version="1.1.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="3.1.21" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="3.1.22" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
 	</ItemGroup>
 
