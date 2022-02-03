@@ -2724,7 +2724,6 @@ namespace Kit.Sql.Sqlite
         public void UpdateVersionControl(ChangesHistory VersionControl)
         {
             Table<ChangesHistory>().Delete(x => x.Guid == VersionControl.Guid, false);
-            Table<SyncHistory>().Delete(x => x.Guid == VersionControl.Guid, false);
             Insert(VersionControl);
         }
     }

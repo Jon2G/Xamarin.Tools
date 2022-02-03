@@ -130,10 +130,18 @@ namespace Kit.Sql.Base
             //    cols.Add(this.SyncGuid);
             //}
 
+            bool isServer = this is Kit.Sql.SqlServer.TableMapping;
             Columns = cols.ToArray();
-
-            _insertColumns = Columns.Where(c => !c.IsAutoInc && !c.IsAutomatic).ToArray();
-            _insertOrReplaceColumns = Columns.Where(c => !c.IsAutomatic).ToArray();
+            if (isServer)
+            {
+                _insertColumns = Columns.Where(c => !c.IsAutoInc && !c.IsAutomatic).ToArray();
+                _insertOrReplaceColumns = Columns.Where(c => !c.IsAutomatic).ToArray();
+            }
+            else
+            {
+                _insertColumns = Columns.Where(c => !c.IsAutoInc).ToArray();
+                _insertOrReplaceColumns = Columns.ToArray();
+            }
         }
 
         internal void Merge(TableMapping tableMapping)

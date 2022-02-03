@@ -255,25 +255,26 @@ namespace Kit.Daemon.Sync
                                 CurrentPackage.MarkAsSynced(source_con);
                                 Processed++;
                                 read.OnSynced(direccion, action);
-                                return true;
-                            }
-
-                            if (target_con is SQLiteConnection)
-                            {
-                                target_con.InsertOrReplace(read, false);
                             }
                             else
                             {
-                                //target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
-                                //if (target_con.Insert(read, String.Empty, read.GetType(), false) <= 0)
-                                if (target_con.InsertOrReplace(read, false) <= 0)
+                                if (target_con is SQLiteConnection)
                                 {
-                                    Processed++;
-                                    read.OnSyncFailed(target_con, source_con, target_con.LastException);
-                                    return CanDo;
+                                    target_con.InsertOrReplace(read, false);
                                 }
-                            }
+                                else
+                                {
+                                    //target_con.Table<ChangesHistory>().Delete(x => x.Guid == CurrentPackage.Guid);
+                                    //if (target_con.Insert(read, String.Empty, read.GetType(), false) <= 0)
+                                    if (target_con.InsertOrReplace(read, false) <= 0)
+                                    {
+                                        Processed++;
+                                        read.OnSyncFailed(target_con, source_con, target_con.LastException);
+                                        return CanDo;
+                                    }
+                                }
 
+                            }
                             if (source_con is SQLiteConnection lite)
                             {
                                 if (read.Affects(this, lite, old_pk))
