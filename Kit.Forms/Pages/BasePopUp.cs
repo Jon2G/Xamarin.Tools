@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AsyncAwaitBestPractices;
 using Kit.Services.Interfaces;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
@@ -60,8 +61,9 @@ namespace Kit.Forms.Pages
 
         public virtual async Task<BasePopUp> Close()
         {
+            await Task.Yield();
             Closing();
-            await PopupNavigation.Instance.RemovePageAsync(this, true);
+            PopupNavigation.Instance.RemovePageAsync(this, true).SafeFireAndForget();
             this.ShowDialogCallback.Set();
             ClosedCommad?.Execute(this);
             return this;

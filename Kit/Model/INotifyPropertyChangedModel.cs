@@ -57,9 +57,9 @@ namespace Kit.Model
                     PropertyChanged(target, e);
                     OnPropertyRaised(target, e.PropertyName);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Log.Logger.Error(ex, "On RAISE");
+                  //  Log.Logger.Error(ex, "On RAISE ");
                 }
             }
         }
