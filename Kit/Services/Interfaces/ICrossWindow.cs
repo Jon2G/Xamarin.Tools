@@ -12,6 +12,6 @@ namespace Kit.Services.Interfaces
         Task Show();
 
         Task ShowDialog();
-       public void OnAppearing();
+        public void CrossOnAppearing();
     }
 }

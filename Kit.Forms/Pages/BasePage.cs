@@ -13,7 +13,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Kit.Forms.Pages
 {
-    public class BasePage : ContentPage, INotifyPropertyChanged, IDisposable, ICrossWindow,ICrossVisualElement
+    public class BasePage : ContentPage, INotifyPropertyChanged, IDisposable, ICrossWindow, ICrossVisualElement
     {
         #region IDisposable
 
@@ -166,6 +166,7 @@ namespace Kit.Forms.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            CrossOnAppearing();
             if (HasAppeared)
             {
                 return;
@@ -173,7 +174,10 @@ namespace Kit.Forms.Pages
             OnFirstAppearing();
             HasAppeared = true;
         }
+        public virtual void CrossOnAppearing()
+        {
 
+        }
         public virtual void OnSleep() { }
 
         private bool HasAppeared;

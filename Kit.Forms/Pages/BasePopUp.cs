@@ -101,5 +101,14 @@ namespace Kit.Forms.Pages
                 await this.Close();
             }
         }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            CrossOnAppearing();
+        }
+        public virtual void CrossOnAppearing()
+        {
+          
+        }
     }
 }
