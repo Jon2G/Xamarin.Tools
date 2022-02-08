@@ -78,6 +78,11 @@ namespace Kit
             {
                 AlertCriticalUnhandled(CriticalAction);
             }
+
+            if (_Current.IsValueCreated)
+            {
+                return _Current.Value;
+            }
             _Current = new Lazy<Log>(() =>
                new Log()
                {

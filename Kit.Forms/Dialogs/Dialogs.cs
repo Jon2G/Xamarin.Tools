@@ -1,12 +1,14 @@
 ﻿using Kit.Dialogs;
 using Kit.Forms.Dialogs;
 using System.Threading.Tasks;
+using Kit.Sql.Attributes;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(Dialogs))]
 
 namespace Kit.Forms.Dialogs
 {
+    [Preserve(AllMembers = true)]
     public class Dialogs : IDialogs
     {
         public ILoading Loading => new Loading();

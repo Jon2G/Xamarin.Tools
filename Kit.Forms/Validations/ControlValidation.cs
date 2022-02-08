@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace Kit.Forms.Validations
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public static class ControlValidation
     {
         public static readonly BindableProperty BindablePropertyProperty =

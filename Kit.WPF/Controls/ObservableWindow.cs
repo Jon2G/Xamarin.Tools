@@ -12,13 +12,14 @@ namespace Kit.WPF.Controls
     public class ObservableWindow : Window, INotifyPropertyChanged, ICrossWindow, ICrossVisualElement
     {
         #region ICrossWindow
-
         Task ICrossWindow.Close() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Close());
-
         Task ICrossWindow.Show() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Show());
-
         Task ICrossWindow.ShowDialog() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => ShowDialog());
 
+        public virtual void OnAppearing()
+        {
+
+        }
         #endregion ICrossWindow
         #region ICrossVisualElement
         public object BindingContext
@@ -48,7 +49,6 @@ namespace Kit.WPF.Controls
         }
 
         #endregion INotifyPropertyChanged
-
         #region PerfomanceHelpers
 
         public void Raise<T>(Expression<Func<T>> propertyExpression)
@@ -79,5 +79,19 @@ namespace Kit.WPF.Controls
         }
 
         #endregion PerfomanceHelpers
+
+        public ObservableWindow()
+        {
+            this.Activated += ObservableWindow_Activated;
+        }
+
+        private void ObservableWindow_Activated(object sender, EventArgs e)
+        {
+            if (this.ShowActivated)
+            {
+                OnAppearing();
+            }
+            this.Activated -= ObservableWindow_Activated;
+        }
     }
 }

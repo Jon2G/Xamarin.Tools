@@ -12,7 +12,7 @@ using Kit.Sql.Attributes;
 
 namespace Kit.Forms.Model
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public abstract class ValidationsModelbase : ModelBase, INotifyScrollToProperty, INotifyDataErrorInfo
     {
         #region Properties

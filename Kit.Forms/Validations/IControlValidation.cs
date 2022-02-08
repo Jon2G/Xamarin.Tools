@@ -5,7 +5,7 @@ using Kit.Sql.Attributes;
 
 namespace Kit.Forms.Validations
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public interface IControlValidation
     {
         bool HasError { get; }

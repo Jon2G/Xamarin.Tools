@@ -10,7 +10,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(KeyboardService))]
 namespace Kit.Droid.Services
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class KeyboardService : Forms9Patch.Droid.KeyboardService, IKeyboardService, KeyboardUtils.SoftKeyboardToggleListener
     {
         public bool IsVisible { get; private set; }

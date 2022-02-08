@@ -9,7 +9,7 @@ using Kit.Sql.Attributes;
 
 namespace Kit.Model
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class PageModelBase : FreshMvvm.FreshBasePageModel
     {
         #region INotifyPropertyChanged

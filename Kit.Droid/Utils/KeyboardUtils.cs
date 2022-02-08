@@ -10,7 +10,7 @@ using Android.Runtime;
 
 namespace Kit.Droid.Utils
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class KeyboardUtils : Java.Lang.Object, ViewTreeObserver.IOnGlobalLayoutListener
     {
         private const int MAGIC_NUMBER = 200;

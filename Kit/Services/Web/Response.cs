@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace Kit.Services.Web
 {
@@ -28,6 +29,11 @@ namespace Kit.Services.Web
             return this;
         }
         public static new Response<T> FromJson(string Json) => Newtonsoft.Json.JsonConvert.DeserializeObject<Response<T>>(Json);
+        public Response<T> Log()
+        {
+            Kit.Log.Logger.Debug(this.ToString());
+            return this;
+        }
     }
 
     public class Response
@@ -44,6 +50,13 @@ namespace Kit.Services.Web
             this.ResponseResult = ResponseResult;
             this.Message = Message;
         }
+
+        public Response Log()
+        {
+            Kit.Log.Logger.Debug(this.ToString());
+            return this;
+        }
+
         public Response()
         {
 
@@ -51,6 +64,12 @@ namespace Kit.Services.Web
         public string ToJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this);
 
         public virtual Response FromJson(string Json) => Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(Json);
+        public override string ToString()
+        {
+            StringBuilder sb= new StringBuilder();
+            sb.Append(ResponseResult).Append(" - ").Append(Message);
+            return sb.ToString();
+        }
     }
 
 }

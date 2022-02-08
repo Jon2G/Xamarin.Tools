@@ -1,9 +1,11 @@
 ﻿using Kit.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Kit.Sql.Attributes;
 
 namespace Kit.Forms.Services
 {
+    [Preserve(AllMembers = true)]
     public class SynchronizeInvoke : ISynchronizeInvoke
     {
         public async Task InvokeOnMainThreadAsync(Action action)

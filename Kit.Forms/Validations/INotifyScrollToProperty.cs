@@ -5,11 +5,11 @@ using Kit.Sql.Attributes;
 
 namespace Kit.Forms.Validations
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public interface INotifyScrollToProperty
     {
         event ScrollToPropertyHandler ScrollToProperty;
     }
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public delegate void ScrollToPropertyHandler(string PropertyName);
 }

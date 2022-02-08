@@ -9,7 +9,7 @@ using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace Kit.Daemon.Abstractions
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class DaemonCompiledSetterTuple
     {
         public DaemonCompiledSetter CompiledSetter;
@@ -20,7 +20,7 @@ namespace Kit.Daemon.Abstractions
             this.CompiledSetter = CompiledSetter;
         }
     }
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public abstract class DaemonCompiledSetter
     {
         public readonly Column[] Columns;
@@ -29,7 +29,7 @@ namespace Kit.Daemon.Abstractions
             this.Columns = Columns;
         }
     }
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class DaemonCompiledSetter<T, TReader>  : DaemonCompiledSetter
     {
        

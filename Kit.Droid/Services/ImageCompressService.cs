@@ -9,7 +9,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageCompressService))]
 namespace Kit.Droid.Services
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class ImageCompressService : IImageCompressService
     {
         public ImageCompressService()

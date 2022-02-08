@@ -14,7 +14,7 @@ using TinyIoC;
 [assembly: Dependency(typeof(AppTrackingTransparencyPermission))]
 namespace Kit.iOS.Services
 {
-    [Preserve]
+    [Preserve(AllMembers = true)]
     public class AppTrackingTransparencyPermission : Permissions.BasePlatformPermission, IAppTrackingTransparencyPermission
     {
         protected override Func<IEnumerable<string>> RequiredInfoPlistKeys => () => new string[] { "NSUserTrackingUsageDescription" };

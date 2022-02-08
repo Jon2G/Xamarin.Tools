@@ -101,10 +101,10 @@ namespace BlumAPI
         {
             try
             {
-                if (Tools.Debugging)
-                {
-                   return await Task.FromResult(true);
-                }
+                //if (Tools.Debugging)
+                //{
+                //   return await Task.FromResult(true);
+                //}
                 await Task.Yield();
                 DeviceInformation = DeviceInformation.Get(SqlBase);
                 bool Autorized = false;
