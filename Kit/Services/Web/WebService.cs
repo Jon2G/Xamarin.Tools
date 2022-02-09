@@ -44,7 +44,7 @@ namespace Kit.Services.Web
             }
         }
 
-        private static readonly HttpClient HttpClient = new HttpClient(HttpClientHandler);
+        public static readonly HttpClient HttpClient = new HttpClient(HttpClientHandler);
 
         public WebService(string Url)
         {
@@ -160,6 +160,23 @@ namespace Kit.Services.Web
             }
         }
 
+        public Request PreparePostAsBody(string body, string metodo, params string[] parameters) => PreparePostAsBody(Encoding.UTF8.GetBytes(body), metodo, null, parameters);
+
+        public Request PreparePostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PreparePostAsBody(byteArray, metodo, null, parameters);
+
+        public Request PreparePostAsBody(byte[] byteArray, string method, Dictionary<string, string> query, params string[] parameters)
+        {
+            try
+            {
+                string geturl = BuildUrl(method, query, parameters);
+                return new PostRequest(geturl, byteArray);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, $"PreparePostAsBody");
+                return null;
+            }
+        }
         public Task<Stream> DownloadFile(string metodo, params string[] parameters) => DownloadFile(metodo, null, parameters);
 
         public async Task<Stream> DownloadFile(string method, Dictionary<string, string> query, params string[] parameters)

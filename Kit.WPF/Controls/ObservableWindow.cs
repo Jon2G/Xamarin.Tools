@@ -15,11 +15,11 @@ namespace Kit.WPF.Controls
         Task ICrossWindow.Close() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Close());
         Task ICrossWindow.Show() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => Show());
         Task ICrossWindow.ShowDialog() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => ShowDialog());
-
-        public virtual void OnAppearing()
+        public virtual void CrossOnAppearing()
         {
-
+            
         }
+
         #endregion ICrossWindow
         #region ICrossVisualElement
         public object BindingContext
@@ -89,7 +89,7 @@ namespace Kit.WPF.Controls
         {
             if (this.ShowActivated)
             {
-                OnAppearing();
+                CrossOnAppearing();
             }
             this.Activated -= ObservableWindow_Activated;
         }

@@ -84,25 +84,35 @@ namespace Kit.Sql.Sqlite
 
         public override SqlBase CheckTables(int DBVersion, params Type[] Tables)
         {
-            CreateTable<DatabaseVersion>();
-            DatabaseVersion Version = Table<DatabaseVersion>().FirstOrDefault();
-            if ((Version?.Version ?? 0) != DBVersion)
+            Type table = null;
+            try
             {
-                this.Close();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                File.Delete(DatabasePath);
-                RenewConnection();
-                CreateSchema();
-                return CheckTables(DBVersion, Tables);
+                CreateTable<DatabaseVersion>();
+                DatabaseVersion Version = Table<DatabaseVersion>().FirstOrDefault();
+                if ((Version?.Version ?? 0) != DBVersion)
+                {
+                    this.Close();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    File.Delete(DatabasePath);
+                    RenewConnection();
+                    CreateSchema();
+                    return CheckTables(DBVersion, Tables);
+                }
+
+                CreateTable<ChangesHistory>();
+                CreateTable<SyncHistory>();
+                CreateTable<Configuracion>();
+                CreateTable<DeviceInformation>();
+                for (var index = 0; index < Tables.Length; index++)
+                {
+                    table = Tables[index];
+                    CreateTable(table);
+                }
             }
-            CreateTable<ChangesHistory>();
-            CreateTable<SyncHistory>();
-            CreateTable<Configuracion>();
-            CreateTable<DeviceInformation>();
-            foreach (Type table in Tables)
+            catch (Exception ex)
             {
-                CreateTable(table);
+                Log.Logger.Error(ex, "CheckTables at table {0}", table);
             }
             return this;
         }
