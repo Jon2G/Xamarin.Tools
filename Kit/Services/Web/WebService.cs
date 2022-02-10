@@ -90,6 +90,7 @@ namespace Kit.Services.Web
             => GET(metodo, null, query, parameters);
         public async Task<Kit.Services.Web.ResponseResult> GET(string metodo, int? timeOut = null, Dictionary<string, string> query = null, params string[] parameters)
         {
+            await Task.Yield();
             Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
             {
                 HttpStatusCode = HttpStatusCode.Unused
