@@ -75,7 +75,7 @@
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
-    <PackageReference Include="ZXing.Net" Version="0.16.7">
+    <PackageReference Include="ZXing.Net" Version="0.16.8">
       <Aliases>SharedZXingNet</Aliases>
     </PackageReference>
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.7" />

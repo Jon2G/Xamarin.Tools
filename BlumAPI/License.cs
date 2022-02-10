@@ -116,7 +116,7 @@ namespace BlumAPI
                         Log.Logger.Information("Project is active");
                         Autorized = true;
                         DeviceInformation.LastAuthorizedTime = DateTime.Now;
-                        SqlBase.InsertOrReplace(DeviceInformation);
+                        DeviceInformation.Save(SqlBase);
                         break;
 
                     case ProjectActivationState.Expired:

@@ -80,7 +80,7 @@
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
 		<PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.2.0-beta" />
-		<PackageReference Include="ZXing.Net" Version="0.16.7" />
+		<PackageReference Include="ZXing.Net" Version="0.16.8" />
 		<PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.10" />
 		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.7" />
 	</ItemGroup>
