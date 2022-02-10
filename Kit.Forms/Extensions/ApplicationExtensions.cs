@@ -9,6 +9,10 @@ namespace Kit.Forms
     {
         public static T GetResource<T>(this Xamarin.Forms.Application app, string key)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                return default(T);
+            }
             return (T)app.Resources[key];
         }
         public static bool IsOnDarkTheme(this Xamarin.Forms.Application app)
