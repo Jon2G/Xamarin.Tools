@@ -40,7 +40,7 @@ namespace Kit.Daemon.Abstractions
                 var directionAttribute =
                     typeInfo.CustomAttributes
                         .Where(x => x.AttributeType == typeof(SyncMode))
-                        .Select(x => (SyncMode)InflateAttribute(x))
+                        .Select(x => (SyncMode)x.InflateAttribute())
                         .FirstOrDefault();
 #endif
                 string tableName = TableMapping.GetTableName(type);

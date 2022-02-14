@@ -6,7 +6,7 @@ namespace Kit.Sql.Base
 {
     public static class BaseOrm
     {
-        public static object InflateAttribute(CustomAttributeData x)
+        public static object InflateAttribute(this CustomAttributeData x)
         {
             var atype = x.AttributeType;
             var typeInfo = atype.GetTypeInfo();

@@ -11,7 +11,7 @@ using static Kit.Sql.Base.BaseOrm;
 
 namespace Kit.Sql.Base
 {
-    public abstract class TableMapping : IComparable, IEquatable<TableMapping>,IGuid
+    public abstract class TableMapping : IComparable, IEquatable<TableMapping>, IGuid
     {
         public SyncMode SyncMode { get; private set; }
         public SyncDirection SyncDirection => SyncMode?.Direction ?? SyncDirection.NoSync;
@@ -165,7 +165,7 @@ namespace Kit.Sql.Base
         {
             return typeInfo.CustomAttributes
                 .Where(x => x.AttributeType == typeof(TableAttribute))
-                .Select(x => (TableAttribute)InflateAttribute(x))
+                .Select(x => (TableAttribute)x.InflateAttribute())
                 .FirstOrDefault();
         }
 
@@ -178,7 +178,7 @@ namespace Kit.Sql.Base
         {
             return typeInfo.CustomAttributes
                 .Where(x => x.AttributeType == typeof(SyncMode))
-                .Select(x => (SyncMode)InflateAttribute(x))
+                .Select(x => (SyncMode)x.InflateAttribute())
                 .FirstOrDefault();
         }
 

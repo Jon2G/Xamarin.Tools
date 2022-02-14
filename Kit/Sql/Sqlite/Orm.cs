@@ -29,11 +29,11 @@ namespace Kit.Sql.Sqlite
         public static string SqlDecl(Column p, bool storeDateTimeAsTicks, bool storeTimeSpanAsTicks)
         {
             string decl = "\"" + p.Name + "\" " + SqlType(p, storeDateTimeAsTicks, storeTimeSpanAsTicks) + " ";
-           
+
             if (p.IsPK)
             {
                 decl += "primary key ";
-                if (p.ColumnType == typeof(string)&& string.IsNullOrEmpty(p.Collation))
+                if (p.ColumnType == typeof(string) && string.IsNullOrEmpty(p.Collation))
                 {
                     decl = "\"" + p.Name + "\" varchar(500) COLLATE NOCASE ";
                 }
@@ -160,7 +160,7 @@ namespace Kit.Sql.Sqlite
             return
                 p.CustomAttributes
                     .Where(x => indexedInfo.IsAssignableFrom(x.AttributeType.GetTypeInfo()))
-                    .Select(x => (IndexedAttribute)InflateAttribute(x));
+                    .Select(x => (IndexedAttribute)x.InflateAttribute());
 #endif
         }
 
@@ -172,7 +172,7 @@ namespace Kit.Sql.Sqlite
             var attr = p.CustomAttributes.FirstOrDefault(x => x.AttributeType == typeof(MaxLengthAttribute));
             if (attr != null)
             {
-                var attrv = (MaxLengthAttribute)InflateAttribute(attr);
+                var attrv = (MaxLengthAttribute)attr.InflateAttribute();
                 return attrv.Value;
             }
             return null;
