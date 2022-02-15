@@ -25,12 +25,13 @@ namespace Kit.Droid
 
         public override AbstractTools Init()
         {
-            TinyIoC.TinyIoCContainer.Current.Register<ISynchronizeInvoke, SynchronizeInvoke>();
-            TinyIoC.TinyIoCContainer.Current.Register<IDialogs, Kit.Forms.Dialogs.Dialogs>();
-            TinyIoC.TinyIoCContainer.Current.Register<IScreenManager, ScreenManagerService>();
-            TinyIoC.TinyIoCContainer.Current.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.Forms.Controls.CrossImage.CrossImageExtensions>();
-            TinyIoC.TinyIoCContainer.Current.Register<IBarCodeBuilder, BarCodeBuilder>();
-            TinyIoC.TinyIoCContainer.Current.Register<IClipboardService, ClipboardService>();
+            Kit.Tools.Container.Register<ISynchronizeInvoke, SynchronizeInvoke>();
+            Kit.Tools.Container.Register<IDialogs, Kit.Forms.Dialogs.Dialogs>();
+            Kit.Tools.Container.Register<IScreenManager, ScreenManagerService>();
+            Kit.Tools.Container.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.Forms.Controls.CrossImage.CrossImageExtensions>();
+            Kit.Tools.Container.Register<IBarCodeBuilder, BarCodeBuilder>();
+            Kit.Tools.Container.Register<IClipboardService, ClipboardService>();
+            Kit.Tools.Container.Register<Plugin.DeviceInfo.Abstractions.IDeviceInfo, Plugin.DeviceInfo.DeviceInfoImplementation>();
             Log.Init((log) =>
             {
                 return (new LoggerConfiguration()

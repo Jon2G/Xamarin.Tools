@@ -457,6 +457,7 @@ namespace Kit.Sql.SqlServer
             }
             else
             {
+                bool valueIsNull = Kit.Sql.Helpers.Sqlh.IsNull(reader[index]);
                 var clrTypeInfo = clrType.GetTypeInfo();
                 if (clrTypeInfo.IsGenericType && clrTypeInfo.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -538,6 +539,10 @@ namespace Kit.Sql.SqlServer
                 else if (clrType == typeof(UInt32))
                 {
                     return (uint)Convert.ToInt32(reader[index]);
+                }
+                else if (clrType == typeof(UInt64))
+                {
+                    return valueIsNull ? 0 : (ulong)Convert.ToUInt64(reader[index]);
                 }
                 else if (clrType == typeof(decimal))
                 {

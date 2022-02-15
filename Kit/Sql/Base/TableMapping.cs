@@ -184,7 +184,7 @@ namespace Kit.Sql.Base
 
         protected static string GetTableName(TableAttribute tableAttr, Type MappedType)
         {
-            return (tableAttr != null && !string.IsNullOrEmpty(tableAttr.Name)) ? tableAttr.Name : MappedType.Name;
+            return ((tableAttr != null && !string.IsNullOrEmpty(tableAttr.Name)) ? tableAttr.Name : MappedType.Name)?.ToUpper();
         }
 
         public bool HasAutoIncPK { get; protected set; }

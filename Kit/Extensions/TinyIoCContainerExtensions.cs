@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TinyIoC;
 
-namespace Kit.Extensions
+namespace Kit
 {
     public static class TinyIoCContainerExtensions
     {

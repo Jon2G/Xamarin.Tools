@@ -68,6 +68,21 @@ namespace Kit.Sql.Base
         /// <summary>
         /// Filters the query based on a predicate.
         /// </summary>
+        public TableQuery<T> Where<T>(Expression<Func<T, bool>> predExpr) 
+        {
+            if (predExpr.NodeType == ExpressionType.Lambda)
+            {
+                var lambda = (LambdaExpression)predExpr;
+                var pred = lambda.Body;
+                var q = Clone<T>();
+                q.AddWhere(pred);
+                return q;
+            }
+            else
+            {
+                throw new NotSupportedException("Must be a predicate");
+            }
+        }
         public TableQuery<T> Where(Expression<Func<T, bool>> predExpr)
         {
             if (predExpr.NodeType == ExpressionType.Lambda)
@@ -257,7 +272,7 @@ namespace Kit.Sql.Base
             }
         }
 
-        private void AddWhere(Expression pred)
+        private TableQuery<T> AddWhere(Expression pred)
         {
             if (_where == null)
             {
@@ -267,6 +282,7 @@ namespace Kit.Sql.Base
             {
                 _where = Expression.AndAlso(_where, pred);
             }
+            return this;
         }
 
         ///// <summary>
@@ -749,7 +765,7 @@ namespace Kit.Sql.Base
         {
             if (expression.NodeType == ExpressionType.Equal)
             {
-                conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName&&x.Value is null);
+                conditions.Remove(x => x.ColumnName == parameter.CurrentCondition.ColumnName && x.Value is null);
 
                 var column = Table.FindColumnWithPropertyName(parameter.CurrentCondition.ColumnName);
                 if (column is null)
@@ -915,6 +931,16 @@ namespace Kit.Sql.Base
             var query = Take(1);
             return (T)((object)query.ToList().FirstOrDefault() ?? new T());
         }
+        /// <summary>
+        /// Returns the first element of this query, or a new element if no element is found.
+        /// </summary>
+        public T FirstOrNew<T>(Expression<Func<T, bool>> predExpr) where T : new()
+        {
+            var query = Take(1).Where(predExpr);
+            return (T)((object)query.ToList().FirstOrDefault() ?? new T());
+        }
+
+
 
         /// <summary>
         /// Returns the first element of this query that matches the predicate.

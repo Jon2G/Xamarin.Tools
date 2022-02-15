@@ -67,7 +67,7 @@ namespace Kit.Daemon.Abstractions
         {
             get
             {
-                string key = TableName;
+                string key = TableName?.Trim()?.ToUpper();
                 if (DeniedTables != null && DeniedTables.Contains(key))
                 {
                     return null;

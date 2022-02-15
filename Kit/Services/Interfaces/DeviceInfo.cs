@@ -2,6 +2,7 @@
 using System;
 using DeviceId;
 using System.IO;
+using Kit;
 
 namespace Kit.Services.Interfaces
 {
@@ -52,7 +53,21 @@ namespace Kit.Services.Interfaces
 
         public string Manufacturer => Plugin.DeviceInfo.CrossDeviceInfo.Current.Manufacturer;
 
-        public string DeviceName => Plugin.DeviceInfo.CrossDeviceInfo.Current.DeviceName;
+        public string DeviceName
+        {
+            get
+            {
+                try
+                {
+                    return Tools.Container.Get<IDeviceInfo>()?.DeviceName;
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex, "Get DeviceName");
+                    return Environment.MachineName;
+                }
+            }
+        }
 
         public string Version => Plugin.DeviceInfo.CrossDeviceInfo.Current.Version;
 

@@ -67,7 +67,9 @@ namespace Kit
 
         public static Log Init(Func<Log, ILogger> loggerFactory, DirectoryInfo LogDirectory = null, Action<string> CriticalAction = null)
         {
-            string log_path = Path.Combine(LogDirectory?.FullName ?? Log.LogDirectory.FullName);
+            var directory=LogDirectory?.FullName ?? Log.LogDirectory.FullName;
+            string critcal_log_path = Path.Combine(directory, "critcal_log.log");
+            string log_path = Path.Combine(directory);
             DirectoryInfo logDirectory = new DirectoryInfo(log_path);
             if (!logDirectory.Exists)
             {
@@ -76,7 +78,7 @@ namespace Kit
 
             if (CriticalAction != null)
             {
-                AlertCriticalUnhandled(CriticalAction);
+                AlertCriticalUnhandled(CriticalAction, critcal_log_path);
             }
 
             if (_Current.IsValueCreated)
@@ -133,11 +135,11 @@ namespace Kit
 
         #endregion Errores
 
-        private static void AlertCriticalUnhandled(Action<string> CriticalAction)
+        private static void AlertCriticalUnhandled(Action<string> CriticalAction, string CriticalLoggerPath)
         {
             try
             {
-                FileInfo file = new FileInfo(Current.CriticalLoggerPath);
+                FileInfo file = new FileInfo(CriticalLoggerPath);
                 if (file.Exists)
                 {
                     string criticalDescription = null;
@@ -151,13 +153,12 @@ namespace Kit
                     }
                     if (!string.IsNullOrEmpty(criticalDescription))
                     {
-                        Log.Logger.Error(criticalDescription);
                         CriticalAction?.Invoke(criticalDescription);
                         file.Delete();
                     }
                 }
             }
-            catch (Exception ex) { Log.Logger.Error(ex, "AlertCriticalUnhandled"); }
+            catch (Exception ex) { Console.WriteLine(ex); }
         }
 
         public static bool AlertOnDBConnectionError(Exception ex)
