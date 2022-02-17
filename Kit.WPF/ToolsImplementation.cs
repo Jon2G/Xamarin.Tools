@@ -48,17 +48,18 @@ namespace Kit.WPF
 
             Log.Init(loggerFactory: (log) => (new LoggerConfiguration()
                     // Set default log level limit to Debug
-                    .MinimumLevel.Debug()
+                    .MinimumLevel.Verbose()
                     // Enrich each log entry with memory usage and thread ID
                     // .Enrich.WithMemoryUsage()
                     //.Enrich.WithThreadId()
                     // Write entries to Android log (Nuget package Serilog.Sinks.Xamarin)
-                    .WriteTo.Console()
+                    .WriteTo.Console().MinimumLevel.Verbose()
+                    .WriteTo.Debug().MinimumLevel.Verbose()
                     // Create a custom logger in order to set another limit,
                     // particularly, any logs from Information level will also be written into a rolling file
                     .WriteTo.Logger(config =>
                     config
-                            .MinimumLevel.Debug()
+                            .MinimumLevel.Verbose()
                             .WriteTo.File(log.LoggerPath, retainedFileCountLimit: 7,
                                 flushToDiskInterval: TimeSpan.FromMilliseconds(500))
                     )
