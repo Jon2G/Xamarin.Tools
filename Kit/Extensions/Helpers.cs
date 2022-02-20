@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Kit.Controls.CrossImage;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Kit.Controls.CrossImage;
 
 namespace Kit
 {
@@ -48,17 +48,17 @@ namespace Kit
 
             long entero = Convert.ToInt64(Math.Truncate(Numero));
             int decimales = Convert.ToInt32(Math.Round((Numero - entero) * 100, 2));
-            if (decimales > 0)
-            {
-                //dec = " PESOS CON " + decimales.ToString() + "/100";
-                dec = $" {strMoneda} {decimales:0,0} /100";
-            }
-            //Código agregado por mí
-            else
-            {
-                //dec = " PESOS CON " + decimales.ToString() + "/100";
-                dec = $" {strMoneda} {decimales:0,0} /100";
-            }
+            //if (decimales > 0)
+            //{
+            //dec = " PESOS CON " + decimales.ToString() + "/100";
+            dec = $" {strMoneda} {decimales:0,0} /100";
+            //}
+            ////Código agregado por mí
+            //else
+            //{
+            //    //dec = " PESOS CON " + decimales.ToString() + "/100";
+            //    dec = $" {strMoneda} {decimales:0,0} /100";
+            //}
             string res = NumeroALetras(Convert.ToDouble(entero)) + dec;
             return $"{res} {Leyenda}";
         }

@@ -1,8 +1,7 @@
-﻿using SQLitePCL;
+﻿using Kit.Sql.Sqlite;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Kit.Sql.Sqlite;
 
 namespace Kit.Sql.SQLiteNetExtensions
 {
@@ -181,19 +180,16 @@ namespace Kit.Sql.SQLiteNetExtensions
         /// <returns></returns>
         private static Type ToType(this SQLite3.ColType colType)
         {
-            // Prepare evolution where column can be nullable
-            bool nullable = false;
-
             switch (colType)
             {
                 case SQLite3.ColType.Blob:
                     return typeof(byte[]);
 
                 case SQLite3.ColType.Float:
-                    return nullable ? typeof(double?) : typeof(double);
+                    return typeof(double);
 
                 case SQLite3.ColType.Integer:
-                    return nullable ? typeof(long?) : typeof(long);
+                    return typeof(long);
 
                 default:
                     return typeof(string);

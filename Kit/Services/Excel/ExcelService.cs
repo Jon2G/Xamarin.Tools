@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System;
+using System.IO;
 
 namespace Kit.Services.Excel
 {
@@ -11,7 +11,7 @@ namespace Kit.Services.Excel
         public string FilePath { get; private set; }
         public ClosedXML.Excel.XLWorkbook Document { get; private set; }
 
-        private ExcelService(string FilePath, ClosedXML.Excel.XLWorkbook Document)
+        public ExcelService(string FilePath, ClosedXML.Excel.XLWorkbook Document)
         {
             this.FilePath = FilePath;
             this.Document = Document;
