@@ -69,20 +69,21 @@ namespace Kit.Daemon.Sync
         }
 
         private readonly object _DownloadQueryLock = new object();
+        private string _DownloadQuery;
         private string DownloadQuery
         {
             get
             {
                 lock (_DownloadQueryLock)
                 {
-                    return DownloadQuery;
+                    return _DownloadQuery;
                 }
             }
             set
             {
                 lock (_DownloadQueryLock)
                 {
-                    DownloadQuery = value;
+                    _DownloadQuery = value;
                 }
             }
         }
