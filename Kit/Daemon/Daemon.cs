@@ -1,13 +1,9 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using AsyncAwaitBestPractices;
 using Kit.Daemon.Abstractions;
 using Kit.Daemon.Devices;
 using Kit.Daemon.Enums;
 using Kit.Daemon.Sync;
+using Kit.Enums;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
@@ -15,10 +11,13 @@ using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using AsyncAwaitBestPractices;
-using Kit.Enums;
-using ThreadState = System.Diagnostics.ThreadState;
 
 namespace Kit.Daemon
 {
@@ -166,8 +165,9 @@ namespace Kit.Daemon
             return Current;
         }
 
-        public async void Reset()
+        public async Task Reset()
         {
+            await Task.Yield();
             await Sleep();
             IsInited = false;
             Awake();
@@ -320,7 +320,7 @@ namespace Kit.Daemon
                     return;
                 }
                 SQLH.CheckTables(DaemonConfig.DbVersion, Schema.GetAll()
-                    .Select(x => x.Value.ForSqlServer()).Where(x=> x is not null)
+                    .Select(x => x.Value.ForSqlServer()).Where(x => x is not null)
                     .DistinctBy(x => x.MappedType)
                     .Select(x => x.MappedType));
                 Schema.CheckTriggers(SQLH);

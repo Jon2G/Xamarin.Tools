@@ -78,7 +78,7 @@ namespace Kit.Model
             }
             finally
             {
-                if (!handleException)
+                if (!handleException && exception is not null)
                 {
                     throw exception;
                 }

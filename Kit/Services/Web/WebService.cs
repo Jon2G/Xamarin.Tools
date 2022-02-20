@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Kit.Enums;
 
 namespace Kit.Services.Web
 {
@@ -44,7 +43,7 @@ namespace Kit.Services.Web
             }
         }
 
-        public static readonly HttpClient HttpClient = new HttpClient(HttpClientHandler);
+        public static HttpClient HttpClient = new HttpClient(HttpClientHandler);
 
         public WebService(string Url)
         {
@@ -129,6 +128,32 @@ namespace Kit.Services.Web
             return result;
         }
 
+        public async Task<Kit.Services.Web.ResponseResult> Post(string method,
+            Dictionary<string, string> query, params string[] parameters)
+        {
+            Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
+            {
+                HttpStatusCode = HttpStatusCode.Unused
+            };
+            string geturl = String.Empty;
+            try
+            {
+                geturl = BuildUrl(method, query, parameters);
+                HttpResponseMessage message = await HttpClient.PostAsync(geturl, null);
+                result.HttpStatusCode = message.StatusCode;
+                result.Response = await message.Content.ReadAsStringAsync();
+
+
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, $"GET: {geturl}");
+                result.Response = "ERROR";
+                return result;
+            }
+        }
         public Task<Kit.Services.Web.ResponseResult> PostAsBody(string body, string metodo, params string[] parameters) => PostAsBody(Encoding.UTF8.GetBytes(body), metodo, null, parameters);
 
         public Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PostAsBody(byteArray, metodo, null, parameters);

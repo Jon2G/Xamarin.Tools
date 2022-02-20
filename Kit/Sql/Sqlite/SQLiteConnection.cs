@@ -1,15 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using Kit.Daemon.Sync;
 using Kit.SetUpConnectionString;
 using Kit.Sql.Attributes;
@@ -22,8 +10,19 @@ using Kit.Sql.Readers;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using SQLitePCL;
-using NotNullConstraintViolationException = Kit.Sql.Exceptions.NotNullConstraintViolationException;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using static Kit.Sql.Base.BaseTableQuery;
+using NotNullConstraintViolationException = Kit.Sql.Exceptions.NotNullConstraintViolationException;
 
 namespace Kit.Sql.Sqlite
 {
@@ -1226,6 +1225,11 @@ namespace Kit.Sql.Sqlite
         {
             CommandBase cmd = CreateCommand(query, args);
             Log.Logger.Debug(cmd?.ToString());
+            if (cmd is null)
+            {
+                Log.Logger.Error("Command is null!");
+                return Error;
+            }
             int r = cmd.ExecuteNonQuery();
             Log.Logger.Debug($"Rows affected [{r}]");
             return r;

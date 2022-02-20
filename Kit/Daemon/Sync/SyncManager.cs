@@ -1,12 +1,6 @@
-﻿using Kit.Daemon.Enums;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kit.Daemon.Abstractions;
 using Kit.Daemon.Devices;
+using Kit.Daemon.Enums;
 using Kit.Model;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -14,9 +8,14 @@ using Kit.Sql.Exceptions;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using static Kit.Daemon.Helpers.Helper;
 using TableMapping = Kit.Sql.Base.TableMapping;
-using Kit.Daemon.Abstractions;
 
 namespace Kit.Daemon.Sync
 {
@@ -69,10 +68,23 @@ namespace Kit.Daemon.Sync
             }
         }
 
+        private readonly object _DownloadQueryLock = new object();
         private string DownloadQuery
         {
-            get;
-            set;
+            get
+            {
+                lock (_DownloadQueryLock)
+                {
+                    return DownloadQuery;
+                }
+            }
+            set
+            {
+                lock (_DownloadQueryLock)
+                {
+                    DownloadQuery = value;
+                }
+            }
         }
 
         private string UploadQuery
@@ -98,15 +110,10 @@ namespace Kit.Daemon.Sync
 
         public bool Download()
         {
-            lock (DownloadQuery)
-            {
-                if (string.IsNullOrEmpty(DownloadQuery))
-                {
-                    DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Remote]);
-                    Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
-                }
-                return GetPendings(SyncTarget.Local);
-            }
+            if (!string.IsNullOrEmpty(DownloadQuery)) return GetPendings(SyncTarget.Local);
+            DownloadQuery = PrepareQuery(Daemon.Current.DaemonConfig[SyncTarget.Remote]);
+            Log.Logger.Information("Prepared {0} Download Query - [{1}]", "DAEMON", DownloadQuery);
+            return GetPendings(SyncTarget.Local);
         }
 
         public bool Upload()
