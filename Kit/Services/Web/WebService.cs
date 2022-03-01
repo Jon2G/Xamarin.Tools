@@ -154,11 +154,11 @@ namespace Kit.Services.Web
                 return result;
             }
         }
-        public Task<Kit.Services.Web.ResponseResult> PostAsBody(string body, string metodo, params string[] parameters) => PostAsBody(Encoding.UTF8.GetBytes(body), metodo, null, parameters);
+        public Task<Kit.Services.Web.ResponseResult> PostAsBody(string body, string metodo, string mediaType = "application/octet-stream", params string[] parameters) => PostAsBody(Encoding.UTF8.GetBytes(body), metodo, null, mediaType, parameters: parameters);
 
-        public Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PostAsBody(byteArray, metodo, null, parameters);
+        public Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PostAsBody(byteArray, metodo, null, parameters: parameters);
 
-        public async Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string method, Dictionary<string, string> query, params string[] parameters)
+        public async Task<Kit.Services.Web.ResponseResult> PostAsBody(byte[] byteArray, string method, Dictionary<string, string> query, string mediaType = "application/octet-stream", params string[] parameters)
         {
             Kit.Services.Web.ResponseResult result = new Kit.Services.Web.ResponseResult
             {
@@ -169,7 +169,7 @@ namespace Kit.Services.Web
             {
                 geturl = BuildUrl(method, query, parameters);
                 var body = new ByteArrayContent(byteArray);
-                body.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
+                body.Headers.ContentType = MediaTypeHeaderValue.Parse(mediaType);
                 HttpResponseMessage message = await HttpClient.PostAsync(geturl, body);
                 result.HttpStatusCode = message.StatusCode;
                 result.Response = await message.Content.ReadAsStringAsync();

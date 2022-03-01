@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 
 namespace Kit
 {
@@ -25,6 +24,15 @@ namespace Kit
             return TimeZoneInfo.ConvertTimeFromUtc(utcTime, tzi); // convert from utc to local
         }
 
+        public static DateTime GetNextOrToday(this DayOfWeek day)
+        {
+            DateTime date = DateTime.Today;
+            while (date.DayOfWeek != day)
+            {
+                date = date.AddDays(+1);
+            }
+            return date;
+        }
         public static DateTime GetNearest(this DayOfWeek day)
         {
             DateTime date = DateTime.Today;
@@ -39,7 +47,6 @@ namespace Kit
                     date = date.AddDays(+1);
                 }
             }
-
             return date;
         }
 
