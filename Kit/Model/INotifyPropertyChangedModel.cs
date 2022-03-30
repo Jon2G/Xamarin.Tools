@@ -29,6 +29,17 @@ namespace Kit.Model
 
         #region PerfomanceHelpers
 
+        protected bool RaiseIfChanged<T>(ref T backingField, T new_value, [CallerMemberName] string propertyName = null) where T : IComparable
+        {
+            if (new_value is null || new_value.CompareTo(backingField) != 0)
+            {
+                backingField = new_value;
+                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                return true;
+            }
+
+            return false;
+        }
         protected void Raise<T>(Expression<Func<T>> propertyExpression)
         {
             AsyncRaise<T>(propertyExpression).SafeFireAndForget();
@@ -59,7 +70,7 @@ namespace Kit.Model
                 }
                 catch (Exception)
                 {
-                  //  Log.Logger.Error(ex, "On RAISE ");
+                    //  Log.Logger.Error(ex, "On RAISE ");
                 }
             }
         }
