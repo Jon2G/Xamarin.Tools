@@ -1,30 +1,30 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using Kit.Daemon.Devices;
+﻿using Kit.Daemon.Devices;
 using Kit.Dialogs;
 using Kit.Enums;
 using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace Kit
 {
     public abstract class AbstractTools
     {
         private Lazy<ISynchronizeInvoke> _SynchronizeInvoke =
-            new Lazy<ISynchronizeInvoke>(() => TinyIoC.TinyIoCContainer.Current.Resolve<ISynchronizeInvoke>());
+            new Lazy<ISynchronizeInvoke>(() => TinyIoC.TinyIoCContainer.Current.Get<ISynchronizeInvoke>());
         public ISynchronizeInvoke SynchronizeInvoke => _SynchronizeInvoke.Value;
 
         private Lazy<IScreenManager> _ScreenManager =
-            new Lazy<IScreenManager>(() => TinyIoC.TinyIoCContainer.Current.Resolve<IScreenManager>());
+            new Lazy<IScreenManager>(() => TinyIoC.TinyIoCContainer.Current.Get<IScreenManager>());
         public IScreenManager ScreenManager => _ScreenManager.Value;
 
         private Lazy<IBarCodeBuilder> _BarCodeBuilder =
-            new Lazy<IBarCodeBuilder>(() => TinyIoC.TinyIoCContainer.Current.Resolve<IBarCodeBuilder>());
+            new Lazy<IBarCodeBuilder>(() => TinyIoC.TinyIoCContainer.Current.Get<IBarCodeBuilder>());
         public IBarCodeBuilder BarCodeBuilder => _BarCodeBuilder.Value;
 
         private Lazy<IDialogs> _Dialogs =
-            new Lazy<IDialogs>(() => TinyIoC.TinyIoCContainer.Current.Resolve<IDialogs>());
+            new Lazy<IDialogs>(() => TinyIoC.TinyIoCContainer.Current.Get<IDialogs>());
         public IDialogs Dialogs => _Dialogs.Value;
         private Lazy<Kit.Controls.CrossImage.CrossImageExtensions> _ImageExtensions =
             new Lazy<Kit.Controls.CrossImage.CrossImageExtensions>(() => TinyIoC.TinyIoCContainer.Current.Resolve<Kit.Controls.CrossImage.CrossImageExtensions>());
@@ -46,10 +46,10 @@ namespace Kit
         }
         public virtual void CriticalAlert(string ex)
         {
-            this.Dialogs.CustomMessageBox.ShowOK(ex, "Alerta", "Entiendo");
+            this.Dialogs?.CustomMessageBox.ShowOK(ex, "Alerta", "Entiendo");
         }
 
-        private static readonly Lazy<bool> _IsInDesingMode =new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        private static readonly Lazy<bool> _IsInDesingMode = new Lazy<bool>(IsDesigning, System.Threading.LazyThreadSafetyMode.PublicationOnly);
         public static bool IsInDesingMode
         {
             get
