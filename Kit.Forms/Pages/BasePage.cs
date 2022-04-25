@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Kit.Enums;
+using Kit.Services.Interfaces;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Kit.Enums;
-using Kit.Services.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Xamarin.Forms.Xaml;
 
 namespace Kit.Forms.Pages
 {

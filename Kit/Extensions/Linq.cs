@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
@@ -78,6 +77,22 @@ namespace Kit
                 lista.AddRange(l);
             }
             return lista;
+        }
+        public static int Mult(this IEnumerable<int> source, Func<int, int> sumFunc)
+        {
+            return source.Aggregate(1, (a, b) => a * sumFunc.Invoke(b));
+        }
+        public static int Mult<T>(this IEnumerable<T> source, Func<T, int> sumFunc)
+        {
+            return source.Aggregate(1, (a, b) => a * sumFunc.Invoke(b));
+        }
+        public static double Mult<T>(this IEnumerable<T> source, Func<T, double> sumFunc)
+        {
+            return source.Aggregate(1d, (a, b) => a * sumFunc.Invoke(b));
+        }
+        public static float Mult<T>(this IEnumerable<T> source, Func<T, float> sumFunc)
+        {
+            return source.Aggregate(1f, (a, b) => a * sumFunc.Invoke(b));
         }
         public static int FindIndexOf<T>(this IList<T> modificadoresSeleccionados, IEquatable<T> p)
         {
@@ -469,5 +484,7 @@ namespace Kit
             found = false;
             return default(TSource);
         }
+
+
     }
 }

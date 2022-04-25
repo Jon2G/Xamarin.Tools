@@ -1,9 +1,30 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Kit
 {
     public static class StringBuilderExtensions
     {
+        public static StringBuilder AppendLine<T>(this StringBuilder sb, Func<IEnumerable<T>> values)
+        {
+            foreach (T value in values.Invoke())
+            {
+                sb.AppendLine(value.ToString());
+            }
+            return sb;
+        }
+        public static StringBuilder Append<T>(this StringBuilder sb, Func<IEnumerable<T>> values)
+        {
+            foreach (T value in values.Invoke())
+            {
+                sb.Append(value.ToString());
+            }
+            return sb;
+        }
+        public static StringBuilder AppendLine<T>(this StringBuilder sb, Func<T> value) => sb.AppendLine(value.Invoke().ToString());
+        public static StringBuilder Append<T>(this StringBuilder sb, Func<T> value) => sb.Append(value.Invoke().ToString());
         public static StringBuilder TrimEnd(this StringBuilder sb)
         {
             int index = sb.Length - 1;

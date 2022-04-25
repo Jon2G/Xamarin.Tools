@@ -1,11 +1,9 @@
-﻿using AsyncAwaitBestPractices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +24,7 @@ namespace Kit.Services.Web
             for (int i = 1; i < 255; i++)
             {
                 string ip = $"{ipBase}.{i}";
-                PingReply reply = await PingOrTimeout(ip, 250);
+                PingReply reply = await new Ping().PingOrTimeout(ip, 250);
                 OnPingReply(reply, ip);
             }
             sw.Stop();
@@ -34,47 +32,14 @@ namespace Kit.Services.Web
             Console.WriteLine("Took {0} milliseconds. {1} hosts active.", span, upCount);
             Console.ReadLine();
         }
-
-        public async Task<PingReply> PingOrTimeout(string hostname, int timeOut=250)
-        {
-            await Task.Yield();
-            PingReply result = null;
-            var cancellationTokenSource = new CancellationTokenSource();
-            var timeoutTask = Task.Delay(timeOut, cancellationTokenSource.Token);
-
-            var actionTask = Task.Factory.StartNew(() =>
-             {
-                 result = NormalPing(hostname, timeOut);
-             }, cancellationTokenSource.Token);
-
-            await Task.WhenAny(actionTask, timeoutTask).ContinueWith(t =>
-             {
-                 cancellationTokenSource.Cancel();
-             });
-            return result;
-        }
         private static PingReply ForcePingTimeoutWithThreads(string hostname, int timeout)
         {
             PingReply reply = null;
-            Thread a = new Thread(() => reply = NormalPing(hostname, timeout));
+            Thread a = new Thread(() => reply = new Ping().RegularPing(hostname, timeout));
             a.Start();
             a.Join(timeout);
             return reply;
         }
-
-        private static PingReply NormalPing(string hostname, int timeout)
-        {
-            try
-            {
-                return new Ping().Send(hostname, timeout);
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error(ex, "normalPing");
-                return null;
-            }
-        }
-
         private void OnPingReply(PingReply reply, string ip)
         {
             if (reply != null && reply.Status == IPStatus.Success)

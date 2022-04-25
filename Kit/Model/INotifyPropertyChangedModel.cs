@@ -37,7 +37,6 @@ namespace Kit.Model
                 OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
                 return true;
             }
-
             return false;
         }
         protected void Raise<T>(Expression<Func<T>> propertyExpression)

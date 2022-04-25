@@ -19,7 +19,7 @@ namespace Kit.Forms.Services
                 {
                     if (exportFontAttribute == null) return;
 
-                    string? fontFilePath = null;
+                    string fontFilePath = null;
                     if (Device.RuntimePlatform == Device.Android)
                     {
                         fontFilePath = Path.Combine(Xamarin.Essentials.FileSystem.CacheDirectory,
@@ -60,7 +60,7 @@ namespace Kit.Forms.Services
 
                             if (deleteFile)
                             {
-                               Debug.WriteLine($"deleting '{fontFilePath}'");
+                                Debug.WriteLine($"deleting '{fontFilePath}'");
                                 File.Delete(fontFilePath);
                                 using (var fileStream = File.Open(fontFilePath, FileMode.OpenOrCreate))
                                 {
