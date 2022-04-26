@@ -83,15 +83,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kit\Kit.csproj" />
-    <ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Controls\Lector.xaml.cs">
       <DependentUpon>Lector.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Pages\DeviceRegister.xaml.cs">
-      <DependentUpon>DeviceRegister.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\NotificationBar\CustomToolBar.xaml.cs">
       <SubType>Code</SubType>

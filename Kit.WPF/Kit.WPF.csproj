@@ -55,7 +55,6 @@
 	<ItemGroup>
 		<EmbeddedResource Remove="Controls\RangoFechas\DateRange.xaml" />
 		<EmbeddedResource Remove="Controls\RangoFechas\DateRangeHorizontal.xaml" />
-		<EmbeddedResource Remove="Pages\DeviceRegister.xaml" />
 		<EmbeddedResource Remove="Pages\SplashScreen.xaml" />
 		<EmbeddedResource Remove="Dialogs\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
@@ -131,7 +130,6 @@
 		<Reference Include="PresentationFramework" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\BlumAPI\BlumAPI.csproj" />
 		<ProjectReference Include="..\Kit\Kit.csproj" />
 	</ItemGroup>
 	<ItemGroup>
