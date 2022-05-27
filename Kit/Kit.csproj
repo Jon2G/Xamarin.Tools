@@ -11,6 +11,7 @@
     <AssemblyName>Kit</AssemblyName>
     <AssemblyVersion>1.1.2.0</AssemblyVersion>
     <FileVersion>1.1.2.0</FileVersion>
+	  <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageIcon>toolbox.png</PackageIcon>
     <Configurations>Release;Debug;x64;Debug2;Gorilla</Configurations>
