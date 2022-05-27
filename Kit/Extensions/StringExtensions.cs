@@ -4,6 +4,12 @@ namespace Kit
 {
     public static class StringExtensions
     {
+        public static bool EndsWith(this string s, char c)
+        {
+            if ((s ?? String.Empty).Length > 0)
+                return c == s[s.Length - 1];
+            return false;
+        }
         public static string ToBase64Encode(this string plainText)
         {
             if (string.IsNullOrEmpty(plainText))

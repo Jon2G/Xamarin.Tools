@@ -45,7 +45,10 @@ namespace Kit
         {
             return sb.ToString(sb.Length - 1, 1)[0];
         }
-
+        public static StringBuilder RemoveLast(this StringBuilder sb)
+        {
+            return sb.Remove(sb.Length - 1, 1);
+        }
         public static bool EndsWith(this StringBuilder sb, string test)
         {
             if (sb.Length < test.Length)
@@ -54,5 +57,6 @@ namespace Kit
             string end = sb.ToString(sb.Length - test.Length, test.Length);
             return end.Equals(test);
         }
+
     }
 }

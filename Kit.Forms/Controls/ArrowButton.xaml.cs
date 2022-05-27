@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using AsyncAwaitBestPractices.MVVM;
-using FFImageLoading;
-using Kit.Forms.Extensions;
-using Xamarin.Essentials;
+using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using ContentView = Xamarin.Forms.ContentView;
 using ImageSource = Xamarin.Forms.ImageSource;
-using Brush = Xamarin.Forms.Brush;
-using Xamarin.CommunityToolkit.Effects;
 
 namespace Kit.Forms.Controls
 {
-    [XamlCompilation(XamlCompilationOptions.Compile), Preserve()]
+    [XamlCompilation(XamlCompilationOptions.Compile), FFImageLoading.Preserve()]
     public partial class ArrowButton
     {
 
@@ -65,7 +58,7 @@ namespace Kit.Forms.Controls
             {
                 base.SetValue(BackgroundColorProperty, value);
                 OnPropertyChanged();
-                TouchEffect.SetNormalBackgroundColor(this.arrow, value);
+                TouchEffect.SetNormalBackgroundColor(this, value);
             }
         }
 
@@ -153,10 +146,12 @@ namespace Kit.Forms.Controls
             }
         }
 
-        public static readonly BindableProperty TitleProperty = BindableProperty.Create(
-            propertyName: nameof(Title), returnType: typeof(string),
-            declaringType: typeof(ArrowButton), defaultValue: string.Empty, BindingMode.OneWay,
-            propertyChanged: (e, o, n) => { if (e is ArrowButton arrow) arrow.Title = n?.ToString(); });
+
+        public static readonly BindableProperty TitleProperty =
+            BindableProperty.Create(
+                nameof(Title),
+                typeof(string),
+                typeof(ArrowButton));
 
         public string Title
         {
@@ -164,9 +159,17 @@ namespace Kit.Forms.Controls
             set
             {
                 SetValue(TitleProperty, value);
-                OnPropertyChanged();
+                //OnPropertyChanged();
             }
         }
+
+        static void OnTitlePropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
+        {
+            var label = (ArrowButton)bindable;
+            label.Title = (newvalue).ToString();
+            label.InvalidateMeasure();
+        }
+
 
         public static readonly BindableProperty SubTitleProperty = BindableProperty.Create(
             propertyName: nameof(SubTitle), returnType: typeof(string),
@@ -412,22 +415,11 @@ namespace Kit.Forms.Controls
 
         public ArrowButton()
         {
-            this.TouchedCommand = new AsyncCommand(Touched);
+            this.TouchedCommand = new AsyncFeedbackCommand(() => this.Command?.Execute(this.CommandParameter));
             InitializeComponent();
-            TouchEffect.SetNormalBackgroundColor(this.arrow, this.arrow.BackgroundColor);
+            TouchEffect.SetNormalBackgroundColor(this, this.BackgroundColor);
             TouchEffect.SetCommand(this, TouchedCommand);
             //xct: TouchEffect.Command = "{Binding TouchedCommand,Source={x:Reference arrow}}"
-        }
-
-        private async Task Touched()
-        {
-            await Task.Yield();
-            if (await Permisos.CanVibrate())
-            {
-                HapticFeedback.Perform(HapticFeedbackType.Click);
-            }
-
-            this.Command?.Execute(this.CommandParameter);
         }
     }
 }

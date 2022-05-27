@@ -29,7 +29,7 @@ namespace Kit.Model
 
         #region PerfomanceHelpers
 
-        protected bool RaiseIfChanged<T>(ref T backingField, T new_value, [CallerMemberName] string propertyName = null) where T : IComparable
+        protected bool RaiseIfChanged<T>(ref T? backingField, T new_value, [CallerMemberName] string propertyName = null) where T : IComparable
         {
             if (new_value is null || new_value.CompareTo(backingField) != 0)
             {
@@ -39,9 +39,10 @@ namespace Kit.Model
             }
             return false;
         }
-        protected void Raise<T>(Expression<Func<T>> propertyExpression)
+        public INotifyPropertyChangedModel Raise<T>(Expression<Func<T>> propertyExpression)
         {
             AsyncRaise<T>(propertyExpression).SafeFireAndForget();
+            return this;
         }
         protected async Task AsyncRaise<T>(Expression<Func<T>> propertyExpression)
         {

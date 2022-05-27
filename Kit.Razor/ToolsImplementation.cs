@@ -1,6 +1,7 @@
 ﻿using Kit.Enums;
 using Serilog;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -8,7 +9,7 @@ namespace Kit.Razor
 {
     public class ToolsImplementation : AbstractTools
     {
-        public ToolsImplementation(string LibraryPath = null)
+        public ToolsImplementation(string? LibraryPath = null)
         {
             this._LibraryPath = LibraryPath;
         }
@@ -22,7 +23,7 @@ namespace Kit.Razor
         }
 
         private string _LibraryPath;
-        public override string LibraryPath => _LibraryPath ?? Environment.CurrentDirectory;
+        public override string LibraryPath => _LibraryPath ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.WPF;
         public static new Kit.Razor.ToolsImplementation Instance => Tools.Instance as Kit.Razor.ToolsImplementation;
 
