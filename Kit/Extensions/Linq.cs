@@ -78,6 +78,15 @@ namespace Kit
             }
             return lista;
         }
+
+        public static List<T> Prepend<T>(this List<T> list, params T[] elements)
+        {
+            foreach (T element in elements.Reverse())
+            {
+                list.Insert(0, element);
+            }
+            return list;
+        }
         public static int Mult(this IEnumerable<int> source, Func<int, int> sumFunc)
         {
             return source.Aggregate(1, (a, b) => a * sumFunc.Invoke(b));

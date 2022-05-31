@@ -1,7 +1,10 @@
-﻿namespace Kit
+﻿using System;
+
+// ReSharper disable once CheckNamespace
+namespace Kit
 {
-    public interface ICloneable<T>
+    public interface ICloneable<out T> : ICloneable
     {
-        T Clone();
+        new T Clone();
     }
 }
