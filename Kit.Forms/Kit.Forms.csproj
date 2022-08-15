@@ -49,8 +49,8 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.564" />
-    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.4" />
-    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.4" />
+    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.5" />
+    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.5" />
     <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="FreshMvvm" Version="4.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.2" />
@@ -59,18 +59,18 @@
     <PackageReference Include="MoyskleyTech.ImageProcessing.PNGCodec" Version="1.0.2" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.TGACodec" Version="1.0.2" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
-    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.2" />
+    <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.4" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
     <PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
     <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.11.982" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
     <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
     <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.759" />
-    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2337" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2515" />
     <PackageReference Include="ZXing.Net" Version="0.16.8">
       <Aliases>SharedZXingNet</Aliases>
     </PackageReference>
