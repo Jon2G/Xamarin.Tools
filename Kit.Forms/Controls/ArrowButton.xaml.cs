@@ -2,11 +2,13 @@
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 using ImageSource = Xamarin.Forms.ImageSource;
 
 namespace Kit.Forms.Controls
 {
+    [Preserve(AllMembers = true)]
     [XamlCompilation(XamlCompilationOptions.Compile), FFImageLoading.Preserve()]
     public partial class ArrowButton
     {

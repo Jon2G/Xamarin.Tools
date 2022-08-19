@@ -17,4 +17,15 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.5" />
+	  <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\PancakeView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using AsyncAwaitBestPractices;
+﻿using AsyncAwaitBestPractices;
 using Kit.Services.Interfaces;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Pages
@@ -36,6 +36,8 @@ namespace Kit.Forms.Pages
 
         public BasePopUp()
         {
+            this.Background = Color.Transparent;
+            this.BackgroundColor = Color.Transparent;
             this.ShowDialogCallback = new AutoResetEvent(false);
             this.Visual = VisualMarker.Material;
         }
@@ -108,7 +110,15 @@ namespace Kit.Forms.Pages
         }
         public virtual void CrossOnAppearing()
         {
-          
+
+        }
+        protected override void OnPropertyChanged(string propertyName = null)
+        {
+            if (propertyName == "Background" || propertyName == "BackgroundColor")
+            {
+                this.Background = null;
+            }
+            base.OnPropertyChanged(propertyName);
         }
     }
 }
