@@ -10,7 +10,7 @@ namespace Kit.Daemon.Devices
     [Table(name: "SYNC_DEVICES")]
     public class Device
     {
-        public static Device Current { get; set; }
+        public static Device? Current { get; set; }
         public DeviceInfo IDeviceInfo { get; private set; }
 
         public string DeviceId { get; set; }

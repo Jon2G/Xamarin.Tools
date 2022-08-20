@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using Kit.Daemon.Devices;
 using TinyIoC;
 
 namespace Kit
@@ -42,6 +43,10 @@ namespace Kit
 
         protected static void BaseInit()
         {
+            if(Device.Current is null)
+            {
+                Device.Init();
+            }
             if (Tools.Instance.RuntimePlatform != Enums.RuntimePlatform.WPF)
             {
                 DirectoryInfo TempDirectory = new DirectoryInfo(Instance.TemporalPath);
