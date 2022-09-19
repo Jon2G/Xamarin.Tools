@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using Kit.Daemon.Enums;
 using Kit.Daemon.Sync;
 using Kit.Sql.Enums;
 using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
+using System;
+using System.Linq;
 using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace Kit.Daemon.Abstractions
@@ -77,14 +78,14 @@ DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted)
 
-INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
-SELECT @action,inserted.SyncGuid,'{Table.TableName}',{Table.SyncMode.Order}
+INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority,Date,SyncStatus)
+SELECT @action,inserted.SyncGuid,'{Table.TableName}',{Table.SyncMode.Order},GETDATE(),'{(int)SyncStatus.Unknown}'
 FROM inserted 
 GROUP BY inserted.SyncGuid
 ---DEBUG
---SELECT 'INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority) VALUES('''
+--SELECT 'INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority,Date,SyncStatus) VALUES('''
 --+RTRIM(LTRIM(@action))+''','''
---+CAST(inserted.SyncGuid AS varchar(MAX))+''',''{Table.TableName}'',{Table.SyncMode.Order})' 
+--+CAST(inserted.SyncGuid AS varchar(MAX))+''',''{Table.TableName}'',{Table.SyncMode.Order})',GETDATE(),'{(int)SyncStatus.Unknown}' 
 --FROM inserted  GROUP BY inserted.SyncGuid
 --DEBUG
 
@@ -94,14 +95,14 @@ DELETE FROM SyncHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM deleted)
 DELETE FROM ChangesHistory WHERE SyncGuid IN ( SELECT SyncGuid FROM inserted)
 
-INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority)
-SELECT @action,deleted.SyncGuid,'{Table.TableName}',{Table.SyncMode.Order}
+INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority,Date,SyncStatus)
+SELECT @action,deleted.SyncGuid,'{Table.TableName}',{Table.SyncMode.Order},GETDATE(),'{(int)SyncStatus.Unknown}' 
 FROM deleted 
 GROUP BY deleted.SyncGuid
 ---DEBUG
---SELECT 'INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority) VALUES('''
+--SELECT 'INSERT INTO ChangesHistory (Action,SyncGuid,TableName,Priority,Date,SyncStatus) VALUES('''
 --+RTRIM(LTRIM(@action))+''','''
---+CAST(inserted.SyncGuid AS varchar(MAX))+''',''{Table.TableName}'',{Table.SyncMode.Order})' 
+--+CAST(inserted.SyncGuid AS varchar(MAX))+''',''{Table.TableName}'',{Table.SyncMode.Order})',GETDATE(),'{(int)SyncStatus.Unknown}' 
 --FROM inserted  GROUP BY inserted.SyncGuid
 --DEBUG
 

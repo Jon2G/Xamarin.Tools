@@ -10,9 +10,7 @@ using Kit.Sql.SqlServer;
 using Kit.Sql.Tables;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using static Kit.Daemon.Helpers.Helper;
 using TableMapping = Kit.Sql.Base.TableMapping;
@@ -24,7 +22,7 @@ namespace Kit.Daemon.Sync
         public const int RegularPackageSize = 100;
         public bool ToDo { get; set; }
         public bool NothingToDo { get => !ToDo; }
-        private Queue<ChangesHistory> Pendings;
+        public Queue<ChangesHistory> Pendings { get; protected set; }
         private int TotalPendientes;
         public SyncTarget CurrentDirection { get; internal set; }
 
@@ -93,6 +91,7 @@ namespace Kit.Daemon.Sync
             get;
             set;
         }
+        protected Type ChangesHistoryType { get; set; }
         public SyncManager()
         {
             this.Pendings = new Queue<ChangesHistory>();
@@ -100,6 +99,7 @@ namespace Kit.Daemon.Sync
             this.PackageSize = RegularPackageSize;
             this.DownloadQuery = string.Empty;
             this.CurrentDirection = SyncTarget.NOT_SET;
+            this.ChangesHistoryType = typeof(ChangesHistory);
         }
 
         public void SetPackageSize(int PackageSize = RegularPackageSize)
@@ -138,12 +138,12 @@ namespace Kit.Daemon.Sync
                     {
                         query += $"TOP {this.PackageSize}";
                     }
-                    query += $" SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
+                    query += $" SyncGuid,TableName,Action,Date,SyncStatus from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
                     return query;
 
                 case SQLiteConnection:
                     query =
-                        $"select SyncGuid,TableName,Action from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
+                        $"select SyncGuid,TableName,Action,Date,SyncStatus from ChangesHistory c where not exists(select 1 from SyncHistory s where s.DeviceId = '{Device.Current.DeviceId}' and s.SyncGuid=c.SyncGuid) order by Priority";
                     if (PackageSize > 0)
                     {
                         query += $" limit {this.PackageSize}";
@@ -153,7 +153,7 @@ namespace Kit.Daemon.Sync
             return query;
         }
 
-        private bool GetPendings(SyncTarget SyncTarget)
+        protected virtual bool GetPendings(SyncTarget SyncTarget)
         {
             try
             {
@@ -181,13 +181,34 @@ namespace Kit.Daemon.Sync
                     {
                         return false;
                     }
-                    this.Pendings = new Queue<ChangesHistory>(Daemon.Current.DaemonConfig[source].RenewConnection()
-                        .DeferredQuery<ChangesHistory>(query).ToList());
+
+                    var pendingsList = Daemon.Current.DaemonConfig[source].RenewConnection()
+                        .DeferredQuery<ChangesHistory>(query).ToList();
+
+
+                    if (ChangesHistoryType != typeof(ChangesHistory))
+                    {
+                        pendingsList = pendingsList.Select(x => x.Elevate(ChangesHistoryType) as ChangesHistory).ToList();
+                    }
+
+                    this.Pendings = new Queue<ChangesHistory>(pendingsList);
                 }
                 else
                 {
                     return GetPendings(SyncTarget);
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.AlertOnDBConnectionError(ex);
+                Log.Logger.Error(ex, $"Obteniendo pendientes {SyncTarget}");
+            }
+            return ProcessPendings(SyncTarget);
+        }
+        protected virtual bool ProcessPendings(SyncTarget SyncTarget)
+        {
+            try
+            {
                 TotalPendientes = Pendings.Count;
                 ToDo = TotalPendientes > 0;
                 this.CurrentDirection = SyncTarget;
@@ -205,7 +226,7 @@ namespace Kit.Daemon.Sync
             }
             return false;
         }
-        public bool ProcesarAcciones(SyncTarget direccion, ISync read, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action)
+        public virtual bool ProcesarAcciones(SyncTarget direccion, ISync read, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action)
         {
             SchemaTable schemaTable = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
             TableMapping table = schemaTable.For(source_con);
@@ -237,17 +258,7 @@ namespace Kit.Daemon.Sync
                 {
                     case NotifyTableChangedAction.Insert:
                     case NotifyTableChangedAction.Update:
-                        bool canSync = false;
-                        if (direccion == SyncTarget.Remote)
-                        {
-                            bool shouldSync = read.ShouldSync(source_con, target_con);
-                            canSync = shouldSync;
-                        }
-                        else if (direccion == SyncTarget.Local)
-                        {
-                            canSync = true;
-                        }
-
+                        bool canSync = read.ShouldSync(source_con, target_con);
                         if (canSync)
                         {
                             CanDo = true;
@@ -278,6 +289,7 @@ namespace Kit.Daemon.Sync
                                     {
                                         Processed++;
                                         read.OnSyncFailed(target_con, source_con, target_con.LastException);
+                                        CurrentPackage.OnSyncFailed(target_con, source_con, target_con.LastException);
                                         return CanDo;
                                     }
                                 }
@@ -311,7 +323,7 @@ namespace Kit.Daemon.Sync
             }
             return CanDo;
         }
-        public bool ProcesarAcciones(SyncTarget direccion, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action, params ISync[] syncObjs)
+        public virtual bool ProcesarAcciones(SyncTarget direccion, SqlBase target_con, SqlBase source_con, NotifyTableChangedAction action, params ISync[] syncObjs)
         {
             bool result = true;
             foreach (ISync sync in syncObjs)
@@ -323,7 +335,7 @@ namespace Kit.Daemon.Sync
             }
             return result;
         }
-        private bool ProcesarAcciones(SyncTarget direccion)
+        protected virtual bool ProcesarAcciones(SyncTarget direccion)
         {
             Processed = 0;
             CurrentPackage = null;
@@ -347,77 +359,17 @@ namespace Kit.Daemon.Sync
                 try
                 {
                     this.CurrentPackage = Pendings.Dequeue();
-                    string condition = (source_con is SQLiteConnection ? $"SyncGuid='{CurrentPackage.Guid}'" : "SyncGuid=@SyncGuid");
                     schemaTable = Daemon.Current.Schema[this.CurrentPackage.TableName, direccion];
-                    if (schemaTable != null)
+                    if (schemaTable != null || this.GetType() != typeof(SyncManager))
                     {
-                        switch (schemaTable.SyncDirection)
-                        {
-                            case SyncDirection.TwoWay:
-                                break;
-
-                            case SyncDirection.Upload:
-                                if (direccion != SyncTarget.Remote)
-                                {
-                                    CurrentPackage.MarkAsSynced(source_con);
-                                    CanDo = true;
-                                    continue;
-                                }
-                                break;
-
-                            case SyncDirection.Download:
-                                if (direccion != SyncTarget.Local)
-                                {
-                                    continue;
-                                }
-                                break;
-                        }
-                        //string key = source_con.GetTableMappingKey(this.CurrentPackage.TableName);
                         NotifyTableChangedAction action = CurrentPackage.Action;
-                        table = schemaTable.For(source_con);
-                        string selection_list = table.SelectionList;
-                        CommandBase command = source_con.CreateCommand($"SELECT {selection_list} FROM {table.TableName} WHERE {condition}",
-                         new BaseTableQuery.Condition("SyncGuid", CurrentPackage.Guid));
-                        List<dynamic> result;
-                        DaemonCompiledSetter compiledSetter = schemaTable.CompiledSetterFor(source_con);
-                        MethodInfo method = command.GetType().GetMethod(compiledSetter is null ? "ExecuteDeferredQueryAndCompile" : nameof(CommandBase.ExecuteDeferredQuery), compiledSetter is null ? new[] { typeof(TableMapping) } : new[] { typeof(TableMapping), typeof(DaemonCompiledSetter) });
-                        method = method.MakeGenericMethod(table.MappedType);
-                        if (compiledSetter is null)
-                        {
-                            DaemonCompiledSetterTuple resultCompiled = (DaemonCompiledSetterTuple)method.Invoke(command, new object[] { table });
-                            if (resultCompiled?.Results?.Any() ?? false)
-                            {
-                                compiledSetter = resultCompiled.CompiledSetter;
-                                schemaTable.Add(table, compiledSetter);
-                            }
-                            result = resultCompiled?.Results.ToList();
-                        }
-                        else
-                        {
-                            result = ((IEnumerable<dynamic>)method.Invoke(command, new object[] { table, compiledSetter }))?.ToList();
-                        }
-
-                        if (!result?.Any() ?? false)
-                        {
-                            CurrentPackage.MarkAsSynced(source_con);
-                            continue;
-                        }
-                        if (Daemon.Current.IsSleepRequested) { return false; }
-
-                        if (result.Count > 1 && Debugger.IsAttached)
-                        {
-                            Debugger.Break();
-                        }
-
-                        dynamic i_result = result.First();
+                        dynamic i_result = CurrentPackage.GetObject(this, source_con, direccion, schemaTable);
                         read = null;
                         if (i_result is ISync)
                         {
                             read = ((ISync)i_result);
                             CanDo = ProcesarAcciones(direccion, read, target_con, source_con, action);
                         }
-
-
                     }
                     else
                     {
@@ -428,6 +380,11 @@ namespace Kit.Daemon.Sync
                 }
                 catch (Exception ex)
                 {
+                    CurrentPackage.SyncStatus = SyncStatus.Failed;
+                    if (OnSyncError(CurrentPackage, target_con, source_con, ex))
+                    {
+                        continue;
+                    }
                     read?.OnSyncFailed(target_con, source_con, ex);
                     if (ex is SQLiteException)
                     {
@@ -436,10 +393,6 @@ namespace Kit.Daemon.Sync
                             target_con.CreateTable(table);
                         }
                     }
-                    if (Debugger.IsAttached)
-                    {
-                        //Debugger.Break();
-                    }
                     Log.Logger.Error(ex, "Al sincronizar - {0}", CurrentPackage);
                 }
             }
@@ -447,6 +400,11 @@ namespace Kit.Daemon.Sync
             return CanDo;
         }
 
+        protected virtual bool OnSyncError(ChangesHistory change, SqlBase target, SqlBase source, Exception ex)
+        {
+            change.SyncStatus = SyncStatus.Failed;
+            return false;
+        }
         private string BuildSqlServerQuery()
         {
             StringBuilder sb = new StringBuilder();
@@ -460,7 +418,7 @@ namespace Kit.Daemon.Sync
             return sb.ToString();
         }
 
-        public void Reset()
+        public virtual void Reset()
         {
             this.Pendings.Clear();
             this.ToDo = false;

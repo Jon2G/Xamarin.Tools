@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Kit.Daemon.Abstractions;
+using Kit.Daemon.Sync;
+using Kit.Sql.Base;
+using Kit.Sql.Helpers;
+using Kit.Sql.Readers;
+using SQLitePCL;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Kit.Daemon.Abstractions;
-using Kit.Daemon.Sync;
-using Kit.Sql.Base;
-using Kit.Sql.Readers;
-using SQLitePCL;
 
 namespace Kit.Sql.SqlServer
 {
@@ -511,6 +512,10 @@ namespace Kit.Sql.SqlServer
                 }
                 else if (clrTypeInfo.IsEnum)
                 {
+                    if (Sqlh.IsNull(reader[index]))
+                    {
+                        return 0;
+                    }
                     if (coltype == typeof(String))
                     {
                         var value = Convert.ToString(reader[index]);
@@ -530,7 +535,9 @@ namespace Kit.Sql.SqlServer
                         return null;
                     }
                     else
+                    {
                         return Convert.ToInt32(reader[index]);
+                    }
                 }
                 else if (clrType == typeof(Int64))
                 {

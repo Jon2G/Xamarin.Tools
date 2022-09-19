@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Kit.Daemon.Enums;
+﻿using Kit.Daemon.Enums;
 using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
@@ -11,6 +6,10 @@ using Kit.Sql.Enums;
 using Kit.Sql.Interfaces;
 using Kit.Sql.Sqlite;
 using Kit.Sql.Tables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Kit.Daemon.Sync
 {
@@ -25,7 +24,7 @@ namespace Kit.Daemon.Sync
         /// </summary>
         [AutoIncrement, Column(SyncGuidColumnName)]
         public virtual Guid Guid { get; set; }
-        public virtual SyncStatus SyncStatus { get; protected set; }
+        public virtual SyncStatus SyncStatus { get; set; }
         public virtual void Delete(SqlBase con, SqlBase targetcon, Kit.Sql.Base.TableMapping map)
         {
             targetcon.Delete(this);
@@ -35,7 +34,7 @@ namespace Kit.Daemon.Sync
             return false;
         }
 
-        public virtual bool Affects(SyncManager syncManager,Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
+        public virtual bool Affects(SyncManager syncManager, Kit.Sql.Sqlite.SQLiteConnection con, object PreviousId)
         {
             return false;
         }
@@ -70,7 +69,7 @@ namespace Kit.Daemon.Sync
         }
         public virtual SyncStatus GetSyncStatus(SqlBase source_con)
         {
-            this.SyncStatus= GetSyncStatus(source_con, this.Guid, this.SyncStatus);
+            this.SyncStatus = GetSyncStatus(source_con, this.Guid, this.SyncStatus);
             return SyncStatus;
         }
         public static SyncStatus GetSyncStatus(SqlBase source_con, Guid guid, SyncStatus SyncStatus)
@@ -109,7 +108,7 @@ namespace Kit.Daemon.Sync
         public static bool IsSynced<T>(SqlBase source_con, int id)
         {
             Guid guid = GetGuid<T>(source_con, id);
-            return GetSyncStatus(source_con, guid,SyncStatus.Unknown) == SyncStatus.Done;
+            return GetSyncStatus(source_con, guid, SyncStatus.Unknown) == SyncStatus.Done;
         }
         internal void OnSynced(SyncTarget direccion, NotifyTableChangedAction action)
         {
@@ -143,7 +142,7 @@ namespace Kit.Daemon.Sync
         }
         public virtual void OnSyncFailed(SqlBase target, SqlBase source, Exception reason)
         {
-
+            this.SyncStatus = SyncStatus.Failed;
         }
     }
 }

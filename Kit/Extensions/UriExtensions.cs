@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Kit
 {
@@ -14,7 +12,7 @@ namespace Kit
                 return false;
             }
             if ((Uri.TryCreate(url, UriKind.Absolute, out uri) ||
-                 Uri.TryCreate("http://" + url, UriKind.Absolute, out uri)) &&
+                 Uri.TryCreate("https://" + url, UriKind.Absolute, out uri)) &&
                 (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
             {
                 return true;

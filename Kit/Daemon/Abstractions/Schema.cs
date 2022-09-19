@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Kit.Daemon.Enums;
+﻿using Kit.Daemon.Enums;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.SqlServer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using static Kit.Sql.Base.BaseOrm;
 using TableMapping = Kit.Sql.Base.TableMapping;
 
@@ -110,7 +110,7 @@ namespace Kit.Daemon.Abstractions
             foreach (TableMapping map in
                 this.Tables
                 .Select(d => d.Value.ForSqlServer())
-                .Where(x => x.SyncDirection == SyncDirection.Download || x.SyncDirection == SyncDirection.TwoWay))
+                .Where(x => x.SyncDirection is SyncDirection.Upload or SyncDirection.TwoWay))
             {
                 Trigger.CheckTrigger(Connection, map, Daemon.Current.DaemonConfig.DbVersion);
                 InitTableAttribute.Find(map.MappedType)?.Execute(Connection);

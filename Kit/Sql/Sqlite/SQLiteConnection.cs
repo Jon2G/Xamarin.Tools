@@ -1327,6 +1327,7 @@ namespace Kit.Sql.Sqlite
             return cmd.ExecuteDeferredQuery<T>();
         }
 
+
         /// <summary>
         /// WARNING: Changes made through this method will not be tracked on history.
         /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'

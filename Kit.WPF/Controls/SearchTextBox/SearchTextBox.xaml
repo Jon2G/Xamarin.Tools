@@ -57,13 +57,11 @@
                                    Focusable="True">
             <Border BorderBrush="MidnightBlue" BorderThickness="1">
                 <local:CardView>
-                    <local:CardView.Header>
-                        <Grid>
-                            <Button Click="Close_Click" HorizontalAlignment="Right" Height="20" Padding="1" BorderBrush="Black" BorderThickness="0">
-                                <Image Source="/Etiquetador;component/Imgs/cancel.png"/>
-                            </Button>
-                        </Grid>
-                    </local:CardView.Header>
+                    <!--<local:CardView.Header>
+                        <Button Click="Close_Click" HorizontalAlignment="Right" Height="20" Padding="1" BorderBrush="Black" BorderThickness="0">
+                            <Image Source="/Etiquetador;component/Imgs/cancel.png"/>
+                        </Button>
+                    </local:CardView.Header>-->
                     <DataGrid IsReadOnly="True" MaxHeight="200" ScrollViewer.VerticalScrollBarVisibility="Visible" 
                                   x:Name="Datagrid" AutoGenerateColumns="True" 
                                   ItemsSource="{Binding Suggestions,Mode=OneWay}" 

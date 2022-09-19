@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Kit.Sql.Enums;
+using Kit.Sql.Readers;
+using Kit.Sql.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Kit.Sql.Enums;
-using Kit.Sql.Readers;
-using Kit.Sql.Sqlite;
 using static Kit.Sql.Base.BaseTableQuery;
 
 namespace Kit.Sql.Base
@@ -284,7 +284,11 @@ namespace Kit.Sql.Base
         /// connection must remain open for the lifetime of the enumerator.
         /// </returns>
         public abstract IEnumerable<T> DeferredQuery<T>(string query, params object[] args) where T : new();
-
+        public IEnumerable<T> DeferredQuery<T>(Base.TableMapping mapping, string query, params object[] args) where T : new()
+        {
+            var cmd = CreateCommand(query, args);
+            return cmd.ExecuteDeferredQuery<T>(mapping);
+        }
         public abstract CommandBase CreateCommand(string cmdText, params object[] ps);
 
         public abstract T Find<T>(object pk) where T : new();

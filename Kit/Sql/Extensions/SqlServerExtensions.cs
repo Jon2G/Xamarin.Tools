@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Kit.Enums;
+using Kit.Sql.Helpers;
+using Kit.Sql.Readers;
+using Kit.Sql.SqlServer;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using Kit.Enums;
-using Kit.Sql.Helpers;
-using Kit.Sql.Readers;
-using Kit.Sql.SqlServer;
 
 namespace Kit
 {
@@ -237,6 +236,7 @@ namespace Kit
                 Log.IsDBConnectionError(ex);
                 Log.Logger.Error(ex, "Transaccion fallida reportada");
                 Log.Logger.Error(sql);
+                throw;
             }
         }
         public static DataTable DataTable(this SqlConnection connection, string sql, string TableName = null)

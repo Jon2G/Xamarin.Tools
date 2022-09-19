@@ -1,13 +1,13 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.Text;
-using System.Text.RegularExpressions;
-using Kit.Model;
+﻿using Kit.Model;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Newtonsoft.Json;
+using System;
+using System.Data.SqlClient;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Kit.SetUpConnectionString
 {
@@ -187,7 +187,7 @@ namespace Kit.SetUpConnectionString
             {
                 Log.Logger.Debug(resultado, "Prueba de conexión");
             }
-            if (string.IsNullOrEmpty(this.NombreDB))
+            else if (string.IsNullOrEmpty(this.NombreDB))
             {
                 return new Exception("La conexión es correcta, sin embargo no se especifico una base de datos");
             }

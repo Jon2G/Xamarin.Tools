@@ -86,17 +86,8 @@ namespace Kit.Daemon
             protected set;
         }
 
-        private SyncManager _SyncManager;
-
-        public SyncManager SyncManager
-        {
-            get => _SyncManager;
-            set
-            {
-                _SyncManager = value;
-                Raise(() => SyncManager);
-            }
-        }
+        private Lazy<SyncManager> _SyncManager = new Lazy<SyncManager>(() => Daemon.Current.GetSyncManager());
+        public SyncManager SyncManager => _SyncManager.Value;
 
         private int _FactorDeDescanso;
 
@@ -146,8 +137,12 @@ namespace Kit.Daemon
         protected Daemon()
         {
             this.IsInited = false;
-            this.SyncManager = new SyncManager();
             this.Schema = new Schema();
+        }
+
+        protected virtual SyncManager GetSyncManager()
+        {
+            return new SyncManager();
         }
 
         public Daemon Configure(SqlBase Local, SqlBase Remote, int DbVersion, int MaxSleep = 30)
