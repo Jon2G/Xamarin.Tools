@@ -157,11 +157,29 @@ namespace Kit.Sql.Tables
             return sb.ToString();
         }
 
-        public virtual dynamic GetObject(SyncManager manager, SqlBase source_con, SyncTarget target, SchemaTable schemaTable)
+        public virtual ISync? GetDeletedObjInfo(SyncManager manager, SqlBase source_con, SyncTarget target, SchemaTable? schemaTable)
         {
-            dynamic result = null;
+            ISync? result = null;
+            Base.TableMapping? mapping = schemaTable?.For(source_con);
+            if (mapping is null)
+            {
+                return result;
+            }
+            result = Activator.CreateInstance(mapping.MappedType) as ISync;
+            if (result is null)
+            {
+                return result;
+            }
+
+            result.Guid = this.Guid;
+            result.SyncStatus = this.SyncStatus;
+            return result;
+        }
+        public virtual dynamic? GetObject(SyncManager manager, SqlBase source_con, SyncTarget target, SchemaTable? schemaTable)
+        {
+            dynamic? result = null;
             string condition = (source_con is SQLiteConnection ? $"SyncGuid='{this.Guid}'" : "SyncGuid=@SyncGuid");
-            if (schemaTable != null)
+            if (schemaTable is not null)
             {
                 switch (schemaTable.SyncDirection)
                 {
@@ -210,12 +228,12 @@ namespace Kit.Sql.Tables
                         compiledSetter = resultCompiled.CompiledSetter;
                         schemaTable.Add(table, compiledSetter);
                     }
-                    result = resultCompiled?.Results?.ToList()?.First();
+                    result = resultCompiled?.Results?.ToList()?.FirstOrDefault();
                 }
                 else
                 {
                     result = ((IEnumerable<dynamic>)method.Invoke(command, new object[] { table, compiledSetter }))
-                        ?.ToList()?.First();
+                        ?.ToList()?.FirstOrDefault();
                 }
             }
             return result;

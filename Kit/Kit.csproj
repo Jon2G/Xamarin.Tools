@@ -15,6 +15,7 @@
     <PackageIcon>toolbox.png</PackageIcon>
     <Configurations>Release;Debug;x64;Debug2;Gorilla</Configurations>
     <Platforms>AnyCPU;x64</Platforms>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>

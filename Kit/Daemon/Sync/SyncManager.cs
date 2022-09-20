@@ -243,13 +243,13 @@ namespace Kit.Daemon.Sync
                 {
                     con.EXEC($"DELETE FROM {table.TableName} where SyncGuid=@SyncGuid", new System.Data.SqlClient.SqlParameter("SyncGuid", CurrentPackage.Guid));
                 }
-                CurrentPackage.MarkAsSynced(source_con);
+                MarkAsSynced(CurrentPackage, source_con);
                 return CanDo;
             }
             if (read is null)
             {
                 Log.Logger.Warning("READ RESULTO EN NULL '{0}'", this.CurrentPackage.TableName);
-                CurrentPackage.MarkAsSynced(source_con);
+                MarkAsSynced(CurrentPackage, source_con);
                 return CanDo;
             }
             if (read != null && CurrentPackage is not null)
@@ -271,7 +271,7 @@ namespace Kit.Daemon.Sync
 
                             if (read.CustomUpload(source_con, target_con, table))
                             {
-                                CurrentPackage.MarkAsSynced(source_con);
+                                MarkAsSynced(CurrentPackage, source_con);
                                 Processed++;
                                 read.OnSynced(direccion, action);
                             }
@@ -299,14 +299,14 @@ namespace Kit.Daemon.Sync
                             {
                                 if (read.Affects(this, lite, old_pk))
                                 {
-                                    CurrentPackage.MarkAsSynced(source_con);
+                                    MarkAsSynced(CurrentPackage, source_con);
                                     Processed++;
                                     read.OnSynced(direccion, action);
                                     return true;
                                 }
                             }
 
-                            CurrentPackage.MarkAsSynced(source_con);
+                            MarkAsSynced(CurrentPackage, source_con);
                             Processed++;
                             read.OnSynced(direccion, action);
                         }
@@ -316,7 +316,7 @@ namespace Kit.Daemon.Sync
                     case NotifyTableChangedAction.Delete:
                         read.Delete(source_con, target_con, table);
                         read.OnSynced(direccion, action);
-                        CurrentPackage.MarkAsSynced(source_con);
+                        MarkAsSynced(CurrentPackage, source_con);
                         Processed++;
                         break;
                 }
@@ -363,7 +363,15 @@ namespace Kit.Daemon.Sync
                     if (schemaTable != null || this.GetType() != typeof(SyncManager))
                     {
                         NotifyTableChangedAction action = CurrentPackage.Action;
-                        dynamic i_result = CurrentPackage.GetObject(this, source_con, direccion, schemaTable);
+                        dynamic? i_result = null;
+                        if (action == NotifyTableChangedAction.Delete)
+                        {
+                            i_result = CurrentPackage.GetDeletedObjInfo(this, source_con, direccion, schemaTable);
+                        }
+                        else
+                        {
+                            i_result = CurrentPackage.GetObject(this, source_con, direccion, schemaTable);
+                        }
                         read = null;
                         if (i_result is ISync)
                         {
@@ -374,7 +382,7 @@ namespace Kit.Daemon.Sync
                     else
                     {
                         Log.Logger.Warning("TABLA NO ENCONTRADA EN EL SCHEMA DEFINIDO '{0}'", this.CurrentPackage.TableName);
-                        CurrentPackage.MarkAsSynced(source_con);
+                        MarkAsSynced(CurrentPackage, source_con);
                         Processed++;
                     }
                 }
@@ -398,6 +406,11 @@ namespace Kit.Daemon.Sync
             }
 
             return CanDo;
+        }
+
+        protected virtual void MarkAsSynced(ChangesHistory change, SqlBase source_con)
+        {
+            change.MarkAsSynced(source_con);
         }
 
         protected virtual bool OnSyncError(ChangesHistory change, SqlBase target, SqlBase source, Exception ex)

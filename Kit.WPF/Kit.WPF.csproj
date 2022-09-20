@@ -45,6 +45,7 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageIcon>toolbox.png</PackageIcon>
 		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<Import Project="..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets" Condition="Exists('..\packages\ceTe.DynamicPDF.Printing.NET.4.15.0\build\net40\ceTe.DynamicPDF.Printing.NET.targets')" />
 	<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
