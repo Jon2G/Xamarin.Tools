@@ -1,4 +1,5 @@
 ﻿using AsyncAwaitBestPractices;
+using Kit.Sql.Attributes;
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kit.Model
 {
+    [Preserve(AllMembers=true)]
     public abstract class INotifyPropertyChangedModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
