@@ -13,7 +13,7 @@
                  x:Class="Kit.Forms.Pages.CadenaCon" x:Name="Me">
     <ContentPage.Content>
         <StackLayout Spacing="0" Padding="0" Margin="0" HorizontalOptions="Fill" VerticalOptions="FillAndExpand">
-            <Label Margin="0" BackgroundColor="{DynamicResource DarkAccentColor}" HorizontalOptions="FillAndExpand"
+            <Label Margin="0" BackgroundColor="{DynamicResource DarkAccentColor}" TextColor="{DynamicResource PrimaryFontColorDark}" HorizontalOptions="FillAndExpand"
                    VerticalOptions="Start"  FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                    Text="Cadena de conexión" />
             <Grid Margin="5" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
