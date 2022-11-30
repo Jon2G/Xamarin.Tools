@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
 using Kit.Sql.Interfaces;
-using Kit.Sql.Sqlite;
-using static Kit.Sql.Base.BaseOrm;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Kit.Sql.Base
 {
@@ -15,6 +13,7 @@ namespace Kit.Sql.Base
     {
         public SyncMode SyncMode { get; private set; }
         public SyncDirection SyncDirection => SyncMode?.Direction ?? SyncDirection.NoSync;
+        public SyncTrigger Trigger => SyncMode?.Trigger ?? SyncTrigger.None;
         public Type MappedType { get; private set; }
 
         public string TableName { get; private set; }

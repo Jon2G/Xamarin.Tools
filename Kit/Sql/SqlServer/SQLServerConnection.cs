@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Kit.Daemon.Sync;
+﻿using Kit.Daemon.Sync;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
 using Kit.Sql.Enums;
@@ -18,6 +6,17 @@ using Kit.Sql.Helpers;
 using Kit.Sql.Readers;
 using Kit.Sql.Sqlite;
 using Kit.Sql.Tables;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using static Kit.Sql.Base.BaseTableQuery;
 
 namespace Kit.Sql.SqlServer

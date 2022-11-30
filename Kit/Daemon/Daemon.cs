@@ -250,6 +250,7 @@ namespace Kit.Daemon
             while (!IsAwake)
             {
                 Awake(count);
+                WaitHandle.WaitOne(5000);
             }
         }
 
@@ -280,7 +281,9 @@ namespace Kit.Daemon
                 {
                     return this;
                 }
-                await Task.Delay(10);
+
+                IsSleepRequested = true;
+                WaitHandle.WaitOne(TimeSpan.FromSeconds(1));
             }
             //this.Thread = null;
             //this.WaitHandle?.Dispose();

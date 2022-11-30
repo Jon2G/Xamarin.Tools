@@ -47,7 +47,7 @@ namespace Kit.Daemon.Abstractions
                 if (directionAttribute is null)
                 {
                     Log.Logger.Warning("SyncDirection is not defined");
-                    directionAttribute = new SyncMode(SyncDirection.Download);
+                    directionAttribute = new SyncMode(SyncDirection.Download, SyncTrigger.None);
                 }
                 var direction = directionAttribute.Direction;
 
@@ -87,30 +87,12 @@ namespace Kit.Daemon.Abstractions
                 return null;
             }
         }
-
-        private bool IsValidDirection(TableDirection TableDirection, SyncTarget UseDirection)
-        {
-            if (TableDirection == TableDirection.TWO_WAY)
-            {
-                return true;
-            }
-            if (TableDirection == TableDirection.UPLOAD && UseDirection == SyncTarget.Remote)
-            {
-                return true;
-            }
-            if (TableDirection == TableDirection.DOWNLOAD && UseDirection == SyncTarget.Local)
-            {
-                return true;
-            }
-            return false;
-        }
-
         internal bool CheckTriggers(SQLServerConnection Connection)
         {
             foreach (TableMapping map in
                 this.Tables
                 .Select(d => d.Value.ForSqlServer())
-                .Where(x => x.SyncDirection is SyncDirection.Upload or SyncDirection.TwoWay))
+                .Where(x => x.Trigger == SyncTrigger.Use))
             {
                 Trigger.CheckTrigger(Connection, map, Daemon.Current.DaemonConfig.DbVersion);
                 InitTableAttribute.Find(map.MappedType)?.Execute(Connection);

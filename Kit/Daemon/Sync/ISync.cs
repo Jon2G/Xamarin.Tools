@@ -24,6 +24,7 @@ namespace Kit.Daemon.Sync
         /// </summary>
         [AutoIncrement, Column(SyncGuidColumnName)]
         public virtual Guid Guid { get; set; }
+        [Column(nameof(SyncStatus))]
         public SyncStatus SyncStatus { get; set; }
         public virtual void Delete(SqlBase con, SqlBase targetcon, Kit.Sql.Base.TableMapping map)
         {

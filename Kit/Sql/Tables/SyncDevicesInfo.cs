@@ -1,10 +1,10 @@
-﻿using System;
-using Kit.Sql.Attributes;
+﻿using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
+using System;
 
 namespace Kit.Sql.Tables
 {
-    [SyncMode(SyncDirection.NoSync)]
+    [SyncMode(SyncDirection.NoSync, SyncTrigger.None)]
     public class SyncDevicesInfo
     {
         [PrimaryKey, AutoIncrement]

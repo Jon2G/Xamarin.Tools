@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Kit.Daemon.Sync;
+﻿using Kit.Daemon.Sync;
 using Kit.Enums;
 using Kit.Sql.Attributes;
 using Kit.Sql.Base;
@@ -11,18 +6,21 @@ using Kit.Sql.Enums;
 using Kit.Sql.Interfaces;
 using Kit.Sql.SqlServer;
 using Newtonsoft.Json;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 using TableMapping = Kit.Sql.Base.TableMapping;
 
 namespace Kit.Services.Web
 {
-    [JsonConverter(typeof(JsonRequestConverter)), Serializable, Preserve(AllMembers = true), SyncMode(SyncDirection.Upload)]
+    [JsonConverter(typeof(JsonRequestConverter)), Serializable, Preserve(AllMembers = true), SyncMode(SyncDirection.Upload, SyncTrigger.None)]
     public abstract class Request : ISync, IGuid
     {
         public abstract RequestType RequestType { get; }
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Url { get; set; }
-        
+
         protected ResponseResult Result;
         /// <summary>
         /// For JSON and SQLITE

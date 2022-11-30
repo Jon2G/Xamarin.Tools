@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Kit.Daemon.Sync;
+using Kit.Sql.Base;
+using Kit.Sql.Helpers;
+using System;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
-using Kit.Daemon.Sync;
-using Kit.Sql.Base;
-using Kit.Sql.Helpers;
 
 namespace Kit.Sql.SqlServer
 {
@@ -187,12 +187,11 @@ namespace Kit.Sql.SqlServer
                         {
                             return Guid.Parse(s_guid);
                         }
-
                         return Guid.Parse(reader[index]?.ToString());
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex, "Al convertir {0} en Guid", reader[index]);
+                        Log.Logger.Error(ex, "Al convertir {0} en Guid en la columna {1}", reader[index], column.Name);
                     }
 
                     return Guid.NewGuid();

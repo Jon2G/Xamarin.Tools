@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace Kit.SetUpConnectionString
 {
-    [Preserve(AllMembers = true), Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync)]
+    [Preserve(AllMembers = true), Table("CONFIGURACION"), SyncMode(SyncDirection.NoSync, SyncTrigger.None)]
     public class Configuracion : ModelBase, ICloneable
     {
         private string _cadenaCon;

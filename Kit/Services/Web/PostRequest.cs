@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Kit.Enums;
+﻿using Kit.Enums;
 using Kit.Sql.Attributes;
 using Kit.Sql.Enums;
-using Newtonsoft.Json;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Kit.Services.Web
 {
-    [Table("PostRequest"), Serializable, Preserve(AllMembers = true), SyncMode(SyncDirection.Upload)]
+    [Table("PostRequest"), Serializable, Preserve(AllMembers = true), SyncMode(SyncDirection.Upload, SyncTrigger.None)]
     public class PostRequest : Request
     {
         public override RequestType RequestType => RequestType.POST;
