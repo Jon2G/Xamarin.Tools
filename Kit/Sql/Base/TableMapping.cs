@@ -55,7 +55,7 @@ namespace Kit.Sql.Base
             {
                 if (!type.IsSubclassOf(typeof(ISync)))
                 {
-                    throw new Exception($"{type} - Must implement ISync");
+                    throw new Exception($"{type} - Must implement ISync to set SyncDirection");
                 }
             }
             ReadColumns(type, createFlags);

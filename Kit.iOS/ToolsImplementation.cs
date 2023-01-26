@@ -1,67 +1,65 @@
 ﻿using Foundation;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Kit;
+using Kit.Dialogs;
+using Kit.Enums;
 using Kit.Forms.Services;
 using Kit.iOS.Services;
-using Kit.Services;
+using Kit.Services.BarCode;
+using Kit.Services.Interfaces;
+using Serilog;
+using System;
+using System.Linq;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Kit.Services.Interfaces;
-using Serilog;
-using Kit.Enums;
-using Kit.Forms.Controls.CrossImage;
-using Kit.Forms.Dialogs;
-using Kit.Forms.Extensions;
-using System.IO;
+
 namespace Kit.iOS
 {
     public class ToolsImplementation : AbstractTools
     {
         public override string TemporalPath => Xamarin.Essentials.FileSystem.CacheDirectory;
         public override RuntimePlatform RuntimePlatform => RuntimePlatform.iOS;
-        public override void Init()
+        public override AbstractTools Init()
         {
+            Kit.Tools.Container.Register<ISynchronizeInvoke, SynchronizeInvoke>();
+            Kit.Tools.Container.Register<IDialogs, Kit.Forms.Dialogs.Dialogs>();
+            Kit.Tools.Container.Register<IScreenManager, ScreenManagerService>();
+            Kit.Tools.Container.Register<Kit.Controls.CrossImage.CrossImageExtensions, Kit.Forms.Controls.CrossImage.CrossImageExtensions>();
+            Kit.Tools.Container.Register<IBarCodeBuilder, BarCodeBuilder>();
             Kit.Tools.Container.Register<IClipboardService, ClipboardService>();
             Kit.Tools.Container.Register<Plugin.DeviceInfo.Abstractions.IDeviceInfo, Plugin.DeviceInfo.DeviceInfoImplementation>();
 
-            Init(new Forms.Dialogs.Dialogs(), new SynchronizeInvoke(), new ScreenManagerService(),
-                new CrossImageExtensions(), new BarCodeBuilder());
-            Log.Init().SetLogger((new LoggerConfiguration()
-                // Set default log level limit to Debug
-                .MinimumLevel.Debug()
-                // Enrich each log entry with memory usage and thread ID
-                // .Enrich.WithMemoryUsage()
-                //.Enrich.WithThreadId()
-                // Write entries to ios log (Nuget package Serilog.Sinks.Xamarin)
-                .WriteTo.NSLog()
-                // Create a custom logger in order to set another limit,
-                // particularly, any logs from Information level will also be written into a rolling file
+            Log.Init((log) =>
+            {
+                return (new LoggerConfiguration()
+                    // Set default log level limit to Debug
+                    .MinimumLevel.Debug()
+                    // Enrich each log entry with memory usage and thread ID
+                    // .Enrich.WithMemoryUsage()
+                    //.Enrich.WithThreadId()
+                    // Write entries to ios log (Nuget package Serilog.Sinks.Xamarin)
+                    .WriteTo.NSLog()
+                    // Create a custom logger in order to set another limit,
+                    // particularly, any logs from Information level will also be written into a rolling file
 
-                .WriteTo.Async(x => x.Sink(Kit.Log.LogsSink))
-                .WriteTo.Logger(config =>
-                    config
-                        .MinimumLevel.Information()
-                        .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
-                )
-                // And create another logger so that logs at Fatal level will immediately send email
-                .WriteTo.Logger(config =>
-                    config
-                        .MinimumLevel.Fatal()
-                        .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
-                )).CreateLogger(), CriticalAlert);
+                    .WriteTo.Async(x => x.Sink(Kit.Log.LogsSink))
+                    .WriteTo.Logger(config =>
+                        config
+                            .MinimumLevel.Information()
+                            .WriteTo.File(Log.Current.LoggerPath, retainedFileCountLimit: 7)
+                    )
+                    // And create another logger so that logs at Fatal level will immediately send email
+                    .WriteTo.Logger(config =>
+                        config
+                            .MinimumLevel.Fatal()
+                            .WriteTo.File(Log.Current.CriticalLoggerPath, retainedFileCountLimit: 1)
+                    )).CreateLogger();
+            }, CriticalAction: CriticalAlert);
+            base.Init();
+            return this;
         }
 
 
-
-        public override void CriticalAlert(object sender, EventArgs e)
-        {
-            Acr.UserDialogs.UserDialogs.Instance.Alert(sender.ToString(), "Alerta", "Entiendo");
-        }
         public UIInterfaceOrientationMask GetSupportedInterfaceOrientations(Page mainPage)
         {
             if (mainPage.Navigation.NavigationStack.Any() && mainPage.Navigation.NavigationStack.Last() is Page page)

@@ -20,7 +20,7 @@ namespace Kit.Services.Excel
         public static ExcelService GenerateExcel(String fileName)
         {
             // Creating the SpreadsheetDocument in the indicated FilePath
-            string FilePath = Path.Combine(Kit.Tools.Instance.LibraryPath, fileName);
+            string FilePath = Path.Combine(Kit.Tools.Instance.TemporalPath, fileName);
             ExcelService xls = new(FilePath, new XLWorkbook());
             return xls;
         }

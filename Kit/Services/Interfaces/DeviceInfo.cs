@@ -1,8 +1,8 @@
-﻿using Plugin.DeviceInfo.Abstractions;
+﻿using DeviceId;
+using DeviceId.Components;
+using Plugin.DeviceInfo.Abstractions;
 using System;
-using DeviceId;
 using System.IO;
-using Kit;
 
 namespace Kit.Services.Interfaces
 {
@@ -41,6 +41,9 @@ namespace Kit.Services.Interfaces
                 builder.AddMachineName();
                 builder.AddUserName();
                 builder.AddOsVersion();
+#if NETSTANDARD2_0
+                builder.AddComponent("CrossDeviceInfo.Id", new DeviceIdComponent(Id));
+#endif
                 id = builder.ToString();
                 File.WriteAllText(keyFile.FullName, id);
                 return id;

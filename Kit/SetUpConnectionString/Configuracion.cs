@@ -4,6 +4,7 @@ using Kit.Sql.Enums;
 using Kit.Sql.Sqlite;
 using Kit.Sql.SqlServer;
 using Newtonsoft.Json;
+using Plugin.CloudFirestore.Attributes;
 using System;
 using System.Data.SqlClient;
 using System.Text;
@@ -130,7 +131,7 @@ namespace Kit.SetUpConnectionString
                 }
             }
         }
-
+        [Ignored]
         public bool Activa { get; set; }
 
         /// <summary>

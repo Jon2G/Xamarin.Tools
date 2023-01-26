@@ -231,10 +231,7 @@ namespace Kit.Sql.SqlServer
             }
             catch (Exception ex)
             {
-                if (Log.IsDBConnectionError(ex))
-                {
-                    Daemon.Daemon.OffLine = true;
-                }
+                throw ex;
             }
             return result;
         }
