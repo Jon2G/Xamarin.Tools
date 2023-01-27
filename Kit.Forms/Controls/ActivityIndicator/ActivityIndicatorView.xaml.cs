@@ -1,5 +1,5 @@
-﻿using System;
-using Kit.Forms.Controls.ActivityIndicator;
+﻿using Kit.Forms.Controls.ActivityIndicator;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

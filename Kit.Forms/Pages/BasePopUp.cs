@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using AsyncAwaitBestPractices;
-using Kit.Services.Interfaces;
+﻿using Kit.Services.Interfaces;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Pages
@@ -63,7 +63,18 @@ namespace Kit.Forms.Pages
         {
             await Task.Yield();
             Closing();
-            PopupNavigation.Instance.RemovePageAsync(this, true).SafeFireAndForget();
+            await Device.InvokeOnMainThreadAsync(async () =>
+            {
+                await Task.Yield();
+                try
+                {
+                    await PopupNavigation.Instance.RemovePageAsync(this, true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex, "BasePopUp.Close");
+                }
+            });
             this.ShowDialogCallback.Set();
             ClosedCommad?.Execute(this);
             return this;
@@ -108,7 +119,7 @@ namespace Kit.Forms.Pages
         }
         public virtual void CrossOnAppearing()
         {
-          
+
         }
     }
 }
