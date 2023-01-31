@@ -1,7 +1,6 @@
 ﻿using AsyncAwaitBestPractices;
 using Kit.Forms.Services;
 using Kit.Model;
-using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -43,7 +42,7 @@ namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
             this.BeginView = BeginView;
             this.CenterView = CenterView;
             this.EndView = EndView;
-            IKeyboardListenerService = new Services.IKeyboardListenerService((e, s) => ReadCode(e, s).SafeFireAndForget(), ReadCharacter, IsEnabled: true);
+            IKeyboardListenerService = new Services.IKeyboardListenerService((s) => ReadCode(s).SafeFireAndForget(), ReadCharacter, IsEnabled: true);
             IKeyboardListenerService.OnKeyboardPluggedInChanged =
                 new Command<IKeyboardListenerService>(ListenerService_OnKeyboardPluggedInChanged);
             ListenerService_OnKeyboardPluggedInChanged(IKeyboardListenerService);
@@ -56,7 +55,7 @@ namespace Kit.Forms.Pages.OtgCodeBarSacnnerDetector
                 "Por favor conecte su lector de código de barras";
         }
 
-        private async Task ReadCode(object sender, string Code)
+        private async Task ReadCode(string Code)
         {
             await Task.Yield();
             this.Code = Code;

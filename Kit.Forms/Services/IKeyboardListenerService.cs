@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Windows.Input;
-using Forms9Patch;
+﻿using Forms9Patch;
 using Kit.Forms.Extensions;
 using Kit.Model;
+using System;
+using System.Text;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Services
@@ -15,7 +14,7 @@ namespace Kit.Forms.Services
         public string Code => RecievedText?.ToString();
         private MyTimer CountDown { get; set; }
 
-        public event EventHandler<string> OnReciveCode;
+        private Action<string> OnReciveCode;
 
         public event EventHandler<string> OnReciveCharacter;
         public Command<IKeyboardListenerService> OnKeyboardPluggedInChanged { get; set; }
@@ -58,18 +57,36 @@ namespace Kit.Forms.Services
 
         public bool IsDisabled => !IsEnabled;
 
-        public IKeyboardListenerService(EventHandler<string> ReciveCode = null, EventHandler<string> ReviceCharacter = null, bool IsEnabled = true)
+        public IKeyboardListenerService(Action<string> ReciveCode = null, EventHandler<string> ReviceCharacter = null, bool IsEnabled = true)
         {
             Current = this;
             RecievedText = new StringBuilder();
             this.IsEnabled = IsEnabled;
             this.OnReciveCharacter += ReviceCharacter;
-            this.OnReciveCode += ReciveCode;
+            this.OnReciveCode = (s) =>
+            {
+                HideKeyboard();
+                if (ReciveCode is not null)
+                    ReciveCode(s);
+            };
             if (this.OnReciveCode is null && this.OnReciveCharacter is null)
             {
                 this.IsEnabled = false;
             }
             this.IsKeyboardPluggedIn = KeyboardService.IsHardwareKeyboardActive;
+        }
+
+        private void HideKeyboard()
+        {
+            try
+            {
+
+                TinyIoC.TinyIoCContainer.Current.Get<IKeyboardService>()?.Hide();
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "HideKeyboard");
+            }
         }
 
         public void SetIsKeyboardPluggedIn(bool isPluggedIn)
@@ -100,7 +117,7 @@ namespace Kit.Forms.Services
             this.CountDown.Stop();
             string code = RecievedText?.ToString()?.Trim();
             if (!string.IsNullOrEmpty(code))
-                OnReciveCode?.Invoke(this, code);
+                OnReciveCode(code);
             this.RecievedText = new StringBuilder();
         }
 
@@ -119,7 +136,7 @@ namespace Kit.Forms.Services
 
             if (text == "\n" && !string.IsNullOrEmpty(Code))
             {
-                OnReciveCode?.Invoke(this, Code);
+                OnReciveCode(Code);
                 RecievedText = new StringBuilder();
             }
             else
