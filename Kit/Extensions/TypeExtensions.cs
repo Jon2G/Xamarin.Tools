@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Kit
@@ -30,8 +29,8 @@ namespace Kit
             return (t.IsPrimitive || t == typeof(Decimal) || t == typeof(String) || t.IsEnum || t == typeof(DateTime) ||
                     t == typeof(TimeSpan) || t == typeof(DateTimeOffset));
         }
-       
-        public static PropertyInfo GetPropertyInfo<T,TValue>(Expression<Func<T, TValue>> selector)
+
+        public static PropertyInfo GetPropertyInfo<T, TValue>(Expression<Func<T, TValue>> selector)
         {
             Expression body = selector;
             if (body is LambdaExpression)

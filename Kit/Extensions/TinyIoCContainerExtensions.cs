@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TinyIoC;
+﻿using TinyIoC;
 
 namespace Kit
 {
@@ -9,7 +6,7 @@ namespace Kit
     {
         public static T Get<T>(this TinyIoCContainer container) where T : class
         {
-            if(container.TryResolve<T>(out T resolved))
+            if (container.TryResolve<T>(out T resolved))
             {
                 return resolved;
             }

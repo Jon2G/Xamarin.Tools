@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Kit.Controls.DateRange
+﻿namespace Kit.Controls.DateRange
 {
     public class ModeloRango : Rango
     {

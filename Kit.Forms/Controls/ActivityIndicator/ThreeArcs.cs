@@ -1,8 +1,7 @@
 ﻿
-using System;
-using System.Diagnostics;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.ActivityIndicator
@@ -10,7 +9,7 @@ namespace Kit.Forms.Controls.ActivityIndicator
     internal class ThreeArcs : ArcActivityIndicator
     {
         bool isAnimating;
-   
+
 
         float firstOvalStartAngle = 90; //outer arc start angle
         float firstOvalSweepAngle = 100; //outer arcg sweep angle from the start angle position
@@ -73,7 +72,7 @@ namespace Kit.Forms.Controls.ActivityIndicator
 
         };
 
-        public ThreeArcs():base()
+        public ThreeArcs() : base()
         {
             isAnimating = true; //make animation true so timer gets running every 20ms
             Stopwatch.Start(); //start the stop watch

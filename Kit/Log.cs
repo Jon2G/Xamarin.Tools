@@ -1,10 +1,7 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kit.Extensions;
 using Serilog;
-using Kit.Extensions;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Kit
 {
@@ -67,7 +64,7 @@ namespace Kit
 
         public static Log Init(Func<Log, ILogger> loggerFactory, DirectoryInfo LogDirectory = null, Action<string> CriticalAction = null)
         {
-            var directory=LogDirectory?.FullName ?? Log.LogDirectory.FullName;
+            var directory = LogDirectory?.FullName ?? Log.LogDirectory.FullName;
             string critcal_log_path = Path.Combine(directory, "critcal_log.log");
             string log_path = Path.Combine(directory);
             DirectoryInfo logDirectory = new DirectoryInfo(log_path);
@@ -165,7 +162,6 @@ namespace Kit
         {
             if (IsDBConnectionError(ex))
             {
-                Daemon.Daemon.OffLine = true;
                 Current.OnConecctionLost?.Invoke(ex, EventArgs.Empty);
                 return true;
             }

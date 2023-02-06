@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit.Forms.Controls.ActivityIndicator
+﻿namespace Kit.Forms.Controls.ActivityIndicator
 {
     public enum IndicatorType
     {

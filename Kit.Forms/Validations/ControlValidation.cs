@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Kit.Sql.Attributes;
-using Xamarin.CommunityToolkit.Behaviors;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace Kit.Forms.Validations
 {

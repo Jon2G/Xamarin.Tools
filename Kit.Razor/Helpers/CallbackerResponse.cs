@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Kit.Razor.Helpers
@@ -45,7 +44,8 @@ namespace Kit.Razor.Helpers
         public Task<CallbackerResponse> InvokeJS(string cmd, params object[] args)
         {
             var t = new TaskCompletionSource<CallbackerResponse>();
-            _InvokeJS((string[] arguments) => {
+            _InvokeJS((string[] arguments) =>
+            {
                 t.TrySetResult(new CallbackerResponse(arguments));
             }, cmd, args);
             return t.Task;
@@ -53,7 +53,8 @@ namespace Kit.Razor.Helpers
 
         public void InvokeJS(Action<CallbackerResponse> callback, string cmd, params object[] args)
         {
-            _InvokeJS((string[] arguments) => {
+            _InvokeJS((string[] arguments) =>
+            {
                 callback(new CallbackerResponse(arguments));
             }, cmd, args);
         }

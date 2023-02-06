@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using Kit.Model;
+﻿using Kit.Model;
 
 namespace Kit.Controls.CrossImage
 {

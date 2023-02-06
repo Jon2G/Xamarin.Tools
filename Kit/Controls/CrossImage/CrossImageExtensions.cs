@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-
-namespace Kit.Controls.CrossImage
+﻿namespace Kit.Controls.CrossImage
 {
     public abstract class CrossImageExtensions
     {

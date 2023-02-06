@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Kit.WPF.Services
 {
@@ -95,7 +92,7 @@ namespace Kit.WPF.Services
 
             return result;
         }
-        public string ToGFA(Image image,int width)
+        public string ToGFA(Image image, int width)
         {
             using var bmp = ScaleAndRotateBitmap(image);
             var widthBytes = GetImageWidthInBytes(bmp);

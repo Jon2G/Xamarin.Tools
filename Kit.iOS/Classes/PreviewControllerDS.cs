@@ -1,9 +1,7 @@
 ﻿using Foundation;
 using QuickLook;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Kit.iOS.Classes
 {

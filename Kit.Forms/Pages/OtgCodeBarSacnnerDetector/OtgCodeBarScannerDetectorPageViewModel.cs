@@ -1,7 +1,6 @@
 ﻿using AsyncAwaitBestPractices;
 using Kit.Forms.Services;
 using Kit.Model;
-using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 

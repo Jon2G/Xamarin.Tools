@@ -1,7 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using SkiaSharp;
+﻿using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.ActivityIndicator

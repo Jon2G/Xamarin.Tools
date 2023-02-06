@@ -1,19 +1,10 @@
-﻿using Foundation;
+﻿using FFImageLoading.Forms.Platform;
+using Foundation;
 using Kit.iOS.Services;
-using Kit.Sql;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Kit;
 using UIKit;
 using UserNotifications;
-using Xamarin.Forms;
-using Xamarin.Forms.Internals;
-using FFImageLoading.Forms.Platform;
-using Xamarin.CommunityToolkit.Effects;
 using PreserveAttribute = Xamarin.Forms.Internals.PreserveAttribute;
 
 
@@ -33,9 +24,9 @@ namespace Kit.iOS
             Set(new ToolsImplementation());
             (Instance as ToolsImplementation).Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
-            if (UIDevice.CurrentDevice.CheckSystemVersion(14,0))
+            if (UIDevice.CurrentDevice.CheckSystemVersion(14, 0))
             {
-                TinyIoC.TinyIoCContainer.Current.Register(typeof(Kit.Forms.Services.Interfaces.IAppTrackingTransparencyPermission),new AppTrackingTransparencyPermission());
+                TinyIoC.TinyIoCContainer.Current.Register(typeof(Kit.Forms.Services.Interfaces.IAppTrackingTransparencyPermission), new AppTrackingTransparencyPermission());
             }
             if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
             {

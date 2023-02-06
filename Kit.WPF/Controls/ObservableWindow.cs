@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using Expression = System.Linq.Expressions.Expression;
-using Kit;
+
 namespace Kit.WPF.Controls
 {
     public class ObservableWindow : Window, INotifyPropertyChanged, ICrossWindow, ICrossVisualElement
@@ -17,7 +17,7 @@ namespace Kit.WPF.Controls
         Task ICrossWindow.ShowDialog() => Tools.Instance.SynchronizeInvoke.InvokeOnMainThreadAsync(() => ShowDialog());
         public virtual void CrossOnAppearing()
         {
-            
+
         }
 
         #endregion ICrossWindow

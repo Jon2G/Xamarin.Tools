@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using AsyncAwaitBestPractices;
 using Xamarin.Forms;
-using Kit;
-using Kit.Forms;
-using Kit.Sql.Attributes;
 using StackLayout = Xamarin.Forms.StackLayout;
 
 namespace Kit.Forms.Validations

@@ -1,15 +1,11 @@
 ﻿using Foundation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Kit.Forms.Services.Interfaces;
 using Kit.iOS.Services;
-using UIKit;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using TinyIoC;
 
 [assembly: Dependency(typeof(AppTrackingTransparencyPermission))]
 namespace Kit.iOS.Services

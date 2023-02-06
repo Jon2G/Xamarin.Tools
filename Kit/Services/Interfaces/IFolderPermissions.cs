@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace Kit.Services.Interfaces
+﻿namespace Kit.Services.Interfaces
 {
     public abstract class IFolderPermissions
     {

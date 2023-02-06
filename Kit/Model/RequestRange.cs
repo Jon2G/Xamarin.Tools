@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using Kit.Sql.SqlServer;
-
-namespace Kit.Model
+﻿namespace Kit.Model
 {
     public class RequestRange
     {
@@ -10,7 +6,7 @@ namespace Kit.Model
         public int To { get; private set; }
         public int Step { get; private set; }
         public bool CanContinue { get; private set; }
-        
+
         private CancellationTokenSource CancellationTokenSource { get; set; }
 
         public RequestRange(int Step)
@@ -53,20 +49,6 @@ namespace Kit.Model
                 CancellationTokenSource.Cancel(false);
             }
             return this;
-        }
-
-        public string GetOffset(Kit.Sql.Base.SqlBase con)
-        {
-            string Offset;
-            if (con is SQLServerConnection)
-            {
-                Offset = $"OFFSET {From} ROWS FETCH NEXT {Step} ROWS ONLY";
-            }
-            else
-            {
-                Offset = $"LIMIT {Step} OFFSET 0";
-            }
-            return Offset;
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using Kit.Services.Web;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Kit
 {
@@ -21,7 +18,7 @@ namespace Kit
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "ToResponse");
-                return new Response(APIResponseResult.INTERNAL_ERROR,response.Response);
+                return new Response(APIResponseResult.INTERNAL_ERROR, response.Response);
             }
         }
 

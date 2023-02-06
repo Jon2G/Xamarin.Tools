@@ -1,11 +1,9 @@
 ﻿using Foundation;
+using Kit.iOS.Services;
 using Kit.Services.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
-using Kit.iOS.Services;
 using UIKit;
 [assembly: Xamarin.Forms.Dependency(typeof(Screenshot))]
 namespace Kit.iOS.Services

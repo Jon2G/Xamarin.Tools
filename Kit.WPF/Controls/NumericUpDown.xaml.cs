@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Kit.WPF.Controls
 {
@@ -24,7 +15,7 @@ namespace Kit.WPF.Controls
     [TemplatePart(Name = "PART_TextBox", Type = typeof(TextBox))]
     [TemplatePart(Name = "PART_IncreaseButton", Type = typeof(RepeatButton))]
     [TemplatePart(Name = "PART_DecreaseButton", Type = typeof(RepeatButton))]
-    public partial class NumericUpDown 
+    public partial class NumericUpDown
     {
 
         #region Properties

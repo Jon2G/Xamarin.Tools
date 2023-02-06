@@ -1,10 +1,5 @@
-﻿using Kit.Sql.Base;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 namespace Kit
 {
@@ -173,94 +168,6 @@ namespace Kit
         }
 
 #if NETSTANDARD1_0 || NETSTANDARD2_0 || NET462
-
-        public static DataTable ToTable<T>(this T obj, params Expression<Func<T, dynamic>>[] propertyExpressions)
-        {
-            TableMapping map = new Kit.Sql.Sqlite.TableMapping(typeof(T));
-            DataTable data = new DataTable(map.TableName);
-            foreach (var propertyExpression in propertyExpressions)
-            {
-                MemberExpression body = propertyExpression.Body as MemberExpression;
-                if (body == null)
-                    throw new ArgumentException("'propertyExpression' should be a member expression");
-                data.Columns.Add(body.Member.Name, body.Type);
-            }
-
-            List<object> valores = new List<object>();
-            if (obj is null) { return data; }
-            foreach (var propertyExpression in propertyExpressions)
-            {
-                MemberExpression body = propertyExpression.Body as MemberExpression;
-                var column = map.Columns.First(x => x.PropertyName == body.Member.Name);
-                valores.Add(column.GetValue(obj));
-            }
-            data.Rows.Add(valores.ToArray());
-
-            return data;
-        }
-
-        public static DataTable ToTable<T>(this T obj)
-        {
-            TableMapping map = new Kit.Sql.Sqlite.TableMapping(typeof(T));
-            DataTable data = new DataTable(map.TableName);
-            foreach (var col in map.Columns.Where(x => x.ColumnType.IsPrimitive()))
-            {
-                data.Columns.Add(col.Name, col.ColumnType);
-            }
-
-            List<object> valores = new List<object>();
-            if (obj is null) { return data; }
-            foreach (var column in map.Columns)
-            {
-                valores.Add(column.GetValue(obj));
-            }
-            data.Rows.Add(valores.ToArray());
-
-            return data;
-        }
-
-        public static DataTable ToTable<T>(this List<T> lista) => ToTable<T>((IEnumerable<T>)lista);
-
-        public static DataTable ToTable<T>(this IOrderedEnumerable<T> lista) => ToTable<T>((IEnumerable<T>)lista);
-
-        public static DataTable ToTable<T>(this IEnumerable<T> lista)
-        {
-            Type type = null;
-            if (lista.Any())
-            {
-                type = lista.First().GetType();
-            }
-            else
-            {
-                type = typeof(T);
-            }
-            TableMapping map = new Kit.Sql.Sqlite.TableMapping(type);
-            DataTable data = new DataTable(map.TableName);
-            foreach (Column col in map.Columns)
-            {
-                data.Columns.Add(col.Name, col.ColumnType);
-            }
-            foreach (T v in lista)
-            {
-                List<object> valores = new List<object>();
-                foreach (var column in map.Columns)
-                {
-                    valores.Add(column.GetValue(v));
-                }
-                data.Rows.Add(valores.ToArray());
-            }
-            return data;
-        }
-
-        public static DataTable ToTable<T>(this ObservableCollection<T> lista)
-        {
-            return lista.ToList().ToTable();
-        }
-
-        public static DataTable ToTable<T>(this Collection<T> lista)
-        {
-            return lista.ToList().ToTable();
-        }
 
         /// <summary>
         /// Convierte cualquier tabla a una Lista de objectos siempre que tengan campos publicos en común y un constructor publico sin parametros

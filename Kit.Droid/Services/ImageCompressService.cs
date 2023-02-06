@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Android.Graphics;
+﻿using Android.Graphics;
 using Kit.Droid.Services;
 using Kit.Forms.Services.Interfaces;
-using Kit.Sql.Attributes;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageCompressService))]
 namespace Kit.Droid.Services
@@ -14,7 +13,7 @@ namespace Kit.Droid.Services
     {
         public ImageCompressService()
         {
-            
+
         }
         public async Task<FileStream> CompressImage(Stream imageData, int Quality)
         {

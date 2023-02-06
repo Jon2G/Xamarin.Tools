@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kit
 {
@@ -12,7 +7,7 @@ namespace Kit
     {
         public static string GetLocalIPAddress()
         {
-            string localIP= "127.0.0.1";
+            string localIP = "127.0.0.1";
             try
             {
                 using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
@@ -21,7 +16,8 @@ namespace Kit
                     IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
                     localIP = endPoint.Address.ToString();
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.Logger.Error(ex, "GetLocalIPAddress");
             }

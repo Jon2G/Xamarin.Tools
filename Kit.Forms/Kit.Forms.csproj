@@ -16,10 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Dictionaries\ResourceDictionary.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Fonts\FontelloIcons\font\KitIcons.ttf" />
     <None Remove="Fonts\FontelloIcons\font\kiticons_1.ttf" />
     <None Remove="Fonts\FontelloIcons\font\kiticons_3.ttf" />
@@ -49,8 +45,8 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.564" />
-    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.5" />
-    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.5" />
+    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.6" />
+    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.6" />
     <PackageReference Include="Forms9Patch" Version="2.4.9" />
     <PackageReference Include="FreshMvvm" Version="4.0.1" />
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.2" />
@@ -90,10 +86,6 @@
       <DependentUpon>Lector.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\NotificationBar\CustomToolBar.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="Pages\CadenaCon.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

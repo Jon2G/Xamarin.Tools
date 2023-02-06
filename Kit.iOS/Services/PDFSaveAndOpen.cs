@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.IO;
-using Xamarin.Forms;
-using UIKit;
-using QuickLook;
-using Kit.Services.Interfaces;
-using Kit.iOS.Classes;
+﻿using Kit.iOS.Classes;
 using Kit.iOS.Services;
+using QuickLook;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using UIKit;
+using Xamarin.Forms;
 
 [assembly: Dependency(typeof(PDFSaveAndOpen))]
 namespace Kit.iOS.Services

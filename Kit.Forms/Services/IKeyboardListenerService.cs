@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Windows.Input;
-using Forms9Patch;
+﻿using Forms9Patch;
 using Kit.Forms.Extensions;
 using Kit.Model;
+using System;
+using System.Text;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Services

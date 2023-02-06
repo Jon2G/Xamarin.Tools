@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Input;
-using Kit.Sql.Attributes;
 using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -146,7 +145,7 @@ namespace Kit.Forms.Controls
 
         public static readonly BindableProperty ImgSourceProperty = BindableProperty.Create(
             propertyName: nameof(ImgSource), returnType: typeof(ImageSource), declaringType: typeof(MyButton), defaultValue: null);
-        
+
         [TypeConverter(typeof(Converters.MyImageSourceConverter))]
         public ImageSource ImgSource
         {
@@ -233,7 +232,7 @@ namespace Kit.Forms.Controls
                 this.Lbl.IsVisible = !(string.IsNullOrEmpty(value));
                 if (!this.Lbl.IsVisible)
                 {
-                    this.Img.VerticalOptions = 
+                    this.Img.VerticalOptions =
                     this.Img.HorizontalOptions = LayoutOptions.Center;
                 }
                 SetValue(TextProperty, value);

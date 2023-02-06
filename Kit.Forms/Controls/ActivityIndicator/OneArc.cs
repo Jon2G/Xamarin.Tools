@@ -1,7 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using SkiaSharp;
+﻿using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.ActivityIndicator
@@ -45,7 +44,7 @@ namespace Kit.Forms.Controls.ActivityIndicator
 
         };
 
-        public OneArc():base()
+        public OneArc() : base()
         {
             Stopwatch.Start();
             Device.StartTimer(TimeSpan.FromMilliseconds(16), OnTimerClik);

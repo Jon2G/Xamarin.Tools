@@ -1,8 +1,7 @@
 ﻿
-using System;
-using System.Diagnostics;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using Xamarin.Forms;
 
 
@@ -65,7 +64,7 @@ namespace Kit.Forms.Controls.ActivityIndicator
 
         };
 
-        public ThreeArcsWithTwoInSamePosition():base()
+        public ThreeArcsWithTwoInSamePosition() : base()
         {
             Stopwatch.Start();
             Device.StartTimer(TimeSpan.FromMilliseconds(16), OnTimerClik);

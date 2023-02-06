@@ -24,70 +24,64 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
     <DebugType></DebugType>
-    <DefineConstants>USE_SQLITEPCL_RAW;RELEASE</DefineConstants>
+    <DefineConstants>RELEASE</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebugSymbols>false</DebugSymbols>
     <DebugType />
-    <DefineConstants>USE_SQLITEPCL_RAW;RELEASE</DefineConstants>
+    <DefineConstants>RELEASE</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DefineConstants>USE_SQLITEPCL_RAW;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>USE_SQLITEPCL_RAW;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64|AnyCPU'">
-    <DefineConstants>USE_SQLITEPCL_RAW;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64|x64'">
-    <DefineConstants>USE_SQLITEPCL_RAW;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2|AnyCPU'">
-    <DefineConstants>USE_SQLITEPCL_RAW;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2|x64'">
-    <DefineConstants>USE_SQLITEPCL_RAW;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.5" />
-    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.5" />
-    <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="DeviceId" Version="6.2.0" />
+    <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.6" />
+    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.6" />
+    <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="DeviceId" Version="6.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  
     <PackageReference Include="MoyskleyTech.ImageProcessing" Version="1.0.2" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.IO" Version="1.0.2" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.JPEGCodec" Version="1.0.2" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.PNGCodec" Version="1.0.2" />
     <PackageReference Include="MoyskleyTech.ImageProcessing.TGACodec" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.5" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.1.1" />
     <PackageReference Include="ZXing.Net" Version="0.16.8">
       <Aliases>SharedZXingNet</Aliases>
     </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.0" />
-    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.0" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\toolbox.png">
@@ -95,11 +89,4 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.13" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
-  </ItemGroup>
-	
 </Project>

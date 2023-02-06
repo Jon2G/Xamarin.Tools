@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Kit.Services.Interfaces
+﻿namespace Kit.Services.Interfaces
 {
     public interface IScreenshot
     {

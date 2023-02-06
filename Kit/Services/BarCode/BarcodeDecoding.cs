@@ -1,12 +1,7 @@
 ﻿extern alias SharedZXingNet;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
 using ImageProcessing.JPEGCodec;
 using ImageProcessing.PNGCodec;
 using ImageProcessing.TGACodec;
-using Kit.Sql.Attributes;
 using MoyskleyTech.ImageProcessing.Image;
 using SharedZXingNet::ZXing;
 using SharedZXingNet::ZXing.Common;

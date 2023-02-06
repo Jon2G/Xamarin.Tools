@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Kit
+﻿namespace Kit
 {
     public class AsyncLazy<T> : Lazy<Task<T>>
     {

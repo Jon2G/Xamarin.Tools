@@ -1,15 +1,10 @@
-﻿using Foundation;
+﻿using CoreGraphics;
+using Kit.iOS.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Kit.Forms.Services.Interfaces;
-using UIKit;
 using System.Drawing;
 using System.IO;
-using CoreGraphics;
 using System.Threading.Tasks;
-using Kit.iOS.Services;
+using UIKit;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(ImageResizerService))]

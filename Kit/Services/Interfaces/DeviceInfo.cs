@@ -1,8 +1,5 @@
-﻿using Plugin.DeviceInfo.Abstractions;
-using System;
-using DeviceId;
-using System.IO;
-using Kit;
+﻿using DeviceId;
+using Plugin.DeviceInfo.Abstractions;
 
 namespace Kit.Services.Interfaces
 {

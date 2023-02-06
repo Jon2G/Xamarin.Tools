@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Kit.Forms.Pages;
 using Xamarin.Forms;
-using Kit.Forms.Pages;
 namespace Kit.Forms
 {
     public abstract class Application : Xamarin.Forms.Application

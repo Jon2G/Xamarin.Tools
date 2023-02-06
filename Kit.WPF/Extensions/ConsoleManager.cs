@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -33,9 +32,9 @@ namespace Kit
         /// <summary>
         /// Creates a new console instance if the process is not attached to a console already.
         /// </summary>
-        public static void Show(Type type=null)
+        public static void Show(Type type = null)
         {
-            ConsoleType = type?? typeof(System.Console);
+            ConsoleType = type ?? typeof(System.Console);
             //#if DEBUG
             if (!HasConsole)
             {
@@ -73,7 +72,7 @@ namespace Kit
 
         static void InvalidateOutAndError()
         {
-       
+
             System.Reflection.FieldInfo _out = ConsoleType.GetField("_out",
                 System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 

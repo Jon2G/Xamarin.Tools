@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Foundation;
-using Kit.iOS.Services;
+﻿using Kit.iOS.Services;
 using Kit.Services.Interfaces;
 using UIKit;
 using Xamarin.Forms;

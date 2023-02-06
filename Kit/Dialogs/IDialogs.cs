@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Kit.Dialogs
+﻿namespace Kit.Dialogs
 {
     public interface IDialogs
     {

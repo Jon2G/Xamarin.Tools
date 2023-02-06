@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using Foundation;
+﻿using Foundation;
 using Kit.iOS.Effects;
+using System;
+using System.Linq;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;

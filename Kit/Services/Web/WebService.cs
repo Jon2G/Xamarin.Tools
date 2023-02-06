@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Kit.Services.Web
 {
@@ -67,7 +61,7 @@ namespace Kit.Services.Web
             if (query != null && query.Any())
             {
                 var first = query.First();
-                sb_parameters.Append($"?{first.Key}={ Uri.EscapeDataString(first.Value)}");
+                sb_parameters.Append($"?{first.Key}={Uri.EscapeDataString(first.Value)}");
                 for (int i = 1; i < query.Count; i++)
                 {
                     var oneParameter = query.ElementAt(i);
@@ -186,23 +180,7 @@ namespace Kit.Services.Web
             }
         }
 
-        public Request PreparePostAsBody(string body, string metodo, params string[] parameters) => PreparePostAsBody(Encoding.UTF8.GetBytes(body), metodo, null, parameters);
 
-        public Request PreparePostAsBody(byte[] byteArray, string metodo, params string[] parameters) => PreparePostAsBody(byteArray, metodo, null, parameters);
-
-        public Request PreparePostAsBody(byte[] byteArray, string method, Dictionary<string, string> query, params string[] parameters)
-        {
-            try
-            {
-                string geturl = BuildUrl(method, query, parameters);
-                return new PostRequest(geturl, byteArray);
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error(ex, $"PreparePostAsBody");
-                return null;
-            }
-        }
         public Task<Stream> DownloadFile(string metodo, params string[] parameters) => DownloadFile(metodo, null, parameters);
 
         public async Task<Stream> DownloadFile(string method, Dictionary<string, string> query, params string[] parameters)

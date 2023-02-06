@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kit
+﻿namespace Kit
 {
     public static class UriExtensions
     {

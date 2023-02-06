@@ -1,5 +1,4 @@
-﻿using System;
-using Kit.Model;
+﻿using Kit.Model;
 
 namespace Kit.Controls.DateRange
 {

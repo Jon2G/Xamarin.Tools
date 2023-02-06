@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
-
-namespace Kit.Forms.Services.Interfaces
+﻿namespace Kit.Forms.Services.Interfaces
 {
     public abstract class IWidget
     {
         public abstract string AppWidgetProviderFullClassName { get; }
         public static void UpdateWidget(string AppWidgetProviderFullClassName)
         {
-            IUpdateWidget iWidget =TinyIoC.TinyIoCContainer.Current.Resolve<IUpdateWidget>();
+            IUpdateWidget iWidget = TinyIoC.TinyIoCContainer.Current.Resolve<IUpdateWidget>();
             iWidget?.UpdateWidget(AppWidgetProviderFullClassName);
         }
 

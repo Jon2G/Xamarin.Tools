@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Kit.Controls.CrossBrush
+﻿namespace Kit.Controls.CrossBrush
 {
     public abstract class CustomBackground<R, B, C>
         where B : CrossBrush<R, C>, new()

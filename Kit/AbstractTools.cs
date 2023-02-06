@@ -1,11 +1,8 @@
-﻿using Kit.Daemon.Devices;
-using Kit.Dialogs;
+﻿using Kit.Dialogs;
 using Kit.Enums;
 using Kit.Services.BarCode;
 using Kit.Services.Interfaces;
-using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace Kit
 {
@@ -41,7 +38,6 @@ namespace Kit
 
         public virtual AbstractTools Init()
         {
-            Device.Init();
             return this;
         }
         public virtual void CriticalAlert(string ex)

@@ -1,15 +1,11 @@
-﻿using System;
+﻿using EnvDTE;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using EnvDTE;
-using System.Threading;
 using Process = System.Diagnostics.Process;
-using Thread = System.Threading.Thread;
+
 namespace Kit.WPF.Services
 {
     public class AtachDebugger
@@ -100,7 +96,7 @@ namespace Kit.WPF.Services
             {
                 List<DTE> instances = GetInstances().ToList();
                 if (instances.Any())
-                return    Attach(instances.First());
+                    return Attach(instances.First());
             }
             catch (Exception ex)
             {

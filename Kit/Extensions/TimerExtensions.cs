@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace Kit
+﻿namespace Kit
 {
     public static class TimerExtensions
     {

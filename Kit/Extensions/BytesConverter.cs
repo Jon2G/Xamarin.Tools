@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Kit
+﻿namespace Kit
 {
     public static class BytesConverter
     {

@@ -1,8 +1,5 @@
 ﻿using Kit.Enums;
 using Kit.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 
 namespace Kit.iOS.Services

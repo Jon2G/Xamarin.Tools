@@ -1,9 +1,5 @@
 ﻿using Foundation;
 using Kit.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 namespace Kit.iOS.Services
 {

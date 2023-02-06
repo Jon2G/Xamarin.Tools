@@ -1,17 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using AsyncAwaitBestPractices.MVVM;
+﻿using Kit.Extensions;
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using Kit.Extensions;
+using System.Windows.Input;
+using System.Windows.Media;
 using Expression = System.Linq.Expressions.Expression;
 using WBrush = System.Windows.Media.Brush;
 namespace Kit.WPF.Controls
@@ -65,7 +60,7 @@ namespace Kit.WPF.Controls
         public static readonly DependencyProperty TextColorProperty = DependencyProperty.Register(
             name: nameof(TextColor),
             propertyType: typeof(WBrush),
-            ownerType: typeof(ArrowButton), new PropertyMetadata(Brushes.Black, 
+            ownerType: typeof(ArrowButton), new PropertyMetadata(Brushes.Black,
                 (e, o) =>
               {
                   if (e is ArrowButton arrow)
@@ -247,7 +242,7 @@ namespace Kit.WPF.Controls
              {
                  if (e is ArrowButton arrow) arrow.TitleFontFamily = (FontFamily)o.NewValue;
              }));
-        
+
         public FontFamily TitleFontFamily
         {
             get { return (FontFamily)GetValue(TitleFontFamilyProperty); }

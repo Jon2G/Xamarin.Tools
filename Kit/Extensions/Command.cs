@@ -1,6 +1,4 @@
-﻿using Kit.Sql.Helpers;
-using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows.Input;
 
 namespace Kit.Extensions
@@ -44,12 +42,6 @@ namespace Kit.Extensions
                 // The parameter isn't null, so we don't have to worry whether null is a valid option
                 if (o is not T)
                 {
-                    var parsed = Sqlh.Parse<T>(o);
-                    if (parsed is not null)
-                    {
-                        o = parsed;
-                        return true;
-                    }
                     return false;
                 }
                 return true;

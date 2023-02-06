@@ -1,14 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using SkiaSharp;
+﻿using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using Xamarin.Forms;
 
 namespace Kit.Forms.Controls.ActivityIndicator
 {
-    internal class TwoSepareteArcs: ArcActivityIndicator
+    internal class TwoSepareteArcs : ArcActivityIndicator
     {
-        
+
         float OvalStartAngle = 90; //outer arc start angle
         float OvalSweepAngle = 180; //outer arcg sweep angle from the start angle position
         float InnerOvalStartAngle = 90; //inner arc start angle

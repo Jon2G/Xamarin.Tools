@@ -55,11 +55,10 @@
 	<ItemGroup>
 		<EmbeddedResource Remove="Controls\RangoFechas\DateRange.xaml" />
 		<EmbeddedResource Remove="Controls\RangoFechas\DateRangeHorizontal.xaml" />
-		<EmbeddedResource Remove="Pages\SplashScreen.xaml" />
 		<EmbeddedResource Remove="Dialogs\ICustomMessageBox\CustomMessageBoxWindow.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="DeviceId" Version="6.2.0" />
+		<PackageReference Include="DeviceId" Version="6.3.0" />
 		<PackageReference Include="Dirkster.NumericUpDownLib" Version="3.1.0" />
 		<PackageReference Include="EnvDTE" Version="17.3.32804.24" />
 
@@ -71,7 +70,7 @@
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.1" />
@@ -146,9 +145,6 @@
 		<Page Update="Controls\ColorBox\Themes\Generic.xaml">
 			<SubType>Designer</SubType>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Images\logo.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Controls\ArrowButton.xaml.cs">

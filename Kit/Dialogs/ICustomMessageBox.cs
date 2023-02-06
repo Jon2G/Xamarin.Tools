@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Kit.Enums;
+﻿using Kit.Enums;
 
 namespace Kit.Dialogs
 {

@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using FFImageLoading.Extensions;
+﻿using FFImageLoading.Extensions;
 using Foundation;
-using Kit.iOS.Services;
 using Kit.Forms.Services.Interfaces;
+using Kit.iOS.Services;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using UIKit;
 using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageCompressService))]
 
 namespace Kit.iOS.Services
 {
-    [Sql.Attributes.Preserve(AllMembers = true)]
+    [Preserve(AllMembers = true)]
     public class ImageCompressService : IImageCompressService
     {
         public async Task<FileStream> CompressImage(Stream imageData, int Quality)

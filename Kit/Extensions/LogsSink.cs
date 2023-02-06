@@ -1,7 +1,6 @@
-﻿using System;
-using System.Windows.Input;
-using Serilog.Core;
+﻿using Serilog.Core;
 using Serilog.Events;
+using System.Windows.Input;
 
 namespace Kit.Extensions
 {

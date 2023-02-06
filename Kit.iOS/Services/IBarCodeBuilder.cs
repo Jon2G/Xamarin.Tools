@@ -1,8 +1,6 @@
-﻿using Kit.Services.Interfaces;
-using Kit.Sql;
+﻿using Kit.Services.BarCode;
 using System;
 using System.IO;
-using Kit.Services.BarCode;
 using UIKit;
 using Xamarin.Forms;
 using ZXing;

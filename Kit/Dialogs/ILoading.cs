@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Kit.Dialogs
+﻿namespace Kit.Dialogs
 {
     public interface ILoading : IDisposable
     {
